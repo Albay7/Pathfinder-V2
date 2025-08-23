@@ -405,6 +405,91 @@ Custom Tailwind configuration with:
 - Responsive breakpoints
 - Content paths for purging
 
+## 💾 Database Structure
+
+The application uses the following database tables:
+
+### Core Tables
+
+#### `users`
+- `id` - Primary key
+- `name` - User's full name
+- `email` - Unique email for authentication
+- `email_verified_at` - Timestamp for email verification
+- `password` - Hashed password
+- `remember_token` - Token for "remember me" functionality
+- `timestamps` - Created and updated timestamps
+
+#### `user_progress`
+- `id` - Primary key
+- `user_id` - Foreign key to users table
+- `feature_type` - Type of feature ('career_guidance', 'career_path', 'skill_gap')
+- `assessment_type` - Type of assessment ('course', 'job')
+- `questionnaire_answers` - JSON storage of questionnaire responses
+- `recommendation` - Stored recommendation result
+- `current_role` - User's current role (for career path)
+- `target_role` - User's target role (for career path and skill gap)
+- `current_skills` - JSON storage of user's current skills (for skill gap)
+- `analysis_result` - JSON storage of complete analysis results
+- `match_percentage` - Skill gap match percentage
+- `completed` - Whether the assessment was completed
+- `timestamps` - Created and updated timestamps
+
+### Tutorial System Tables
+
+#### `tutorials`
+- `id` - Primary key
+- `title` - Tutorial title
+- `description` - Tutorial description
+- `skill` - The skill this tutorial teaches
+- `level` - Difficulty level ('beginner', 'intermediate', 'advanced')
+- `type` - Content type ('video', 'article', 'course', 'documentation')
+- `url` - Tutorial link
+- `provider` - Content provider (YouTube, Coursera, etc.)
+- `duration_minutes` - Estimated duration
+- `rating` - User rating (out of 5)
+- `difficulty` - Difficulty scale (1-5)
+- `prerequisites` - JSON storage of required skills/knowledge
+- `tags` - JSON storage of additional tags
+- `is_free` - Whether the tutorial is free
+- `is_active` - Whether the tutorial is active
+- `timestamps` - Created and updated timestamps
+
+#### `user_tutorial_progress`
+- `id` - Primary key
+- `user_id` - Foreign key to users table
+- `tutorial_id` - Foreign key to tutorials table
+- `status` - Progress status ('not_started', 'in_progress', 'completed', 'bookmarked')
+- `progress_percentage` - Progress percentage (0-100)
+- `started_at` - Timestamp when tutorial was started
+- `completed_at` - Timestamp when tutorial was completed
+- `time_spent_minutes` - Time spent on tutorial
+- `user_rating` - User's rating of the tutorial
+- `notes` - User's personal notes
+- `bookmarks` - JSON storage of specific timestamps or sections bookmarked
+- `timestamps` - Created and updated timestamps
+
+### Laravel System Tables
+
+#### `password_reset_tokens`
+- `email` - Primary key, user's email
+- `token` - Password reset token
+- `created_at` - Timestamp when token was created
+
+#### `sessions`
+- `id` - Primary key, session ID
+- `user_id` - Foreign key to users table
+- `ip_address` - User's IP address
+- `user_agent` - User's browser information
+- `payload` - Session data
+- `last_activity` - Timestamp of last activity
+
+#### `cache` and `cache_locks`
+- System tables for Laravel's caching functionality
+
+#### `jobs`, `job_batches`, and `failed_jobs`
+- System tables for Laravel's queue functionality
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
