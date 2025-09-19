@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserProgress;
 use App\Models\Tutorial;
+use App\Models\User;
 
 class PathfinderController extends Controller
 {
@@ -111,17 +112,122 @@ class PathfinderController extends Controller
         return view('pathfinder.skill-gap-result', compact('analysis', 'targetRole'));
     }
 
+    // Career Details Page
+    public function careerDetails(Request $request, $career)
+    {
+        // Decode the URL-encoded career name
+        $career = urldecode($career);
+        
+        // Mock career details data - in a real app, this would come from a database
+        $careerDetails = [
+            'title' => $career,
+            'description' => "This is a detailed description of the {$career} role, including responsibilities, required skills, and career outlook.",
+            'skills_required' => ['Skill 1', 'Skill 2', 'Skill 3', 'Skill 4', 'Skill 5'],
+            'education_requirements' => 'Bachelor\'s degree in related field',
+            'salary_range' => '$50,000 - $100,000',
+            'job_outlook' => 'Growing faster than average',
+            'related_careers' => ['Related Career 1', 'Related Career 2', 'Related Career 3']
+        ];
+        
+        return view('pathfinder.career-details', compact('careerDetails'));
+    }
+    
+    /**
+     * Display available courses
+     *
+     * @return \Illuminate\View\View
+     */
+    public function courses()
+    {
+        // Mock courses data
+        $courses = [
+            'technology' => [
+                'Web Development', 'Data Science', 'Mobile App Development',
+                'Cloud Computing', 'Cybersecurity'
+            ],
+            'business' => [
+                'Project Management', 'Digital Marketing', 'Business Analytics',
+                'Entrepreneurship', 'Finance'
+            ],
+            'design' => [
+                'UX/UI Design', 'Graphic Design', 'Product Design',
+                'Motion Graphics', '3D Modeling'
+            ],
+            'science' => [
+                'Machine Learning', 'Bioinformatics', 'Environmental Science',
+                'Physics', 'Chemistry'
+            ]
+        ];
+        
+        return view('pathfinder.courses', ['courses' => $courses]);
+    }
+    
+    /**
+     * Display external learning resources and RSS feeds
+     *
+     * @return \Illuminate\View\View
+     */
+    public function externalResources()
+    {
+        // Mock RSS feed data
+        $rssFeeds = [
+            'technical' => [
+                'Software Development' => [
+                    ['title' => 'CSS-Tricks', 'url' => 'https://css-tricks.com/feed/'],
+                    ['title' => 'Dev.to', 'url' => 'https://dev.to/feed'],
+                    ['title' => 'Smashing Magazine', 'url' => 'https://www.smashingmagazine.com/feed/']
+                ],
+                'Data Science' => [
+                    ['title' => 'Towards Data Science', 'url' => 'https://towardsdatascience.com/feed'],
+                    ['title' => 'KDnuggets', 'url' => 'https://www.kdnuggets.com/feed'],
+                    ['title' => 'Analytics Vidhya', 'url' => 'https://medium.com/feed/analytics-vidhya']
+                ],
+                'UX/UI Design' => [
+                    ['title' => 'UX Collective', 'url' => 'https://uxdesign.cc/feed'],
+                    ['title' => 'UX Movement', 'url' => 'https://uxmovement.com/feed/'],
+                    ['title' => 'Nielsen Norman Group', 'url' => 'https://www.nngroup.com/feed/']
+                ]
+            ],
+            'soft_skills' => [
+                ['title' => 'Harvard Business Review', 'url' => 'https://hbr.org/feed'],
+                ['title' => 'Mind Tools', 'url' => 'https://www.mindtools.com/blog/feed/'],
+                ['title' => 'Fast Company', 'url' => 'https://www.fastcompany.com/feed']
+            ]
+        ];
+        
+        // Learning platforms
+        $platforms = [
+            ['name' => 'Udemy', 'url' => 'https://www.udemy.com', 'description' => 'Marketplace for online learning with courses on virtually any topic'],
+            ['name' => 'Coursera', 'url' => 'https://www.coursera.org', 'description' => 'Online courses from top universities and companies'],
+            ['name' => 'Pluralsight', 'url' => 'https://www.pluralsight.com', 'description' => 'Technology skill development platform with focus on IT and software development'],
+            ['name' => 'LinkedIn Learning', 'url' => 'https://www.linkedin.com/learning', 'description' => 'Professional courses on business, technology and creative skills']
+        ];
+        
+        return view('pathfinder.external-resources', ['rssFeeds' => $rssFeeds, 'platforms' => $platforms]);
+    }
+    
     // Helper Methods
     private function generateRecommendation($answers, $type)
     {
+        // Get user's MBTI type if available
+        $mbtiType = null;
+        $mbtiWeight = 0.2; // 20% weight for MBTI factor
+        
+        if (Auth::check()) {
+            $user = Auth::user();
+            if (!empty($user->mbti_type)) {
+                $mbtiType = $user->mbti_type;
+            }
+        }
+        
         if ($type === 'course') {
-            return $this->generateCourseRecommendation($answers);
+            return $this->generateCourseRecommendation($answers, $mbtiType, $mbtiWeight);
         } else {
-            return $this->generateJobRecommendation($answers);
+            return $this->generateJobRecommendation($answers, $mbtiType, $mbtiWeight);
         }
     }
 
-    private function generateCourseRecommendation($answers)
+    private function generateCourseRecommendation($answers, $mbtiType = null, $mbtiWeight = 0.2)
     {
         // DLSU Dasmariñas course recommendations based on assessment
         $dlsuCourses = [
@@ -271,7 +377,7 @@ class PathfinderController extends Controller
         return 'Bachelor of Science in Business Administration';
     }
 
-    private function generateJobRecommendation($answers)
+    private function generateJobRecommendation($answers, $mbtiType = null, $mbtiWeight = 0.2)
     {
         // Industry-specific job recommendations
         $industryJobs = [
@@ -403,11 +509,33 @@ class PathfinderController extends Controller
 
         // Score-based recommendation system
         $scores = [];
-
-        // Primary industry interest (50% weight)
+        
+        // Adjust weights if MBTI is available
+        $industryWeight = $mbtiType ? 40 : 50; // Reduce from 50% to 40% if MBTI is available
+        
+        // Primary industry interest (40-50% weight)
         if (isset($industryJobs[$jobIndustry])) {
             foreach ($industryJobs[$jobIndustry] as $job) {
-                $scores[$job] = ($scores[$job] ?? 0) + 50;
+                $scores[$job] = ($scores[$job] ?? 0) + $industryWeight;
+            }
+        }
+        
+        // MBTI-based job recommendations (20% weight if available)
+        if ($mbtiType) {
+            $mbtiRecommendations = $this->getMbtiJobRecommendations($mbtiType);
+            foreach ($mbtiRecommendations as $job) {
+                // Check if this job exists in our job list (any industry)
+                $jobExists = false;
+                foreach ($industryJobs as $industry => $jobs) {
+                    if (in_array($job, $jobs)) {
+                        $jobExists = true;
+                        break;
+                    }
+                }
+                
+                if ($jobExists) {
+                    $scores[$job] = ($scores[$job] ?? 0) + (20 * $mbtiWeight);
+                }
             }
         }
 
@@ -539,7 +667,12 @@ class PathfinderController extends Controller
             'Backend Developer' => ['PHP', 'Python', 'Node.js', 'SQL', 'API Development', 'Git', 'Docker'],
             'Data Scientist' => ['Python', 'R', 'SQL', 'Machine Learning', 'Statistics', 'Pandas', 'Numpy'],
             'UX Designer' => ['Figma', 'Adobe XD', 'User Research', 'Wireframing', 'Prototyping', 'Design Thinking'],
-            'Digital Marketer' => ['Google Analytics', 'SEO', 'Social Media Marketing', 'Content Marketing', 'PPC', 'Email Marketing']
+            'Digital Marketer' => ['Google Analytics', 'SEO', 'Social Media Marketing', 'Content Marketing', 'PPC', 'Email Marketing'],
+            'Project Manager' => ['Project Planning', 'Agile Methodologies', 'Risk Management', 'Stakeholder Communication', 'Budgeting', 'Team Leadership'],
+            'Business Analyst' => ['Requirements Gathering', 'Process Modeling', 'Data Analysis', 'SQL', 'Documentation', 'Stakeholder Management'],
+            'Financial Analyst' => ['Financial Modeling', 'Excel', 'Data Analysis', 'Accounting Principles', 'Forecasting', 'Business Intelligence'],
+            'Human Resources Manager' => ['Recruitment', 'Employee Relations', 'Performance Management', 'Compensation & Benefits', 'HR Policies', 'Conflict Resolution'],
+            'Marketing Coordinator' => ['Social Media', 'Content Creation', 'Campaign Management', 'Analytics', 'Brand Management', 'Market Research']
         ];
 
         $requiredSkills = $roleRequirements[$targetRole] ?? ['Communication', 'Problem Solving', 'Teamwork'];
@@ -553,5 +686,42 @@ class PathfinderController extends Controller
             'missing_skills' => $missingSkills,
             'match_percentage' => round((count($matchingSkills) / count($requiredSkills)) * 100, 1)
         ];
+    }
+    
+    /**
+     * Get job recommendations based on MBTI personality type
+     * 
+     * @param string $mbtiType
+     * @return array
+     */
+    private function getMbtiJobRecommendations($mbtiType)
+    {
+        $recommendations = [
+            // Analysts
+            'INTJ' => ['Data Scientist', 'Software Engineer', 'Systems Analyst', 'Financial Analyst', 'Business Consultant'],
+            'INTP' => ['Backend Developer', 'Data Scientist', 'Systems Architect', 'Research Scientist', 'Business Analyst'],
+            'ENTJ' => ['Project Manager', 'Business Consultant', 'Operations Manager', 'Financial Analyst', 'Investment Banker'],
+            'ENTP' => ['Business Consultant', 'Marketing Coordinator', 'Creative Director', 'Entrepreneur', 'Product Manager'],
+            
+            // Diplomats
+            'INFJ' => ['School Counselor', 'Healthcare Administrator', 'Content Marketing Manager', 'Human Resources Manager', 'UX Designer'],
+            'INFP' => ['UX Designer', 'Content Marketing Manager', 'School Counselor', 'Social Worker', 'Instructional Designer'],
+            'ENFJ' => ['Human Resources Manager', 'School Administrator', 'Corporate Trainer', 'Public Relations Specialist', 'Healthcare Administrator'],
+            'ENFP' => ['Marketing Coordinator', 'Public Relations Specialist', 'Event Coordinator', 'Corporate Trainer', 'Sales Representative'],
+            
+            // Sentinels
+            'ISTJ' => ['Financial Analyst', 'Accountant', 'Quality Control Engineer', 'Systems Analyst', 'Auditor'],
+            'ISFJ' => ['Administrative Assistant', 'Medical Assistant', 'Registered Nurse', 'Elementary Teacher', 'Accountant'],
+            'ESTJ' => ['Operations Manager', 'Project Manager', 'Financial Planner', 'School Administrator', 'Business Analyst'],
+            'ESFJ' => ['Customer Success Manager', 'Human Resources Manager', 'Healthcare Administrator', 'Elementary Teacher', 'Sales Representative'],
+            
+            // Explorers
+            'ISTP' => ['Civil Engineer', 'Mechanical Engineer', 'Site Engineer', 'Frontend Developer', 'Backend Developer'],
+            'ISFP' => ['UX Designer', 'Medical Assistant', 'Tour Guide', 'Administrative Assistant', 'Social Media Manager'],
+            'ESTP' => ['Sales Representative', 'Marketing Coordinator', 'Project Manager', 'Event Coordinator', 'Tour Guide'],
+            'ESFP' => ['Event Coordinator', 'Sales Representative', 'Tour Guide', 'Customer Success Manager', 'Social Media Manager']
+        ];
+        
+        return $recommendations[$mbtiType] ?? [];
     }
 }

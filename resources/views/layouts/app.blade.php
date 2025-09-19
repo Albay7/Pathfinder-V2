@@ -13,6 +13,9 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -32,5 +35,67 @@
                 {{ $slot }}
             </main>
         </div>
+        
+        <!-- Flash Messages Script -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @if(session('success'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: '{{ session('success') }}',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                @endif
+
+                @if(session('error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: '{{ session('error') }}',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#ef4444'
+                    });
+                @endif
+
+                @if(session('warning'))
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: '{{ session('warning') }}',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#f59e0b'
+                    });
+                @endif
+
+                @if(session('info'))
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Information',
+                        text: '{{ session('info') }}',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3b82f6'
+                    });
+                @endif
+
+                // Handle validation errors
+                @if($errors->any())
+                    let errorMessages = [];
+                    @foreach($errors->all() as $error)
+                        errorMessages.push('{{ $error }}');
+                    @endforeach
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        html: errorMessages.map(msg => `<div class="text-left">• ${msg}</div>`).join(''),
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#ef4444'
+                    });
+                @endif
+            });
+        </script>
     </body>
 </html>

@@ -48,6 +48,9 @@
                     <a href="{{ route('pathfinder.skill-gap') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.skill-gap*') ? 'text-blue-600 bg-blue-50' : '' }}">
                         Skill Gap
                     </a>
+                    <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.mbti-questionnaire*') || request()->routeIs('pathfinder.mbti.results*') ? 'text-purple-600 bg-purple-50' : '' }}">
+                        MBTI Assessment
+                    </a>
                     
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
@@ -102,6 +105,9 @@
                 </a>
                 <a href="{{ route('pathfinder.skill-gap') }}" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('pathfinder.skill-gap*') ? 'text-blue-600 bg-blue-50' : '' }}">
                     Skill Gap
+                </a>
+                <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="text-gray-700 hover:text-purple-600 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('pathfinder.mbti-questionnaire*') || request()->routeIs('pathfinder.mbti.results*') ? 'text-purple-600 bg-purple-50' : '' }}">
+                    MBTI Assessment
                 </a>
                 
                 @auth
@@ -187,6 +193,9 @@
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}"></script>
     
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- Mobile Menu Toggle Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -198,6 +207,68 @@
                     mobileMenu.classList.toggle('hidden');
                 });
             }
+        });
+    </script>
+    
+    <!-- Flash Messages Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            @endif
+
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: '{{ session('error') }}',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#ef4444'
+                });
+            @endif
+
+            @if(session('warning'))
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: '{{ session('warning') }}',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#f59e0b'
+                });
+            @endif
+
+            @if(session('info'))
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Information',
+                    text: '{{ session('info') }}',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3b82f6'
+                });
+            @endif
+
+            // Handle validation errors
+            @if($errors->any())
+                let errorMessages = [];
+                @foreach($errors->all() as $error)
+                    errorMessages.push('{{ $error }}');
+                @endforeach
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: errorMessages.map(msg => `<div class="text-left">• ${msg}</div>`).join(''),
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#ef4444'
+                });
+            @endif
         });
     </script>
     
