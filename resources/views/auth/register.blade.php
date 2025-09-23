@@ -312,13 +312,13 @@
             </div>
 
             <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="{{ route('pathfinder.index') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">Home</a>
-                <a href="{{ route('pathfinder.career-guidance') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">Career Guidance</a>
-                <a href="{{ route('pathfinder.career-path') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">Career Path</a>
-                <a href="{{ route('pathfinder.skill-gap') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">Skill Gap</a>
-                <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">MBTI Assessment</a>
-                <a href="{{ route('login') }}" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-zodiac hover:text-white transition-all duration-200 hover:shadow-sm">Login</a>
+            <div class="hidden md:flex items-center space-x-6 mr-4">
+                <a href="{{ route('pathfinder.index') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">Home</a>
+                <a href="{{ route('pathfinder.career-guidance') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">Career Guidance</a>
+                <a href="{{ route('pathfinder.career-path') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">Career Path</a>
+                <a href="{{ route('pathfinder.skill-gap') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">Skill Gap</a>
+                <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">MBTI Assessment</a>
+                <a href="{{ route('login') }}" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-fountain-blue hover:text-white transition-all duration-200 hover:shadow-sm">Login</a>
                 <a href="#" class="bg-fountain-blue text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-zodiac transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5">Register</a>
             </div>
         </div>
