@@ -60,12 +60,17 @@ echo "Starting application..."\n\
 export PORT=${PORT:-80}\n\
 echo "Using PORT: $PORT"\n\
 \n\
-# Set ServerName to suppress Apache warning\n\
-echo "ServerName localhost" >> /etc/apache2/apache2.conf\n\
+# Set ServerName to suppress Apache warning (only if not already set)
+if ! grep -q "ServerName" /etc/apache2/apache2.conf; then\n\
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf\n\
+fi\n\
 \n\
 # Configure Apache to use the PORT environment variable\n\
-envsubst < /etc/apache2/sites-available/000-default.conf > /tmp/vhost.conf\n\
+envsubst '"'"'$PORT'"'"' < /etc/apache2/sites-available/000-default.conf > /tmp/vhost.conf\n\
 mv /tmp/vhost.conf /etc/apache2/sites-available/000-default.conf\n\
+\n\
+# Enable the site\n\
+a2ensite 000-default\n\
 \n\
 # Wait for database to be ready\n\
 echo "Waiting for database connection..."\n\
@@ -89,8 +94,13 @@ php artisan key:generate --force || echo "Key generation failed, continuing..."\
 # Clear and cache config\n\
 php artisan config:cache || echo "Config cache failed, continuing..."\n\
 \n\
-# Start Apache\n\
+# Start Apache
 echo "Starting Apache server on port $PORT..."\n\
+echo "Apache configuration:"\n\
+cat /etc/apache2/sites-available/000-default.conf\n\
+echo "Testing Apache configuration..."\n\
+apache2ctl configtest\n\
+echo "Starting Apache in foreground..."\n\
 apache2-foreground' > /start.sh && chmod +x /start.sh
 
 # Start Apache
