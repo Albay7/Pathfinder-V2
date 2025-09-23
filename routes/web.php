@@ -7,6 +7,15 @@ use App\Http\Controllers\TutorialController;
 use App\Http\Controllers\MbtiController;
 use Illuminate\Support\Facades\Route;
 
+// Health check endpoint for Railway
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'timestamp' => now()->toISOString(),
+        'service' => 'pathfinder-app'
+    ]);
+});
+
 // Redirect root to Pathfinder
 Route::get('/', [PathfinderController::class, 'index'])->name('pathfinder.index');
 
