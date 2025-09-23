@@ -60,6 +60,9 @@ echo "Starting application..."\n\
 export PORT=${PORT:-80}\n\
 echo "Using PORT: $PORT"\n\
 \n\
+# Set ServerName to suppress Apache warning\n\
+echo "ServerName localhost" >> /etc/apache2/apache2.conf\n\
+\n\
 # Configure Apache to use the PORT environment variable\n\
 envsubst < /etc/apache2/sites-available/000-default.conf > /tmp/vhost.conf\n\
 mv /tmp/vhost.conf /etc/apache2/sites-available/000-default.conf\n\
