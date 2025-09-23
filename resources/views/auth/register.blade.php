@@ -211,6 +211,10 @@
         }
         
         /* Links */
+        a {
+            text-decoration: none;
+        }
+        
         .nav-link {
             color: #4B5563;
             text-decoration: none;

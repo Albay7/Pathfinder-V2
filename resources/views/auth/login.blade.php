@@ -207,6 +207,10 @@
         }
         
         /* Links */
+        a {
+            text-decoration: none;
+        }
+        
         .link {
             color: #5AA7C6;
             text-decoration: none;
@@ -265,7 +269,7 @@
         
         /* Responsive utilities */
         @media (min-width: 768px) {
-            .md\\:flex { display: flex; }
+            .md\:flex { display: flex; }
         }
         
         /* Transitions */
