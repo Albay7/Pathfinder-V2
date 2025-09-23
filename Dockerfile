@@ -56,6 +56,11 @@ RUN echo '#!/bin/bash\n\
 set -e\n\
 echo "Starting application..."\n\
 \n\
+# Set proper permissions for Laravel directories\n\
+echo "Setting up Laravel permissions..."\n\
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache\n\
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache\n\
+\n\
 # Set default PORT if not provided by Railway\n\
 export PORT=${PORT:-80}\n\
 echo "Using PORT: $PORT"\n\
