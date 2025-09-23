@@ -88,7 +88,11 @@ for i in {1..5}; do\n\
     fi\n\
 done\n\
 \n\
-# Generate application key if not exists\n\
+# Generate application key if not exists
+if [ ! -f /var/www/html/.env ]; then\n\
+    echo "Creating .env file from .env.example..."\n\
+    cp /var/www/html/.env.example /var/www/html/.env\n\
+fi\n\
 php artisan key:generate --force || echo "Key generation failed, continuing..."\n\
 \n\
 # Clear and cache config\n\
