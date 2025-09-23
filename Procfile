@@ -1,1 +1,1 @@
-web: php artisan migrate --force && php artisan config:cache && apache2-foreground
+web: /start.sh
