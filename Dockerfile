@@ -49,9 +49,35 @@ RUN echo '<VirtualHost *:80>\n\
 # Expose port 80
 EXPOSE 80
 
-# Create startup script
+# Create startup script with better error handling
 RUN echo '#!/bin/bash\n\
-php artisan migrate --force\n\
+set -e\n\
+echo "Starting application..."\n\
+\n\
+# Wait for database to be ready\n\
+echo "Waiting for database connection..."\n\
+php artisan migrate:status || echo "Database not ready yet, will retry migrations"\n\
+\n\
+# Run migrations with retry logic\n\
+echo "Running database migrations..."\n\
+for i in {1..5}; do\n\
+    if php artisan migrate --force; then\n\
+        echo "Migrations completed successfully"\n\
+        break\n\
+    else\n\
+        echo "Migration attempt $i failed, retrying in 5 seconds..."\n\
+        sleep 5\n\
+    fi\n\
+done\n\
+\n\
+# Generate application key if not exists\n\
+php artisan key:generate --force || echo "Key generation failed, continuing..."\n\
+\n\
+# Clear and cache config\n\
+php artisan config:cache || echo "Config cache failed, continuing..."\n\
+\n\
+# Start Apache\n\
+echo "Starting Apache server..."\n\
 apache2-foreground' > /start.sh && chmod +x /start.sh
 
 # Start Apache
