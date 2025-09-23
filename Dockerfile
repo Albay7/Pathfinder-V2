@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     nodejs \
     npm \
+    gettext-base \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Get latest Composer
