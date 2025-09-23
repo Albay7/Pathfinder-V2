@@ -9,11 +9,22 @@ use Illuminate\Support\Facades\Route;
 
 // Health check endpoint for Railway
 Route::get('/health', function () {
-    return response()->json([
-        'status' => 'ok',
-        'timestamp' => now()->toISOString(),
-        'service' => 'pathfinder-app'
-    ]);
+    try {
+        // Simple health check without database dependency
+        return response()->json([
+            'status' => 'ok',
+            'timestamp' => date('c'), // Use PHP date instead of Laravel's now()
+            'service' => 'pathfinder-app',
+            'php_version' => PHP_VERSION,
+            'laravel_version' => app()->version()
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'timestamp' => date('c')
+        ], 500);
+    }
 });
 
 // Redirect root to Pathfinder
