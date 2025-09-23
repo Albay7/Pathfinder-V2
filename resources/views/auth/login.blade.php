@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Pathfinder Career Guidance</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'blue-zodiac': '#13264D',
-                        'tiara': '#BEC0BF',
-                        'fountain-blue': '#5AA7C6'
-                    }
-                }
-            }
-        }
-    </script>
+    <style>
+        .bg-blue-zodiac { background-color: #13264D; }
+        .bg-fountain-blue { background-color: #5AA7C6; }
+        .text-fountain-blue { color: #5AA7C6; }
+        .border-fountain-blue { border-color: #5AA7C6; }
+        .focus\:ring-fountain-blue:focus { --tw-ring-color: #5AA7C6; }
+        .focus\:border-fountain-blue:focus { border-color: #5AA7C6; }
+        .hover\:bg-blue-600:hover { background-color: #2563eb; }
+        .focus\:ring-fountain-blue\/30:focus { --tw-ring-color: rgba(90, 167, 198, 0.3); }
+    </style>
     <script src="{{ asset('js/page-transitions.js') }}"></script>
 </head>
 <body class="h-screen bg-white flex flex-col min-w-[1024px]">
