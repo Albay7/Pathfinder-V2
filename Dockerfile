@@ -37,8 +37,9 @@ RUN chown -R www-data:www-data /var/www/html \
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Configure Apache
-RUN echo '<VirtualHost *:80>\n\
+# Configure Apache to use Railway's PORT environment variable
+RUN echo 'Listen ${PORT}\n\
+<VirtualHost *:${PORT}>\n\
     DocumentRoot /var/www/html/public\n\
     <Directory /var/www/html/public>\n\
         AllowOverride All\n\
@@ -46,13 +47,21 @@ RUN echo '<VirtualHost *:80>\n\
     </Directory>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
-# Expose port 80
+# Expose port 80 (Railway will override with PORT env var)
 EXPOSE 80
 
 # Create startup script with better error handling
 RUN echo '#!/bin/bash\n\
 set -e\n\
 echo "Starting application..."\n\
+\n\
+# Set default PORT if not provided by Railway\n\
+export PORT=${PORT:-80}\n\
+echo "Using PORT: $PORT"\n\
+\n\
+# Configure Apache to use the PORT environment variable\n\
+envsubst < /etc/apache2/sites-available/000-default.conf > /tmp/vhost.conf\n\
+mv /tmp/vhost.conf /etc/apache2/sites-available/000-default.conf\n\
 \n\
 # Wait for database to be ready\n\
 echo "Waiting for database connection..."\n\
@@ -77,7 +86,7 @@ php artisan key:generate --force || echo "Key generation failed, continuing..."\
 php artisan config:cache || echo "Config cache failed, continuing..."\n\
 \n\
 # Start Apache\n\
-echo "Starting Apache server..."\n\
+echo "Starting Apache server on port $PORT..."\n\
 apache2-foreground' > /start.sh && chmod +x /start.sh
 
 # Start Apache
