@@ -139,6 +139,7 @@
         .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .min-w-\[1024px\] { min-width: 1024px; }
         
         /* Grid */
         .grid { display: grid; }
