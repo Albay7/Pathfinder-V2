@@ -92,6 +92,7 @@
         .gap-4 { gap: 1rem; }
         
         /* Typography */
+        .text-base { font-size: 1rem; }
         .text-xl { font-size: 1.25rem; }
         .text-2xl { font-size: 1.5rem; }
         .text-4xl { font-size: 2.25rem; }
