@@ -10,7 +10,14 @@ class MbtiTestSession extends Model
 {
     protected $fillable = [
         'user_id',
+        'session_type',
         'responses',
+        'questions_asked',
+        'rl_predictions',
+        'final_result',
+        'questions_used',
+        'efficiency',
+        'confidence',
         'e_score',
         'i_score',
         's_score',
@@ -27,6 +34,11 @@ class MbtiTestSession extends Model
 
     protected $casts = [
         'responses' => 'array',
+        'questions_asked' => 'array',
+        'rl_predictions' => 'array',
+        'final_result' => 'array',
+        'efficiency' => 'decimal:4',
+        'confidence' => 'decimal:4',
         'completed' => 'boolean',
         'completed_at' => 'datetime'
     ];
@@ -45,6 +57,50 @@ class MbtiTestSession extends Model
     public function personalityType(): BelongsTo
     {
         return $this->belongsTo(MbtiPersonalityType::class, 'personality_type_id');
+    }
+
+    /**
+     * Scope for adaptive sessions
+     */
+    public function scopeAdaptive($query)
+    {
+        return $query->where('session_type', 'adaptive');
+    }
+
+    /**
+     * Scope for traditional sessions
+     */
+    public function scopeTraditional($query)
+    {
+        return $query->where('session_type', 'traditional');
+    }
+
+    /**
+     * Get efficiency percentage
+     */
+    public function getEfficiencyPercentageAttribute()
+    {
+        return $this->efficiency ? round($this->efficiency * 100, 1) : null;
+    }
+
+    /**
+     * Get confidence percentage
+     */
+    public function getConfidencePercentageAttribute()
+    {
+        return $this->confidence ? round($this->confidence * 100, 1) : null;
+    }
+
+    /**
+     * Get time saved compared to traditional assessment
+     */
+    public function getTimeSavedAttribute()
+    {
+        if (!$this->questions_used) return null;
+        
+        $traditionalQuestions = 60;
+        $questionsSaved = $traditionalQuestions - $this->questions_used;
+        return round(($questionsSaved / $traditionalQuestions) * 100, 1);
     }
 
     /**

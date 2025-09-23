@@ -13,7 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        
+
         <!-- SweetAlert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
@@ -35,7 +35,7 @@
                 {{ $slot }}
             </main>
         </div>
-        
+
         <!-- Flash Messages Script -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -86,7 +86,7 @@
                     @foreach($errors->all() as $error)
                         errorMessages.push('{{ $error }}');
                     @endforeach
-                    
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Validation Error',

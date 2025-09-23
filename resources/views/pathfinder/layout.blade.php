@@ -36,7 +36,7 @@
                 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('pathfinder.index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.index') ? 'text-blue-600 bg-blue-50' : '' }}">
+                    <a href="{{ route('pathfinder.home') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.home') ? 'text-blue-600 bg-blue-50' : '' }}">
                         Home
                     </a>
                     <a href="{{ route('pathfinder.career-guidance') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.career-guidance*') ? 'text-blue-600 bg-blue-50' : '' }}">
@@ -94,7 +94,7 @@
         <!-- Mobile Navigation Menu -->
         <div class="mobile-menu hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
-                <a href="{{ route('pathfinder.index') }}" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('pathfinder.index') ? 'text-blue-600 bg-blue-50' : '' }}">
+                <a href="{{ route('pathfinder.home') }}" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('pathfinder.home') ? 'text-blue-600 bg-blue-50' : '' }}">
                     Home
                 </a>
                 <a href="{{ route('pathfinder.career-guidance') }}" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('pathfinder.career-guidance*') ? 'text-blue-600 bg-blue-50' : '' }}">

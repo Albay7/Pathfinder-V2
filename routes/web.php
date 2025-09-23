@@ -15,7 +15,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 
 // Pathfinder routes (accessible to all)
 Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
-    Route::get('/', [PathfinderController::class, 'index'])->name('index');
+    Route::get('/', [PathfinderController::class, 'index'])->name('home');
     Route::get('/career-guidance', [PathfinderController::class, 'careerGuidance'])->name('career-guidance');
     Route::get('/questionnaire/{type}', [PathfinderController::class, 'questionnaire'])->name('questionnaire');
     Route::post('/questionnaire/process', [PathfinderController::class, 'processQuestionnaire'])->name('questionnaire.process');
@@ -28,6 +28,7 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
     Route::get('/mbti-questionnaire', [MbtiController::class, 'showQuestionnaire'])->name('mbti-questionnaire');
     Route::post('/mbti-questionnaire/process', [MbtiController::class, 'processQuestionnaire'])->name('mbti-questionnaire.process');
     Route::get('/mbti-results', [MbtiController::class, 'showResults'])->name('mbti.results');
+
     Route::get('/career/details/{career}', [PathfinderController::class, 'careerDetails'])->name('career.details');
     Route::get('/career', [PathfinderController::class, 'careerGuidance'])->name('career');
     Route::get('/courses', [PathfinderController::class, 'courses'])->name('courses');

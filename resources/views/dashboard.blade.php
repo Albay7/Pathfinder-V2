@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Recent Activity -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Recent Assessments -->
@@ -152,7 +152,7 @@
                     </div>
                 @endif
             </div>
-            
+
             <!-- Quick Actions -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
                 <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
@@ -170,7 +170,7 @@
                             <p class="text-sm text-gray-600">Get personalized course and job recommendations</p>
                         </div>
                     </a>
-                    
+
                     <a href="{{ route('pathfinder.career-path') }}" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors duration-200">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-10 h-10 bg-green-600 rounded-lg">
@@ -184,7 +184,7 @@
                             <p class="text-sm text-gray-600">Visualize your journey to your dream job</p>
                         </div>
                     </a>
-                    
+
                     <a href="{{ route('pathfinder.skill-gap') }}" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors duration-200">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-10 h-10 bg-purple-600 rounded-lg">
@@ -198,7 +198,7 @@
                             <p class="text-sm text-gray-600">Identify gaps and get learning priorities</p>
                         </div>
                     </a>
-                    
+
                     <a href="{{ route('tutorials.index') }}" class="flex items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors duration-200">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-10 h-10 bg-indigo-600 rounded-lg">

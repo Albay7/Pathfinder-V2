@@ -24,6 +24,560 @@ class MbtiController extends Controller
     }
 
     /**
+     * Get the next question for adaptive assessment
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getNextQuestion(Request $request)
+    {
+        try {
+            $request->validate([
+                'session_id' => 'required|exists:mbti_test_sessions,id',
+                'current_responses' => 'array',
+                'rl_state' => 'array'
+            ]);
+
+            $sessionId = $request->input('session_id');
+            $currentResponses = $request->input('current_responses', []);
+            $rlState = $request->input('rl_state', []);
+
+            // Get the test session
+            $testSession = MbtiTestSession::findOrFail($sessionId);
+
+            // Load MBTI questions (you might want to create a separate service for this)
+            $allQuestions = $this->getMbtiQuestions();
+            
+            // Simple adaptive logic - you can enhance this with your RL algorithm
+            $questionsAsked = count($currentResponses);
+            
+            // If we've asked enough questions (minimum 10, maximum 30)
+            if ($questionsAsked >= 10) {
+                // Calculate current confidence
+                $confidence = $this->calculateConfidence($currentResponses);
+                
+                // If confidence is high enough or we've reached max questions, stop
+                if ($confidence > 0.85 || $questionsAsked >= 30) {
+                    return response()->json([
+                        'success' => true,
+                        'should_stop' => true,
+                        'confidence' => $confidence,
+                        'questions_asked' => $questionsAsked
+                    ]);
+                }
+            }
+
+            // Select next question based on current responses
+            $nextQuestionIndex = $this->selectNextQuestion($currentResponses, $allQuestions);
+            
+            if ($nextQuestionIndex === null) {
+                return response()->json([
+                    'success' => true,
+                    'should_stop' => true,
+                    'confidence' => 1.0,
+                    'questions_asked' => $questionsAsked
+                ]);
+            }
+
+            $nextQuestion = $allQuestions[$nextQuestionIndex];
+
+            return response()->json([
+                'success' => true,
+                'should_stop' => false,
+                'question' => $nextQuestion,
+                'question_index' => $nextQuestionIndex,
+                'progress' => min(100, ($questionsAsked / 20) * 100)
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to get next question: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get next question',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Record a response for adaptive assessment
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function recordResponse(Request $request)
+    {
+        try {
+            $request->validate([
+                'session_id' => 'required|exists:mbti_test_sessions,id',
+                'question_index' => 'required|integer',
+                'response' => 'required|integer|min:1|max:7'
+            ]);
+
+            $sessionId = $request->input('session_id');
+            $questionIndex = $request->input('question_index');
+            $response = $request->input('response');
+
+            // Get the test session
+            $testSession = MbtiTestSession::findOrFail($sessionId);
+
+            // Update responses
+            $responses = $testSession->responses ?? [];
+            $responses["q{$questionIndex}"] = $response;
+            
+            // Update questions asked
+            $questionsAsked = $testSession->questions_asked ?? [];
+            if (!in_array($questionIndex, $questionsAsked)) {
+                $questionsAsked[] = $questionIndex;
+            }
+
+            $testSession->update([
+                'responses' => $responses,
+                'questions_asked' => $questionsAsked
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Response recorded successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to record response: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to record response',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Complete the adaptive assessment
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function completeAssessment(Request $request)
+    {
+        try {
+            $request->validate([
+                'session_id' => 'required|exists:mbti_test_sessions,id',
+                'final_responses' => 'required|array',
+                'rl_predictions' => 'array',
+                'confidence' => 'numeric|min:0|max:1'
+            ]);
+
+            $sessionId = $request->input('session_id');
+            $finalResponses = $request->input('final_responses');
+            $rlPredictions = $request->input('rl_predictions', []);
+            $confidence = $request->input('confidence', 0.5);
+
+            // Get the test session
+            $testSession = MbtiTestSession::findOrFail($sessionId);
+
+            // Calculate MBTI type from responses
+            $mbtiType = $this->calculateMbtiTypeFromResponses($finalResponses);
+            
+            // Calculate efficiency (questions saved)
+            $totalQuestions = 60;
+            $questionsAsked = count($testSession->questions_asked ?? []);
+            $efficiency = ($totalQuestions - $questionsAsked) / $totalQuestions;
+
+            // Update test session
+            $testSession->update([
+                'responses' => $finalResponses,
+                'rl_predictions' => $rlPredictions,
+                'final_result' => $mbtiType,
+                'confidence' => $confidence,
+                'efficiency' => $efficiency,
+                'completed' => true,
+                'completed_at' => now()
+            ]);
+
+            // Update user's MBTI type if authenticated
+            if (auth()->check()) {
+                auth()->user()->update(['mbti_type' => $mbtiType['type']]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Assessment completed successfully',
+                'mbti_type' => $mbtiType,
+                'efficiency' => $efficiency,
+                'confidence' => $confidence,
+                'questions_asked' => $questionsAsked,
+                'redirect_url' => route('pathfinder.mbti.results')
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to complete assessment: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to complete assessment',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get session data for adaptive assessment
+     *
+     * @param  int  $sessionId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSessionData($sessionId)
+    {
+        try {
+            $testSession = MbtiTestSession::findOrFail($sessionId);
+
+            return response()->json([
+                'success' => true,
+                'session' => [
+                    'id' => $testSession->id,
+                    'responses' => $testSession->responses ?? [],
+                    'questions_asked' => $testSession->questions_asked ?? [],
+                    'rl_predictions' => $testSession->rl_predictions ?? [],
+                    'confidence' => $testSession->confidence,
+                    'efficiency' => $testSession->efficiency,
+                    'completed' => $testSession->completed
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to get session data: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Session not found',
+                'error' => $e->getMessage()
+            ], 404);
+        }
+    }
+
+    /**
+     * Get MBTI questions
+     *
+     * @return array
+     */
+    private function getMbtiQuestions()
+    {
+        // This should ideally be stored in a database or config file
+        return [
+            1 => "I am outgoing and sociable.",
+            2 => "I prefer to work alone rather than in a group.",
+            3 => "I enjoy being the center of attention.",
+            4 => "I find it easy to stay relaxed and focused.",
+            5 => "I talk to a lot of different people at parties.",
+            6 => "I keep in the background.",
+            7 => "I start conversations.",
+            8 => "I have little to say.",
+            9 => "I feel comfortable around people.",
+            10 => "I avoid crowds.",
+            11 => "I make friends easily.",
+            12 => "I find it difficult to approach others.",
+            13 => "I am skilled in handling social situations.",
+            14 => "I would describe my experiences as somewhat dull.",
+            15 => "I take charge.",
+            16 => "I focus on details.",
+            17 => "I see the big picture.",
+            18 => "I am practical.",
+            19 => "I have a vivid imagination.",
+            20 => "I prefer to stick with things that I know.",
+            21 => "I like to think about complex problems.",
+            22 => "I follow directions.",
+            23 => "I come up with bold plans.",
+            24 => "I stick to conventional approaches.",
+            25 => "I like to get lost in thought.",
+            26 => "I rarely look for a deeper meaning in things.",
+            27 => "I can handle a lot of information.",
+            28 => "I like to concentrate on one thing at a time.",
+            29 => "I have excellent ideas.",
+            30 => "I do not like art.",
+            31 => "I make decisions based on facts.",
+            32 => "I consider people's feelings when making decisions.",
+            33 => "I believe that too much tax money goes to support artists.",
+            34 => "I believe laws should be flexible.",
+            35 => "I think that all will be well.",
+            36 => "I worry about things.",
+            37 => "I base my decisions on logic.",
+            38 => "I sympathize with others' feelings.",
+            39 => "I remain calm under pressure.",
+            40 => "I get stressed out easily.",
+            41 => "I rarely get irritated.",
+            42 => "I get upset easily.",
+            43 => "I keep my emotions under control.",
+            44 => "I have frequent mood swings.",
+            45 => "I am not easily bothered by things.",
+            46 => "I like to have everything under control.",
+            47 => "I prefer to leave my options open.",
+            48 => "I stick to my plans.",
+            49 => "I change my plans at the last minute.",
+            50 => "I like to organize events.",
+            51 => "I prefer spontaneous activities.",
+            52 => "I complete tasks successfully.",
+            53 => "I often forget to put things back in their proper place.",
+            54 => "I like to tidy up.",
+            55 => "I leave my belongings around.",
+            56 => "I follow a schedule.",
+            57 => "I act without thinking.",
+            58 => "I get things done quickly.",
+            59 => "I postpone decisions.",
+            60 => "I work hard."
+        ];
+    }
+
+    /**
+     * Select next question based on current responses
+     *
+     * @param  array  $currentResponses
+     * @param  array  $allQuestions
+     * @return int|null
+     */
+    private function selectNextQuestion($currentResponses, $allQuestions)
+    {
+        $askedQuestions = array_keys($currentResponses);
+        
+        // Simple strategy: ask questions from dimensions with least certainty
+        $dimensionCounts = [
+            'EI' => 0, // Questions 1-15
+            'SN' => 0, // Questions 16-30
+            'TF' => 0, // Questions 31-45
+            'JP' => 0  // Questions 46-60
+        ];
+        
+        foreach ($askedQuestions as $questionKey) {
+            $questionNum = (int) str_replace('q', '', $questionKey);
+            if ($questionNum <= 15) $dimensionCounts['EI']++;
+            elseif ($questionNum <= 30) $dimensionCounts['SN']++;
+            elseif ($questionNum <= 45) $dimensionCounts['TF']++;
+            else $dimensionCounts['JP']++;
+        }
+        
+        // Find dimension with least questions asked
+        $minDimension = array_keys($dimensionCounts, min($dimensionCounts))[0];
+        
+        // Select a random question from that dimension
+        $dimensionRanges = [
+            'EI' => [1, 15],
+            'SN' => [16, 30],
+            'TF' => [31, 45],
+            'JP' => [46, 60]
+        ];
+        
+        $range = $dimensionRanges[$minDimension];
+        $availableQuestions = [];
+        
+        for ($i = $range[0]; $i <= $range[1]; $i++) {
+            if (!in_array("q{$i}", $askedQuestions)) {
+                $availableQuestions[] = $i;
+            }
+        }
+        
+        return empty($availableQuestions) ? null : $availableQuestions[array_rand($availableQuestions)];
+    }
+
+    /**
+     * Calculate confidence based on current responses
+     *
+     * @param  array  $responses
+     * @return float
+     */
+    private function calculateConfidence($responses)
+    {
+        if (empty($responses)) return 0.0;
+        
+        // Simple confidence calculation based on response consistency
+        $dimensionScores = $this->calculateDimensionScores($responses);
+        
+        $confidences = [];
+        foreach ($dimensionScores as $dimension => $scores) {
+            $total = $scores['positive'] + $scores['negative'];
+            if ($total > 0) {
+                $ratio = max($scores['positive'], $scores['negative']) / $total;
+                $confidences[] = $ratio;
+            }
+        }
+        
+        return empty($confidences) ? 0.0 : array_sum($confidences) / count($confidences);
+    }
+
+    /**
+     * Calculate dimension scores from responses
+     *
+     * @param  array  $responses
+     * @return array
+     */
+    private function calculateDimensionScores($responses)
+    {
+        $scores = [
+            'EI' => ['positive' => 0, 'negative' => 0],
+            'SN' => ['positive' => 0, 'negative' => 0],
+            'TF' => ['positive' => 0, 'negative' => 0],
+            'JP' => ['positive' => 0, 'negative' => 0]
+        ];
+        
+        foreach ($responses as $questionKey => $response) {
+            $questionNum = (int) str_replace('q', '', $questionKey);
+            $score = (int) $response;
+            
+            if ($questionNum <= 15) {
+                // E/I dimension
+                if (in_array($questionNum, [2, 4, 6, 8, 10, 12, 14])) {
+                    $scores['EI']['negative'] += $score;
+                } else {
+                    $scores['EI']['positive'] += $score;
+                }
+            } elseif ($questionNum <= 30) {
+                // S/N dimension
+                if (in_array($questionNum, [17, 19, 21, 23, 25, 27, 29])) {
+                    $scores['SN']['negative'] += $score;
+                } else {
+                    $scores['SN']['positive'] += $score;
+                }
+            } elseif ($questionNum <= 45) {
+                // T/F dimension
+                if (in_array($questionNum, [32, 34, 36, 38, 40, 42, 44])) {
+                    $scores['TF']['negative'] += $score;
+                } else {
+                    $scores['TF']['positive'] += $score;
+                }
+            } else {
+                // J/P dimension
+                if (in_array($questionNum, [47, 49, 51, 53, 55, 57, 59])) {
+                    $scores['JP']['negative'] += $score;
+                } else {
+                    $scores['JP']['positive'] += $score;
+                }
+            }
+        }
+        
+        return $scores;
+    }
+
+    /**
+     * Calculate MBTI type from responses
+     *
+     * @param  array  $responses
+     * @return array
+     */
+    private function calculateMbtiTypeFromResponses($responses)
+    {
+        $scores = $this->calculateDimensionScores($responses);
+        
+        $type = '';
+        $type .= $scores['EI']['positive'] > $scores['EI']['negative'] ? 'E' : 'I';
+        $type .= $scores['SN']['positive'] > $scores['SN']['negative'] ? 'S' : 'N';
+        $type .= $scores['TF']['positive'] > $scores['TF']['negative'] ? 'T' : 'F';
+        $type .= $scores['JP']['positive'] > $scores['JP']['negative'] ? 'J' : 'P';
+        
+        return [
+            'type' => $type,
+            'scores' => $scores,
+            'dimensions' => [
+                'EI' => $scores['EI']['positive'] > $scores['EI']['negative'] ? 'E' : 'I',
+                'SN' => $scores['SN']['positive'] > $scores['SN']['negative'] ? 'S' : 'N',
+                'TF' => $scores['TF']['positive'] > $scores['TF']['negative'] ? 'T' : 'F',
+                'JP' => $scores['JP']['positive'] > $scores['JP']['negative'] ? 'J' : 'P'
+            ]
+        ];
+    }
+
+    /**
+     * Display the adaptive MBTI assessment form
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showAdaptiveAssessment()
+    {
+        return view('pathfinder.mbti-adaptive');
+    }
+
+    /**
+     * Process the adaptive MBTI assessment results
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function processAdaptiveAssessment(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'results' => 'required|array',
+            'session_data' => 'required|array'
+        ]);
+
+        $results = $request->input('results');
+        $sessionData = $request->input('session_data');
+
+        try {
+            // Get or create user
+            $user = Auth::user();
+            if (!$user) {
+                // For guest users, we'll still process but won't save to database
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Assessment completed successfully',
+                    'guest_mode' => true
+                ]);
+            }
+
+            // Create test session record
+            $testSession = MbtiTestSession::create([
+                'user_id' => $user->id,
+                'session_type' => 'adaptive',
+                'questions_asked' => $sessionData['questionsAsked'] ?? [],
+                'responses' => $sessionData['responses'] ?? [],
+                'rl_predictions' => $sessionData['rlPredictions'] ?? [],
+                'final_result' => $results,
+                'questions_used' => $results['questionsUsed'] ?? 0,
+                'efficiency' => $results['efficiency'] ?? 0,
+                'confidence' => $results['confidence'] ?? 0,
+                'completed_at' => now()
+            ]);
+
+            // Update user's MBTI type and related data
+            $user->update([
+                'mbti_type' => $results['primary']['type'] ?? null,
+                'mbti_confidence' => $results['confidence'] ?? 0,
+                'mbti_assessment_date' => now(),
+                'questionnaire_answers' => json_encode($sessionData['responses'] ?? [])
+            ]);
+
+            // Update user progress
+            UserProgress::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'mbti_completed' => true,
+                    'mbti_type' => $results['primary']['type'] ?? null,
+                    'mbti_confidence' => $results['confidence'] ?? 0,
+                    'assessment_efficiency' => $results['efficiency'] ?? 0,
+                    'questions_answered' => $results['questionsUsed'] ?? 0,
+                    'updated_at' => now()
+                ]
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Assessment completed and saved successfully',
+                'session_id' => $testSession->id,
+                'redirect_url' => route('pathfinder.mbti.results')
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Adaptive MBTI assessment processing failed: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save assessment results',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Process the MBTI questionnaire submission
      *
      * @param  \Illuminate\Http\Request  $request

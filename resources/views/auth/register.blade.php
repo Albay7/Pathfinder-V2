@@ -1,117 +1,251 @@
-@extends('pathfinder.layout')
-
-@section('title', 'Register - Pathfinder')
-
-@section('content')
-<!-- Header Section -->
-<div class="bg-gradient-to-br from-green-600 to-emerald-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                Join Pathfinder
-            </h1>
-            <p class="text-xl text-green-100 max-w-3xl mx-auto">
-                Create your account and start your career development journey today
-            </p>
-        </div>
-    </div>
-</div>
-
-<!-- Register Form Section -->
-<div class="py-16 bg-gray-50">
-    <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-            <div class="text-center mb-8">
-                <div class="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mx-auto mb-4">
-                    <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Pathfinder Career Guidance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'blue-zodiac': '#13264D',
+                        'tiara': '#BEC0BF',
+                        'fountain-blue': '#5AA7C6'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="{{ asset('js/page-transitions.js') }}"></script>
+</head>
+<body class="h-screen bg-white flex flex-col min-w-[1024px]">
+    <!-- Navigation Header -->
+    <nav class="bg-white border-b border-gray-200 px-8 py-4">
+        <div class="flex justify-between items-center max-w-7xl mx-auto">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-fountain-blue rounded flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                     </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                    Create Account
-                </h2>
-                <p class="text-gray-600">
-                    Fill in your details to get started
-                </p>
+                <h2 class="text-xl font-bold text-gray-900">Pathfinder</h2>
             </div>
-            
-            <form method="POST" action="{{ route('register') }}" class="space-y-6">
-                @csrf
-                
-                <!-- Name -->
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name
-                    </label>
-                    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" 
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 @error('name') border-red-500 @enderror">
-                    @error('name')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="{{ route('pathfinder.index') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">Home</a>
+                <a href="{{ route('pathfinder.career-guidance') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">Career Guidance</a>
+                <a href="{{ route('pathfinder.career-path') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">Career Path</a>
+                <a href="{{ route('pathfinder.skill-gap') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">Skill Gap</a>
+                <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="text-gray-600 hover:text-blue-zodiac text-sm font-medium transition-colors duration-200">MBTI Assessment</a>
+                <a href="{{ route('login') }}" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-zodiac hover:text-white transition-all duration-200 hover:shadow-sm">Login</a>
+                <a href="#" class="bg-fountain-blue text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-zodiac transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex">
+        <!-- Left Panel -->
+        <div class="w-1/2 bg-gradient-to-br from-blue-zodiac to-fountain-blue flex items-center justify-center p-12">
+            <div class="max-w-md text-center text-white">
+                <!-- Icon -->
+                <div class="mx-auto w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center mb-8">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
                 </div>
-                
-                <!-- Email Address -->
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address
-                    </label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username" 
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 @error('email') border-red-500 @enderror">
-                    @error('email')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <!-- Password -->
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Password
-                    </label>
-                    <input id="password" type="password" name="password" required autocomplete="new-password" 
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 @error('password') border-red-500 @enderror">
-                    @error('password')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <!-- Confirm Password -->
-                <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                        Confirm Password
-                    </label>
-                    <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" 
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 @error('password_confirmation') border-red-500 @enderror">
-                    @error('password_confirmation')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <!-- Terms and Conditions -->
-                <div class="bg-green-50 rounded-lg p-4">
-                    <p class="text-sm text-green-800">
-                        <svg class="inline h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        By creating an account, you agree to our terms of service and privacy policy.
-                    </p>
-                </div>
-                
-                <!-- Submit Button -->
-                <button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
-                    Create Account
-                </button>
-            </form>
-            
-            <!-- Login Link -->
-            <div class="mt-6 text-center">
-                <p class="text-gray-600">
-                    Already have an account?
-                    <a href="{{ route('login') }}" class="text-green-600 hover:text-green-500 font-medium transition-colors duration-200">
-                        Sign in here
-                    </a>
+
+                <!-- Main Heading -->
+                <h1 class="text-4xl font-bold mb-4">Welcome to Pathfinder</h1>
+                <h2 class="text-2xl font-semibold mb-6 text-white/90">Start Your Career Journey</h2>
+                <p class="text-lg text-white/80 mb-12 leading-relaxed">
+                    Join thousands of professionals who have discovered their path with Pathfinder. Get personalized career guidance and unlock your potential.
                 </p>
+
+                <!-- Feature Cards -->
+                <div class="grid grid-cols-3 gap-4">
+                    <!-- Personalized Guidance -->
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/20 transition-all duration-300 hover:scale-105 cursor-pointer">
+                        <div class="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center mx-auto mb-3 hover:bg-pink-400 transition-colors duration-200">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V9M15 11.5C15.8 11.5 16.5 12.2 16.5 13S15.8 14.5 15 14.5 13.5 13.8 13.5 13 14.2 11.5 15 11.5M5 7V9L11 8.5V7L5 7ZM11 11.5C11.8 11.5 12.5 12.2 12.5 13S11.8 14.5 11 14.5 9.5 13.8 9.5 13 10.2 11.5 11 11.5M12 15C12 16.66 10.66 18 9 18S6 16.66 6 15H12ZM18 15C18 16.66 16.66 18 15 18S12 16.66 12 15H18Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-semibold mb-1">Personalized</h3>
+                        <p class="text-sm text-white/70">Guidance</p>
+                    </div>
+
+                    <!-- Skills Assessment -->
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/20 transition-all duration-300 hover:scale-105 cursor-pointer">
+                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3 hover:bg-blue-400 transition-colors duration-200">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-semibold mb-1">Skills Assessment</h3>
+                        <p class="text-sm text-white/70">Evaluation</p>
+                    </div>
+
+                    <!-- Career Mapping -->
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/20 transition-all duration-300 hover:scale-105 cursor-pointer">
+                        <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mx-auto mb-3 hover:bg-teal-400 transition-colors duration-200">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.5 3L20.34 3.03L15 5.1L9 3L3.36 4.9C3.15 4.97 3 5.15 3 5.38V20.5C3 20.78 3.22 21 3.5 21L3.66 20.97L9 18.9L15 21L20.64 19.1C20.85 19.03 21 18.85 21 18.62V3.5C21 3.22 20.78 3 20.5 3ZM10 5.47L14 6.87V18.53L10 17.13V5.47ZM5 6.46L8 5.45V17.15L5 18.31V6.46ZM19 17.54L16 18.55V6.86L19 5.7V17.54Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-semibold mb-1">Career Mapping</h3>
+                        <p class="text-sm text-white/70">Planning</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Registration Form -->
+        <div class="w-1/2 bg-blue-50 flex items-center justify-center p-8">
+            <div class="w-full max-w-md">
+                <!-- Register Card -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Create Account</h2>
+                        <p class="text-gray-600">Start your personalized career guidance journey</p>
+                    </div>
+
+                    <!-- Register Form -->
+                    <form method="POST" action="{{ route('register') }}" class="space-y-6">
+                        @csrf
+
+                        <!-- Name Fields Row -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- First Name -->
+                            <div>
+                                <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input
+                                    id="first_name"
+                                    type="text"
+                                    name="first_name"
+                                    value="{{ old('first_name') }}"
+                                    required
+                                    autocomplete="given-name"
+                                    autofocus
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md hover:shadow-lg focus:shadow-xl focus:ring-2 focus:ring-fountain-blue focus:border-fountain-blue transition-all duration-300 bg-white"
+                                    placeholder="First Name"
+                                >
+                                @error('first_name')
+                                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <!-- Last Name -->
+                            <div>
+                                <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input
+                                    id="last_name"
+                                    type="text"
+                                    name="last_name"
+                                    value="{{ old('last_name') }}"
+                                    required
+                                    autocomplete="family-name"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md hover:shadow-lg focus:shadow-xl focus:ring-2 focus:ring-fountain-blue focus:border-fountain-blue transition-all duration-300 bg-white"
+                                    placeholder="Last Name"
+                                >
+                                @error('last_name')
+                                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input
+                                id="email"
+                                type="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                required
+                                autocomplete="email"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md hover:shadow-lg focus:shadow-xl focus:ring-2 focus:ring-fountain-blue focus:border-fountain-blue transition-all duration-300 bg-white"
+                                placeholder="Email Address"
+                            >
+                            @error('email')
+                                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Password Field -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <input
+                                id="password"
+                                type="password"
+                                name="password"
+                                required
+                                autocomplete="new-password"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md hover:shadow-lg focus:shadow-xl focus:ring-2 focus:ring-fountain-blue focus:border-fountain-blue transition-all duration-300 bg-white"
+                                placeholder="Password"
+                            >
+                            @error('password')
+                                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Confirm Password Field -->
+                        <div>
+                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                            <input
+                                id="password_confirmation"
+                                type="password"
+                                name="password_confirmation"
+                                required
+                                autocomplete="new-password"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md hover:shadow-lg focus:shadow-xl focus:ring-2 focus:ring-fountain-blue focus:border-fountain-blue transition-all duration-300 bg-white"
+                                placeholder="Confirm Password"
+                            >
+                            @error('password_confirmation')
+                                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="flex items-start space-x-3">
+                            <input
+                                type="checkbox"
+                                id="agreeTerms"
+                                name="terms"
+                                class="w-4 h-4 text-fountain-blue bg-gray-100 border-gray-300 rounded focus:ring-fountain-blue focus:ring-2 mt-1"
+                                required
+                            >
+                            <label for="agreeTerms" class="text-sm text-gray-600 leading-tight">
+                                I agree to the
+                                <a href="#" class="text-fountain-blue hover:text-blue-zodiac transition-colors">Terms and Conditions</a>
+                            </label>
+                        </div>
+
+                        <!-- Create Account Button -->
+                        <button
+                            type="submit"
+                            class="w-full bg-fountain-blue text-white py-3 px-4 rounded-lg font-medium shadow-lg hover:shadow-xl hover:bg-blue-600 focus:ring-4 focus:ring-fountain-blue/30 transform hover:-translate-y-0.5 transition-all duration-200"
+                        >
+                            Create Account
+                        </button>
+                    </form>
+
+                    <!-- Login Link -->
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600">
+                            Already have an account?
+                            <a href="{{ route('login') }}" class="text-fountain-blue hover:text-blue-zodiac font-medium transition-colors">
+                                Sign in here
+                            </a>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</body>
+</html>

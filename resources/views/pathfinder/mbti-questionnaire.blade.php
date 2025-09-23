@@ -10,9 +10,39 @@
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
                 MBTI Personality Assessment
             </h1>
-            <p class="text-xl text-purple-100 max-w-3xl mx-auto">
-                Discover your personality type through this comprehensive 60-question assessment based on the Myers-Briggs Type Indicator.
+            <p class="text-xl text-purple-100 max-w-3xl mx-auto mb-6">
+                Discover your personality type through this comprehensive assessment based on the Myers-Briggs Type Indicator.
             </p>
+            
+            <!-- Assessment Mode Toggle -->
+            <div class="flex justify-center items-center space-x-4 mb-6">
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="assessment-mode" value="standard" class="sr-only" checked>
+                            <div class="mode-option bg-white/30 hover:bg-white/40 px-4 py-2 rounded-lg transition-all duration-200 border-2 border-transparent">
+                                <span class="text-white font-medium">📝 Standard (60 questions)</span>
+                            </div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="assessment-mode" value="adaptive" class="sr-only">
+                            <div class="mode-option bg-white/30 hover:bg-white/40 px-4 py-2 rounded-lg transition-all duration-200 border-2 border-transparent">
+                                <span class="text-white font-medium">🧠 Smart Adaptive (8-15 questions)</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mode Description -->
+            <div id="mode-description" class="max-w-2xl mx-auto">
+                <div id="standard-description" class="text-purple-100">
+                    Complete all 60 questions for a comprehensive personality analysis
+                </div>
+                <div id="adaptive-description" class="text-purple-100 hidden">
+                    AI-powered assessment that adapts to your responses and completes in 8-15 questions while maintaining accuracy
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -274,7 +304,7 @@
                 currentPage--;
                 showPage(currentPage);
                 updateProgress();
-                updateNavigationButtons();
+                updateNavigationButtons(); // Update buttons when going back
             }
         });
 
@@ -284,9 +314,32 @@
                 currentPage++;
                 showPage(currentPage);
                 updateProgress();
-                updateNavigationButtons();
+                updateNavigationButtons(); // Check for early completion after each page
             }
         });
+
+        // Call updateNavigationButtons after each page change to check for early completion
+        function nextPage() {
+            if (validateCurrentPage()) {
+                saveCurrentPageResponses();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                    updateProgress();
+                    updateNavigationButtons(); // Check for early completion after each page
+                }
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                saveCurrentPageResponses();
+                currentPage--;
+                showPage(currentPage);
+                updateProgress();
+                updateNavigationButtons(); // Update buttons when going back
+            }
+        }
 
         // Form submission
         document.getElementById('mbti-questionnaire-form').addEventListener('submit', function(e) {
@@ -443,14 +496,448 @@
             
             prevBtn.disabled = currentPage === 1;
             
-            if (currentPage === totalPages) {
+            // Check if we can complete early in standard mode
+            const canCompleteEarly = checkEarlyCompletion();
+            
+            if (currentPage === totalPages || canCompleteEarly) {
                 nextBtn.style.display = 'none';
                 submitBtn.style.display = 'block';
+                
+                // Update submit button text if completing early
+                if (canCompleteEarly && currentPage < totalPages) {
+                    submitBtn.textContent = 'Complete Assessment (Early)';
+                    submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                    submitBtn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+                } else {
+                    submitBtn.textContent = 'Complete Assessment';
+                    submitBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    submitBtn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+                }
             } else {
                 nextBtn.style.display = 'block';
                 submitBtn.style.display = 'none';
             }
         }
+
+        function checkEarlyCompletion() {
+            // Only allow early completion in standard mode and after at least 30 questions
+            if (adaptiveMode || Object.keys(responses).length < 30) {
+                return false;
+            }
+
+            // Calculate confidence for each dimension
+            const dimensions = {
+                'E': { questions: [1, 5, 9, 13, 17, 21, 25, 29, 33, 37, 41, 45, 49, 53, 57], score: 0, count: 0 },
+                'S': { questions: [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 54, 58], score: 0, count: 0 },
+                'T': { questions: [3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47, 51, 55, 59], score: 0, count: 0 },
+                'J': { questions: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60], score: 0, count: 0 }
+            };
+
+            // Calculate scores for answered questions
+            Object.keys(responses).forEach(questionKey => {
+                const questionNum = parseInt(questionKey.replace('q', ''));
+                const value = responses[questionKey];
+
+                Object.keys(dimensions).forEach(dim => {
+                    if (dimensions[dim].questions.includes(questionNum)) {
+                        dimensions[dim].score += value;
+                        dimensions[dim].count++;
+                    }
+                });
+            });
+
+            // Check if we have enough confidence (at least 8 questions per dimension with clear preference)
+            let confidenceMet = 0;
+            Object.keys(dimensions).forEach(dim => {
+                const dimension = dimensions[dim];
+                if (dimension.count >= 8) {
+                    const average = dimension.score / dimension.count;
+                    // Clear preference if average is significantly above or below neutral (4)
+                    if (Math.abs(average - 4) >= 1.5) {
+                        confidenceMet++;
+                    }
+                }
+            });
+
+            // Allow early completion if at least 3 out of 4 dimensions show clear preference
+            return confidenceMet >= 3;
+        }
     });
+
+    // Assessment Mode Toggle Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const modeRadios = document.querySelectorAll('input[name="assessment-mode"]');
+        const standardDesc = document.getElementById('standard-description');
+        const adaptiveDesc = document.getElementById('adaptive-description');
+        
+        // Handle mode toggle styling
+        modeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Update visual selection
+                document.querySelectorAll('.mode-option').forEach(option => {
+                    option.classList.remove('border-white', 'bg-white/50');
+                    option.classList.add('border-transparent', 'bg-white/30');
+                });
+                
+                const selectedOption = this.parentElement.querySelector('.mode-option');
+                selectedOption.classList.remove('border-transparent', 'bg-white/30');
+                selectedOption.classList.add('border-white', 'bg-white/50');
+                
+                // Update description
+                if (this.value === 'adaptive') {
+                    standardDesc.classList.add('hidden');
+                    adaptiveDesc.classList.remove('hidden');
+                } else {
+                    adaptiveDesc.classList.add('hidden');
+                    standardDesc.classList.remove('hidden');
+                }
+            });
+        });
+        
+        // Set initial state
+        const standardRadio = document.querySelector('input[value="standard"]');
+        if (standardRadio.checked) {
+            const selectedOption = standardRadio.parentElement.querySelector('.mode-option');
+            selectedOption.classList.remove('border-transparent', 'bg-white/30');
+            selectedOption.classList.add('border-white', 'bg-white/50');
+        }
+    });
+</script>
+
+<!-- Include MBTI RL System Scripts (only loaded when adaptive mode is selected) -->
+<script src="{{ asset('js/mbti-tester.js') }}"></script>
+<script src="{{ asset('js/mbti-rl-agent.js') }}"></script>
+<script src="{{ asset('js/mbti-rl-enhanced.js') }}"></script>
+
+<script>
+// Adaptive Assessment Integration
+let rlSystem = null;
+let adaptiveMode = false;
+let adaptiveSession = null;
+
+// Initialize adaptive system when mode is selected
+document.addEventListener('change', function(e) {
+    if (e.target.name === 'assessment-mode') {
+        const newMode = e.target.value === 'adaptive';
+        
+        // If switching from adaptive back to standard, reset the UI
+        if (adaptiveMode && !newMode) {
+            resetToStandardMode();
+        }
+        
+        adaptiveMode = newMode;
+        
+        if (adaptiveMode && !rlSystem) {
+            initializeAdaptiveSystem();
+        }
+    }
+});
+
+function resetToStandardMode() {
+    // Reset adaptive session
+    adaptiveSession = null;
+    
+    // Show standard UI elements
+    const stepIndicator = document.querySelector('.step-indicator');
+    if (stepIndicator) {
+        stepIndicator.parentElement.style.display = 'flex';
+    }
+    
+    const progressBar = document.getElementById('progress-bar');
+    if (progressBar) {
+        progressBar.parentElement.style.display = 'block';
+    }
+    
+    // Remove adaptive question container if it exists
+    const questionContainer = document.getElementById('question-container');
+    if (questionContainer) {
+        questionContainer.remove();
+    }
+    
+    // Show standard question pages
+    const standardPages = document.querySelectorAll('.question-page');
+    standardPages.forEach(page => {
+        page.style.display = 'block';
+    });
+    
+    // Reset to current page or page 1 if no progress
+    const targetPage = currentPage > 0 ? currentPage : 1;
+    showPage(targetPage);
+    updateProgress();
+    updateNavigationButtons();
+    
+    // Force re-initialization of standard mode
+    setTimeout(() => {
+        startStandardAssessment();
+    }, 100);
+    
+    console.log('🔄 Switched back to standard mode');
+}
+
+async function initializeAdaptiveSystem() {
+    try {
+        console.log('🚀 Initializing Adaptive MBTI System...');
+        rlSystem = new MBTIRLEnhanced();
+        await rlSystem.trainAgent(50); // Quick training
+        console.log('✅ Adaptive system ready');
+    } catch (error) {
+        console.error('❌ Adaptive system initialization failed:', error);
+        // Fallback to standard mode
+        document.querySelector('input[value="standard"]').checked = true;
+        adaptiveMode = false;
+    }
+}
+
+// Override the standard assessment flow when adaptive mode is active
+function startStandardAssessment() {
+    // Show standard UI elements
+    const stepIndicators = document.querySelector('.step-indicator');
+    if (stepIndicators) {
+        stepIndicators.parentElement.style.display = 'flex';
+    }
+    
+    const progressBar = document.getElementById('progress-bar');
+    if (progressBar) {
+        progressBar.parentElement.style.display = 'block';
+    }
+    
+    // Initialize standard assessment
+    currentPage = 1;
+    showPage(currentPage);
+    updateProgress();
+    updateNavigationButtons();
+    
+    console.log('🎯 Standard assessment started');
+}
+
+const originalStartAssessment = window.startAssessment || startStandardAssessment;
+
+window.startAssessment = function() {
+    if (adaptiveMode && rlSystem) {
+        startAdaptiveAssessment();
+    } else {
+        startStandardAssessment();
+    }
+};
+
+function startAdaptiveAssessment() {
+    // Hide standard UI elements
+    document.querySelector('.step-indicator').style.display = 'none';
+    document.getElementById('progress-bar').parentElement.style.display = 'none';
+    
+    // Start adaptive session
+    adaptiveSession = rlSystem.startAdaptiveAssessment();
+    
+    // Show first adaptive question
+    showNextAdaptiveQuestion();
+}
+
+function showNextAdaptiveQuestion() {
+    const question = rlSystem.getNextQuestion();
+    
+    if (!question) {
+        // Assessment complete
+        completeAdaptiveAssessment();
+        return;
+    }
+    
+    // Update UI with adaptive question
+    updateAdaptiveQuestionUI(question);
+}
+
+function updateAdaptiveQuestionUI(question) {
+    // Create adaptive question display
+    const questionContainer = document.getElementById('question-container') || createAdaptiveQuestionContainer();
+    
+    questionContainer.innerHTML = `
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-medium text-gray-500">Question ${rlSystem.currentSession.responses.length + 1}</span>
+                    <span class="text-sm font-medium text-green-600">🧠 Adaptive Mode</span>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">${question.text}</h3>
+            </div>
+            
+            <div class="space-y-3">
+                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition-colors">
+                    <input type="radio" name="adaptive-response" value="1" class="sr-only">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                    <span class="text-gray-700">Strongly Disagree</span>
+                </label>
+                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition-colors">
+                    <input type="radio" name="adaptive-response" value="2" class="sr-only">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                    <span class="text-gray-700">Disagree</span>
+                </label>
+                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition-colors">
+                    <input type="radio" name="adaptive-response" value="3" class="sr-only">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                    <span class="text-gray-700">Slightly Disagree</span>
+                </label>
+                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition-colors">
+                    <input type="radio" name="adaptive-response" value="4" class="sr-only">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                    <span class="text-gray-700">Neutral</span>
+                </label>
+                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition-colors">
+                    <input type="radio" name="adaptive-response" value="5" class="sr-only">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                    <span class="text-gray-700">Slightly Agree</span>
+                </label>
+                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition-colors">
+                    <input type="radio" name="adaptive-response" value="6" class="sr-only">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                    <span class="text-gray-700">Agree</span>
+                </label>
+                <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition-colors">
+                    <input type="radio" name="adaptive-response" value="7" class="sr-only">
+                    <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3 flex-shrink-0"></div>
+                    <span class="text-gray-700">Strongly Agree</span>
+                </label>
+            </div>
+            
+            <div class="mt-8 flex justify-center">
+                <button id="adaptive-next-btn" class="px-8 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50" disabled>
+                    Next Question
+                </button>
+            </div>
+        </div>
+        
+        <!-- Confidence Indicators -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4">Assessment Progress</h4>
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-600">Extroversion/Introversion</span>
+                    <div class="w-32 bg-gray-200 rounded-full h-2">
+                        <div id="ei-confidence" class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-600">Sensing/Intuition</span>
+                    <div class="w-32 bg-gray-200 rounded-full h-2">
+                        <div id="sn-confidence" class="bg-green-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-600">Thinking/Feeling</span>
+                    <div class="w-32 bg-gray-200 rounded-full h-2">
+                        <div id="tf-confidence" class="bg-yellow-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-600">Judging/Perceiving</span>
+                    <div class="w-32 bg-gray-200 rounded-full h-2">
+                        <div id="jp-confidence" class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add event listeners for adaptive responses
+    setupAdaptiveResponseListeners();
+}
+
+function createAdaptiveQuestionContainer() {
+    const container = document.createElement('div');
+    container.id = 'question-container';
+    
+    // Hide standard questionnaire
+    const standardContent = document.querySelector('.max-w-4xl');
+    const assessmentArea = standardContent.querySelector('.mb-8').parentElement;
+    assessmentArea.style.display = 'none';
+    
+    // Insert adaptive container
+    standardContent.appendChild(container);
+    return container;
+}
+
+function setupAdaptiveResponseListeners() {
+    const responseInputs = document.querySelectorAll('input[name="adaptive-response"]');
+    const nextBtn = document.getElementById('adaptive-next-btn');
+    
+    responseInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            // Update visual selection
+            document.querySelectorAll('label').forEach(label => {
+                const radio = label.querySelector('input[name="adaptive-response"]');
+                const dot = label.querySelector('.w-4.h-4');
+                if (radio && dot) {
+                    if (radio.checked) {
+                        dot.classList.add('bg-purple-600', 'border-purple-600');
+                        dot.classList.remove('border-gray-300');
+                        label.classList.add('border-purple-500', 'bg-purple-50');
+                        label.classList.remove('border-gray-200');
+                    } else {
+                        dot.classList.remove('bg-purple-600', 'border-purple-600');
+                        dot.classList.add('border-gray-300');
+                        label.classList.remove('border-purple-500', 'bg-purple-50');
+                        label.classList.add('border-gray-200');
+                    }
+                }
+            });
+            
+            nextBtn.disabled = false;
+        });
+    });
+    
+    nextBtn.addEventListener('click', function() {
+        const selectedResponse = document.querySelector('input[name="adaptive-response"]:checked');
+        if (selectedResponse) {
+            const response = parseInt(selectedResponse.value);
+            rlSystem.recordResponse(response);
+            
+            // Update confidence indicators
+            updateConfidenceIndicators();
+            
+            // Show next question or complete
+            setTimeout(() => {
+                showNextAdaptiveQuestion();
+            }, 300);
+        }
+    });
+}
+
+function updateConfidenceIndicators() {
+    const confidenceScores = rlSystem.rlAgent.confidence_scores;
+    
+    Object.entries(confidenceScores).forEach(([dimension, confidence]) => {
+        const element = document.getElementById(`${dimension.toLowerCase()}-confidence`);
+        if (element) {
+            const percentage = Math.round(confidence * 100);
+            element.style.width = `${percentage}%`;
+        }
+    });
+}
+
+function completeAdaptiveAssessment() {
+    const results = rlSystem.completeAssessment();
+    
+    if (results) {
+        // Redirect to results page with adaptive results
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("pathfinder.mbti-questionnaire.process") }}';
+        
+        // Add CSRF token
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        form.appendChild(csrfInput);
+        
+        // Add adaptive results
+        const resultsInput = document.createElement('input');
+        resultsInput.type = 'hidden';
+        resultsInput.name = 'adaptive_results';
+        resultsInput.value = JSON.stringify(results);
+        form.appendChild(resultsInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
 </script>
 @endpush
