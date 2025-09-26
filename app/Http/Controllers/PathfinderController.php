@@ -32,9 +32,16 @@ class PathfinderController extends Controller
     {
         $answers = $request->all();
         $type = $request->get('type');
+        $selectedCategory = $request->get('selected_category');
+        $allResponses = $request->get('all_responses');
 
-        // Mock recommendation logic
-        $recommendation = $this->generateRecommendation($answers, $type);
+        // Parse the responses if they're JSON
+        if (is_string($allResponses)) {
+            $allResponses = json_decode($allResponses, true);
+        }
+
+        // Generate recommendation based on actual questionnaire data
+        $recommendation = $this->generateRecommendationFromResponses($selectedCategory, $allResponses, $type);
 
         // Save progress if user is authenticated
         if (Auth::check()) {
@@ -43,12 +50,14 @@ class PathfinderController extends Controller
                 'feature_type' => 'career_guidance',
                 'assessment_type' => $type,
                 'questionnaire_answers' => $answers,
+                'selected_category' => $selectedCategory,
+                'calculated_scores' => $allResponses,
                 'recommendation' => $recommendation,
                 'completed' => true
             ]);
         }
 
-        return view('pathfinder.recommendation', compact('recommendation', 'type'));
+        return view('pathfinder.recommendation', compact('recommendation', 'type', 'selectedCategory', 'allResponses'));
     }
 
     // Career Path Visualizer Methods
@@ -207,24 +216,75 @@ class PathfinderController extends Controller
     }
     
     // Helper Methods
-    private function generateRecommendation($answers, $type)
+    private function generateRecommendationFromResponses($selectedCategory, $allResponses, $type)
     {
-        // Get user's MBTI type if available
-        $mbtiType = null;
-        $mbtiWeight = 0.2; // 20% weight for MBTI factor
-        
-        if (Auth::check()) {
-            $user = Auth::user();
-            if (!empty($user->mbti_type)) {
-                $mbtiType = $user->mbti_type;
-            }
-        }
-        
         if ($type === 'course') {
-            return $this->generateCourseRecommendation($answers, $mbtiType, $mbtiWeight);
+            return $this->generateCourseRecommendationFromScores($selectedCategory, $allResponses);
         } else {
-            return $this->generateJobRecommendation($answers, $mbtiType, $mbtiWeight);
+            return $this->generateJobRecommendationFromScores($selectedCategory, $allResponses);
         }
+    }
+
+    private function generateCourseRecommendationFromScores($selectedCategory, $allResponses)
+    {
+        // Get course scores from the responses
+        $courseScores = $allResponses['courseScores'] ?? [];
+        
+        if (empty($courseScores)) {
+            // Fallback to category-based recommendation
+            return $this->getCategoryFallbackCourse($selectedCategory);
+        }
+
+        // Find the highest scoring course
+        $topCourse = array_keys($courseScores, max($courseScores))[0];
+        return $topCourse;
+    }
+
+    private function generateJobRecommendationFromScores($selectedCategory, $allResponses)
+    {
+        // Get job scores from the responses
+        $jobScores = $allResponses['jobScores'] ?? [];
+        
+        if (empty($jobScores)) {
+            // Fallback to category-based recommendation
+            return $this->getCategoryFallbackJob($selectedCategory);
+        }
+
+        // Find the highest scoring job
+        $topJob = array_keys($jobScores, max($jobScores))[0];
+        return $topJob;
+    }
+
+    private function getCategoryFallbackCourse($category)
+    {
+        $categoryDefaults = [
+            'business' => 'Bachelor of Science in Business Administration',
+            'healthcare' => 'Bachelor of Science in Nursing',
+            'technology' => 'Bachelor of Science in Computer Science',
+            'creative' => 'Bachelor of Arts in Communication',
+            'education' => 'Bachelor of Elementary Education',
+            'engineering' => 'Bachelor of Science in Civil Engineering',
+            'law' => 'Bachelor of Laws (LLB)',
+            'tourism' => 'Bachelor of Science in Tourism Management'
+        ];
+
+        return $categoryDefaults[$category] ?? 'Bachelor of Science in Business Administration';
+    }
+
+    private function getCategoryFallbackJob($category)
+    {
+        $categoryDefaults = [
+            'business' => 'Business Analyst',
+            'healthcare' => 'Registered Nurse',
+            'technology' => 'Software Developer',
+            'creative' => 'Graphic Designer',
+            'education' => 'Elementary Teacher',
+            'engineering' => 'Civil Engineer',
+            'law' => 'Legal Assistant',
+            'tourism' => 'Tourism Coordinator'
+        ];
+
+        return $categoryDefaults[$category] ?? 'Business Analyst';
     }
 
     private function generateCourseRecommendation($answers, $mbtiType = null, $mbtiWeight = 0.2)
@@ -723,5 +783,31 @@ class PathfinderController extends Controller
         ];
         
         return $recommendations[$mbtiType] ?? [];
+    }
+
+    public function submitQuestionnaire(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'session_id' => 'required|string',
+                'responses' => 'required|array',
+                'selected_category' => 'required|string'
+            ]);
+
+            // For now, return a simple success response
+            // This will be enhanced with the sectioned questionnaire logic
+            return response()->json([
+                'success' => true,
+                'message' => 'Questionnaire submitted successfully',
+                'skill_scores' => [],
+                'recommended_courses' => []
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'There was an error processing your questionnaire. Please try again.'
+            ], 500);
+        }
     }
 }

@@ -1,1706 +1,2978 @@
 @extends('pathfinder.layout')
 
-@section('title', 'Assessment Questionnaire - Pathfinder')
+@section('title', (request("type") === "job" ? "Job" : "Course") . ' Assessment - Pathfinder')
 
 @section('content')
 <!-- Header Section -->
-<div class="bg-gradient-to-br from-{{ $type === 'course' ? 'blue' : 'green' }}-600 to-{{ $type === 'course' ? 'indigo' : 'emerald' }}-700">
+<div class="bg-gradient-to-br from-{{ request('type') === 'job' ? 'green' : 'blue' }}-600 to-{{ request('type') === 'job' ? 'emerald' : 'indigo' }}-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                {{ $type === 'course' ? 'Course' : 'Job' }} Assessment
+                {{ request('type') === 'job' ? 'Job' : 'Course' }} Assessment
             </h1>
-            <p class="text-xl text-{{ $type === 'course' ? 'blue' : 'green' }}-100 max-w-3xl mx-auto">
-                Answer these questions to get personalized {{ $type === 'course' ? 'course' : 'job' }} recommendations tailored to your interests and goals.
+            <p class="text-xl text-{{ request('type') === 'job' ? 'green' : 'blue' }}-100 max-w-3xl mx-auto mb-6">
+                {{ request('type') === 'job' ? 'Answer a few questions to discover career opportunities that match your skills and interests.' : 'Answer a few questions to discover courses that match your interests and career goals.' }}
             </p>
         </div>
     </div>
 </div>
 
-<!-- Progress Bar -->
-<div class="bg-white border-b border-gray-200">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-medium text-gray-700">Progress</span>
-            <span class="text-sm font-medium text-gray-700"><span id="current-question">1</span> of <span id="total-questions">7</span></span>
-        </div>
-        <div class="w-full bg-gray-200 rounded-full h-2">
-            <div id="progress-bar" class="bg-{{ $type === 'course' ? 'blue' : 'green' }}-600 h-2 rounded-full transition-all duration-300" style="width: 12.5%"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Questionnaire Form -->
+<!-- Assessment Content -->
 <div class="py-16 bg-gray-50">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <form id="questionnaire-form" action="{{ route('pathfinder.questionnaire.process') }}" method="POST">
-            @csrf
-            <input type="hidden" name="type" value="{{ $type }}">
 
-            <div id="questions-container">
-                @if($type === 'course')
-                    <!-- Course Questions -->
-                    <div class="question-slide active" data-question="1">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What is your current education level?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_level" value="high_school" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">High School / Secondary Education</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_level" value="bachelor" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Bachelor's Degree</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_level" value="master" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Master's Degree</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_level" value="professional" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Professional Certification</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="2">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which field interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="engineering" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Engineering & Technology (Civil, Electrical, Computer, Mechanical)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="computer_science" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Computer Science & Information Technology</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="business" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Business Administration & Management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="education" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Education & Teaching</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="accounting" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Accounting & Finance</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="liberal_arts" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Liberal Arts & Communication</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="tourism" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Tourism & Management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="science" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Science & Research</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="field_interest" value="criminal_justice" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Criminal Justice Education</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="3">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What is your preferred learning style?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="learning_style" value="visual" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Visual (videos, diagrams, infographics)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="learning_style" value="hands_on" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Hands-on (practical exercises, projects)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="learning_style" value="reading" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Reading (books, articles, documentation)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="learning_style" value="interactive" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Interactive (discussions, group work)</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="4">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">How much time can you dedicate to learning per week?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="time_commitment" value="1-5" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">1-5 hours per week</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="time_commitment" value="6-10" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">6-10 hours per week</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="time_commitment" value="11-20" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">11-20 hours per week</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="time_commitment" value="20+" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">More than 20 hours per week</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Engineering & Technology Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="engineering" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which engineering discipline interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_discipline" value="civil" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Civil Engineering - Infrastructure, buildings, roads</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_discipline" value="electrical" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Electrical Engineering - Power systems, electronics</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_discipline" value="computer" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Computer Engineering - Hardware and software integration</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_discipline" value="mechanical" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Mechanical Engineering - Machines, manufacturing</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_discipline" value="industrial" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Industrial Engineering - Process optimization</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide field-specific" data-question="6" data-field="engineering" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of engineering work appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_work_type" value="design" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Design and planning new systems</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_work_type" value="construction" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Construction and implementation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_work_type" value="research" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Research and development</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_work_type" value="maintenance" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Maintenance and troubleshooting</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Computer Science & IT Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="computer_science" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which area of computer science interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="cs_specialization" value="software_development" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Software Development - Creating applications and systems</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="cs_specialization" value="web_development" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Web Development - Websites and web applications</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="cs_specialization" value="data_science" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Data Science - Analytics and machine learning</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="cs_specialization" value="cybersecurity" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Cybersecurity - Protecting systems and data</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="cs_specialization" value="it_systems" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">IT Systems - Network and infrastructure management</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide field-specific" data-question="6" data-field="computer_science" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What programming experience do you have?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="programming_experience" value="none" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">No programming experience</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="programming_experience" value="basic" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Basic programming (HTML, CSS, simple scripts)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="programming_experience" value="intermediate" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Intermediate (Python, Java, JavaScript)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="programming_experience" value="advanced" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Advanced programming and project experience</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Business Administration Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="business" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which business area interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_area" value="management" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">General Management - Leading teams and operations</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_area" value="marketing" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Marketing - Promoting products and services</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_area" value="finance" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Finance - Managing money and investments</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_area" value="entrepreneurship" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Entrepreneurship - Starting your own business</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_area" value="hr" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Human Resources - Managing people and talent</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide field-specific" data-question="6" data-field="business" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of business environment do you prefer?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_environment" value="corporate" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Large corporation with structured processes</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_environment" value="startup" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Startup with fast-paced, dynamic environment</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_environment" value="sme" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Small to medium enterprise</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_environment" value="consulting" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Consulting firm working with various clients</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Education Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="education" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which age group would you prefer to teach?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_level" value="early_childhood" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Early Childhood (Ages 3-6)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_level" value="elementary" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Elementary (Ages 6-12)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_level" value="secondary" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Secondary/High School (Ages 12-18)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_level" value="adult" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Adult Education and Training</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide field-specific" data-question="6" data-field="education" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What subject area would you like to specialize in?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_subject" value="general" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">General Education (All subjects)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_subject" value="mathematics" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Mathematics</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_subject" value="science" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Science (Biology, Chemistry, Physics)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_subject" value="english" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">English and Literature</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="teaching_subject" value="social_studies" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Social Studies and History</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Accounting & Finance Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="accounting" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which area of accounting/finance interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="accounting_area" value="public_accounting" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Public Accounting - Auditing and tax services</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="accounting_area" value="corporate_finance" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Corporate Finance - Company financial management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="accounting_area" value="investment" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Investment and Portfolio Management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="accounting_area" value="banking" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Banking and Financial Services</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide field-specific" data-question="6" data-field="accounting" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of financial work appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="financial_work" value="analysis" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Financial analysis and reporting</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="financial_work" value="planning" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Financial planning and budgeting</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="financial_work" value="compliance" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Compliance and regulatory work</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="financial_work" value="advisory" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Financial advisory and consulting</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Liberal Arts Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="liberal_arts" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which liberal arts area interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="liberal_arts_area" value="communication" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Communication - Media, journalism, public relations</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="liberal_arts_area" value="psychology" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Psychology - Understanding human behavior</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="liberal_arts_area" value="english" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">English - Literature, writing, language</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="liberal_arts_area" value="social_work" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Social Work - Helping communities and individuals</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide field-specific" data-question="6" data-field="liberal_arts" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of career in liberal arts appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="liberal_arts_career" value="media" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Media and journalism</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="liberal_arts_career" value="counseling" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Counseling and therapy</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="liberal_arts_career" value="writing" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Writing and content creation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="liberal_arts_career" value="research" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Research and academia</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tourism & Management Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="tourism" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which area of tourism and management interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_area" value="hospitality" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Hospitality Management - Hotels, resorts, restaurants</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_area" value="travel_tourism" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Travel and Tourism - Tour operations, travel agencies</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_area" value="event_management" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Event Management - Conferences, weddings, corporate events</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_area" value="destination_marketing" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Destination Marketing - Promoting tourist destinations</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="tourism" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of tourism work environment appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_environment" value="luxury_resort" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Luxury resorts and high-end hotels</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_environment" value="adventure_tourism" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Adventure and eco-tourism</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_environment" value="cultural_heritage" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Cultural and heritage tourism</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_environment" value="business_travel" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Business travel and corporate events</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Science & Research Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="science" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which science field interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_field" value="biology" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Biology - Life sciences, genetics, ecology</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_field" value="chemistry" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Chemistry - Chemical research, pharmaceuticals</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_field" value="physics" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Physics - Physical sciences, technology applications</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_field" value="environmental" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Environmental Science - Conservation, sustainability</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_field" value="mathematics" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Mathematics - Applied mathematics, statistics</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="science" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of scientific work appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_work" value="laboratory_research" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Laboratory research and experimentation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_work" value="field_research" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Field research and data collection</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_work" value="teaching_academia" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Teaching and academic research</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="science_work" value="industry_application" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Industry applications and product development</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Criminal Justice Education Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="criminal_justice" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which area of criminal justice interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_area" value="law_enforcement" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Law Enforcement - Police work, investigation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_area" value="forensics" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Forensic Science - Crime scene investigation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_area" value="corrections" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Corrections - Prison management, rehabilitation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_area" value="legal_studies" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Legal Studies - Court systems, legal research</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_area" value="cybersecurity" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Cybersecurity - Digital crime prevention</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="criminal_justice" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of criminal justice work environment appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_environment" value="field_patrol" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Field work and patrol duties</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_environment" value="office_investigation" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Office-based investigation and analysis</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_environment" value="courtroom" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Courtroom and legal proceedings</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="criminal_justice_environment" value="community_outreach" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Community outreach and prevention programs</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Final Question for all paths -->
-                    <div class="question-slide" data-question="7">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What motivates you most in choosing a course?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="passion_interest" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Personal passion and genuine interest</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="job_prospects" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">High job demand and career prospects</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="salary_potential" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">High salary potential</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="family_influence" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Family expectations and influence</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="social_impact" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Opportunity to make a positive social impact</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="5">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which activities do you enjoy most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="preferred_activities" value="problem_solving" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Solving complex problems and puzzles</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="preferred_activities" value="building_creating" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Building, designing, or creating things</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="preferred_activities" value="helping_teaching" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Helping and teaching others</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="preferred_activities" value="analyzing_data" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Analyzing data and finding patterns</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="preferred_activities" value="leading_organizing" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Leading teams and organizing projects</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="6">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What are your strongest subjects in school?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="strong_subjects" value="math_science" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Mathematics and Science (Physics, Chemistry)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="strong_subjects" value="computer_tech" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Computer Science and Technology</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="strong_subjects" value="business_economics" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Business Studies and Economics</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="strong_subjects" value="languages_social" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Languages and Social Studies</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="strong_subjects" value="arts_humanities" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Arts and Humanities</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="7">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of career do you envision for yourself?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_vision" value="technical_specialist" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Technical specialist or engineer</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_vision" value="business_leader" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Business leader or entrepreneur</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_vision" value="educator_trainer" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Educator or trainer</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_vision" value="consultant_advisor" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Consultant or advisor</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_vision" value="researcher_analyst" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Researcher or analyst</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="8">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which DLSU Dasmariñas program area interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="dlsu_program_interest" value="ceat" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">College of Engineering, Architecture & Technology (CEAT)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="dlsu_program_interest" value="ccs" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">College of Computer Studies (CCS)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="dlsu_program_interest" value="cbaa" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">College of Business Administration & Accountancy (CBAA)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="dlsu_program_interest" value="coed" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">College of Education (COEd)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="dlsu_program_interest" value="cla" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">College of Liberal Arts (CLA)</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="9">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What motivates you most in choosing a course?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="passion_interest" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Personal passion and genuine interest</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="job_prospects" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">High job demand and career prospects</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="salary_potential" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">High salary potential</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="family_influence" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Family expectations and influence</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="course_motivation" value="social_impact" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Opportunity to make a positive social impact</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="10">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">How do you prefer to work on projects?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_preference" value="individual_focused" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Individual work with deep focus</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_preference" value="small_team" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Small team collaboration</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_preference" value="large_group" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Large group projects</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_preference" value="leadership_role" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Leading and coordinating others</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_preference" value="mentoring_teaching" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Mentoring and teaching others</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="11">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which skills would you like to develop most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="skill_development" value="technical_programming" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Technical and programming skills</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="skill_development" value="analytical_research" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Analytical and research skills</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="skill_development" value="communication_presentation" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Communication and presentation skills</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="skill_development" value="business_management" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Business and management skills</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="skill_development" value="creative_design" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Creative and design skills</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="12">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of work environment appeals to you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_environment_preference" value="corporate_office" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Corporate office environment</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_environment_preference" value="tech_startup" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Tech startup or innovation hub</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_environment_preference" value="educational_institution" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Educational institution or training center</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_environment_preference" value="field_construction" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Field work or construction sites</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_environment_preference" value="government_public" class="mr-4 text-blue-600">
-                                    <span class="text-gray-700">Government or public service</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <!-- Job Assessment Questions -->
-                    <div class="question-slide active" data-question="1">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What is your primary career goal?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_goal" value="entry_level" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Find my first professional job</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_goal" value="career_advancement" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Advance to a higher position</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_goal" value="career_change" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Switch to a different industry</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_goal" value="skill_development" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Develop new professional skills</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="career_goal" value="entrepreneurship" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Start my own business</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="2">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which industry offers the career opportunities you're seeking?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="technology" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Technology & Software Development</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="business" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Business & Management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="finance" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Finance & Banking</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="healthcare" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Healthcare & Medical</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="education" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Education & Training</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="marketing" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Marketing & Creative</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="engineering" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Engineering & Construction</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="government" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Government & Public Service</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_industry" value="tourism" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Tourism & Hospitality</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="3">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of work schedule do you prefer?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_schedule" value="standard" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Standard 9-5 weekday schedule</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_schedule" value="flexible" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Flexible hours with core time</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_schedule" value="shift_work" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Shift work (evenings, nights, weekends)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_schedule" value="project_based" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Project-based with varying hours</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="work_schedule" value="part_time" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Part-time or contract work</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-slide" data-question="4">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of responsibilities do you want in your job?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_responsibilities" value="technical_execution" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Technical execution and hands-on work</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_responsibilities" value="people_management" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Managing and leading people</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_responsibilities" value="strategic_planning" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Strategic planning and decision making</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_responsibilities" value="client_interaction" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Client interaction and relationship building</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_responsibilities" value="problem_solving" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Problem solving and troubleshooting</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Technology Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="technology" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which technology role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_role" value="frontend" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Frontend Developer - User interfaces and web design</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_role" value="backend" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Backend Developer - Server-side and databases</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_role" value="fullstack" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Full-Stack Developer - Complete web applications</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_role" value="mobile" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Mobile Developer - iOS/Android applications</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_role" value="data" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Data Scientist/Analyst - Data analysis and insights</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_role" value="cybersecurity" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Cybersecurity Specialist - Security and protection</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="technology" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of technology company appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_company" value="startup" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Tech startup - Fast-paced, innovative environment</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_company" value="big_tech" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Large tech company - Established, structured environment</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_company" value="consulting" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">IT consulting firm - Variety of client projects</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tech_company" value="freelance" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Freelance/Contract work - Flexible, independent</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Business Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="business" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which business role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_role" value="management" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">General Management - Leading teams and operations</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_role" value="operations" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Operations Manager - Process optimization</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_role" value="hr" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Human Resources - Talent management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_role" value="sales" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Sales Representative - Client acquisition</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="business_role" value="consultant" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Business Consultant - Strategic advisory</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="business" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What size company do you prefer?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="company_size" value="startup" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Startup (1-50 employees) - Dynamic, wear many hats</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="company_size" value="sme" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Small-Medium Enterprise (50-500 employees)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="company_size" value="large" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Large Corporation (500+ employees) - Structured, specialized roles</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="company_size" value="multinational" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Multinational Corporation - Global opportunities</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Finance Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="finance" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which finance role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_role" value="banking" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Banking - Loans, deposits, customer service</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_role" value="investment" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Investment Banking - Mergers, acquisitions, IPOs</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_role" value="accounting" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Accounting - Financial reporting, auditing</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_role" value="financial_planning" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Financial Planning - Personal wealth management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_role" value="insurance" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Insurance - Risk assessment and claims</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="finance" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of financial work appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_work_type" value="analysis" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Financial analysis and research</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_work_type" value="client_service" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Client service and relationship management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_work_type" value="trading" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Trading and investment management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="finance_work_type" value="compliance" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Compliance and regulatory work</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Healthcare Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="healthcare" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which healthcare role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_role" value="nursing" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Nursing - Direct patient care</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_role" value="medical_tech" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Medical Technology - Lab work, diagnostics</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_role" value="administration" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Healthcare Administration - Hospital management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_role" value="pharmacy" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Pharmacy - Medication management</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_role" value="therapy" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Therapy - Physical, occupational, speech</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="healthcare" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What healthcare setting appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_setting" value="hospital" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Hospital - Acute care, emergency situations</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_setting" value="clinic" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Clinic - Outpatient care, routine visits</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_setting" value="home_care" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Home Healthcare - In-home patient visits</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="healthcare_setting" value="research" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Research Facility - Medical research and trials</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Education Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="education" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which education role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_role" value="teacher" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Classroom Teacher - Direct instruction</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_role" value="administrator" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">School Administrator - Principal, vice-principal</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_role" value="counselor" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">School Counselor - Student guidance</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_role" value="trainer" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Corporate Trainer - Professional development</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_role" value="curriculum" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Curriculum Developer - Educational content creation</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="education" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What age group would you prefer to work with?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_age_group" value="early_childhood" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Early Childhood (Ages 3-6)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_age_group" value="elementary" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Elementary (Ages 6-12)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_age_group" value="secondary" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Secondary/High School (Ages 12-18)</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="education_age_group" value="adult" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Adult Education and Professional Training</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Marketing Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="marketing" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which marketing role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_role" value="digital" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Digital Marketing - Social media, online campaigns</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_role" value="content" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Content Marketing - Writing, video, creative content</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_role" value="brand" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Brand Management - Brand strategy and positioning</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_role" value="advertising" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Advertising - Campaign creation and media buying</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_role" value="market_research" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Market Research - Consumer insights and analytics</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="marketing" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of marketing work appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_work_type" value="creative" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Creative development - Design, copywriting, campaigns</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_work_type" value="analytical" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Data analysis - Metrics, ROI, performance tracking</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_work_type" value="strategic" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Strategic planning - Market positioning, growth strategies</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="marketing_work_type" value="execution" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Campaign execution - Implementation and coordination</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Engineering Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="engineering" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which engineering role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_job_role" value="civil" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Civil Engineer - Infrastructure, roads, buildings</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_job_role" value="mechanical" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Mechanical Engineer - Machines, manufacturing</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_job_role" value="electrical" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Electrical Engineer - Power systems, electronics</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_job_role" value="project_manager" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Project Manager - Construction project coordination</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_job_role" value="quality_control" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Quality Control Engineer - Standards and compliance</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="engineering" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of engineering work environment appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_work_environment" value="office_design" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Office-based design and planning</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_work_environment" value="field_construction" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Field work and construction sites</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_work_environment" value="manufacturing" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Manufacturing plants and facilities</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="engineering_work_environment" value="consulting" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Engineering consulting firm</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Government Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="government" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which government role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_role" value="civil_service" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Civil Service - Administrative and policy work</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_role" value="law_enforcement" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Law Enforcement - Police, investigation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_role" value="social_services" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Social Services - Community support programs</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_role" value="regulatory" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Regulatory Affairs - Compliance and oversight</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_role" value="public_health" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Public Health - Community health programs</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="government" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What level of government appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_level" value="local" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Local Government - City, municipal level</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_level" value="provincial" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Provincial Government - Regional administration</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_level" value="national" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">National Government - Federal departments</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="government_level" value="international" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">International Organizations - UN, NGOs</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Tourism Industry Specific Questions -->
-                    <div class="question-slide field-specific" data-question="5" data-field="tourism" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Which tourism role interests you most?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_role" value="hotel_management" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Hotel Management - Operations and guest services</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_role" value="tour_guide" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Tour Guide - Leading tours and experiences</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_role" value="travel_agent" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Travel Agent - Trip planning and booking</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_role" value="event_coordinator" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Event Coordinator - Conferences and special events</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_role" value="restaurant_manager" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Restaurant Manager - Food service operations</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="question-slide field-specific" data-question="6" data-field="tourism" style="display: none;">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What type of tourism environment appeals to you?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_environment" value="luxury_resort" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Luxury resorts and high-end hotels</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_environment" value="adventure_tourism" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Adventure and eco-tourism</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_environment" value="cultural_heritage" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Cultural and heritage tourism</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="tourism_job_environment" value="business_travel" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Business travel and corporate events</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Final Question for all job paths -->
-                    <div class="question-slide" data-question="7">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-6">What motivates you most in your career?</h2>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_motivation" value="financial" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Financial rewards and compensation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_motivation" value="impact" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Making a positive impact on society</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_motivation" value="creativity" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Creative expression and innovation</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_motivation" value="growth" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Personal and professional growth</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_motivation" value="stability" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Job security and stability</span>
-                                </label>
-                                <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 cursor-pointer transition-colors duration-200">
-                                    <input type="radio" name="job_motivation" value="work_life_balance" class="mr-4 text-green-600">
-                                    <span class="text-gray-700">Work-life balance and flexibility</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700">Progress</span>
+                <span class="text-sm font-medium text-gray-700" id="progress-text">Section 1 of 5</span>
             </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" id="progress-bar" style="width: 25%"></div>
+            </div>
+        </div>
+
+        <!-- Steps Indicator -->
+        <div class="flex justify-center mb-12">
+            <div class="flex space-x-2">
+                <div class="step-indicator active" data-step="1">1</div>
+                <div class="step-indicator" data-step="2">2</div>
+                <div class="step-indicator" data-step="3">3</div>
+                <div class="step-indicator" data-step="4">4</div>
+                <div class="step-indicator" data-step="5">5</div>
+            </div>
+        </div>
+
+        <!-- Questionnaire Form -->
+        <form id="course-questionnaire-form" action="{{ route('pathfinder.questionnaire.process') }}" method="POST" class="space-y-8">
+            @csrf
+            <input type="hidden" id="current-section" name="current_section" value="1">
+            <input type="hidden" id="selected-category" name="selected_category" value="">
+            <input type="hidden" id="all-responses" name="responses" value="">
+            <input type="hidden" name="type" value="{{ request('type', 'course') }}">
+
+            <!-- Questions will be dynamically generated by JavaScript -->
 
             <!-- Navigation Buttons -->
-            <div class="flex justify-between mt-8">
+            <div class="flex justify-between items-center mt-12">
                 <button type="button" id="prev-btn" class="px-6 py-3 bg-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                     Previous
                 </button>
-                <button type="button" id="next-btn" class="px-6 py-3 bg-{{ $type === 'course' ? 'blue' : 'green' }}-600 text-white font-medium rounded-lg hover:bg-{{ $type === 'course' ? 'blue' : 'green' }}-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <button type="button" id="next-btn" class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                     Next
                 </button>
-                <button type="submit" id="submit-btn" class="hidden px-6 py-3 bg-{{ $type === 'course' ? 'blue' : 'green' }}-600 text-white font-medium rounded-lg hover:bg-{{ $type === 'course' ? 'blue' : 'green' }}-700 transition-colors duration-200">
+                <button type="submit" id="submit-btn" class="hidden px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200">
                     Get Recommendations
                 </button>
             </div>
         </form>
+
+        <!-- Results Section (Hidden initially) -->
+        <div id="results-section" class="hidden mt-12">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Your Course Recommendations</h2>
+                <div id="results-content"></div>
+            </div>
+        </div>
     </div>
 </div>
+@endsection
+
+@push('styles')
+<style>
+    /* Question section styles */
+    .question-section {
+        display: none;
+    }
+
+    .question-section.active {
+        display: block;
+    }
+
+    /* Step indicators */
+    .step-indicator {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #e5e7eb;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .step-indicator.active {
+        background-color: #2563eb;
+        color: white;
+    }
+
+    .step-indicator.completed {
+        background-color: #10b981;
+        color: white;
+    }
+
+    /* Modern radio button styling */
+    .modern-radio-option {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+        background: white;
+    }
+
+    .modern-radio-option:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-color: #3b82f6;
+    }
+
+    input[type="radio"]:checked + .modern-radio-option {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border-color: #2563eb;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Category selection styles */
+    .category-option {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.3s ease;
+        border: 2px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 24px;
+        background: white;
+        text-align: center;
+    }
+
+    .category-option:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        border-color: #3b82f6;
+    }
+
+    input[type="radio"]:checked + .category-option {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border-color: #2563eb;
+        color: white;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.3);
+    }
+
+    input[type="radio"]:checked + .category-option .text-gray-600 {
+        color: rgba(255, 255, 255, 0.9);
+    }
+</style>
+@endpush
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const allQuestions = document.querySelectorAll('.question-slide');
-    const progressBar = document.getElementById('progress-bar');
-    const currentQuestionSpan = document.getElementById('current-question');
-    const totalQuestionsSpan = document.getElementById('total-questions');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const submitBtn = document.getElementById('submit-btn');
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentSection = 1;
+        let totalSections = 5;
+        const responses = {};
+        let selectedCategory = '';
+        let currentQuestions = [];
 
-    let currentQuestion = 1;
-    let selectedField = null;
-    let questionFlow = [1, 2, 3, 4]; // Base questions
-    let totalQuestions = 7; // Will be updated based on field selection
-
-    // Set initial total questions
-    totalQuestionsSpan.textContent = totalQuestions;
-
-    // Function to update progress
-    function updateProgress() {
-        const progress = (currentQuestion / totalQuestions) * 100;
-        progressBar.style.width = progress + '%';
-        currentQuestionSpan.textContent = currentQuestion;
-    }
-
-    // Function to determine question flow based on field selection
-    function updateQuestionFlow(fieldInterest) {
-        selectedField = fieldInterest;
-
-        // Reset all field-specific questions to hidden
-        document.querySelectorAll('.field-specific').forEach(q => {
-            q.style.display = 'none';
-            q.classList.remove('active');
-        });
-
-        // Update question flow: base questions (1-4) + field-specific (5-6) + final question (7)
-        questionFlow = [1, 2, 3, 4, 5, 6, 7];
-        totalQuestions = 7;
-        totalQuestionsSpan.textContent = totalQuestions;
-    }
-
-    // Function to show current question
-    function showQuestion(questionNumber) {
-        // Hide all questions first
-        allQuestions.forEach(question => {
-            question.classList.remove('active');
-            question.style.display = 'none';
-        });
-
-        // Show the appropriate question based on current flow
-        if (questionNumber <= 4) {
-            // Show base questions (1-4)
-            const targetQuestion = document.querySelector(`[data-question="${questionNumber}"]:not(.field-specific)`);
-            if (targetQuestion) {
-                targetQuestion.classList.add('active');
-                targetQuestion.style.display = 'block';
+        // Question database organized by category
+        const questionDatabase = {
+            business: {
+                section1: [
+                    { id: 1, text: "How comfortable are you with mathematical calculations and numerical analysis?", type: "rating", category: "Skill", focus: "Mathematical/Analytical Skills" },
+                    { id: 2, text: "How interested are you in analyzing financial statements and business performance metrics?", type: "rating", category: "Interest", focus: "Financial Analysis" },
+                    { id: 3, text: "How well can you communicate complex ideas clearly to different audiences?", type: "rating", category: "Skill", focus: "Communication Skills" },
+                    { id: 4, text: "How interested are you in leading teams and managing people?", type: "rating", category: "Interest", focus: "Leadership/Management" }
+                ],
+                section2: [
+                    { id: 5, text: "How comfortable are you with using technology and business software applications?", type: "rating", category: "Skill", focus: "Technology Skills" },
+                    { id: 6, text: "How interested are you in creating and developing new business ideas or products?", type: "rating", category: "Interest", focus: "Innovation/Entrepreneurship" },
+                    { id: 7, text: "How well do you understand basic accounting principles and bookkeeping?", type: "rating", category: "Knowledge", focus: "Accounting Knowledge" },
+                    { id: 8, text: "How interested are you in understanding consumer behavior and market trends?", type: "rating", category: "Interest", focus: "Marketing/Consumer Behavior" }
+                ],
+                section3: [
+                    { id: 9, text: "How comfortable are you with making decisions under pressure and uncertainty?", type: "rating", category: "Skill", focus: "Decision Making" },
+                    { id: 10, text: "How well do you understand economic principles and their business applications?", type: "rating", category: "Knowledge", focus: "Economics/Business Environment" },
+                    { id: 11, text: "How interested are you in managing budgets and financial planning?", type: "rating", category: "Interest", focus: "Financial Planning" },
+                    { id: 12, text: "How well can you organize and manage multiple tasks simultaneously?", type: "rating", category: "Skill", focus: "Organization/Time Management" }
+                ],
+                section4: [
+                    { id: 13, text: "How interested are you in understanding workplace policies and employee relations?", type: "rating", category: "Interest", focus: "Human Resources" },
+                    { id: 14, text: "How comfortable are you with analyzing data and identifying business patterns?", type: "rating", category: "Skill", focus: "Data Analysis" },
+                    { id: 15, text: "How well do you understand legal and regulatory aspects of business operations?", type: "rating", category: "Knowledge", focus: "Business Law/Compliance" },
+                    { id: 16, text: "How interested are you in optimizing business processes and operational efficiency?", type: "rating", category: "Interest", focus: "Operations Management" }
+                ]
+            },
+            technology: {
+                section1: [
+                    { id: 101, text: "How comfortable are you with programming fundamentals (e.g., Python/Java) and problem solving?", type: "rating", category: "Skill", focus: "Programming Fundamentals" },
+                    { id: 102, text: "How strong is your understanding of algorithms, data structures, and computational thinking?", type: "rating", category: "Skill", focus: "Algorithms & Data Structures" },
+                    { id: 103, text: "How comfortable are you with discrete math, logic, linear algebra, and probability?", type: "rating", category: "Skill", focus: "Mathematics for Computing" },
+                    { id: 104, text: "How comfortable are you with databases, SQL, and data modeling/normalization?", type: "rating", category: "Skill", focus: "Databases & SQL" }
+                ],
+                section2: [
+                    { id: 105, text: "How interested are you in web and mobile development (front-end/back-end, APIs, apps)?", type: "rating", category: "Interest", focus: "Web & Mobile Development" },
+                    { id: 106, text: "How familiar are you with software engineering lifecycle, Git, testing, and CI/CD?", type: "rating", category: "Skill", focus: "Software Engineering" },
+                    { id: 107, text: "How comfortable are you with operating systems, shell, virtualization, and sysadmin tasks?", type: "rating", category: "Skill", focus: "Operating Systems & SysAdmin" },
+                    { id: 108, text: "How comfortable are you with computer networks, routing/switching, and protocols?", type: "rating", category: "Skill", focus: "Computer Networks" }
+                ],
+                section3: [
+                    { id: 109, text: "How experienced are you with cloud platforms (AWS/Azure/GCP), scripting, and DevOps?", type: "rating", category: "Skill", focus: "Cloud & DevOps" },
+                    { id: 110, text: "How interested are you in cybersecurity (threats, defense, forensics, and policy)?", type: "rating", category: "Interest", focus: "Cybersecurity" },
+                    { id: 111, text: "How comfortable are you with statistics, data wrangling, visualization, and analytics?", type: "rating", category: "Skill", focus: "Data Analysis & Stats" },
+                    { id: 112, text: "How interested are you in machine learning and AI (models, training, evaluation)?", type: "rating", category: "Interest", focus: "Machine Learning & AI" }
+                ],
+                section4: [
+                    { id: 113, text: "How comfortable are you with hardware, digital logic, microcontrollers, and embedded systems?", type: "rating", category: "Skill", focus: "Hardware & Embedded" },
+                    { id: 114, text: "How interested are you in graphics, multimedia production, and game engines?", type: "rating", category: "Interest", focus: "Graphics, Multimedia & Games" },
+                    { id: 115, text: "How strong is your interest in UX/HCI, requirements analysis, and business process modeling?", type: "rating", category: "Interest", focus: "UX/HCI & Business Analysis" },
+                    { id: 116, text: "How comfortable are you with teamwork, communication, and managing projects (Agile/Scrum)?", type: "rating", category: "Skill", focus: "Teamwork & Project Management" }
+                ]
+            },
+            healthcare: {
+                section1: [
+                    { id: 201, text: "How comfortable are you with direct patient care, bedside procedures, and vital signs monitoring?", type: "rating", category: "Skill", focus: "Patient Care & Bedside Skills" },
+                    { id: 202, text: "How strong is your interest in laboratory diagnostics, specimen handling, and clinical analysis?", type: "rating", category: "Interest", focus: "Laboratory Diagnostics" },
+                    { id: 203, text: "How interested are you in pharmacology, medications, dosing, and medication safety?", type: "rating", category: "Interest", focus: "Pharmacology & Medication Management" },
+                    { id: 204, text: "How comfortable are you with anatomy, kinesiology, and rehabilitation exercise planning?", type: "rating", category: "Skill", focus: "Anatomy & Rehabilitation" }
+                ],
+                section2: [
+                    { id: 205, text: "How interested are you in medical imaging, radiation physics, and imaging procedures?", type: "rating", category: "Interest", focus: "Imaging & Radiologic Science" },
+                    { id: 206, text: "How comfortable are you with respiratory assessment, oxygen therapy, and ventilator management?", type: "rating", category: "Skill", focus: "Respiratory Care" },
+                    { id: 207, text: "How strong is your interest in epidemiology, community programs, and population health?", type: "rating", category: "Interest", focus: "Public Health & Epidemiology" },
+                    { id: 208, text: "How comfortable are you with chemistry/biochemistry, compounding, and laboratory calculations?", type: "rating", category: "Skill", focus: "Chemistry & Compounding" }
+                ],
+                section3: [
+                    { id: 209, text: "How comfortable are you with infection control, biosafety, and quality assurance procedures?", type: "rating", category: "Skill", focus: "Infection Control & QA" },
+                    { id: 210, text: "How interested are you in therapeutic exercise, manual therapy, and rehabilitation goals?", type: "rating", category: "Interest", focus: "Therapeutic Exercise" },
+                    { id: 211, text: "How comfortable are you with assistive technology, ADL retraining, and psychosocial support?", type: "rating", category: "Skill", focus: "Occupational Therapy & ADLs" },
+                    { id: 212, text: "How comfortable are you with emergency response, triage, and critical care protocols (BLS/ACLS)?", type: "rating", category: "Skill", focus: "Emergency & Critical Care" }
+                ],
+                section4: [
+                    { id: 213, text: "How strong is your communication, empathy, and patient education across diverse populations?", type: "rating", category: "Skill", focus: "Communication & Patient Education" },
+                    { id: 214, text: "How comfortable are you with health informatics, electronic records, and clinical documentation?", type: "rating", category: "Skill", focus: "Health Informatics & Documentation" },
+                    { id: 215, text: "How comfortable are you with statistics, research methods, and evidence-based practice?", type: "rating", category: "Skill", focus: "Research & Evidence-Based Practice" },
+                    { id: 216, text: "How strong is your understanding of ethics, regulations, and safety protocols in clinical settings?", type: "rating", category: "Knowledge", focus: "Ethics, Regulation & Safety" }
+                ]
+            },
+            creative: {
+                section1: [
+                    { id: 301, text: "How interested are you in analyzing and interpreting literary works, poetry, and written texts?", type: "rating", category: "Interest", focus: "Literary Analysis" },
+                    { id: 302, text: "How much do you enjoy studying historical events, cultures, and their impact on society?", type: "rating", category: "Interest", focus: "Historical Research" },
+                    { id: 303, text: "How interested are you in understanding human behavior, social dynamics, and psychological processes?", type: "rating", category: "Interest", focus: "Social Sciences" },
+                    { id: 304, text: "How much do you enjoy philosophical discussions, ethical debates, and exploring abstract concepts?", type: "rating", category: "Interest", focus: "Philosophy & Ethics" }
+                ],
+                section2: [
+                    { id: 305, text: "How confident are you in your writing skills for academic papers, essays, and research?", type: "rating", category: "Skill", focus: "Academic Writing" },
+                    { id: 306, text: "How strong are your critical thinking and analytical reasoning abilities?", type: "rating", category: "Skill", focus: "Critical Analysis" },
+                    { id: 307, text: "How comfortable are you with conducting research using various sources and methodologies?", type: "rating", category: "Skill", focus: "Research Methods" },
+                    { id: 308, text: "How effective are you at oral communication, presentations, and public speaking?", type: "rating", category: "Skill", focus: "Communication" }
+                ],
+                section3: [
+                    { id: 309, text: "How interested are you in studying different cultures, languages, and global perspectives?", type: "rating", category: "Interest", focus: "Cultural Studies" },
+                    { id: 310, text: "How much do you enjoy creative writing, storytelling, and artistic expression?", type: "rating", category: "Interest", focus: "Creative Expression" },
+                    { id: 311, text: "How interested are you in political systems, governance, and public policy analysis?", type: "rating", category: "Interest", focus: "Political Science" },
+                    { id: 312, text: "How much do you enjoy studying economics, market behavior, and financial systems?", type: "rating", category: "Interest", focus: "Economics" }
+                ],
+                section4: [
+                    { id: 313, text: "How interested are you in media studies, journalism, and mass communication?", type: "rating", category: "Interest", focus: "Media & Communication" },
+                    { id: 314, text: "How much do you enjoy studying art history, visual culture, and aesthetic theory?", type: "rating", category: "Interest", focus: "Art & Aesthetics" },
+                    { id: 315, text: "How interested are you in environmental studies and sustainability issues?", type: "rating", category: "Interest", focus: "Environmental Studies" },
+                    { id: 316, text: "How much do you enjoy interdisciplinary studies that combine multiple fields of knowledge?", type: "rating", category: "Interest", focus: "Interdisciplinary Studies" }
+                ]
+            },
+            education: {
+                section1: [
+                    { id: 401, text: "How confident are you in teaching language, reading comprehension, and writing to learners?", type: "rating", category: "Skill", focus: "Language/Communication Pedagogy" },
+                    { id: 402, text: "How strong is your interest and skill in mathematics problem-solving and explaining math concepts?", type: "rating", category: "Skill", focus: "Mathematics Pedagogy" },
+                    { id: 403, text: "How interested are you in scientific inquiry, experiments, and explaining natural phenomena?", type: "rating", category: "Interest", focus: "Science Pedagogy" },
+                    { id: 404, text: "How interested are you in civics, history, culture, and facilitating discussions on society?", type: "rating", category: "Interest", focus: "Social Studies Pedagogy" }
+                ],
+                section2: [
+                    { id: 405, text: "How patient and passionate are you about nurturing children ages 3–8 through play-based learning?", type: "rating", category: "Interest", focus: "Early Childhood Orientation" },
+                    { id: 406, text: "How confident are you in lesson planning, classroom management, and assessment strategies?", type: "rating", category: "Skill", focus: "General Pedagogy & Assessment" },
+                    { id: 407, text: "How comfortable are you with facilitating physical activities, sports coaching, and fitness instruction?", type: "rating", category: "Skill", focus: "Physical Education & Coaching" },
+                    { id: 408, text: "How skilled are you in practical, hands-on, and vocational skills (e.g., ICT, HELE/TLE, carpentry, cookery)?", type: "rating", category: "Skill", focus: "TLE/Vocational Orientation" }
+                ],
+                section3: [
+                    { id: 409, text: "How comfortable are you speaking in front of groups, facilitating discussions, and leading classes?", type: "rating", category: "Skill", focus: "Public Speaking & Facilitation" },
+                    { id: 410, text: "How strong is your interest in educational technology (LMS, multimedia lessons, basic coding/ICT)?", type: "rating", category: "Interest", focus: "EdTech Integration" },
+                    { id: 411, text: "How interested are you in child/adolescent psychology, differentiation, and inclusive practices?", type: "rating", category: "Knowledge", focus: "Learner Diversity & Inclusion" },
+                    { id: 412, text: "How comfortable are you with designing performance tasks, rubrics, and interpreting test results?", type: "rating", category: "Skill", focus: "Assessment Literacy" }
+                ],
+                section4: [
+                    { id: 413, text: "How much do you enjoy designing creative instructional materials (worksheets, visuals, manipulatives)?", type: "rating", category: "Interest", focus: "Instructional Design & Creativity" },
+                    { id: 414, text: "How interested are you in school-community engagement, service learning, and extracurricular advising?", type: "rating", category: "Interest", focus: "Advising & Community Engagement" },
+                    { id: 415, text: "How comfortable are you in basic classroom research (action research, data collection, reflection)?", type: "rating", category: "Knowledge", focus: "Action Research Orientation" },
+                    { id: 416, text: "How strong is your interest in mentorship, patience, and building positive classroom climate?", type: "rating", category: "Interest", focus: "Pastoral Care & Mentorship" }
+                ]
+            },
+            engineering: {
+                section1: [
+                    { id: 501, text: "How comfortable are you with mathematical modeling, calculus, and solving complex equations?", type: "rating", category: "Skill", focus: "Mathematical Foundations" },
+                    { id: 502, text: "How interested are you in designing and analyzing structures like buildings, bridges, and infrastructure?", type: "rating", category: "Interest", focus: "Structural Design" },
+                    { id: 503, text: "How skilled are you in programming, software development, and computer systems?", type: "rating", category: "Skill", focus: "Programming & Software" },
+                    { id: 504, text: "How interested are you in electrical circuits, power systems, and electronic devices?", type: "rating", category: "Interest", focus: "Electrical Systems" }
+                ],
+                section2: [
+                    { id: 505, text: "How comfortable are you with mechanical systems, thermodynamics, and machine design?", type: "rating", category: "Skill", focus: "Mechanical Systems" },
+                    { id: 506, text: "How interested are you in chemical processes, materials science, and industrial production?", type: "rating", category: "Interest", focus: "Chemical Processes" },
+                    { id: 507, text: "How skilled are you in using CAD software, 3D modeling, and technical drawing?", type: "rating", category: "Skill", focus: "Design & Modeling" },
+                    { id: 508, text: "How interested are you in environmental sustainability, renewable energy, and green technology?", type: "rating", category: "Interest", focus: "Environmental Engineering" }
+                ],
+                section3: [
+                    { id: 509, text: "How comfortable are you with project management, teamwork, and leading technical projects?", type: "rating", category: "Skill", focus: "Project Management" },
+                    { id: 510, text: "How interested are you in research, innovation, and developing new technologies?", type: "rating", category: "Interest", focus: "Research & Innovation" },
+                    { id: 511, text: "How knowledgeable are you about safety protocols, quality control, and regulatory compliance?", type: "rating", category: "Knowledge", focus: "Safety & Compliance" },
+                    { id: 512, text: "How skilled are you in data analysis, statistics, and interpreting technical results?", type: "rating", category: "Skill", focus: "Data Analysis" }
+                ],
+                section4: [
+                    { id: 513, text: "How interested are you in automation, robotics, and artificial intelligence applications?", type: "rating", category: "Interest", focus: "Automation & AI" },
+                    { id: 514, text: "How comfortable are you with troubleshooting, problem-solving, and system optimization?", type: "rating", category: "Skill", focus: "Problem Solving" },
+                    { id: 515, text: "How knowledgeable are you about materials properties, testing, and selection for engineering applications?", type: "rating", category: "Knowledge", focus: "Materials Science" },
+                    { id: 516, text: "How interested are you in interdisciplinary collaboration and communicating technical concepts to non-engineers?", type: "rating", category: "Interest", focus: "Communication & Collaboration" }
+                ]
+            },
+            law: {
+                section1: [
+                    { id: 601, text: "How interested are you in legal research, case analysis, and statutory interpretation?", type: "rating", category: "Interest", focus: "Legal Research" },
+                    { id: 602, text: "How comfortable are you with constitutional law, civil rights, and government structure?", type: "rating", category: "Knowledge", focus: "Constitutional Law" },
+                    { id: 603, text: "How interested are you in criminal justice, law enforcement, and crime prevention?", type: "rating", category: "Interest", focus: "Criminal Justice" },
+                    { id: 604, text: "How skilled are you in public speaking, debate, and oral argumentation?", type: "rating", category: "Skill", focus: "Advocacy & Oral Skills" }
+                ],
+                section2: [
+                    { id: 605, text: "How interested are you in contract law, business transactions, and commercial disputes?", type: "rating", category: "Interest", focus: "Contract & Commercial Law" },
+                    { id: 606, text: "How comfortable are you with legal writing, brief preparation, and document drafting?", type: "rating", category: "Skill", focus: "Legal Writing" },
+                    { id: 607, text: "How interested are you in public administration, policy development, and government operations?", type: "rating", category: "Interest", focus: "Public Administration" },
+                    { id: 608, text: "How knowledgeable are you about ethics, professional responsibility, and legal standards?", type: "rating", category: "Knowledge", focus: "Legal Ethics" }
+                ],
+                section3: [
+                    { id: 609, text: "How interested are you in forensic science, evidence analysis, and crime scene investigation?", type: "rating", category: "Interest", focus: "Forensic Science" },
+                    { id: 610, text: "How comfortable are you with negotiation, mediation, and conflict resolution?", type: "rating", category: "Skill", focus: "Alternative Dispute Resolution" },
+                    { id: 611, text: "How interested are you in international law, human rights, and global governance?", type: "rating", category: "Interest", focus: "International Law" },
+                    { id: 612, text: "How skilled are you in critical thinking, logical reasoning, and analytical problem-solving?", type: "rating", category: "Skill", focus: "Critical Analysis" }
+                ],
+                section4: [
+                    { id: 613, text: "How interested are you in family law, personal injury, and individual client representation?", type: "rating", category: "Interest", focus: "Personal Legal Services" },
+                    { id: 614, text: "How comfortable are you with legal technology, case management systems, and digital research tools?", type: "rating", category: "Skill", focus: "Legal Technology" },
+                    { id: 615, text: "How interested are you in regulatory compliance, administrative law, and government relations?", type: "rating", category: "Interest", focus: "Regulatory Affairs" },
+                    { id: 616, text: "How strong is your interest in justice, fairness, and protecting individual rights?", type: "rating", category: "Interest", focus: "Social Justice" }
+                ]
+            },
+            tourism: {
+                section1: [
+                    { id: 701, text: "How interested are you in travel planning, itinerary development, and destination management?", type: "rating", category: "Interest", focus: "Travel Operations" },
+                    { id: 702, text: "How comfortable are you with food and beverage service, restaurant operations, and hospitality?", type: "rating", category: "Skill", focus: "F&B Service" },
+                    { id: 703, text: "How interested are you in culinary arts, food preparation, and kitchen management?", type: "rating", category: "Interest", focus: "Culinary Arts" },
+                    { id: 704, text: "How skilled are you in housekeeping operations, facility maintenance, and guest services?", type: "rating", category: "Skill", focus: "Housekeeping & Facilities" }
+                ],
+                section2: [
+                    { id: 705, text: "How interested are you in event planning, coordination, and special occasion management?", type: "rating", category: "Interest", focus: "Event Management" },
+                    { id: 706, text: "How comfortable are you with cruise operations, maritime hospitality, and shipboard services?", type: "rating", category: "Skill", focus: "Cruise Operations" },
+                    { id: 707, text: "How interested are you in hospitality marketing, customer relations, and brand promotion?", type: "rating", category: "Interest", focus: "Hospitality Marketing" },
+                    { id: 708, text: "How skilled are you in customer service, guest relations, and problem resolution?", type: "rating", category: "Skill", focus: "Guest Relations" }
+                ],
+                section3: [
+                    { id: 709, text: "How interested are you in cultural tourism, heritage preservation, and local community engagement?", type: "rating", category: "Interest", focus: "Cultural Tourism" },
+                    { id: 710, text: "How comfortable are you with hotel operations, front desk management, and reservation systems?", type: "rating", category: "Skill", focus: "Hotel Operations" },
+                    { id: 711, text: "How interested are you in sustainable tourism, eco-friendly practices, and environmental conservation?", type: "rating", category: "Interest", focus: "Sustainable Tourism" },
+                    { id: 712, text: "How skilled are you in multilingual communication and cross-cultural interaction?", type: "rating", category: "Skill", focus: "Cross-Cultural Communication" }
+                ],
+                section4: [
+                    { id: 713, text: "How interested are you in tourism research, market analysis, and industry trends?", type: "rating", category: "Interest", focus: "Tourism Research" },
+                    { id: 714, text: "How comfortable are you with financial management, budgeting, and revenue optimization in hospitality?", type: "rating", category: "Skill", focus: "Financial Management" },
+                    { id: 715, text: "How interested are you in adventure tourism, outdoor recreation, and activity coordination?", type: "rating", category: "Interest", focus: "Adventure Tourism" },
+                    { id: 716, text: "How skilled are you in leadership, team management, and staff development in service industries?", type: "rating", category: "Skill", focus: "Service Leadership" }
+                ]
             }
-        } else if (questionNumber === 5 || questionNumber === 6) {
-            // Show field-specific questions (5-6)
-            if (selectedField) {
-                const targetQuestion = document.querySelector(`[data-question="${questionNumber}"][data-field="${selectedField}"]`);
-                if (targetQuestion) {
-                    targetQuestion.classList.add('active');
-                    targetQuestion.style.display = 'block';
-                }
+        };
+
+        const liberalArtsWeightMapping = {
+            1: { // Literary Analysis
+                "BA English Language": 10,
+                "BA Literature": 10,
+                "BA Communication": 8,
+                "BA Philosophy": 7,
+                "BA History": 6,
+                "BA Political Science": 6,
+                "BA Psychology": 5,
+                "BA Sociology": 5
+            },
+            2: { // Historical Research
+                "BA History": 10,
+                "BA Political Science": 8,
+                "BA Sociology": 7,
+                "BA Philosophy": 6,
+                "BA Literature": 6,
+                "BA English Language": 5,
+                "BA Communication": 5,
+                "BA Psychology": 4
+            },
+            3: { // Social Sciences
+                "BA Psychology": 10,
+                "BA Sociology": 10,
+                "BA Political Science": 8,
+                "BA Communication": 7,
+                "BA History": 6,
+                "BA Philosophy": 6,
+                "BA English Language": 5,
+                "BA Literature": 5
+            },
+            4: { // Philosophy & Ethics
+                "BA Philosophy": 10,
+                "BA Political Science": 8,
+                "BA Literature": 7,
+                "BA History": 7,
+                "BA Psychology": 6,
+                "BA Sociology": 6,
+                "BA English Language": 5,
+                "BA Communication": 5
+            },
+            5: { // Academic Writing
+                "BA English Language": 10,
+                "BA Literature": 9,
+                "BA Communication": 9,
+                "BA Philosophy": 8,
+                "BA History": 8,
+                "BA Political Science": 7,
+                "BA Psychology": 7,
+                "BA Sociology": 7
+            },
+            6: { // Critical Analysis
+                "BA Philosophy": 10,
+                "BA Literature": 9,
+                "BA Political Science": 9,
+                "BA History": 8,
+                "BA Psychology": 8,
+                "BA English Language": 8,
+                "BA Sociology": 7,
+                "BA Communication": 7
+            },
+            7: { // Research Methods
+                "BA Psychology": 10,
+                "BA Sociology": 10,
+                "BA History": 9,
+                "BA Political Science": 9,
+                "BA Philosophy": 8,
+                "BA Literature": 7,
+                "BA English Language": 7,
+                "BA Communication": 6
+            },
+            8: { // Communication
+                "BA Communication": 10,
+                "BA English Language": 9,
+                "BA Political Science": 8,
+                "BA Psychology": 7,
+                "BA Sociology": 7,
+                "BA Literature": 7,
+                "BA Philosophy": 6,
+                "BA History": 6
+            },
+            9: { // Cultural Studies
+                "BA Sociology": 10,
+                "BA History": 9,
+                "BA Literature": 8,
+                "BA Communication": 8,
+                "BA Political Science": 7,
+                "BA English Language": 7,
+                "BA Philosophy": 6,
+                "BA Psychology": 6
+            },
+            10: { // Creative Expression
+                "BA Literature": 10,
+                "BA English Language": 9,
+                "BA Communication": 8,
+                "BA Philosophy": 7,
+                "BA History": 6,
+                "BA Psychology": 6,
+                "BA Sociology": 5,
+                "BA Political Science": 5
+            },
+            11: { // Political Science
+                "BA Political Science": 10,
+                "BA History": 8,
+                "BA Sociology": 7,
+                "BA Philosophy": 7,
+                "BA Communication": 6,
+                "BA Psychology": 6,
+                "BA English Language": 5,
+                "BA Literature": 5
+            },
+            12: { // Economics
+                "BA Political Science": 9,
+                "BA History": 7,
+                "BA Sociology": 7,
+                "BA Psychology": 6,
+                "BA Philosophy": 6,
+                "BA Communication": 5,
+                "BA English Language": 4,
+                "BA Literature": 4
+            },
+            13: { // Media & Communication
+                "BA Communication": 10,
+                "BA English Language": 8,
+                "BA Literature": 7,
+                "BA Sociology": 7,
+                "BA Political Science": 6,
+                "BA Psychology": 6,
+                "BA History": 5,
+                "BA Philosophy": 5
+            },
+            14: { // Art & Aesthetics
+                "BA Literature": 9,
+                "BA Philosophy": 8,
+                "BA History": 7,
+                "BA English Language": 7,
+                "BA Communication": 6,
+                "BA Sociology": 5,
+                "BA Psychology": 5,
+                "BA Political Science": 4
+            },
+            15: { // Environmental Studies
+                "BA Sociology": 8,
+                "BA Political Science": 8,
+                "BA Philosophy": 7,
+                "BA History": 6,
+                "BA Psychology": 6,
+                "BA Communication": 5,
+                "BA Literature": 4,
+                "BA English Language": 4
+            },
+            16: { // Interdisciplinary Studies
+                "BA Philosophy": 9,
+                "BA Literature": 8,
+                "BA Sociology": 8,
+                "BA Psychology": 8,
+                "BA History": 7,
+                "BA Political Science": 7,
+                "BA Communication": 7,
+                "BA English Language": 6
             }
-        } else if (questionNumber === 7) {
-            // Show final question
-            const targetQuestion = document.querySelector(`[data-question="7"]:not(.field-specific)`);
-            if (targetQuestion) {
-                targetQuestion.classList.add('active');
-                targetQuestion.style.display = 'block';
+        };
+
+        const engineeringWeightMapping = {
+            501: { // Mathematical Foundations
+                "BS Civil Engineering": 9,
+                "BS Mechanical Engineering": 9,
+                "BS Electrical Engineering": 9,
+                "BS Computer Engineering": 9,
+                "BS Chemical Engineering": 9,
+                "BS Industrial Engineering": 8,
+                "BS Environmental Engineering": 8,
+                "BS Materials Engineering": 8
+            },
+            502: { // Structural Design
+                "BS Civil Engineering": 10,
+                "BS Mechanical Engineering": 7,
+                "BS Materials Engineering": 7,
+                "BS Environmental Engineering": 6,
+                "BS Industrial Engineering": 5,
+                "BS Electrical Engineering": 4,
+                "BS Computer Engineering": 3,
+                "BS Chemical Engineering": 3
+            },
+            503: { // Programming & Software
+                "BS Computer Engineering": 10,
+                "BS Electrical Engineering": 8,
+                "BS Industrial Engineering": 6,
+                "BS Mechanical Engineering": 5,
+                "BS Chemical Engineering": 4,
+                "BS Civil Engineering": 4,
+                "BS Environmental Engineering": 4,
+                "BS Materials Engineering": 3
+            },
+            504: { // Electrical Systems
+                "BS Electrical Engineering": 10,
+                "BS Computer Engineering": 9,
+                "BS Mechanical Engineering": 6,
+                "BS Industrial Engineering": 5,
+                "BS Chemical Engineering": 4,
+                "BS Civil Engineering": 4,
+                "BS Environmental Engineering": 4,
+                "BS Materials Engineering": 3
+            },
+            505: { // Mechanical Systems
+                "BS Mechanical Engineering": 10,
+                "BS Industrial Engineering": 8,
+                "BS Civil Engineering": 7,
+                "BS Chemical Engineering": 6,
+                "BS Materials Engineering": 6,
+                "BS Environmental Engineering": 5,
+                "BS Electrical Engineering": 4,
+                "BS Computer Engineering": 3
+            },
+            506: { // Chemical Processes
+                "BS Chemical Engineering": 10,
+                "BS Materials Engineering": 8,
+                "BS Environmental Engineering": 7,
+                "BS Industrial Engineering": 5,
+                "BS Mechanical Engineering": 4,
+                "BS Civil Engineering": 3,
+                "BS Electrical Engineering": 3,
+                "BS Computer Engineering": 2
+            },
+            507: { // Design & Modeling
+                "BS Mechanical Engineering": 9,
+                "BS Civil Engineering": 9,
+                "BS Computer Engineering": 8,
+                "BS Electrical Engineering": 7,
+                "BS Industrial Engineering": 7,
+                "BS Materials Engineering": 6,
+                "BS Chemical Engineering": 5,
+                "BS Environmental Engineering": 5
+            },
+            508: { // Environmental Engineering
+                "BS Environmental Engineering": 10,
+                "BS Chemical Engineering": 8,
+                "BS Civil Engineering": 7,
+                "BS Industrial Engineering": 6,
+                "BS Materials Engineering": 5,
+                "BS Mechanical Engineering": 4,
+                "BS Electrical Engineering": 3,
+                "BS Computer Engineering": 3
+            },
+            509: { // Project Management
+                "BS Industrial Engineering": 9,
+                "BS Civil Engineering": 8,
+                "BS Mechanical Engineering": 7,
+                "BS Chemical Engineering": 7,
+                "BS Environmental Engineering": 7,
+                "BS Computer Engineering": 6,
+                "BS Electrical Engineering": 6,
+                "BS Materials Engineering": 6
+            },
+            510: { // Research & Innovation
+                "BS Materials Engineering": 9,
+                "BS Chemical Engineering": 8,
+                "BS Computer Engineering": 8,
+                "BS Electrical Engineering": 8,
+                "BS Mechanical Engineering": 7,
+                "BS Environmental Engineering": 7,
+                "BS Civil Engineering": 6,
+                "BS Industrial Engineering": 6
+            },
+            511: { // Safety & Compliance
+                "BS Chemical Engineering": 9,
+                "BS Environmental Engineering": 9,
+                "BS Industrial Engineering": 8,
+                "BS Civil Engineering": 8,
+                "BS Materials Engineering": 7,
+                "BS Mechanical Engineering": 6,
+                "BS Electrical Engineering": 6,
+                "BS Computer Engineering": 5
+            },
+            512: { // Data Analysis
+                "BS Industrial Engineering": 9,
+                "BS Computer Engineering": 9,
+                "BS Chemical Engineering": 8,
+                "BS Electrical Engineering": 8,
+                "BS Materials Engineering": 7,
+                "BS Environmental Engineering": 7,
+                "BS Mechanical Engineering": 6,
+                "BS Civil Engineering": 6
+            },
+            513: { // Automation & AI
+                "BS Computer Engineering": 10,
+                "BS Electrical Engineering": 9,
+                "BS Industrial Engineering": 8,
+                "BS Mechanical Engineering": 6,
+                "BS Chemical Engineering": 5,
+                "BS Materials Engineering": 4,
+                "BS Civil Engineering": 4,
+                "BS Environmental Engineering": 4
+            },
+            514: { // Problem Solving
+                "BS Industrial Engineering": 9,
+                "BS Mechanical Engineering": 8,
+                "BS Computer Engineering": 8,
+                "BS Electrical Engineering": 8,
+                "BS Chemical Engineering": 8,
+                "BS Civil Engineering": 7,
+                "BS Environmental Engineering": 7,
+                "BS Materials Engineering": 7
+            },
+            515: { // Materials Science
+                "BS Materials Engineering": 10,
+                "BS Chemical Engineering": 8,
+                "BS Mechanical Engineering": 7,
+                "BS Civil Engineering": 6,
+                "BS Industrial Engineering": 5,
+                "BS Environmental Engineering": 5,
+                "BS Electrical Engineering": 4,
+                "BS Computer Engineering": 3
+            },
+            516: { // Communication & Collaboration
+                "BS Industrial Engineering": 8,
+                "BS Civil Engineering": 8,
+                "BS Environmental Engineering": 7,
+                "BS Computer Engineering": 7,
+                "BS Mechanical Engineering": 7,
+                "BS Chemical Engineering": 6,
+                "BS Electrical Engineering": 6,
+                "BS Materials Engineering": 6
             }
-        }
+        };
 
-        // Update button states
-        prevBtn.disabled = questionNumber === 1;
+        const lawWeightMapping = {
+            601: { // Legal Research
+                "LLB Law": 10,
+                "JD Juris Doctor": 10,
+                "BS Criminology": 7,
+                "BA Public Administration": 6,
+                "BS Forensic Science": 8
+            },
+            602: { // Constitutional Law
+                "LLB Law": 10,
+                "JD Juris Doctor": 10,
+                "BA Public Administration": 8,
+                "BS Criminology": 6,
+                "BS Forensic Science": 5
+            },
+            603: { // Criminal Justice
+                "BS Criminology": 10,
+                "BS Forensic Science": 9,
+                "LLB Law": 8,
+                "JD Juris Doctor": 8,
+                "BA Public Administration": 6
+            },
+            604: { // Advocacy & Oral Skills
+                "LLB Law": 10,
+                "JD Juris Doctor": 10,
+                "BA Public Administration": 7,
+                "BS Criminology": 6,
+                "BS Forensic Science": 5
+            },
+            605: { // Contract & Commercial Law
+                "LLB Law": 10,
+                "JD Juris Doctor": 10,
+                "BA Public Administration": 6,
+                "BS Criminology": 4,
+                "BS Forensic Science": 3
+            },
+            606: { // Legal Writing
+                "LLB Law": 10,
+                "JD Juris Doctor": 10,
+                "BA Public Administration": 7,
+                "BS Criminology": 6,
+                "BS Forensic Science": 6
+            },
+            607: { // Public Administration
+                "BA Public Administration": 10,
+                "LLB Law": 7,
+                "JD Juris Doctor": 7,
+                "BS Criminology": 6,
+                "BS Forensic Science": 4
+            },
+            608: { // Legal Ethics
+                "LLB Law": 10,
+                "JD Juris Doctor": 10,
+                "BA Public Administration": 7,
+                "BS Criminology": 7,
+                "BS Forensic Science": 6
+            },
+            609: { // Forensic Science
+                "BS Forensic Science": 10,
+                "BS Criminology": 8,
+                "LLB Law": 6,
+                "JD Juris Doctor": 6,
+                "BA Public Administration": 4
+            },
+            610: { // Alternative Dispute Resolution
+                "LLB Law": 9,
+                "JD Juris Doctor": 9,
+                "BA Public Administration": 7,
+                "BS Criminology": 6,
+                "BS Forensic Science": 5
+            },
+            611: { // International Law
+                "LLB Law": 10,
+                "JD Juris Doctor": 10,
+                "BA Public Administration": 8,
+                "BS Criminology": 5,
+                "BS Forensic Science": 4
+            },
+            612: { // Critical Analysis
+                "LLB Law": 9,
+                "JD Juris Doctor": 9,
+                "BA Public Administration": 8,
+                "BS Criminology": 7,
+                "BS Forensic Science": 8
+            },
+            613: { // Personal Legal Services
+                "LLB Law": 10,
+                "JD Juris Doctor": 10,
+                "BA Public Administration": 5,
+                "BS Criminology": 6,
+                "BS Forensic Science": 5
+            },
+            614: { // Legal Technology
+                "LLB Law": 8,
+                "JD Juris Doctor": 8,
+                "BA Public Administration": 7,
+                "BS Criminology": 6,
+                "BS Forensic Science": 7
+            },
+            615: { // Regulatory Affairs
+                "BA Public Administration": 10,
+                "LLB Law": 8,
+                "JD Juris Doctor": 8,
+                "BS Criminology": 6,
+                "BS Forensic Science": 5
+            },
+            616: { // Social Justice
+                "LLB Law": 9,
+                "JD Juris Doctor": 9,
+                "BA Public Administration": 8,
+                "BS Criminology": 8,
+                "BS Forensic Science": 6
+            }
+        };
 
-        if (questionNumber === totalQuestions) {
-            nextBtn.style.display = 'none';
-            submitBtn.style.display = 'block';
-        } else {
-            nextBtn.style.display = 'block';
-            submitBtn.style.display = 'none';
-        }
+        const tourismWeightMapping = {
+            701: { // Travel Operations
+                "BS Tourism Management": 10,
+                "BS Hotel and Restaurant Management": 7,
+                "BS Hospitality Management": 9,
+                "BS Event Management": 8,
+                "BS Culinary Arts": 5
+            },
+            702: { // F&B Service
+                "BS Hotel and Restaurant Management": 10,
+                "BS Culinary Arts": 9,
+                "BS Hospitality Management": 8,
+                "BS Tourism Management": 6,
+                "BS Event Management": 7
+            },
+            703: { // Culinary Arts
+                "BS Culinary Arts": 10,
+                "BS Hotel and Restaurant Management": 9,
+                "BS Hospitality Management": 6,
+                "BS Tourism Management": 4,
+                "BS Event Management": 5
+            },
+            704: { // Housekeeping & Facilities
+                "BS Hotel and Restaurant Management": 9,
+                "BS Hospitality Management": 9,
+                "BS Tourism Management": 6,
+                "BS Event Management": 7,
+                "BS Culinary Arts": 5
+            },
+            705: { // Event Management
+                "BS Event Management": 10,
+                "BS Hospitality Management": 8,
+                "BS Hotel and Restaurant Management": 7,
+                "BS Tourism Management": 7,
+                "BS Culinary Arts": 6
+            },
+            706: { // Cruise Operations
+                "BS Tourism Management": 9,
+                "BS Hospitality Management": 8,
+                "BS Hotel and Restaurant Management": 7,
+                "BS Event Management": 6,
+                "BS Culinary Arts": 5
+            },
+            707: { // Hospitality Marketing
+                "BS Tourism Management": 9,
+                "BS Hospitality Management": 8,
+                "BS Event Management": 8,
+                "BS Hotel and Restaurant Management": 6,
+                "BS Culinary Arts": 4
+            },
+            708: { // Guest Relations
+                "BS Hospitality Management": 10,
+                "BS Hotel and Restaurant Management": 9,
+                "BS Tourism Management": 8,
+                "BS Event Management": 7,
+                "BS Culinary Arts": 5
+            },
+            709: { // Cultural Tourism
+                "BS Tourism Management": 10,
+                "BS Hospitality Management": 7,
+                "BS Event Management": 6,
+                "BS Hotel and Restaurant Management": 5,
+                "BS Culinary Arts": 4
+            },
+            710: { // Hotel Operations
+                "BS Hotel and Restaurant Management": 10,
+                "BS Hospitality Management": 9,
+                "BS Tourism Management": 7,
+                "BS Event Management": 6,
+                "BS Culinary Arts": 5
+            },
+            711: { // Sustainable Tourism
+                "BS Tourism Management": 10,
+                "BS Hospitality Management": 8,
+                "BS Event Management": 6,
+                "BS Hotel and Restaurant Management": 6,
+                "BS Culinary Arts": 4
+            },
+            712: { // Cross-Cultural Communication
+                "BS Tourism Management": 9,
+                "BS Hospitality Management": 8,
+                "BS Hotel and Restaurant Management": 7,
+                "BS Event Management": 7,
+                "BS Culinary Arts": 5
+            },
+            713: { // Tourism Research
+                "BS Tourism Management": 10,
+                "BS Hospitality Management": 7,
+                "BS Event Management": 6,
+                "BS Hotel and Restaurant Management": 5,
+                "BS Culinary Arts": 4
+            },
+            714: { // Financial Management
+                "BS Hospitality Management": 9,
+                "BS Hotel and Restaurant Management": 8,
+                "BS Tourism Management": 8,
+                "BS Event Management": 8,
+                "BS Culinary Arts": 6
+            },
+            715: { // Adventure Tourism
+                "BS Tourism Management": 10,
+                "BS Event Management": 7,
+                "BS Hospitality Management": 6,
+                "BS Hotel and Restaurant Management": 5,
+                "BS Culinary Arts": 4
+            },
+            716: { // Service Leadership
+                "BS Hospitality Management": 10,
+                "BS Hotel and Restaurant Management": 9,
+                "BS Tourism Management": 8,
+                "BS Event Management": 8,
+                "BS Culinary Arts": 7
+            }
+        };
 
+        // Job questionnaire database organized by category
+        const jobQuestionDatabase = {
+            business: {
+                section1: [
+                    { id: 1, text: "How interested are you in developing and implementing business strategies?", type: "rating" },
+                    { id: 2, text: "How comfortable are you with analyzing financial data and creating reports?", type: "rating" },
+                    { id: 3, text: "How much do you enjoy leading teams and managing people?", type: "rating" },
+                    { id: 4, text: "How interested are you in identifying market opportunities and trends?", type: "rating" }
+                ],
+                section2: [
+                    { id: 5, text: "How comfortable are you with making high-stakes business decisions?", type: "rating" },
+                    { id: 6, text: "How much do you enjoy networking and building business relationships?", type: "rating" },
+                    { id: 7, text: "How interested are you in creating and launching new products or services?", type: "rating" },
+                    { id: 8, text: "How comfortable are you with managing budgets and financial planning?", type: "rating" }
+                ],
+                section3: [
+                    { id: 9, text: "How much do you enjoy analyzing customer behavior and preferences?", type: "rating" },
+                    { id: 10, text: "How interested are you in optimizing business operations and processes?", type: "rating" },
+                    { id: 11, text: "How comfortable are you with public speaking and presentations?", type: "rating" },
+                    { id: 12, text: "How much do you enjoy working with data and analytics?", type: "rating" }
+                ],
+                section4: [
+                    { id: 13, text: "How interested are you in developing organizational policies and procedures?", type: "rating" },
+                    { id: 14, text: "How comfortable are you with negotiating contracts and deals?", type: "rating" },
+                    { id: 15, text: "How much do you enjoy mentoring and developing other professionals?", type: "rating" },
+                    { id: 16, text: "How interested are you in staying updated with industry regulations and compliance?", type: "rating" }
+                ]
+            },
+            healthcare: {
+                section1: [
+                    { id: 1, text: "How comfortable are you with providing direct patient care and support?", type: "rating" },
+                    { id: 2, text: "How interested are you in conducting medical tests and laboratory analysis?", type: "rating" },
+                    { id: 3, text: "How much do you enjoy educating patients about health and wellness?", type: "rating" },
+                    { id: 4, text: "How comfortable are you with working in high-stress emergency situations?", type: "rating" }
+                ],
+                section2: [
+                    { id: 5, text: "How interested are you in developing treatment plans and rehabilitation programs?", type: "rating" },
+                    { id: 6, text: "How much do you enjoy working with medical technology and equipment?", type: "rating" },
+                    { id: 7, text: "How comfortable are you with maintaining detailed medical records and documentation?", type: "rating" },
+                    { id: 8, text: "How interested are you in conducting medical research and clinical studies?", type: "rating" }
+                ],
+                section3: [
+                    { id: 9, text: "How much do you enjoy collaborating with healthcare teams and professionals?", type: "rating" },
+                    { id: 10, text: "How comfortable are you with administering medications and monitoring patient responses?", type: "rating" },
+                    { id: 11, text: "How interested are you in promoting community health and disease prevention?", type: "rating" },
+                    { id: 12, text: "How much do you enjoy working with diverse patient populations?", type: "rating" }
+                ],
+                section4: [
+                    { id: 13, text: "How comfortable are you with following strict medical protocols and procedures?", type: "rating" },
+                    { id: 14, text: "How interested are you in specializing in a specific area of healthcare?", type: "rating" },
+                    { id: 15, text: "How much do you enjoy continuous learning about medical advances?", type: "rating" },
+                    { id: 16, text: "How comfortable are you with making critical decisions about patient care?", type: "rating" }
+                ]
+            },
+            technology: {
+                section1: [
+                    { id: 1, text: "How interested are you in designing and developing software applications?", type: "rating" },
+                    { id: 2, text: "How comfortable are you with analyzing complex data and creating insights?", type: "rating" },
+                    { id: 3, text: "How much do you enjoy solving technical problems and debugging code?", type: "rating" },
+                    { id: 4, text: "How interested are you in protecting systems from cyber threats and attacks?", type: "rating" }
+                ],
+                section2: [
+                    { id: 5, text: "How comfortable are you with managing computer networks and infrastructure?", type: "rating" },
+                    { id: 6, text: "How much do you enjoy creating user-friendly interfaces and experiences?", type: "rating" },
+                    { id: 7, text: "How interested are you in working with artificial intelligence and machine learning?", type: "rating" },
+                    { id: 8, text: "How comfortable are you with managing databases and information systems?", type: "rating" }
+                ],
+                section3: [
+                    { id: 9, text: "How much do you enjoy testing software and ensuring quality assurance?", type: "rating" },
+                    { id: 10, text: "How interested are you in leading technical projects and teams?", type: "rating" },
+                    { id: 11, text: "How comfortable are you with staying updated on emerging technologies?", type: "rating" },
+                    { id: 12, text: "How much do you enjoy automating processes and improving efficiency?", type: "rating" }
+                ],
+                section4: [
+                    { id: 13, text: "How interested are you in providing technical support and training?", type: "rating" },
+                    { id: 14, text: "How comfortable are you with working in agile development environments?", type: "rating" },
+                    { id: 15, text: "How much do you enjoy collaborating with cross-functional teams?", type: "rating" },
+                    { id: 16, text: "How interested are you in researching and implementing new technologies?", type: "rating" }
+                ]
+            },
+            creative: {
+                section1: [
+                    { id: 1, text: "How interested are you in creating visual designs and artistic content?", type: "rating" },
+                    { id: 2, text: "How comfortable are you with writing creative content and storytelling?", type: "rating" },
+                    { id: 3, text: "How much do you enjoy working with multimedia and digital media?", type: "rating" },
+                    { id: 4, text: "How interested are you in developing marketing campaigns and brand strategies?", type: "rating" }
+                ],
+                section2: [
+                    { id: 5, text: "How comfortable are you with using design software and creative tools?", type: "rating" },
+                    { id: 6, text: "How much do you enjoy collaborating with clients on creative projects?", type: "rating" },
+                    { id: 7, text: "How interested are you in photography and visual documentation?", type: "rating" },
+                    { id: 8, text: "How comfortable are you with presenting creative ideas to stakeholders?", type: "rating" }
+                ],
+                section3: [
+                    { id: 9, text: "How much do you enjoy working on multiple creative projects simultaneously?", type: "rating" },
+                    { id: 10, text: "How interested are you in staying current with design trends and techniques?", type: "rating" },
+                    { id: 11, text: "How comfortable are you with receiving and incorporating creative feedback?", type: "rating" },
+                    { id: 12, text: "How much do you enjoy problem-solving through creative solutions?", type: "rating" }
+                ],
+                section4: [
+                    { id: 13, text: "How interested are you in teaching or mentoring other creative professionals?", type: "rating" },
+                    { id: 14, text: "How comfortable are you with working under tight deadlines?", type: "rating" },
+                    { id: 15, text: "How much do you enjoy experimenting with new creative mediums?", type: "rating" },
+                    { id: 16, text: "How interested are you in building a personal creative portfolio?", type: "rating" }
+                ]
+            },
+            education: {
+                section1: [
+                    { id: 1, text: "How interested are you in developing curriculum and educational materials?", type: "rating" },
+                    { id: 2, text: "How comfortable are you with managing classroom behavior and student engagement?", type: "rating" },
+                    { id: 3, text: "How much do you enjoy working with students of different ages and backgrounds?", type: "rating" },
+                    { id: 4, text: "How interested are you in assessing student progress and providing feedback?", type: "rating" }
+                ],
+                section2: [
+                    { id: 5, text: "How comfortable are you with using educational technology and digital tools?", type: "rating" },
+                    { id: 6, text: "How much do you enjoy collaborating with parents and families?", type: "rating" },
+                    { id: 7, text: "How interested are you in supporting students with special needs or challenges?", type: "rating" },
+                    { id: 8, text: "How comfortable are you with public speaking and presenting to groups?", type: "rating" }
+                ],
+                section3: [
+                    { id: 9, text: "How much do you enjoy continuous professional development and learning?", type: "rating" },
+                    { id: 10, text: "How interested are you in educational research and best practices?", type: "rating" },
+                    { id: 11, text: "How comfortable are you with adapting teaching methods to different learning styles?", type: "rating" },
+                    { id: 12, text: "How much do you enjoy mentoring and guiding student development?", type: "rating" }
+                ],
+                section4: [
+                    { id: 13, text: "How interested are you in educational leadership and administration?", type: "rating" },
+                    { id: 14, text: "How comfortable are you with handling challenging or difficult situations?", type: "rating" },
+                    { id: 15, text: "How much do you enjoy creating inclusive and supportive learning environments?", type: "rating" },
+                    { id: 16, text: "How interested are you in making a positive impact on student lives?", type: "rating" }
+                ]
+            },
+            engineering: {
+                section1: [
+                    { id: 1, text: "How interested are you in designing and developing technical systems?", type: "rating" },
+                    { id: 2, text: "How comfortable are you with complex mathematical calculations and analysis?", type: "rating" },
+                    { id: 3, text: "How much do you enjoy solving engineering problems and challenges?", type: "rating" },
+                    { id: 4, text: "How interested are you in working with advanced technology and equipment?", type: "rating" }
+                ],
+                section2: [
+                    { id: 5, text: "How comfortable are you with creating technical drawings and specifications?", type: "rating" },
+                    { id: 6, text: "How much do you enjoy testing and validating engineering solutions?", type: "rating" },
+                    { id: 7, text: "How interested are you in managing engineering projects and timelines?", type: "rating" },
+                    { id: 8, text: "How comfortable are you with ensuring safety and compliance standards?", type: "rating" }
+                ],
+                section3: [
+                    { id: 9, text: "How much do you enjoy collaborating with multidisciplinary teams?", type: "rating" },
+                    { id: 10, text: "How interested are you in researching and implementing new technologies?", type: "rating" },
+                    { id: 11, text: "How comfortable are you with analyzing data and making technical decisions?", type: "rating" },
+                    { id: 12, text: "How much do you enjoy optimizing processes and improving efficiency?", type: "rating" }
+                ],
+                section4: [
+                    { id: 13, text: "How interested are you in environmental sustainability and green engineering?", type: "rating" },
+                    { id: 14, text: "How comfortable are you with presenting technical information to stakeholders?", type: "rating" },
+                    { id: 15, text: "How much do you enjoy continuous learning about engineering advances?", type: "rating" },
+                    { id: 16, text: "How interested are you in mentoring junior engineers and technical staff?", type: "rating" }
+                ]
+            },
+            law: {
+                section1: [
+                    { id: 1, text: "How interested are you in researching and analyzing legal cases and precedents?", type: "rating" },
+                    { id: 2, text: "How comfortable are you with writing legal documents and briefs?", type: "rating" },
+                    { id: 3, text: "How much do you enjoy advocating for clients and representing their interests?", type: "rating" },
+                    { id: 4, text: "How interested are you in developing public policies and regulations?", type: "rating" }
+                ],
+                section2: [
+                    { id: 5, text: "How comfortable are you with public speaking and courtroom presentations?", type: "rating" },
+                    { id: 6, text: "How much do you enjoy negotiating settlements and agreements?", type: "rating" },
+                    { id: 7, text: "How interested are you in ensuring compliance with laws and regulations?", type: "rating" },
+                    { id: 8, text: "How comfortable are you with managing complex legal cases and documentation?", type: "rating" }
+                ],
+                section3: [
+                    { id: 9, text: "How much do you enjoy working with diverse clients and communities?", type: "rating" },
+                    { id: 10, text: "How interested are you in criminal justice and law enforcement?", type: "rating" },
+                    { id: 11, text: "How comfortable are you with analyzing contracts and legal agreements?", type: "rating" },
+                    { id: 12, text: "How much do you enjoy staying updated on legal developments and changes?", type: "rating" }
+                ],
+                section4: [
+                    { id: 13, text: "How interested are you in providing legal education and training?", type: "rating" },
+                    { id: 14, text: "How comfortable are you with working under pressure and tight deadlines?", type: "rating" },
+                    { id: 15, text: "How much do you enjoy collaborating with legal teams and professionals?", type: "rating" },
+                    { id: 16, text: "How interested are you in making a positive impact on society through law?", type: "rating" }
+                ]
+            },
+            tourism: {
+                section1: [
+                    { id: 1, text: "How interested are you in planning and organizing travel experiences?", type: "rating" },
+                    { id: 2, text: "How comfortable are you with providing excellent customer service?", type: "rating" },
+                    { id: 3, text: "How much do you enjoy working with people from different cultures?", type: "rating" },
+                    { id: 4, text: "How interested are you in managing hospitality operations and services?", type: "rating" }
+                ],
+                section2: [
+                    { id: 5, text: "How comfortable are you with handling multiple tasks and priorities?", type: "rating" },
+                    { id: 6, text: "How much do you enjoy creating memorable experiences for guests?", type: "rating" },
+                    { id: 7, text: "How interested are you in marketing tourism destinations and services?", type: "rating" },
+                    { id: 8, text: "How comfortable are you with working flexible hours and schedules?", type: "rating" }
+                ],
+                section3: [
+                    { id: 9, text: "How much do you enjoy problem-solving and handling customer concerns?", type: "rating" },
+                    { id: 10, text: "How interested are you in learning about different destinations and attractions?", type: "rating" },
+                    { id: 11, text: "How comfortable are you with using booking systems and travel technology?", type: "rating" },
+                    { id: 12, text: "How much do you enjoy working in fast-paced, dynamic environments?", type: "rating" }
+                ],
+                section4: [
+                    { id: 13, text: "How interested are you in sustainable tourism and environmental responsibility?", type: "rating" },
+                    { id: 14, text: "How comfortable are you with managing budgets and financial planning?", type: "rating" },
+                    { id: 15, text: "How much do you enjoy building relationships with suppliers and partners?", type: "rating" },
+                    { id: 16, text: "How interested are you in leadership roles in the tourism industry?", type: "rating" }
+                ]
+            }
+        };
+
+        // Job roles database for scoring
+        const jobRolesDatabase = {
+            business: [
+                "Business Analyst",
+                "Financial Analyst", 
+                "Marketing Manager",
+                "Operations Manager",
+                "Human Resources Manager",
+                "Project Manager",
+                "Sales Manager",
+                "Management Consultant"
+            ],
+            healthcare: [
+                "Registered Nurse",
+                "Medical Laboratory Technologist",
+                "Physical Therapist",
+                "Pharmacist",
+                "Radiologic Technologist",
+                "Respiratory Therapist",
+                "Public Health Specialist",
+                "Occupational Therapist"
+            ],
+            technology: [
+                "Software Developer",
+                "Data Scientist",
+                "Cybersecurity Analyst",
+                "Network Administrator",
+                "UX/UI Designer",
+                "AI/ML Engineer",
+                "Database Administrator",
+                "IT Project Manager"
+            ],
+            creative: [
+                "Graphic Designer",
+                "Content Writer",
+                "Digital Marketing Specialist",
+                "Art Director",
+                "Photographer",
+                "Social Media Manager",
+                "Creative Director",
+                "Brand Manager"
+            ],
+            education: [
+                "Elementary School Teacher",
+                "High School Teacher",
+                "Special Education Teacher",
+                "School Counselor",
+                "Curriculum Developer",
+                "Educational Administrator",
+                "Instructional Designer",
+                "Academic Advisor"
+            ],
+            engineering: [
+                "Civil Engineer",
+                "Mechanical Engineer",
+                "Electrical Engineer",
+                "Software Engineer",
+                "Chemical Engineer",
+                "Environmental Engineer",
+                "Industrial Engineer",
+                "Biomedical Engineer"
+            ],
+            law: [
+                "Corporate Lawyer",
+                "Criminal Defense Attorney",
+                "Public Defender",
+                "Legal Researcher",
+                "Paralegal",
+                "Compliance Officer",
+                "Judge",
+                "Legal Consultant"
+            ],
+            tourism: [
+                "Travel Agent",
+                "Hotel Manager",
+                "Tour Guide",
+                "Event Planner",
+                "Restaurant Manager",
+                "Tourism Marketing Specialist",
+                "Resort Operations Manager",
+                "Travel Consultant"
+            ]
+        };
+
+        // Initialize first section
+        showSection(1);
         updateProgress();
-    }
+        updateNavigationButtons();
 
-    // Function to check if current question is answered
-    function isCurrentQuestionAnswered() {
-        if (currentQuestion <= 4) {
-            const currentQuestionElement = document.querySelector(`[data-question="${currentQuestion}"]:not(.field-specific)`);
-            if (currentQuestionElement) {
-                const radios = currentQuestionElement.querySelectorAll('input[type="radio"]');
-                return Array.from(radios).some(radio => radio.checked);
-            }
-        } else if (currentQuestion === 5 || currentQuestion === 6) {
-            if (selectedField) {
-                const currentQuestionElement = document.querySelector(`[data-question="${currentQuestion}"][data-field="${selectedField}"]`);
-                if (currentQuestionElement) {
-                    const radios = currentQuestionElement.querySelectorAll('input[type="radio"]');
-                    return Array.from(radios).some(radio => radio.checked);
+        // Navigation event listeners
+        document.getElementById('prev-btn').addEventListener('click', function() {
+            if (currentSection > 1) {
+                try {
+                    saveCurrentSectionResponses();
+                    currentSection--;
+                    showSection(currentSection);
+                    updateProgress();
+                    updateNavigationButtons();
+                } catch (error) {
+                    console.error('Error navigating to previous section:', error);
+                    alert('An error occurred while navigating. Please try again.');
                 }
             }
-        } else if (currentQuestion === 7) {
-            const currentQuestionElement = document.querySelector(`[data-question="7"]:not(.field-specific)`);
-            if (currentQuestionElement) {
-                const radios = currentQuestionElement.querySelectorAll('input[type="radio"]');
-                return Array.from(radios).some(radio => radio.checked);
-            }
-        }
-        return false;
-    }
-
-    // Function to update next button state
-    function updateNextButtonState() {
-        nextBtn.disabled = !isCurrentQuestionAnswered();
-    }
-
-    // Add event listeners to radio buttons for field interest (question 2)
-    // Handle both course (field_interest) and job (job_industry) questionnaires
-    const fieldInterestInputs = document.querySelectorAll('input[name="field_interest"], input[name="job_industry"]');
-    fieldInterestInputs.forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.checked && currentQuestion === 2) {
-                updateQuestionFlow(this.value);
-            }
-            updateNextButtonState();
         });
-    });
 
-    // Add event listeners to all radio buttons
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', updateNextButtonState);
-    });
+        document.getElementById('next-btn').addEventListener('click', function() {
+            if (validateCurrentSection()) {
+                saveCurrentSectionResponses();
+                if (currentSection < totalSections) {
+                    currentSection++;
+                    showSection(currentSection);
+                    updateProgress();
+                    updateNavigationButtons();
+                } else {
+                    // Show submit button on last section
+                    document.getElementById('next-btn').style.display = 'none';
+                    document.getElementById('submit-btn').style.display = 'block';
+                }
+            }
+        });
 
-    // Previous button click
-    prevBtn.addEventListener('click', function() {
-        if (currentQuestion > 1) {
-            currentQuestion--;
-            showQuestion(currentQuestion);
-            updateNextButtonState();
+        // Form submission
+        document.getElementById('course-questionnaire-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveCurrentSectionResponses();
+
+            // Prepare final responses
+            document.getElementById('all-responses').value = JSON.stringify(responses);
+            document.getElementById('current-section').value = currentSection;
+            document.getElementById('selected-category').value = selectedCategory;
+
+            // Submit form
+            this.submit();
+        });
+
+        function showSection(sectionNum) {
+            // Hide all sections
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show current section or create it if it doesn't exist
+            let currentSectionElement = document.getElementById(`section-${sectionNum}`);
+            if (!currentSectionElement) {
+                currentSectionElement = createSection(sectionNum);
+            }
+            currentSectionElement.classList.add('active');
+
+            // Update step indicators
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                indicator.classList.remove('active', 'completed');
+                if (index + 1 === sectionNum) {
+                    indicator.classList.add('active');
+                } else if (index + 1 < sectionNum) {
+                    indicator.classList.add('completed');
+                }
+            });
         }
-    });
 
-    // Next button click
-    nextBtn.addEventListener('click', function() {
-        if (currentQuestion < totalQuestions && isCurrentQuestionAnswered()) {
-            currentQuestion++;
-            showQuestion(currentQuestion);
-            updateNextButtonState();
+        function createSection(sectionNum) {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'question-section';
+            sectionDiv.id = `section-${sectionNum}`;
+
+            if (sectionNum === 1) {
+                // Category selection section
+                sectionDiv.innerHTML = createCategorySelection();
+                // Restore category selection if it exists
+                if (responses.category) {
+                    setTimeout(() => {
+                        const categoryInput = document.querySelector(`input[name="category"][value="${responses.category}"]`);
+                        if (categoryInput) {
+                            categoryInput.checked = true;
+                            categoryInput.closest('.category-option').classList.add('selected');
+                        }
+                    }, 0);
+                }
+            } else {
+                // Question sections
+                const questions = getCurrentQuestions(sectionNum);
+                sectionDiv.innerHTML = createQuestionsHTML(questions, sectionNum);
+                // Restore previous answers if they exist
+                setTimeout(() => {
+                    restorePreviousAnswers(questions);
+                }, 0);
+            }
+
+            // Insert before navigation buttons
+            const form = document.getElementById('course-questionnaire-form');
+            const navButtons = form.querySelector('div.flex.justify-between.items-center.mt-12');
+            form.insertBefore(sectionDiv, navButtons);
+
+            return sectionDiv;
         }
-    });
 
-    // Initialize - hide all field-specific questions on page load
-    document.querySelectorAll('.field-specific').forEach(q => {
-        q.style.display = 'none';
-        q.classList.remove('active');
-    });
+        function restorePreviousAnswers(questions) {
+            questions.forEach(question => {
+                const savedResponse = responses[`question_${question.id}`];
+                if (savedResponse) {
+                    const input = document.querySelector(`input[name="question_${question.id}"][value="${savedResponse}"]`);
+                    if (input) {
+                        input.checked = true;
+                        // Add visual feedback for selected option
+                        const radioOption = input.closest('.modern-radio-option');
+                        if (radioOption) {
+                            radioOption.classList.add('selected');
+                        }
+                    }
+                }
+            });
+        }
 
-    // Initialize
-    showQuestion(1);
-    updateNextButtonState();
-});
+        function clearSectionResponses(sectionNum) {
+            if (sectionNum === 1) {
+                responses.category = '';
+                selectedCategory = '';
+            } else {
+                const questions = getCurrentQuestions(sectionNum);
+                questions.forEach(question => {
+                    delete responses[`question_${question.id}`];
+                });
+            }
+        }
+
+        function createCategorySelection() {
+            const assessmentType = '{{ request("type", "course") }}';
+            
+            if (assessmentType === 'job') {
+                return `
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">What career field interests you most?</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <label class="block">
+                                <input type="radio" name="category" value="business" class="sr-only" onchange="selectCategory('business')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">💼</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Business & Management</h3>
+                                    <p class="text-gray-600">Leadership roles, entrepreneurship, finance, and business strategy careers</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="education" class="sr-only" onchange="selectCategory('education')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">🎓</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Education & Teaching</h3>
+                                    <p class="text-gray-600">Teaching positions, educational administration, and training roles</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="engineering" class="sr-only" onchange="selectCategory('engineering')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">⚙️</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Engineering & Technology</h3>
+                                    <p class="text-gray-600">Engineering positions, technical consulting, and project management</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="technology" class="sr-only" onchange="selectCategory('technology')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">💻</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Technology & IT</h3>
+                                    <p class="text-gray-600">Software development, data analysis, cybersecurity, and IT management</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="healthcare" class="sr-only" onchange="selectCategory('healthcare')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">🏥</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Healthcare & Medicine</h3>
+                                    <p class="text-gray-600">Medical careers, healthcare administration, and wellness professions</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="creative" class="sr-only" onchange="selectCategory('creative')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">🎨</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Creative & Design</h3>
+                                    <p class="text-gray-600">Design careers, marketing roles, content creation, and media production</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="law" class="sr-only" onchange="selectCategory('law')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">⚖️</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Law & Public Administration</h3>
+                                    <p class="text-gray-600">Legal careers, government positions, and public service roles</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="tourism" class="sr-only" onchange="selectCategory('tourism')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">🏨</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Tourism & Hospitality</h3>
+                                    <p class="text-gray-600">Hotel management, tourism industry, event planning, and culinary careers</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">What field interests you most?</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <label class="block">
+                                <input type="radio" name="category" value="business" class="sr-only" onchange="selectCategory('business')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">💼</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Business & Management</h3>
+                                    <p class="text-gray-600">Leadership, entrepreneurship, finance, and business strategy</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="education" class="sr-only" onchange="selectCategory('education')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">🎓</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Education & Teaching</h3>
+                                    <p class="text-gray-600">Elementary education, secondary education, early childhood, and specialized teaching</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="engineering" class="sr-only" onchange="selectCategory('engineering')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">⚙️</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Engineering & Technology</h3>
+                                    <p class="text-gray-600">Civil, mechanical, electrical, computer, and chemical engineering</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="technology" class="sr-only" onchange="selectCategory('technology')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">💻</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Technology & IT</h3>
+                                    <p class="text-gray-600">Programming, data science, cybersecurity, and web development</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="healthcare" class="sr-only" onchange="selectCategory('healthcare')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">🏥</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Healthcare & Medicine</h3>
+                                    <p class="text-gray-600">Nursing, healthcare administration, mental health, and medical technology</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="creative" class="sr-only" onchange="selectCategory('creative')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">🎨</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Creative & Design</h3>
+                                    <p class="text-gray-600">Graphic design, digital marketing, content creation, and multimedia</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="law" class="sr-only" onchange="selectCategory('law')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">⚖️</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Law & Public Administration</h3>
+                                    <p class="text-gray-600">Legal studies, criminology, public administration, and international relations</p>
+                                </div>
+                            </label>
+                            <label class="block">
+                                <input type="radio" name="category" value="tourism" class="sr-only" onchange="selectCategory('tourism')">
+                                <div class="category-option">
+                                    <div class="text-4xl mb-4">🏨</div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Tourism & Hospitality</h3>
+                                    <p class="text-gray-600">Hotel management, tourism, event planning, and culinary arts</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function selectCategory(category) {
+            console.log('Selecting category:', category, 'Previous category:', selectedCategory);
+            
+            // If switching to a different category, reset everything
+            if (selectedCategory && selectedCategory !== category) {
+                console.log('Category changed, resetting questionnaire');
+                resetQuestionnaire();
+            }
+            
+            selectedCategory = category;
+            responses.category = category; // Update responses with new category
+            
+            // Use appropriate question database based on assessment type
+            const assessmentType = '{{ request("type", "course") }}';
+            if (assessmentType === 'job') {
+                currentQuestions = jobQuestionDatabase[category];
+            } else {
+                currentQuestions = questionDatabase[category];
+            }
+            
+            console.log('Current questions for', category, ':', currentQuestions);
+            
+            // Update total sections based on the new category
+            if (currentQuestions) {
+                totalSections = Object.keys(currentQuestions).length + 1; // +1 for category selection
+                console.log('Total sections updated to:', totalSections);
+            }
+            
+            // Update visual selection
+            document.querySelectorAll('.category-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            const selectedOption = document.querySelector(`input[name="category"][value="${category}"]`);
+            if (selectedOption) {
+                selectedOption.checked = true;
+                selectedOption.closest('.category-option').classList.add('selected');
+            }
+        }
+
+        function resetQuestionnaire() {
+            console.log('Resetting questionnaire, clearing responses');
+            
+            // Clear all responses completely
+            Object.keys(responses).forEach(key => {
+                if (key !== 'category') {
+                    delete responses[key];
+                }
+            });
+            
+            // Remove all existing question sections (keep only section 1)
+            document.querySelectorAll('.question-section').forEach((section, index) => {
+                if (section.id !== 'section-1') {
+                    console.log('Removing section:', section.id);
+                    section.remove();
+                }
+            });
+            
+            // Reset navigation state
+            currentSection = 1;
+            
+            // Update progress and navigation
+            updateProgress();
+            updateNavigationButtons();
+            
+            console.log('Questionnaire reset complete');
+        }
+
+        function getCurrentQuestions(sectionNum) {
+            if (!selectedCategory || !currentQuestions) return [];
+            return currentQuestions[`section${sectionNum - 1}`] || [];
+        }
+
+        function createQuestionsHTML(questions, sectionNum) {
+            if (!questions || questions.length === 0) return '<div>No questions available</div>';
+
+            const categoryNames = {
+                'business': 'Business & Management',
+                'technology': 'Technology & IT',
+                'healthcare': 'Healthcare & Medicine',
+                'creative': 'Creative & Design',
+                'education': 'Education & Teaching',
+                'engineering': 'Engineering & Technology',
+                'law': 'Law & Public Administration',
+                'tourism': 'Tourism & Hospitality'
+            };
+
+            const sectionTitles = {
+                1: `${categoryNames[selectedCategory] || 'Other Knowledge'} Assessment`,
+                2: 'Your Interests & Preferences',
+                3: 'Learning Style & Environment',
+                4: 'Career Goals & Aspirations',
+                5: 'Other Knowledge'
+            };
+
+            let html = `
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">${sectionTitles[sectionNum]}</h2>
+                    <div class="space-y-8">
+            `;
+
+            questions.forEach(question => {
+                html += `
+                    <div class="border-b border-gray-200 pb-6 last:border-b-0">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">${question.text}</h3>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm font-medium text-green-600">Strongly Agree</span>
+                            <span class="text-sm font-medium text-red-600">Strongly Disagree</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-4">
+                            ${createRatingScale(question.id)}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function createRatingScale(questionId) {
+            let html = '';
+            for (let i = 1; i <= 5; i++) {
+                html += `
+                    <label class="block">
+                        <input type="radio" name="question_${questionId}" value="${i}" class="sr-only">
+                        <div class="modern-radio-option w-12 h-12 flex items-center justify-center font-bold">
+                            ${i}
+                        </div>
+                    </label>
+                `;
+            }
+            return html;
+        }
+
+        function validateCurrentSection() {
+            if (currentSection === 1) {
+                return selectedCategory !== '';
+            } else {
+                const questions = getCurrentQuestions(currentSection);
+                for (let question of questions) {
+                    const inputs = document.querySelectorAll(`input[name="question_${question.id}"]:checked`);
+                    if (inputs.length === 0) {
+                        alert('Please answer all questions before proceeding.');
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function saveCurrentSectionResponses() {
+            if (currentSection === 1) {
+                responses.category = selectedCategory;
+            } else {
+                const questions = getCurrentQuestions(currentSection);
+                questions.forEach(question => {
+                    const checkedInput = document.querySelector(`input[name="question_${question.id}"]:checked`);
+                    if (checkedInput) {
+                        responses[`question_${question.id}`] = checkedInput.value;
+                    }
+                });
+            }
+        }
+
+        // Weight mapping for business courses (from Business.py)
+        const businessWeightMapping = {
+            1: { // Mathematical/Analytical Skills
+                "BS Business Administration": 7,
+                "BS Accountancy": 10, 
+                "BS Marketing Management": 6,
+                "BS Financial Management": 9,
+                "BS Human Resource Management": 5,
+                "BS Entrepreneurship": 6,
+                "BS Management Accounting": 10,
+                "BS Operations Management": 8
+            },
+            2: { // Financial Analysis Interest
+                "BS Business Administration": 8,
+                "BS Accountancy": 10,
+                "BS Marketing Management": 5,
+                "BS Financial Management": 10,
+                "BS Human Resource Management": 4,
+                "BS Entrepreneurship": 7,
+                "BS Management Accounting": 9,
+                "BS Operations Management": 6
+            },
+            3: { // Communication Skills
+                "BS Business Administration": 9,
+                "BS Accountancy": 7,
+                "BS Marketing Management": 10,
+                "BS Financial Management": 7,
+                "BS Human Resource Management": 10,
+                "BS Entrepreneurship": 9,
+                "BS Management Accounting": 6,
+                "BS Operations Management": 8
+            },
+            4: { // Leadership/Management Interest
+                "BS Business Administration": 10,
+                "BS Accountancy": 6,
+                "BS Marketing Management": 8,
+                "BS Financial Management": 7,
+                "BS Human Resource Management": 10,
+                "BS Entrepreneurship": 10,
+                "BS Management Accounting": 5,
+                "BS Operations Management": 9
+            },
+            5: { // Technology Skills
+                "BS Business Administration": 8,
+                "BS Accountancy": 9,
+                "BS Marketing Management": 8,
+                "BS Financial Management": 8,
+                "BS Human Resource Management": 7,
+                "BS Entrepreneurship": 7,
+                "BS Management Accounting": 9,
+                "BS Operations Management": 9
+            },
+            6: { // Innovation/Entrepreneurship Interest
+                "BS Business Administration": 7,
+                "BS Accountancy": 3,
+                "BS Marketing Management": 8,
+                "BS Financial Management": 5,
+                "BS Human Resource Management": 6,
+                "BS Entrepreneurship": 10,
+                "BS Management Accounting": 4,
+                "BS Operations Management": 6
+            },
+            7: { // Accounting Knowledge
+                "BS Business Administration": 7,
+                "BS Accountancy": 10,
+                "BS Marketing Management": 4,
+                "BS Financial Management": 8,
+                "BS Human Resource Management": 5,
+                "BS Entrepreneurship": 6,
+                "BS Management Accounting": 10,
+                "BS Operations Management": 6
+            },
+            8: { // Marketing/Consumer Behavior Interest
+                "BS Business Administration": 7,
+                "BS Accountancy": 3,
+                "BS Marketing Management": 10,
+                "BS Financial Management": 4,
+                "BS Human Resource Management": 6,
+                "BS Entrepreneurship": 8,
+                "BS Management Accounting": 3,
+                "BS Operations Management": 5
+            },
+            9: { // Decision Making Skills
+                "BS Business Administration": 9,
+                "BS Accountancy": 7,
+                "BS Marketing Management": 8,
+                "BS Financial Management": 9,
+                "BS Human Resource Management": 8,
+                "BS Entrepreneurship": 10,
+                "BS Management Accounting": 7,
+                "BS Operations Management": 9
+            },
+            10: { // Economics/Business Environment Knowledge
+                "BS Business Administration": 9,
+                "BS Accountancy": 6,
+                "BS Marketing Management": 7,
+                "BS Financial Management": 8,
+                "BS Human Resource Management": 6,
+                "BS Entrepreneurship": 8,
+                "BS Management Accounting": 6,
+                "BS Operations Management": 7
+            },
+            11: { // Financial Planning Interest
+                "BS Business Administration": 8,
+                "BS Accountancy": 9,
+                "BS Marketing Management": 4,
+                "BS Financial Management": 10,
+                "BS Human Resource Management": 5,
+                "BS Entrepreneurship": 8,
+                "BS Management Accounting": 9,
+                "BS Operations Management": 6
+            },
+            12: { // Organization/Time Management Skills
+                "BS Business Administration": 9,
+                "BS Accountancy": 8,
+                "BS Marketing Management": 9,
+                "BS Financial Management": 8,
+                "BS Human Resource Management": 9,
+                "BS Entrepreneurship": 9,
+                "BS Management Accounting": 8,
+                "BS Operations Management": 10
+            },
+            13: { // Human Resources Interest
+                "BS Business Administration": 7,
+                "BS Accountancy": 4,
+                "BS Marketing Management": 6,
+                "BS Financial Management": 5,
+                "BS Human Resource Management": 10,
+                "BS Entrepreneurship": 7,
+                "BS Management Accounting": 4,
+                "BS Operations Management": 7
+            },
+            14: { // Data Analysis Skills
+                "BS Business Administration": 8,
+                "BS Accountancy": 9,
+                "BS Marketing Management": 8,
+                "BS Financial Management": 9,
+                "BS Human Resource Management": 6,
+                "BS Entrepreneurship": 7,
+                "BS Management Accounting": 9,
+                "BS Operations Management": 9
+            },
+            15: { // Business Law/Compliance Knowledge
+                "BS Business Administration": 8,
+                "BS Accountancy": 9,
+                "BS Marketing Management": 6,
+                "BS Financial Management": 7,
+                "BS Human Resource Management": 8,
+                "BS Entrepreneurship": 7,
+                "BS Management Accounting": 8,
+                "BS Operations Management": 7
+            },
+            16: { // Operations Management Interest
+                "BS Business Administration": 8,
+                "BS Accountancy": 5,
+                "BS Marketing Management": 6,
+                "BS Financial Management": 6,
+                "BS Human Resource Management": 7,
+                "BS Entrepreneurship": 7,
+                "BS Management Accounting": 6,
+                "BS Operations Management": 10
+            }
+        };
+
+        // Education weight mapping from Education.py
+        const educationWeightMapping = {
+            1: { // Language/Communication Pedagogy
+                "Bachelor of Secondary Education (BSEd) major in English": 10,
+                "Bachelor of Elementary Education (BEEd)": 8,
+                "Bachelor of Early Childhood Education (BECEd)": 8,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 6,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 5,
+                "Bachelor of Secondary Education (BSEd) major in Science": 4,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 4,
+                "Bachelor of Physical Education (BPEd)": 3
+            },
+            2: { // Mathematics Pedagogy
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 10,
+                "Bachelor of Elementary Education (BEEd)": 8,
+                "Bachelor of Early Childhood Education (BECEd)": 7,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 6,
+                "Bachelor of Secondary Education (BSEd) major in Science": 5,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4,
+                "Bachelor of Secondary Education (BSEd) major in English": 4,
+                "Bachelor of Physical Education (BPEd)": 3
+            },
+            3: { // Science Pedagogy
+                "Bachelor of Secondary Education (BSEd) major in Science": 10,
+                "Bachelor of Elementary Education (BEEd)": 7,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 6,
+                "Bachelor of Early Childhood Education (BECEd)": 6,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 5,
+                "Bachelor of Secondary Education (BSEd) major in English": 4,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4,
+                "Bachelor of Physical Education (BPEd)": 3
+            },
+            4: { // Social Studies Pedagogy
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 10,
+                "Bachelor of Elementary Education (BEEd)": 7,
+                "Bachelor of Secondary Education (BSEd) major in English": 6,
+                "Bachelor of Early Childhood Education (BECEd)": 6,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 5,
+                "Bachelor of Secondary Education (BSEd) major in Science": 4,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 4,
+                "Bachelor of Physical Education (BPEd)": 3
+            },
+            5: { // Early Childhood Orientation
+                "Bachelor of Early Childhood Education (BECEd)": 10,
+                "Bachelor of Elementary Education (BEEd)": 9,
+                "Bachelor of Physical Education (BPEd)": 5,
+                "Bachelor of Secondary Education (BSEd) major in English": 5,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 4,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 4,
+                "Bachelor of Secondary Education (BSEd) major in Science": 4,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4
+            },
+            6: { // General Pedagogy & Assessment
+                "Bachelor of Elementary Education (BEEd)": 9,
+                "Bachelor of Early Childhood Education (BECEd)": 9,
+                "Bachelor of Secondary Education (BSEd) major in English": 8,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 8,
+                "Bachelor of Secondary Education (BSEd) major in Science": 8,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 8,
+                "Bachelor of Physical Education (BPEd)": 7,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
+            },
+            7: { // Physical Education & Coaching
+                "Bachelor of Physical Education (BPEd)": 10,
+                "Bachelor of Elementary Education (BEEd)": 6,
+                "Bachelor of Early Childhood Education (BECEd)": 6,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 5,
+                "Bachelor of Secondary Education (BSEd) major in English": 4,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 4,
+                "Bachelor of Secondary Education (BSEd) major in Science": 4,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4
+            },
+            8: { // TLE/Vocational Orientation
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 10,
+                "Bachelor of Elementary Education (BEEd)": 6,
+                "Bachelor of Early Childhood Education (BECEd)": 5,
+                "Bachelor of Physical Education (BPEd)": 5,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 5,
+                "Bachelor of Secondary Education (BSEd) major in Science": 5,
+                "Bachelor of Secondary Education (BSEd) major in English": 4,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4
+            },
+            9: { // Public Speaking & Facilitation
+                "Bachelor of Secondary Education (BSEd) major in English": 9,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 9,
+                "Bachelor of Elementary Education (BEEd)": 8,
+                "Bachelor of Physical Education (BPEd)": 8,
+                "Bachelor of Early Childhood Education (BECEd)": 8,
+                "Bachelor of Secondary Education (BSEd) major in Science": 7,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
+            },
+            10: { // EdTech Integration
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 9,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 8,
+                "Bachelor of Secondary Education (BSEd) major in Science": 8,
+                "Bachelor of Secondary Education (BSEd) major in English": 7,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 7,
+                "Bachelor of Elementary Education (BEEd)": 7,
+                "Bachelor of Physical Education (BPEd)": 6,
+                "Bachelor of Early Childhood Education (BECEd)": 6
+            },
+            11: { // Learner Diversity & Inclusion
+                "Bachelor of Elementary Education (BEEd)": 9,
+                "Bachelor of Early Childhood Education (BECEd)": 9,
+                "Bachelor of Secondary Education (BSEd) major in English": 7,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
+                "Bachelor of Secondary Education (BSEd) major in Science": 7,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 7,
+                "Bachelor of Physical Education (BPEd)": 6,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 6
+            },
+            12: { // Assessment Literacy
+                "Bachelor of Elementary Education (BEEd)": 9,
+                "Bachelor of Secondary Education (BSEd) major in English": 8,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 8,
+                "Bachelor of Secondary Education (BSEd) major in Science": 8,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 8,
+                "Bachelor of Early Childhood Education (BECEd)": 8,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 7,
+                "Bachelor of Physical Education (BPEd)": 7
+            },
+            13: { // Instructional Design & Creativity
+                "Bachelor of Early Childhood Education (BECEd)": 9,
+                "Bachelor of Elementary Education (BEEd)": 9,
+                "Bachelor of Secondary Education (BSEd) major in English": 8,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 7,
+                "Bachelor of Secondary Education (BSEd) major in Science": 7,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
+                "Bachelor of Physical Education (BPEd)": 7,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
+            },
+            14: { // Advising & Community Engagement
+                "Bachelor of Elementary Education (BEEd)": 8,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 8,
+                "Bachelor of Secondary Education (BSEd) major in English": 8,
+                "Bachelor of Physical Education (BPEd)": 8,
+                "Bachelor of Early Childhood Education (BECEd)": 8,
+                "Bachelor of Secondary Education (BSEd) major in Science": 7,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
+            },
+            15: { // Action Research Orientation
+                "Bachelor of Secondary Education (BSEd) major in Science": 8,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 8,
+                "Bachelor of Secondary Education (BSEd) major in English": 7,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 7,
+                "Bachelor of Elementary Education (BEEd)": 7,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 7,
+                "Bachelor of Early Childhood Education (BECEd)": 6,
+                "Bachelor of Physical Education (BPEd)": 6
+            },
+            16: { // Pastoral Care & Mentorship
+                "Bachelor of Elementary Education (BEEd)": 9,
+                "Bachelor of Early Childhood Education (BECEd)": 9,
+                "Bachelor of Physical Education (BPEd)": 8,
+                "Bachelor of Secondary Education (BSEd) major in English": 8,
+                "Bachelor of Secondary Education (BSEd) major in Social Studies": 8,
+                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
+                "Bachelor of Secondary Education (BSEd) major in Science": 7,
+                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
+            }
+        };
+
+        const healthcareWeightMapping = {
+            1: { // Patient Care & Bedside Skills
+                "BS Nursing": 10,
+                "BS Respiratory Therapy": 8,
+                "BS Physical Therapy": 7,
+                "BS Occupational Therapy": 7,
+                "BS Public Health": 6,
+                "BS Medical Technology": 5,
+                "BS Radiologic Technology": 5,
+                "BS Pharmacy": 4
+            },
+            2: { // Laboratory Diagnostics
+                "BS Medical Technology": 10,
+                "BS Public Health": 7,
+                "BS Pharmacy": 6,
+                "BS Radiologic Technology": 5,
+                "BS Nursing": 5,
+                "BS Respiratory Therapy": 4,
+                "BS Physical Therapy": 3,
+                "BS Occupational Therapy": 3
+            },
+            3: { // Pharmacology & Medication Management
+                "BS Pharmacy": 10,
+                "BS Nursing": 7,
+                "BS Public Health": 6,
+                "BS Medical Technology": 6,
+                "BS Respiratory Therapy": 5,
+                "BS Radiologic Technology": 4,
+                "BS Physical Therapy": 4,
+                "BS Occupational Therapy": 4
+            },
+            4: { // Anatomy & Rehabilitation
+                "BS Physical Therapy": 10,
+                "BS Occupational Therapy": 9,
+                "BS Nursing": 6,
+                "BS Respiratory Therapy": 5,
+                "BS Medical Technology": 4,
+                "BS Radiologic Technology": 4,
+                "BS Pharmacy": 4,
+                "BS Public Health": 4
+            },
+            5: { // Imaging & Radiologic Science
+                "BS Radiologic Technology": 10,
+                "BS Nursing": 6,
+                "BS Respiratory Therapy": 6,
+                "BS Medical Technology": 5,
+                "BS Public Health": 4,
+                "BS Pharmacy": 4,
+                "BS Physical Therapy": 3,
+                "BS Occupational Therapy": 3
+            },
+            6: { // Respiratory Care
+                "BS Respiratory Therapy": 10,
+                "BS Nursing": 8,
+                "BS Public Health": 5,
+                "BS Medical Technology": 5,
+                "BS Radiologic Technology": 5,
+                "BS Physical Therapy": 4,
+                "BS Occupational Therapy": 4,
+                "BS Pharmacy": 4
+            },
+            7: { // Public Health & Epidemiology
+                "BS Public Health": 10,
+                "BS Nursing": 8,
+                "BS Medical Technology": 7,
+                "BS Pharmacy": 6,
+                "BS Respiratory Therapy": 5,
+                "BS Radiologic Technology": 4,
+                "BS Physical Therapy": 4,
+                "BS Occupational Therapy": 4
+            },
+            8: { // Chemistry & Compounding
+                "BS Pharmacy": 10,
+                "BS Medical Technology": 8,
+                "BS Public Health": 6,
+                "BS Nursing": 5,
+                "BS Respiratory Therapy": 4,
+                "BS Radiologic Technology": 4,
+                "BS Physical Therapy": 3,
+                "BS Occupational Therapy": 3
+            },
+            9: { // Infection Control & QA
+                "BS Medical Technology": 9,
+                "BS Public Health": 8,
+                "BS Nursing": 7,
+                "BS Pharmacy": 6,
+                "BS Respiratory Therapy": 5,
+                "BS Radiologic Technology": 5,
+                "BS Physical Therapy": 3,
+                "BS Occupational Therapy": 3
+            },
+            10: { // Therapeutic Exercise
+                "BS Physical Therapy": 10,
+                "BS Occupational Therapy": 9,
+                "BS Nursing": 6,
+                "BS Respiratory Therapy": 4,
+                "BS Medical Technology": 3,
+                "BS Radiologic Technology": 3,
+                "BS Pharmacy": 3,
+                "BS Public Health": 4
+            },
+            11: { // Occupational Therapy & ADLs
+                "BS Occupational Therapy": 10,
+                "BS Physical Therapy": 8,
+                "BS Nursing": 7,
+                "BS Public Health": 5,
+                "BS Pharmacy": 4,
+                "BS Respiratory Therapy": 4,
+                "BS Radiologic Technology": 4,
+                "BS Medical Technology": 4
+            },
+            12: { // Emergency & Critical Care
+                "BS Nursing": 10,
+                "BS Respiratory Therapy": 8,
+                "BS Radiologic Technology": 6,
+                "BS Medical Technology": 6,
+                "BS Pharmacy": 5,
+                "BS Physical Therapy": 5,
+                "BS Occupational Therapy": 5,
+                "BS Public Health": 5
+            },
+            13: { // Communication & Patient Education
+                "BS Nursing": 9,
+                "BS Occupational Therapy": 9,
+                "BS Physical Therapy": 8,
+                "BS Public Health": 8,
+                "BS Pharmacy": 6,
+                "BS Respiratory Therapy": 6,
+                "BS Radiologic Technology": 6,
+                "BS Medical Technology": 6
+            },
+            14: { // Health Informatics & Documentation
+                "BS Nursing": 8,
+                "BS Public Health": 8,
+                "BS Medical Technology": 7,
+                "BS Pharmacy": 7,
+                "BS Respiratory Therapy": 6,
+                "BS Radiologic Technology": 6,
+                "BS Physical Therapy": 5,
+                "BS Occupational Therapy": 5
+            },
+            15: { // Research & Evidence-Based Practice
+                "BS Public Health": 9,
+                "BS Medical Technology": 8,
+                "BS Nursing": 7,
+                "BS Physical Therapy": 7,
+                "BS Occupational Therapy": 7,
+                "BS Pharmacy": 7,
+                "BS Respiratory Therapy": 6,
+                "BS Radiologic Technology": 6
+            },
+            16: { // Ethics, Regulation & Safety
+                "BS Pharmacy": 8,
+                "BS Radiologic Technology": 8,
+                "BS Medical Technology": 8,
+                "BS Nursing": 8,
+                "BS Respiratory Therapy": 7,
+                "BS Public Health": 7,
+                "BS Physical Therapy": 6,
+                "BS Occupational Therapy": 6
+            }
+        };
+
+        const itWeightMapping = {
+            1: { // Programming Fundamentals
+                "BS Computer Science": 10,
+                "BS Information Technology": 9,
+                "BS Data Science": 8,
+                "BS Entertainment and Multimedia Computing": 7,
+                "BS Computer Engineering": 7,
+                "BS Cybersecurity": 6,
+                "BS Information Systems": 6,
+                "BS Network Administration": 6
+            },
+            2: { // Algorithms & Data Structures
+                "BS Computer Science": 10,
+                "BS Data Science": 9,
+                "BS Information Technology": 7,
+                "BS Computer Engineering": 7,
+                "BS Information Systems": 6,
+                "BS Entertainment and Multimedia Computing": 6,
+                "BS Cybersecurity": 6,
+                "BS Network Administration": 5
+            },
+            3: { // Mathematics for Computing
+                "BS Computer Science": 10,
+                "BS Data Science": 9,
+                "BS Computer Engineering": 7,
+                "BS Information Technology": 6,
+                "BS Information Systems": 6,
+                "BS Cybersecurity": 6,
+                "BS Entertainment and Multimedia Computing": 5,
+                "BS Network Administration": 5
+            },
+            4: { // Databases & SQL
+                "BS Information Systems": 10,
+                "BS Information Technology": 9,
+                "BS Data Science": 8,
+                "BS Computer Science": 7,
+                "BS Cybersecurity": 6,
+                "BS Network Administration": 6,
+                "BS Computer Engineering": 5,
+                "BS Entertainment and Multimedia Computing": 5
+            },
+            5: { // Web & Mobile Development
+                "BS Information Technology": 10,
+                "BS Information Systems": 8,
+                "BS Entertainment and Multimedia Computing": 8,
+                "BS Computer Science": 7,
+                "BS Cybersecurity": 6,
+                "BS Network Administration": 6,
+                "BS Computer Engineering": 5,
+                "BS Data Science": 5
+            },
+            6: { // Software Engineering
+                "BS Information Technology": 9,
+                "BS Information Systems": 9,
+                "BS Computer Science": 8,
+                "BS Entertainment and Multimedia Computing": 7,
+                "BS Cybersecurity": 7,
+                "BS Network Administration": 7,
+                "BS Computer Engineering": 6,
+                "BS Data Science": 6
+            },
+            7: { // Operating Systems & SysAdmin
+                "BS Network Administration": 9,
+                "BS Information Technology": 8,
+                "BS Cybersecurity": 8,
+                "BS Computer Engineering": 7,
+                "BS Computer Science": 7,
+                "BS Information Systems": 6,
+                "BS Entertainment and Multimedia Computing": 5,
+                "BS Data Science": 5
+            },
+            8: { // Computer Networks
+                "BS Network Administration": 10,
+                "BS Cybersecurity": 9,
+                "BS Information Technology": 8,
+                "BS Computer Engineering": 7,
+                "BS Computer Science": 6,
+                "BS Information Systems": 6,
+                "BS Entertainment and Multimedia Computing": 5,
+                "BS Data Science": 5
+            },
+            9: { // Cloud & DevOps
+                "BS Network Administration": 10,
+                "BS Information Technology": 9,
+                "BS Information Systems": 7,
+                "BS Cybersecurity": 7,
+                "BS Computer Science": 7,
+                "BS Data Science": 6,
+                "BS Computer Engineering": 6,
+                "BS Entertainment and Multimedia Computing": 5
+            },
+            10: { // Cybersecurity
+                "BS Cybersecurity": 10,
+                "BS Network Administration": 8,
+                "BS Information Technology": 7,
+                "BS Computer Science": 6,
+                "BS Information Systems": 6,
+                "BS Computer Engineering": 6,
+                "BS Data Science": 5,
+                "BS Entertainment and Multimedia Computing": 4
+            },
+            11: { // Data Analysis & Stats
+                "BS Data Science": 10,
+                "BS Information Systems": 8,
+                "BS Computer Science": 8,
+                "BS Information Technology": 7,
+                "BS Entertainment and Multimedia Computing": 6,
+                "BS Cybersecurity": 6,
+                "BS Network Administration": 5,
+                "BS Computer Engineering": 5
+            },
+            12: { // Machine Learning & AI
+                "BS Data Science": 10,
+                "BS Computer Science": 9,
+                "BS Information Technology": 7,
+                "BS Information Systems": 6,
+                "BS Entertainment and Multimedia Computing": 6,
+                "BS Cybersecurity": 6,
+                "BS Computer Engineering": 5,
+                "BS Network Administration": 4
+            },
+            13: { // Hardware & Embedded
+                "BS Computer Engineering": 10,
+                "BS Network Administration": 7,
+                "BS Cybersecurity": 6,
+                "BS Computer Science": 6,
+                "BS Information Technology": 5,
+                "BS Entertainment and Multimedia Computing": 5,
+                "BS Information Systems": 4,
+                "BS Data Science": 4
+            },
+            14: { // Graphics, Multimedia & Games
+                "BS Entertainment and Multimedia Computing": 10,
+                "BS Computer Science": 7,
+                "BS Information Technology": 7,
+                "BS Information Systems": 6,
+                "BS Cybersecurity": 5,
+                "BS Computer Engineering": 5,
+                "BS Data Science": 5,
+                "BS Network Administration": 4
+            },
+            15: { // UX/HCI & Business Analysis
+                "BS Information Systems": 10,
+                "BS Entertainment and Multimedia Computing": 8,
+                "BS Information Technology": 8,
+                "BS Computer Science": 6,
+                "BS Cybersecurity": 6,
+                "BS Network Administration": 5,
+                "BS Computer Engineering": 5,
+                "BS Data Science": 5
+            },
+            16: { // Teamwork & Project Management
+                "BS Information Systems": 9,
+                "BS Information Technology": 9,
+                "BS Computer Science": 8,
+                "BS Entertainment and Multimedia Computing": 8,
+                "BS Cybersecurity": 7,
+                "BS Network Administration": 7,
+                "BS Computer Engineering": 7,
+                "BS Data Science": 7
+            }
+        };
+
+        function calculateBusinessCourseScores() {
+            const courseScores = {};
+            const businessCourses = [
+                "BS Business Administration",
+                "BS Accountancy", 
+                "BS Marketing Management",
+                "BS Financial Management",
+                "BS Human Resource Management", 
+                "BS Entrepreneurship",
+                "BS Management Accounting",
+                "BS Operations Management"
+            ];
+
+            // Initialize scores
+            businessCourses.forEach(course => {
+                courseScores[course] = 0;
+            });
+
+            // Calculate weighted scores
+            for (let questionId = 1; questionId <= 16; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && businessWeightMapping[questionId]) {
+                    businessCourses.forEach(course => {
+                        const weight = businessWeightMapping[questionId][course] || 0;
+                        courseScores[course] += userRating * weight;
+                    });
+                }
+            }
+
+            return courseScores;
+        }
+
+        // Job scoring functions
+        function calculateBusinessJobScores() {
+            const jobScores = {};
+            const businessJobs = jobRolesDatabase.business;
+
+            // Initialize scores
+            businessJobs.forEach(job => {
+                jobScores[job] = 0;
+            });
+
+            // Calculate scores based on job questionnaire structure
+            // Each job has 2 questions (16 total / 8 jobs = 2 per job)
+            for (let i = 0; i < businessJobs.length; i++) {
+                const job = businessJobs[i];
+                const question1Id = (i * 2) + 1;
+                const question2Id = (i * 2) + 2;
+                
+                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
+                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
+                
+                jobScores[job] = rating1 + rating2;
+            }
+
+            return jobScores;
+        }
+
+        function calculateHealthcareJobScores() {
+            const jobScores = {};
+            const healthcareJobs = jobRolesDatabase.healthcare;
+
+            // Initialize scores
+            healthcareJobs.forEach(job => {
+                jobScores[job] = 0;
+            });
+
+            // Calculate scores
+            for (let i = 0; i < healthcareJobs.length; i++) {
+                const job = healthcareJobs[i];
+                const question1Id = (i * 2) + 1;
+                const question2Id = (i * 2) + 2;
+                
+                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
+                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
+                
+                jobScores[job] = rating1 + rating2;
+            }
+
+            return jobScores;
+        }
+
+        function calculateTechnologyJobScores() {
+            const jobScores = {};
+            const technologyJobs = jobRolesDatabase.technology;
+
+            // Initialize scores
+            technologyJobs.forEach(job => {
+                jobScores[job] = 0;
+            });
+
+            // Calculate scores
+            for (let i = 0; i < technologyJobs.length; i++) {
+                const job = technologyJobs[i];
+                const question1Id = (i * 2) + 1;
+                const question2Id = (i * 2) + 2;
+                
+                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
+                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
+                
+                jobScores[job] = rating1 + rating2;
+            }
+
+            return jobScores;
+        }
+
+        function calculateCreativeJobScores() {
+            const jobScores = {};
+            const creativeJobs = jobRolesDatabase.creative;
+
+            // Initialize scores
+            creativeJobs.forEach(job => {
+                jobScores[job] = 0;
+            });
+
+            // Calculate scores
+            for (let i = 0; i < creativeJobs.length; i++) {
+                const job = creativeJobs[i];
+                const question1Id = (i * 2) + 1;
+                const question2Id = (i * 2) + 2;
+                
+                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
+                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
+                
+                jobScores[job] = rating1 + rating2;
+            }
+
+            return jobScores;
+        }
+
+        function calculateEducationJobScores() {
+            const jobScores = {};
+            const educationJobs = jobRolesDatabase.education;
+
+            // Initialize scores
+            educationJobs.forEach(job => {
+                jobScores[job] = 0;
+            });
+
+            // Calculate scores
+            for (let i = 0; i < educationJobs.length; i++) {
+                const job = educationJobs[i];
+                const question1Id = (i * 2) + 1;
+                const question2Id = (i * 2) + 2;
+                
+                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
+                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
+                
+                jobScores[job] = rating1 + rating2;
+            }
+
+            return jobScores;
+        }
+
+        function calculateEngineeringJobScores() {
+            const jobScores = {};
+            const engineeringJobs = jobRolesDatabase.engineering;
+
+            // Initialize scores
+            engineeringJobs.forEach(job => {
+                jobScores[job] = 0;
+            });
+
+            // Calculate scores
+            for (let i = 0; i < engineeringJobs.length; i++) {
+                const job = engineeringJobs[i];
+                const question1Id = (i * 2) + 1;
+                const question2Id = (i * 2) + 2;
+                
+                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
+                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
+                
+                jobScores[job] = rating1 + rating2;
+            }
+
+            return jobScores;
+        }
+
+        function calculateLawJobScores() {
+            const jobScores = {};
+            const lawJobs = jobRolesDatabase.law;
+
+            // Initialize scores
+            lawJobs.forEach(job => {
+                jobScores[job] = 0;
+            });
+
+            // Calculate scores
+            for (let i = 0; i < lawJobs.length; i++) {
+                const job = lawJobs[i];
+                const question1Id = (i * 2) + 1;
+                const question2Id = (i * 2) + 2;
+                
+                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
+                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
+                
+                jobScores[job] = rating1 + rating2;
+            }
+
+            return jobScores;
+        }
+
+        function calculateTourismJobScores() {
+            const jobScores = {};
+            const tourismJobs = jobRolesDatabase.tourism;
+
+            // Initialize scores
+            tourismJobs.forEach(job => {
+                jobScores[job] = 0;
+            });
+
+            // Calculate scores
+            for (let i = 0; i < tourismJobs.length; i++) {
+                const job = tourismJobs[i];
+                const question1Id = (i * 2) + 1;
+                const question2Id = (i * 2) + 2;
+                
+                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
+                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
+                
+                jobScores[job] = rating1 + rating2;
+            }
+
+            return jobScores;
+        }
+
+        function calculateLiberalArtsCourseScores() {
+            const courseScores = {};
+            const liberalArtsCourses = [
+                "BA English Language",
+                "BA Literature", 
+                "BA Communication",
+                "BA Philosophy",
+                "BA History",
+                "BA Political Science",
+                "BA Psychology",
+                "BA Sociology"
+            ];
+
+            // Initialize scores
+            liberalArtsCourses.forEach(course => {
+                courseScores[course] = 0;
+            });
+
+            // Calculate weighted scores
+            for (let questionId = 1; questionId <= 16; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && liberalArtsWeightMapping[questionId]) {
+                    liberalArtsCourses.forEach(course => {
+                        const weight = liberalArtsWeightMapping[questionId][course] || 0;
+                        courseScores[course] += userRating * weight;
+                    });
+                }
+            }
+
+            return courseScores;
+        }
+
+        function calculateITCourseScores() {
+            const courseScores = {};
+            const itCourses = [
+                "BS Information Technology",
+                "BS Computer Science",
+                "BS Information Systems",
+                "BS Computer Engineering",
+                "BS Entertainment and Multimedia Computing",
+                "BS Data Science",
+                "BS Cybersecurity",
+                "BS Network Administration"
+            ];
+
+            // Initialize scores
+            itCourses.forEach(course => {
+                courseScores[course] = 0;
+            });
+
+            // Calculate scores based on responses and weights
+            for (let questionId = 1; questionId <= 16; questionId++) {
+                const response = responses[questionId];
+                if (response && itWeightMapping[questionId]) {
+                    for (const course of itCourses) {
+                        if (itWeightMapping[questionId][course]) {
+                            courseScores[course] += response * itWeightMapping[questionId][course];
+                        }
+                    }
+                }
+            }
+
+            return courseScores;
+        }
+
+        function calculateEngineeringCourseScores() {
+            const courseScores = {};
+            const engineeringCourses = [
+                "BS Civil Engineering",
+                "BS Mechanical Engineering",
+                "BS Electrical Engineering",
+                "BS Computer Engineering",
+                "BS Chemical Engineering",
+                "BS Industrial Engineering",
+                "BS Environmental Engineering",
+                "BS Materials Engineering"
+            ];
+
+            // Initialize scores
+            engineeringCourses.forEach(course => {
+                courseScores[course] = 0;
+            });
+
+            // Calculate weighted scores
+            for (let questionId = 1; questionId <= 16; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && engineeringWeightMapping[questionId]) {
+                    engineeringCourses.forEach(course => {
+                        const weight = engineeringWeightMapping[questionId][course] || 0;
+                        courseScores[course] += userRating * weight;
+                    });
+                }
+            }
+
+            return courseScores;
+        }
+
+        function calculateEducationCourseScores() {
+            const courseScores = {};
+            const educationCourses = [
+                "Bachelor of Secondary Education (BSEd) major in English",
+                "Bachelor of Elementary Education (BEEd)",
+                "Bachelor of Early Childhood Education (BECEd)",
+                "Bachelor of Secondary Education (BSEd) major in Social Studies",
+                "Bachelor of Technology and Livelihood Education (BTLEd)",
+                "Bachelor of Secondary Education (BSEd) major in Science",
+                "Bachelor of Secondary Education (BSEd) major in Mathematics",
+                "Bachelor of Physical Education (BPEd)"
+            ];
+
+            // Initialize scores
+            educationCourses.forEach(course => {
+                courseScores[course] = 0;
+            });
+
+            // Calculate weighted scores
+            for (let questionId = 1; questionId <= 16; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && educationWeightMapping[questionId]) {
+                    educationCourses.forEach(course => {
+                        const weight = educationWeightMapping[questionId][course] || 0;
+                        courseScores[course] += userRating * weight;
+                    });
+                }
+            }
+
+            return courseScores;
+        }
+
+        function calculateHealthcareCourseScores() {
+            const courseScores = {};
+            const healthcareCourses = [
+                "BS Nursing",
+                "BS Medical Technology",
+                "BS Pharmacy",
+                "BS Physical Therapy",
+                "BS Radiologic Technology",
+                "BS Respiratory Therapy",
+                "BS Occupational Therapy",
+                "BS Public Health"
+            ];
+
+            // Initialize scores
+            healthcareCourses.forEach(course => {
+                courseScores[course] = 0;
+            });
+
+            // Calculate weighted scores
+            for (let questionId = 1; questionId <= 16; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && healthcareWeightMapping[questionId]) {
+                    healthcareCourses.forEach(course => {
+                        const weight = healthcareWeightMapping[questionId][course] || 0;
+                        courseScores[course] += userRating * weight;
+                    });
+                }
+            }
+
+            return courseScores;
+        }
+
+        function calculateLawCourseScores() {
+            const courseScores = {};
+            const lawCourses = [
+                "LLB Law",
+                "JD Juris Doctor",
+                "BS Criminology",
+                "BA Public Administration",
+                "BS Forensic Science"
+            ];
+
+            // Initialize scores
+            lawCourses.forEach(course => {
+                courseScores[course] = 0;
+            });
+
+            // Calculate weighted scores
+            for (let questionId = 601; questionId <= 616; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && lawWeightMapping[questionId]) {
+                    lawCourses.forEach(course => {
+                        const weight = lawWeightMapping[questionId][course] || 0;
+                        courseScores[course] += userRating * weight;
+                    });
+                }
+            }
+
+            return courseScores;
+        }
+
+        function calculateTourismCourseScores() {
+            const courseScores = {};
+            const tourismCourses = [
+                "BS Tourism Management",
+                "BS Hotel and Restaurant Management",
+                "BS Hospitality Management",
+                "BS Event Management",
+                "BS Culinary Arts"
+            ];
+
+            // Initialize scores
+            tourismCourses.forEach(course => {
+                courseScores[course] = 0;
+            });
+
+            // Calculate weighted scores
+            for (let questionId = 701; questionId <= 716; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && tourismWeightMapping[questionId]) {
+                    tourismCourses.forEach(course => {
+                        const weight = tourismWeightMapping[questionId][course] || 0;
+                        courseScores[course] += userRating * weight;
+                    });
+                }
+            }
+
+            return courseScores;
+        }
+
+        function updateProgress() {
+            const progress = (currentSection / totalSections) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `Section ${currentSection} of ${totalSections}`;
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+
+            prevBtn.disabled = currentSection === 1;
+            
+            if (currentSection === totalSections) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        // Override form submission to include calculated scores
+        document.getElementById('course-questionnaire-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Save current section responses
+            saveCurrentSectionResponses();
+            
+            const assessmentType = '{{ request("type", "course") }}';
+            
+            if (assessmentType === 'job') {
+                // Calculate job scores based on selected category
+                let jobScores = {};
+                
+                if (selectedCategory === 'business') {
+                    jobScores = calculateBusinessJobScores();
+                } else if (selectedCategory === 'healthcare') {
+                    jobScores = calculateHealthcareJobScores();
+                } else if (selectedCategory === 'technology') {
+                    jobScores = calculateTechnologyJobScores();
+                } else if (selectedCategory === 'creative') {
+                    jobScores = calculateCreativeJobScores();
+                } else if (selectedCategory === 'education') {
+                    jobScores = calculateEducationJobScores();
+                } else if (selectedCategory === 'engineering') {
+                    jobScores = calculateEngineeringJobScores();
+                } else if (selectedCategory === 'law') {
+                    jobScores = calculateLawJobScores();
+                } else if (selectedCategory === 'tourism') {
+                    jobScores = calculateTourismJobScores();
+                }
+                
+                responses.jobScores = jobScores;
+                
+                // Find the top recommended job
+                const topJob = Object.keys(jobScores).reduce((a, b) => 
+                    jobScores[a] > jobScores[b] ? a : b
+                );
+                responses.topRecommendation = topJob;
+                
+            } else {
+                // Calculate course scores (existing logic)
+                if (selectedCategory === 'business') {
+                    const courseScores = calculateBusinessCourseScores();
+                    responses.courseScores = courseScores;
+                    
+                    // Find the top recommended course
+                    const topCourse = Object.keys(courseScores).reduce((a, b) => 
+                        courseScores[a] > courseScores[b] ? a : b
+                    );
+                    responses.topRecommendation = topCourse;
+                }
+                
+                // Calculate course scores if education category is selected
+                if (selectedCategory === 'education') {
+                    const courseScores = calculateEducationCourseScores();
+                    responses.courseScores = courseScores;
+                    
+                    // Find the top recommended course
+                    const topCourse = Object.keys(courseScores).reduce((a, b) => 
+                        courseScores[a] > courseScores[b] ? a : b
+                    );
+                    responses.topRecommendation = topCourse;
+                }
+                
+                // Calculate course scores if engineering category is selected
+                if (selectedCategory === 'engineering') {
+                    const courseScores = calculateEngineeringCourseScores();
+                    responses.courseScores = courseScores;
+                    
+                    // Find the top recommended course
+                    const topCourse = Object.keys(courseScores).reduce((a, b) => 
+                        courseScores[a] > courseScores[b] ? a : b
+                    );
+                    responses.topRecommendation = topCourse;
+                }
+                
+                // Calculate course scores if healthcare category is selected
+                if (selectedCategory === 'healthcare') {
+                    const courseScores = calculateHealthcareCourseScores();
+                    responses.courseScores = courseScores;
+                    
+                    // Find the top recommended course
+                    const topCourse = Object.keys(courseScores).reduce((a, b) => 
+                        courseScores[a] > courseScores[b] ? a : b
+                    );
+                    responses.topRecommendation = topCourse;
+                }
+                
+                // Calculate course scores if technology category is selected
+                if (selectedCategory === 'technology') {
+                    const courseScores = calculateITCourseScores();
+                    responses.courseScores = courseScores;
+                    
+                    // Find the top recommended course
+                    const topCourse = Object.keys(courseScores).reduce((a, b) => 
+                        courseScores[a] > courseScores[b] ? a : b
+                    );
+                    responses.topRecommendation = topCourse;
+                }
+                
+                // Calculate course scores if creative category is selected
+                if (selectedCategory === 'creative') {
+                    const courseScores = calculateLiberalArtsCourseScores();
+                    responses.courseScores = courseScores;
+                    
+                    // Find the top recommended course
+                    const topCourse = Object.keys(courseScores).reduce((a, b) => 
+                        courseScores[a] > courseScores[b] ? a : b
+                    );
+                    responses.topRecommendation = topCourse;
+                }
+                
+                // Calculate course scores if law category is selected
+                if (selectedCategory === 'law') {
+                    const courseScores = calculateLawCourseScores();
+                    responses.courseScores = courseScores;
+                    
+                    // Find the top recommended course
+                    const topCourse = Object.keys(courseScores).reduce((a, b) => 
+                        courseScores[a] > courseScores[b] ? a : b
+                    );
+                    responses.topRecommendation = topCourse;
+                }
+                
+                // Calculate course scores if tourism category is selected
+                if (selectedCategory === 'tourism') {
+                    const courseScores = calculateTourismCourseScores();
+                    responses.courseScores = courseScores;
+                    
+                    // Find the top recommended course
+                    const topCourse = Object.keys(courseScores).reduce((a, b) => 
+                        courseScores[a] > courseScores[b] ? a : b
+                    );
+                    responses.topRecommendation = topCourse;
+                }
+            }
+            
+            // Update hidden form fields
+            document.getElementById('selected-category').value = selectedCategory;
+            document.getElementById('all-responses').value = JSON.stringify(responses);
+            
+            // Submit the form
+            this.submit();
+        });
+
+        // Make selectCategory function global
+        window.selectCategory = selectCategory;
+    });
 </script>
 @endpush
-@endsection

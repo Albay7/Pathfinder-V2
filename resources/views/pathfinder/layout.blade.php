@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <title>@yield('title', 'Pathfinder - Career Guidance Platform')</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
-    
+
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    
+
     <!-- Additional Styles -->
     @stack('styles')
 </head>
@@ -33,7 +33,7 @@
                         <span class="ml-2 text-xl font-bold text-gray-900">Pathfinder</span>
                     </a>
                 </div>
-                
+
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="{{ route('pathfinder.home') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.home') ? 'text-blue-600 bg-blue-50' : '' }}">
@@ -51,7 +51,7 @@
                     <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.mbti-questionnaire*') || request()->routeIs('pathfinder.mbti.results*') ? 'text-purple-600 bg-purple-50' : '' }}">
                         MBTI Assessment
                     </a>
-                    
+
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
                             Dashboard
@@ -79,7 +79,7 @@
                         </a>
                     @endauth
                 </div>
-                
+
                 <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center">
                     <button type="button" class="mobile-menu-button text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600" aria-label="toggle menu">
@@ -90,7 +90,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Mobile Navigation Menu -->
         <div class="mobile-menu hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
@@ -109,7 +109,7 @@
                 <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="text-gray-700 hover:text-purple-600 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('pathfinder.mbti-questionnaire*') || request()->routeIs('pathfinder.mbti.results*') ? 'text-purple-600 bg-purple-50' : '' }}">
                     MBTI Assessment
                 </a>
-                
+
                 @auth
                         <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200">
                             Dashboard
@@ -141,12 +141,12 @@
             </div>
         </div>
     </nav>
-    
+
     <!-- Main Content -->
     <main class="min-h-screen">
         @yield('content')
     </main>
-    
+
     <!-- Footer -->
     <footer class="bg-gray-800 text-white">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -189,19 +189,19 @@
             </div>
         </div>
     </footer>
-    
+
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}"></script>
-    
+
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <!-- Mobile Menu Toggle Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuButton = document.querySelector('.mobile-menu-button');
             const mobileMenu = document.querySelector('.mobile-menu');
-            
+
             if (mobileMenuButton && mobileMenu) {
                 mobileMenuButton.addEventListener('click', function() {
                     mobileMenu.classList.toggle('hidden');
@@ -209,7 +209,7 @@
             }
         });
     </script>
-    
+
     <!-- Flash Messages Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -260,7 +260,7 @@
                 @foreach($errors->all() as $error)
                     errorMessages.push('{{ $error }}');
                 @endforeach
-                
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Validation Error',
@@ -271,7 +271,7 @@
             @endif
         });
     </script>
-    
+
     @stack('scripts')
 </body>
 </html>

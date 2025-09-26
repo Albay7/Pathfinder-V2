@@ -1,0 +1,13 @@
+John Doe
+Software Developer
+
+Skills:
+- JavaScript
+- PHP
+- Laravel
+- React
+- MySQL
+
+Experience:
+- 3 years web development
+- Full-stack developer at Tech Company

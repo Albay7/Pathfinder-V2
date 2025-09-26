@@ -13,27 +13,28 @@ class Course extends Model
     protected $fillable = [
         'title',
         'description',
-        'field',
+        'provider',
+        'category',
         'level',
-        'duration',
-        'career_outcomes',
-        'skills_developed',
+        'url',
+        'price',
+        'currency',
+        'duration_hours',
+        'skills_taught',
+        'prerequisites',
         'mbti_compatibility',
         'mbti_explanation',
-        'institution',
-        'tuition_fee',
-        'prerequisites',
-        'subjects',
+        'rating',
+        'students_count',
         'is_active'
     ];
 
     protected $casts = [
-        'career_outcomes' => 'array',
-        'skills_developed' => 'array',
-        'mbti_compatibility' => 'array',
+        'skills_taught' => 'array',
         'prerequisites' => 'array',
-        'subjects' => 'array',
-        'tuition_fee' => 'decimal:2',
+        'mbti_compatibility' => 'array',
+        'price' => 'decimal:2',
+        'rating' => 'decimal:2',
         'is_active' => 'boolean'
     ];
 

@@ -8,7 +8,7 @@
         /* Reset and base styles */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        
+
         /* Custom colors */
         .bg-blue-zodiac { background-color: #13264D; }
         .bg-fountain-blue { background-color: #5AA7C6; }
@@ -16,7 +16,7 @@
         .border-fountain-blue { border-color: #5AA7C6; }
         .bg-tiara { background-color: #BEC0BF; }
         .text-tiara { color: #BEC0BF; }
-        
+
         /* Layout utilities */
         .h-screen { height: 100vh; }
         .bg-white { background-color: white; }
@@ -69,7 +69,7 @@
         .gap-4 { gap: 1rem; }
         .text-center { text-align: center; }
         .leading-relaxed { line-height: 1.625; }
-        
+
         /* Spacing */
         .p-12 { padding: 3rem; }
         .p-8 { padding: 2rem; }
@@ -94,7 +94,7 @@
         .space-x-6 > * + * { margin-left: 1.5rem; }
         .space-y-6 > * + * { margin-top: 1.5rem; }
         .gap-4 { gap: 1rem; }
-        
+
         /* Typography */
         .text-base { font-size: 1rem; }
         .text-xl { font-size: 1.25rem; }
@@ -113,7 +113,7 @@
         .text-center { text-align: center; }
         .leading-relaxed { line-height: 1.625; }
         .leading-tight { line-height: 1.25; }
-        
+
         /* Backgrounds and gradients */
         .bg-gray-100 { background-color: #F3F4F6; }
         .bg-blue-50 { background-color: #EFF6FF; }
@@ -132,7 +132,7 @@
         .bg-blue-400 { background-color: #60A5FA; }
         .bg-teal-500 { background-color: #14B8A6; }
         .bg-teal-400 { background-color: #2DD4BF; }
-        
+
         /* Borders and shadows */
         .border { border-width: 1px; }
         .border-b { border-bottom-width: 1px; }
@@ -146,14 +146,14 @@
         .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
         .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
         .min-w-\[1024px\] { min-width: 1024px; }
-        
+
         /* Transitions */
         .transition-colors { transition-property: color, background-color, border-color; transition-duration: 0.2s; }
         .transition-all { transition-property: all; transition-duration: 0.2s; }
         .duration-200 { transition-duration: 0.2s; }
         .duration-300 { transition-duration: 0.3s; }
         .transform { transform: translateZ(0); }
-        
+
         /* Hover and focus effects */
         .hover\:bg-fountain-blue:hover { background-color: #5AA7C6; }
         .hover\:bg-blue-zodiac:hover { background-color: #13264D; }
@@ -168,24 +168,24 @@
         .hover\:bg-blue-400:hover { background-color: #60A5FA; }
         .hover\:bg-teal-400:hover { background-color: #2DD4BF; }
         .cursor-pointer { cursor: pointer; }
-        
+
         /* Grid */
         .grid { display: grid; }
         .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        
+
         /* Positioning */
         .relative { position: relative; }
         .block { display: block; }
         .hidden { display: none; }
         .cursor-pointer { cursor: pointer; }
-        
+
         /* Forms */
         input[type="text"], input[type="email"], input[type="password"], input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
         }
-        
+
         input[type="checkbox"] {
             width: 1rem;
             height: 1rem;
@@ -194,12 +194,12 @@
             border-radius: 0.25rem;
             position: relative;
         }
-        
+
         input[type="checkbox"]:checked {
             background-color: #5AA7C6;
             border-color: #5AA7C6;
         }
-        
+
         input[type="checkbox"]:checked::after {
             content: '✓';
             position: absolute;
@@ -209,12 +209,12 @@
             color: white;
             font-size: 0.75rem;
         }
-        
+
         /* Links */
         a {
             text-decoration: none;
         }
-        
+
         .nav-link {
             color: #4B5563;
             text-decoration: none;
@@ -222,11 +222,11 @@
             font-weight: 500;
             transition: color 0.2s ease;
         }
-        
+
         .nav-link:hover {
             color: #13264D;
         }
-        
+
         .nav-btn {
             background-color: #F3F4F6;
             color: #374151;
@@ -237,13 +237,13 @@
             text-decoration: none;
             transition: all 0.2s ease;
         }
-        
+
         .nav-btn:hover {
             background-color: #13264D;
             color: white;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
-        
+
         .nav-btn-primary {
             background-color: #5AA7C6;
             color: white;
@@ -254,13 +254,13 @@
             text-decoration: none;
             transition: all 0.2s ease;
         }
-        
+
         .nav-btn-primary:hover {
             background-color: #13264D;
             transform: translateY(-2px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* Hover and focus effects */
         .hover\:bg-blue-zodiac:hover { background-color: #13264D; }
         .hover\:text-white:hover { color: white; }
@@ -276,18 +276,18 @@
         .hover\:bg-pink-400:hover { background-color: #F472B6; }
         .hover\:bg-blue-400:hover { background-color: #60A5FA; }
         .hover\:bg-teal-400:hover { background-color: #2DD4BF; }
-        
+
         .focus\:ring-2:focus { box-shadow: 0 0 0 2px rgba(90, 167, 198, 0.5); }
         .focus\:ring-4:focus { box-shadow: 0 0 0 4px rgba(90, 167, 198, 0.3); }
         .focus\:ring-fountain-blue:focus { --tw-ring-color: #5AA7C6; }
         .focus\:border-fountain-blue:focus { border-color: #5AA7C6; }
         .focus\:ring-fountain-blue\/30:focus { --tw-ring-color: rgba(90, 167, 198, 0.3); }
-        
+
         /* Responsive utilities */
         @media (min-width: 768px) {
             .md\:flex { display: flex; }
         }
-        
+
         /* Transitions */
         .transition-colors { transition-property: color, background-color, border-color; transition-duration: 0.2s; }
         .transition-all { transition-property: all; transition-duration: 0.2s; }

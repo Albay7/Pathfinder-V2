@@ -40,7 +40,7 @@
                 Our comprehensive platform provides everything you need to make informed career decisions and achieve your professional goals.
             </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Career Guidance Card -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300">
@@ -80,7 +80,7 @@
                     </svg>
                 </a>
             </div>
-            
+
             <!-- Career Path Visualizer Card -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300">
                 <div class="flex items-center justify-center w-16 h-16 bg-green-100 rounded-lg mb-6">
@@ -119,7 +119,7 @@
                     </svg>
                 </a>
             </div>
-            
+
             <!-- Skill Gap Analyzer Card -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300">
                 <div class="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-lg mb-6">
@@ -173,7 +173,7 @@
                 Simple steps to discover and achieve your career goals
             </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="text-center">
                 <div class="flex items-center justify-center w-16 h-16 bg-blue-600 text-white rounded-full mx-auto mb-4 text-xl font-bold">
@@ -182,7 +182,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Take Assessment</h3>
                 <p class="text-gray-600">Answer questions about your interests, skills, and career preferences.</p>
             </div>
-            
+
             <div class="text-center">
                 <div class="flex items-center justify-center w-16 h-16 bg-green-600 text-white rounded-full mx-auto mb-4 text-xl font-bold">
                     2
@@ -190,7 +190,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Get Recommendations</h3>
                 <p class="text-gray-600">Receive personalized course and job recommendations based on your profile.</p>
             </div>
-            
+
             <div class="text-center">
                 <div class="flex items-center justify-center w-16 h-16 bg-purple-600 text-white rounded-full mx-auto mb-4 text-xl font-bold">
                     3
@@ -198,7 +198,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Plan Your Path</h3>
                 <p class="text-gray-600">Visualize your career journey and identify skill gaps to bridge.</p>
             </div>
-            
+
             <div class="text-center">
                 <div class="flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-full mx-auto mb-4 text-xl font-bold">
                     4
