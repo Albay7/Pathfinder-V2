@@ -9,6 +9,9 @@ A comprehensive, intelligent career guidance platform built with Laravel that he
 - **Career-Focused Job Assessment**: Separate 7-question assessment focused on career goals and professional development
 - **Industry-Specific Branching**: Questions adapt based on user's field/industry selection (9 industries covered)
 - **Smart Recommendation Engine**: Multi-factor scoring algorithm with weighted preferences
+- **Category-Based Recommendation Algorithm**: Dynamic scoring system that processes questionnaire responses based on selected category (Business, IT, Creative, Law, Tourism)
+- **Real-time Score Calculation**: JavaScript-based computation of compatibility scores for both courses and jobs
+- **Fallback Recommendation System**: Category-specific fallback recommendations when no clear match is found
 
 ### 🏢 **Comprehensive Coverage**
 - **DLSU Dasmariñas Integration**: All 9 colleges covered with specific course recommendations
@@ -34,6 +37,21 @@ A comprehensive, intelligent career guidance platform built with Laravel that he
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 - **Dynamic UI**: Interactive questionnaires with real-time progress tracking
 - **Professional Styling**: Clean, modern interface with Tailwind CSS
+
+## 💻 Technical Implementation
+
+### 🧠 **Recommendation Algorithm**
+- **Dynamic Category Processing**: Processes questionnaire responses based on the selected category (Business, IT, Creative, Law, Tourism)
+- **Score-Based Matching**: Calculates compatibility scores for each course/job based on weighted question responses
+- **Client-Side Computation**: Initial scoring performed in JavaScript for immediate feedback
+- **Server-Side Validation**: Final recommendations validated and processed on the server
+- **Fallback System**: Category-specific default recommendations when user responses don't yield clear matches
+
+### 🗄️ **Database Structure**
+- **Questionnaire System**: Tables for questionnaires, questions, and user responses
+- **Recommendation Storage**: Separate tables for course and job recommendations
+- **User Progress Tracking**: Persistent storage of assessment results and learning progress
+- **Migrations & Seeders**: Comprehensive database setup with pre-populated course and job data
 
 ## 🔧 System Requirements
 
