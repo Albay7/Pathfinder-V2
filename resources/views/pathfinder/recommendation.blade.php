@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Header Section -->
-<div class="bg-gradient-to-br from-{{ $type === 'course' ? 'blue' : 'green' }}-600 to-{{ $type === 'course' ? 'indigo' : 'emerald' }}-700">
+<div style="background: linear-gradient(to bottom right, #13264D, #5AA7C6);">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
             <div class="flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mx-auto mb-6">
@@ -15,7 +15,7 @@
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
                 Assessment Complete!
             </h1>
-            <p class="text-xl text-{{ $type === 'course' ? 'blue' : 'green' }}-100 max-w-3xl mx-auto">
+            <p class="text-xl max-w-3xl mx-auto" style="color: #EFF6FF; opacity: 0.9;">
                 Based on your responses, we've found the perfect {{ $type === 'course' ? 'course' : 'job' }} recommendation for you.
             </p>
         </div>
@@ -28,28 +28,28 @@
         <!-- Main Recommendation Card -->
         <div class="bg-white rounded-xl shadow-xl border border-gray-200 p-8 mb-8">
             <div class="text-center mb-8">
-                <div class="flex items-center justify-center w-16 h-16 bg-{{ $type === 'course' ? 'blue' : 'green' }}-100 rounded-full mx-auto mb-4">
+                <div class="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style="background-color: #EFF6FF;">
                     @if($type === 'course')
-                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="h-8 w-8" style="color: #5AA7C6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
                     @else
-                        <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="h-8 w-8" style="color: #5AA7C6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"></path>
                         </svg>
                     @endif
                 </div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">
+                <h2 class="text-3xl font-bold mb-2" style="color: #13264D;">
                     Your Recommended {{ $type === 'course' ? 'Course' : 'Job' }}
                 </h2>
-                <div class="inline-flex items-center px-4 py-2 bg-{{ $type === 'course' ? 'blue' : 'green' }}-100 text-{{ $type === 'course' ? 'blue' : 'green' }}-800 rounded-full text-sm font-medium">
+                <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style="background-color: #EFF6FF; color: #13264D;">
                     <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
                     {{ rand(85, 98) }}% Match
                 </div>
             </div>
-            
+
             <div class="text-center">
                 <h3 class="text-4xl font-bold text-gray-900 mb-4">{{ $recommendation }}</h3>
                 <p class="text-lg text-gray-600 mb-8">
@@ -61,7 +61,7 @@
                 </p>
             </div>
         </div>
-        
+
         <!-- Why This Recommendation Section -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 mb-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-6">Why This {{ $type === 'course' ? 'Course' : 'Job' }}?</h3>
@@ -80,7 +80,7 @@
                             <p class="text-gray-600">The course format and delivery method align with your preferred way of learning.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
@@ -94,7 +94,7 @@
                             <p class="text-gray-600">High demand in your field of interest with excellent job prospects.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
@@ -108,7 +108,7 @@
                             <p class="text-gray-600">Fits within your available time schedule and learning pace.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
@@ -136,7 +136,7 @@
                             <p class="text-gray-600">Aligns with your preferred work setting and collaboration style.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
@@ -150,7 +150,7 @@
                             <p class="text-gray-600">Satisfies your primary motivations and career aspirations.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
@@ -164,7 +164,7 @@
                             <p class="text-gray-600">Strong growth potential in your preferred industry sector.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
@@ -181,7 +181,7 @@
                 @endif
             </div>
         </div>
-        
+
         <!-- Next Steps Section -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 mb-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-6">Next Steps</h3>
@@ -198,7 +198,7 @@
                             <p class="text-gray-600">Look for reputable institutions or platforms offering this course.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center p-4 bg-blue-50 rounded-lg">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full text-sm font-bold">
@@ -210,7 +210,7 @@
                             <p class="text-gray-600">Ensure you meet any required background knowledge or skills.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center p-4 bg-blue-50 rounded-lg">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full text-sm font-bold">
@@ -234,7 +234,7 @@
                             <p class="text-gray-600">Use our Skill Gap Analyzer to identify what skills you need to develop.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center p-4 bg-green-50 rounded-lg">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-green-600 text-white rounded-full text-sm font-bold">
@@ -246,7 +246,7 @@
                             <p class="text-gray-600">Visualize your journey from current position to this target role.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center p-4 bg-green-50 rounded-lg">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-green-600 text-white rounded-full text-sm font-bold">
@@ -261,37 +261,37 @@
                 @endif
             </div>
         </div>
-        
+
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             @if($type === 'job')
-                <a href="{{ route('pathfinder.skill-gap') }}" class="inline-flex items-center justify-center px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors duration-200">
+                <a href="{{ route('pathfinder.skill-gap') }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                     Analyze Skill Gap
                 </a>
-                <a href="{{ route('pathfinder.career-path') }}" class="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200">
+                <a href="{{ route('pathfinder.career-path') }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                     </svg>
                     Visualize Career Path
                 </a>
             @else
-                <a href="{{ route('pathfinder.questionnaire', ['type' => 'job']) }}" class="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200">
+                <a href="{{ route('pathfinder.questionnaire', ['type' => 'job']) }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"></path>
                     </svg>
                     Find Matching Jobs
                 </a>
-                <a href="{{ route('pathfinder.career-path') }}" class="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200">
+                <a href="{{ route('pathfinder.career-path') }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                     </svg>
                     Plan Career Path
                 </a>
             @endif
-            <a href="{{ route('pathfinder.career-guidance') }}" class="inline-flex items-center justify-center px-6 py-3 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors duration-200">
+            <a href="{{ route('pathfinder.career-guidance') }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #BEC0BF;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#BEC0BF';">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                 </svg>

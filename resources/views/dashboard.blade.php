@@ -4,13 +4,13 @@
 
 @section('content')
 <!-- Header Section -->
-<div class="bg-gradient-to-br from-indigo-600 to-purple-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<div style="background: linear-gradient(to bottom right, #13264D, #5AA7C6);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
                 Welcome back, {{ Auth::user()->name }}!
             </h1>
-            <p class="text-xl text-indigo-100 max-w-3xl mx-auto">
+            <p class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto px-2" style="color: #EFF6FF; opacity: 0.9;">
                 Track your career development progress and continue your journey to success.
             </p>
         </div>
@@ -57,8 +57,8 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
-                            <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-lg" style="background-color: #EFF6FF;">
+                            <svg class="h-6 w-6" style="color: #5AA7C6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
                         </div>
@@ -110,8 +110,8 @@
                                             </svg>
                                         </div>
                                     @else
-                                        <div class="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-full">
-                                            <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="flex items-center justify-center w-10 h-10 rounded-full" style="background-color: #EFF6FF;">
+                                            <svg class="h-5 w-5" style="color: #5AA7C6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                                             </svg>
                                         </div>
@@ -185,9 +185,9 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('pathfinder.skill-gap') }}" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors duration-200">
+                    <a href="{{ route('pathfinder.skill-gap') }}" class="flex items-center p-4 rounded-lg transition-colors duration-200" style="background-color: #EFF6FF;" onmouseover="this.style.backgroundColor='#DBEAFE'" onmouseout="this.style.backgroundColor='#EFF6FF'">
                         <div class="flex-shrink-0">
-                            <div class="flex items-center justify-center w-10 h-10 bg-purple-600 rounded-lg">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-lg" style="background-color: #5AA7C6;">
                                 <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                                 </svg>
@@ -199,9 +199,9 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('tutorials.index') }}" class="flex items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors duration-200">
+                    <a href="{{ route('tutorials.index') }}" class="flex items-center p-4 rounded-lg transition-colors duration-200" style="background-color: #EFF6FF;" onmouseover="this.style.backgroundColor='#DBEAFE'" onmouseout="this.style.backgroundColor='#EFF6FF'">
                         <div class="flex-shrink-0">
-                            <div class="flex items-center justify-center w-10 h-10 bg-indigo-600 rounded-lg">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-lg" style="background-color: #13264D;">
                                 <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                 </svg>
