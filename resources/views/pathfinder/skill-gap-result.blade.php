@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Header Section -->
-<div class="bg-gradient-to-br from-purple-600 to-indigo-700">
+<div style="background: linear-gradient(to bottom right, #13264D, #5AA7C6);">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
             <div class="flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mx-auto mb-6">
@@ -15,7 +15,7 @@
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
                 Your Skill Analysis
             </h1>
-            <p class="text-xl text-purple-100 max-w-3xl mx-auto">
+            <p class="text-xl max-w-3xl mx-auto" style="color: #EFF6FF; opacity: 0.9;">
                 Detailed analysis for <span class="font-semibold">{{ $targetRole }}</span> position
             </p>
         </div>
@@ -28,24 +28,24 @@
         <!-- Score Card -->
         <div class="bg-white rounded-xl shadow-xl border border-gray-200 p-8 mb-8">
             <div class="text-center">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">
+                <h2 class="text-3xl font-bold mb-6" style="color: #13264D;">
                     Your Skill Match Score
                 </h2>
-                
+
                 <!-- Circular Progress -->
                 <div class="relative inline-flex items-center justify-center mb-6">
                     <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
                         <circle cx="60" cy="60" r="50" stroke="#e5e7eb" stroke-width="8" fill="none"></circle>
-                        <circle cx="60" cy="60" r="50" stroke="{{ $analysis['match_percentage'] >= 70 ? '#10b981' : ($analysis['match_percentage'] >= 50 ? '#f59e0b' : '#ef4444') }}" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="{{ 2 * pi() * 50 }}" stroke-dashoffset="{{ 2 * pi() * 50 * (1 - $analysis['match_percentage'] / 100) }}"></circle>
+                        <circle cx="60" cy="60" r="50" stroke="#5AA7C6" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="{{ 2 * pi() * 50 }}" stroke-dashoffset="{{ 2 * pi() * 50 * (1 - $analysis['match_percentage'] / 100) }}"></circle>
                     </svg>
                     <div class="absolute inset-0 flex items-center justify-center">
                         <span class="text-3xl font-bold text-gray-900">{{ $analysis['match_percentage'] }}%</span>
                     </div>
                 </div>
-                
+
                 <div class="mb-6">
                     @if($analysis['match_percentage'] >= 80)
-                        <div class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-lg font-medium">
+                        <div class="inline-flex items-center px-4 py-2 rounded-full text-lg font-medium" style="background-color: #EFF6FF; color: #13264D;">
                             <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -53,7 +53,7 @@
                         </div>
                         <p class="text-gray-600 mt-2">You have most of the skills needed for this role. Focus on the remaining gaps to become fully qualified.</p>
                     @elseif($analysis['match_percentage'] >= 60)
-                        <div class="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-lg font-medium">
+                        <div class="inline-flex items-center px-4 py-2 rounded-full text-lg font-medium" style="background-color: #EFF6FF; color: #13264D;">
                             <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
@@ -78,7 +78,19 @@
                         <p class="text-gray-600 mt-2">There's a significant skill gap. Consider starting with foundational courses and building up gradually.</p>
                     @endif
                 </div>
-                
+
+                <!-- Progress Bar -->
+                <div class="mb-6">
+                    <div class="flex justify-between text-sm text-gray-600 mb-2">
+                        <span>{{ count($analysis['matching_skills']) }} skills acquired</span>
+                        <span>{{ count($analysis['missing_skills']) }} skills to learn</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div class="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500"
+                             style="width: {{ $analysis['match_percentage'] }}%"></div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                     <div class="bg-green-50 rounded-lg p-4">
                         <div class="text-2xl font-bold text-green-600">{{ count($analysis['matching_skills']) }}</div>
@@ -95,7 +107,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Skills Breakdown -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <!-- Skills You Have -->
@@ -126,25 +138,34 @@
                     </div>
                 </div>
             @endif
-            
+
             <!-- Skills You Need -->
             @if(count($analysis['missing_skills']) > 0)
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="flex-shrink-0">
-                            <div class="flex items-center justify-center w-10 h-10 bg-red-100 rounded-full">
-                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                </svg>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center w-10 h-10 bg-red-100 rounded-full">
+                                    <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-xl font-bold text-gray-900">Skills to Develop</h3>
+                                <p class="text-sm text-gray-600">Your top learning priorities</p>
                             </div>
                         </div>
-                        <div class="ml-3">
-                            <h3 class="text-xl font-bold text-gray-900">Skills to Develop</h3>
-                            <p class="text-sm text-gray-600">Focus on learning these skills</p>
-                        </div>
+                        @if(count($analysis['missing_skills']) > 8)
+                            <button id="toggle-skills" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                Show All ({{ count($analysis['missing_skills']) }})
+                            </button>
+                        @endif
                     </div>
-                    <div class="space-y-2">
-                        @foreach($analysis['missing_skills'] as $index => $skill)
+
+                    <!-- Top Priority Skills (Always visible) -->
+                    <div class="space-y-2" id="priority-skills">
+                        @foreach(array_slice($analysis['missing_skills'], 0, 8) as $index => $skill)
                             <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
                                 <div class="flex items-center">
                                     <span class="flex items-center justify-center w-6 h-6 bg-red-600 text-white text-xs font-bold rounded-full mr-3">
@@ -152,104 +173,64 @@
                                     </span>
                                     <span class="text-gray-900 font-medium">{{ $skill }}</span>
                                 </div>
-                                <span class="text-xs text-red-600 font-medium">
+                                <span class="text-xs px-2 py-1 rounded-full font-medium
+                                    {{ $index < 3 ? 'bg-red-100 text-red-600' : ($index < 6 ? 'bg-orange-100 text-orange-600' : 'bg-yellow-100 text-yellow-600') }}">
                                     {{ $index < 3 ? 'High Priority' : ($index < 6 ? 'Medium Priority' : 'Low Priority') }}
                                 </span>
                             </div>
                         @endforeach
                     </div>
+
+                    <!-- Additional Skills (Collapsible) -->
+                    @if(count($analysis['missing_skills']) > 8)
+                        <div class="space-y-2 mt-4 hidden" id="additional-skills">
+                            <div class="border-t border-gray-200 pt-4">
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">Additional Skills to Consider</h4>
+                                @foreach(array_slice($analysis['missing_skills'], 8) as $index => $skill)
+                                    <div class="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                                        <div class="flex items-center">
+                                            <span class="flex items-center justify-center w-5 h-5 bg-gray-400 text-white text-xs font-bold rounded-full mr-3">
+                                                {{ $index + 9 }}
+                                            </span>
+                                            <span class="text-gray-800 text-sm">{{ $skill }}</span>
+                                        </div>
+                                        <span class="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full font-medium">
+                                            Future Learning
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(count($analysis['missing_skills']) > 8)
+                        <script>
+                            document.getElementById('toggle-skills').addEventListener('click', function() {
+                                const additionalSkills = document.getElementById('additional-skills');
+                                const button = document.getElementById('toggle-skills');
+
+                                if (additionalSkills.classList.contains('hidden')) {
+                                    additionalSkills.classList.remove('hidden');
+                                    button.textContent = 'Show Less';
+                                } else {
+                                    additionalSkills.classList.add('hidden');
+                                    button.textContent = 'Show All ({{ count($analysis['missing_skills']) }})';
+                                }
+                            });
+                        </script>
+                    @endif
                 </div>
             @endif
         </div>
-        
-        <!-- Learning Recommendations -->
-        @if(count($analysis['missing_skills']) > 0)
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 mb-8">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6">Learning Recommendations</h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Immediate Focus -->
-                    <div class="bg-red-50 rounded-lg p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="flex-shrink-0">
-                                <div class="flex items-center justify-center w-8 h-8 bg-red-600 text-white rounded-full text-sm font-bold">
-                                    1
-                                </div>
-                            </div>
-                            <h4 class="ml-3 text-lg font-semibold text-red-900">Immediate Focus</h4>
-                        </div>
-                        <p class="text-red-800 mb-3">Start with these high-priority skills:</p>
-                        <ul class="space-y-1 text-sm text-red-700">
-                            @foreach(array_slice($analysis['missing_skills'], 0, 3) as $skill)
-                                <li class="flex items-center">
-                                    <svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                    {{ $skill }}
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    
-                    <!-- Medium Term -->
-                    @if(count($analysis['missing_skills']) > 3)
-                        <div class="bg-yellow-50 rounded-lg p-6">
-                            <div class="flex items-center mb-4">
-                                <div class="flex-shrink-0">
-                                    <div class="flex items-center justify-center w-8 h-8 bg-yellow-600 text-white rounded-full text-sm font-bold">
-                                        2
-                                    </div>
-                                </div>
-                                <h4 class="ml-3 text-lg font-semibold text-yellow-900">Medium Term</h4>
-                            </div>
-                            <p class="text-yellow-800 mb-3">Build these skills next:</p>
-                            <ul class="space-y-1 text-sm text-yellow-700">
-                                @foreach(array_slice($analysis['missing_skills'], 3, 3) as $skill)
-                                    <li class="flex items-center">
-                                        <svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                        {{ $skill }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    
-                    <!-- Long Term -->
-                    @if(count($analysis['missing_skills']) > 6)
-                        <div class="bg-blue-50 rounded-lg p-6">
-                            <div class="flex items-center mb-4">
-                                <div class="flex-shrink-0">
-                                    <div class="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full text-sm font-bold">
-                                        3
-                                    </div>
-                                </div>
-                                <h4 class="ml-3 text-lg font-semibold text-blue-900">Long Term</h4>
-                            </div>
-                            <p class="text-blue-800 mb-3">Advanced skills to master:</p>
-                            <ul class="space-y-1 text-sm text-blue-700">
-                                @foreach(array_slice($analysis['missing_skills'], 6) as $skill)
-                                    <li class="flex items-center">
-                                        <svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                        {{ $skill }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        @endif
-        
+
+
+
         <!-- Tutorial Recommendations -->
         @if(isset($analysis['tutorial_recommendations']) && count($analysis['tutorial_recommendations']) > 0)
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 mb-8">
                 <h3 class="text-2xl font-bold text-gray-900 mb-6">Recommended Tutorials</h3>
                 <p class="text-gray-600 mb-6">Start learning with these curated tutorials for your missing skills:</p>
-                
+
                 @foreach($analysis['tutorial_recommendations'] as $skill => $tutorials)
                     <div class="mb-8">
                         <h4 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
@@ -258,7 +239,7 @@
                             </span>
                             Learning Resources
                         </h4>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach($tutorials as $tutorial)
                                 <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200">
@@ -283,7 +264,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    
+
                                     <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
                                         <span class="flex items-center">
                                             <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -298,12 +279,12 @@
                                             {{ $tutorial->rating }}
                                         </span>
                                     </div>
-                                    
+
                                     <div class="flex items-center justify-between">
                                         <span class="inline-flex items-center px-2 py-1 bg-{{ $tutorial->level === 'beginner' ? 'green' : ($tutorial->level === 'intermediate' ? 'yellow' : 'red') }}-100 text-{{ $tutorial->level === 'beginner' ? 'green' : ($tutorial->level === 'intermediate' ? 'yellow' : 'red') }}-800 text-xs font-medium rounded">
                                             {{ ucfirst($tutorial->level) }}
                                         </span>
-                                        
+
                                         <div class="flex space-x-2">
                                             @auth
                                                 <form action="{{ route('tutorials.bookmark') }}" method="POST" class="inline">
@@ -316,7 +297,7 @@
                                                     </button>
                                                 </form>
                                             @endauth
-                                            
+
                                             <a href="{{ $tutorial->url }}" target="_blank" class="inline-flex items-center px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors duration-200">
                                                 Start
                                                 <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -332,11 +313,11 @@
                 @endforeach
             </div>
         @endif
-        
+
         <!-- Action Plan -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-6">Your Action Plan</h3>
-            
+
             <div class="space-y-4">
                 @if($analysis['match_percentage'] >= 80)
                     <div class="flex items-start p-4 bg-green-50 rounded-lg">
@@ -350,7 +331,7 @@
                             <p class="text-gray-600">Focus on deepening your knowledge in areas where you're already strong.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start p-4 bg-blue-50 rounded-lg">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full text-sm font-bold">
@@ -374,7 +355,7 @@
                             <p class="text-gray-600">Concentrate on the top 3 missing skills to quickly improve your match score.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start p-4 bg-green-50 rounded-lg">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-green-600 text-white rounded-full text-sm font-bold">
@@ -398,7 +379,7 @@
                             <p class="text-gray-600">Begin with foundational courses in your target field before moving to specialized skills.</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start p-4 bg-blue-50 rounded-lg">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full text-sm font-bold">
@@ -411,7 +392,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 <div class="flex items-start p-4 bg-purple-50 rounded-lg">
                     <div class="flex-shrink-0">
                         <div class="flex items-center justify-center w-8 h-8 bg-purple-600 text-white rounded-full text-sm font-bold">

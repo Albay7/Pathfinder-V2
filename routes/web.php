@@ -48,7 +48,7 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
     Route::post('/career-path/show', [PathfinderController::class, 'showCareerPath'])->name('career-path.show');
     Route::get('/skill-gap', [PathfinderController::class, 'skillGap'])->name('skill-gap');
     Route::post('/skill-gap/analyze', [PathfinderController::class, 'analyzeSkillGap'])->name('skill-gap.analyze');
-    
+
     // MBTI Personality Assessment routes
     Route::get('/mbti-questionnaire', [MbtiController::class, 'showQuestionnaire'])->name('mbti-questionnaire');
     Route::post('/mbti-questionnaire/process', [MbtiController::class, 'processQuestionnaire'])->name('mbti-questionnaire.process');
@@ -58,7 +58,7 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
     Route::get('/career', [PathfinderController::class, 'careerGuidance'])->name('career');
     Route::get('/courses', [PathfinderController::class, 'courses'])->name('courses');
     Route::get('/external-resources', [PathfinderController::class, 'externalResources'])->name('external-resources');
-    
+
     // CV Analysis routes
     Route::get('/cv-upload', [CVAnalysisController::class, 'showUploadForm'])->name('cv-upload');
     Route::get('/cv-analysis/history', [CVAnalysisController::class, 'showAnalysisHistory'])->name('cv-analysis.history');
@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Tutorial routes
     Route::prefix('tutorials')->name('tutorials.')->group(function () {
         Route::get('/', [TutorialController::class, 'index'])->name('index');

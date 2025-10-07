@@ -4,13 +4,13 @@
 
 @section('content')
 <!-- Header Section -->
-<div class="bg-gradient-to-br from-purple-600 to-indigo-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<div style="background: linear-gradient(to bottom right, #13264D, #5AA7C6);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
                 My Learning Journey
             </h1>
-            <p class="text-xl text-purple-100 max-w-3xl mx-auto">
+            <p class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto px-2" style="color: #EFF6FF; opacity: 0.9;">
                 Track your progress through tutorials and continue building your skills
             </p>
         </div>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -69,12 +69,12 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
-                            <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-lg" style="background-color: #EFF6FF;">
+                            <svg class="h-6 w-6" style="color: #5AA7C6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                         </div>
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Tutorial Sections -->
         <div class="space-y-8">
             <!-- In Progress Tutorials -->
@@ -98,7 +98,7 @@
                         </svg>
                         Continue Learning
                     </h3>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($inProgress as $progress)
                             <div class="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors duration-200">
@@ -108,7 +108,7 @@
                                         <p class="text-sm text-gray-600 mb-3">{{ Str::limit($progress->tutorial->description, 100) }}</p>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Progress Bar -->
                                 <div class="mb-4">
                                     <div class="flex justify-between text-sm text-gray-600 mb-1">
@@ -116,19 +116,19 @@
                                         <span>{{ $progress->progress_percentage }}%</span>
                                     </div>
                                     <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $progress->progress_percentage }}%"></div>
+                                        <div class="h-2 rounded-full" style="width: {{ $progress->progress_percentage }}%; background-color: #5AA7C6;"></div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
                                     <span>{{ $progress->formatted_time_spent }}</span>
                                     <span class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded">
                                         {{ ucfirst($progress->tutorial->level) }}
                                     </span>
                                 </div>
-                                
+
                                 <div class="flex space-x-2">
-                                    <a href="{{ $progress->tutorial->url }}" target="_blank" class="flex-1 bg-blue-600 text-white text-center py-2 px-3 rounded text-sm font-medium hover:bg-blue-700 transition-colors duration-200">
+                                    <a href="{{ $progress->tutorial->url }}" target="_blank" class="flex-1 text-white text-center py-2 px-3 rounded text-sm font-medium transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                                         Continue
                                     </a>
                                     <form action="{{ route('tutorials.complete') }}" method="POST" class="inline">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
             @endif
-            
+
             <!-- Bookmarked Tutorials -->
             @if($bookmarked->count() > 0)
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
@@ -154,7 +154,7 @@
                         </svg>
                         Bookmarked Tutorials
                     </h3>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($bookmarked as $progress)
                             <div class="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors duration-200">
@@ -164,19 +164,19 @@
                                         <p class="text-sm text-gray-600 mb-3">{{ Str::limit($progress->tutorial->description, 100) }}</p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
                                     <span>{{ $progress->tutorial->formatted_duration }}</span>
                                     <span class="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
                                         {{ ucfirst($progress->tutorial->level) }}
                                     </span>
                                 </div>
-                                
+
                                 <div class="flex space-x-2">
                                     <form action="{{ route('tutorials.start') }}" method="POST" class="flex-1">
                                         @csrf
                                         <input type="hidden" name="tutorial_id" value="{{ $progress->tutorial->id }}">
-                                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-blue-700 transition-colors duration-200">
+                                        <button type="submit" class="w-full text-white py-2 px-3 rounded text-sm font-medium transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                                             Start Learning
                                         </button>
                                     </form>
@@ -194,7 +194,7 @@
                     </div>
                 </div>
             @endif
-            
+
             <!-- Completed Tutorials -->
             @if($completed->count() > 0)
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
@@ -204,7 +204,7 @@
                         </svg>
                         Completed Tutorials
                     </h3>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($completed as $progress)
                             <div class="bg-gray-50 rounded-lg p-6">
@@ -219,12 +219,12 @@
                                         </span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
                                     <span>Completed: {{ $progress->completed_at->format('M j, Y') }}</span>
                                     <span>Time: {{ $progress->formatted_time_spent }}</span>
                                 </div>
-                                
+
                                 @if($progress->user_rating)
                                     <div class="flex items-center mb-4">
                                         <span class="text-sm text-gray-600 mr-2">Your rating:</span>
@@ -237,8 +237,8 @@
                                         </div>
                                     </div>
                                 @endif
-                                
-                                <a href="{{ $progress->tutorial->url }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-500 text-sm font-medium">
+
+                                <a href="{{ $progress->tutorial->url }}" target="_blank" class="inline-flex items-center text-sm font-medium transition-colors duration-200" style="color: #5AA7C6;" onmouseover="this.style.color='#13264D';" onmouseout="this.style.color='#5AA7C6';">
                                     Review Tutorial
                                     <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -249,7 +249,7 @@
                     </div>
                 </div>
             @endif
-            
+
             <!-- Empty State -->
             @if($inProgress->count() === 0 && $bookmarked->count() === 0 && $completed->count() === 0)
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
@@ -258,7 +258,7 @@
                     </svg>
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">No tutorials yet</h3>
                     <p class="text-gray-600 mb-6">Start your learning journey by taking a skill gap analysis to get personalized tutorial recommendations.</p>
-                    <a href="{{ route('pathfinder.skill-gap') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                    <a href="{{ route('pathfinder.skill-gap') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                         Analyze Your Skills
                         <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
