@@ -45,7 +45,7 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
     Route::post('/questionnaire/process', [PathfinderController::class, 'processQuestionnaire'])->name('questionnaire.process');
     Route::post('/questionnaire/submit', [PathfinderController::class, 'submitQuestionnaire'])->name('questionnaire.submit');
     Route::get('/career-path', [PathfinderController::class, 'careerPath'])->name('career-path');
-    Route::post('/career-path/show', [PathfinderController::class, 'showCareerPath'])->name('career-path.show');
+    Route::match(['get', 'post'], '/career-path/show', [PathfinderController::class, 'showCareerPath'])->name('career-path.show');
     Route::get('/skill-gap', [PathfinderController::class, 'skillGap'])->name('skill-gap');
     Route::post('/skill-gap/analyze', [PathfinderController::class, 'analyzeSkillGap'])->name('skill-gap.analyze');
 

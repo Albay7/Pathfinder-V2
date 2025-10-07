@@ -68,8 +68,15 @@ class PathfinderController extends Controller
 
     public function showCareerPath(Request $request)
     {
-        $currentRole = $request->get('current_role');
-        $targetRole = $request->get('target_role');
+        // Handle both GET and POST requests
+        $currentRole = $request->input('current_role');
+        $targetRole = $request->input('target_role');
+        
+        // If required parameters are missing, redirect back to the form
+        if (!$currentRole || !$targetRole) {
+            return redirect()->route('pathfinder.career-path')
+                ->with('error', 'Please provide both current role and target role');
+        }
 
         $pathSteps = $this->generateCareerPath($currentRole, $targetRole);
 
