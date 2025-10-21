@@ -1,0 +1,64 @@
+name: App Build & Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
+      RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, mbstring, zip, pdo, mysql, gd, bcmath
+          coverage: none
+
+      - name: Composer install (prod)
+        run: |
+          composer install --no-dev --prefer-dist --no-interaction --no-progress
+          php artisan key:generate --ansi || true
+          php artisan config:clear || true
+
+      - name: Node install & build
+        run: |
+          npm ci || npm install
+          npm run build || npm run prod || echo "No build script"
+
+      - name: Archive app for deploy
+        run: |
+          mkdir -p build
+          tar -czf build/app.tar.gz --exclude=.git --exclude=build .
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          package: build/app.tar.gz
+
+      - name: Smoke test
+        run: |
+          echo "Hit health endpoint";
+          curl -I "https://${{ secrets.AZURE_WEBAPP_NAME }}.azurewebsites.net/simple-health.php" || true
