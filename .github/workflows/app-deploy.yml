@@ -52,6 +52,24 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Azure context info
+        run: |
+          az account show --output table
+          az group show -n "$RESOURCE_GROUP" --output table || true
+
+      - name: Preflight: verify Web App exists
+        run: |
+          if [ -z "$APP_NAME" ] || [ -z "$RESOURCE_GROUP" ]; then
+            echo "Missing required secrets: AZURE_WEBAPP_NAME or AZURE_RESOURCE_GROUP";
+            exit 1;
+          fi
+          echo "Checking web app $APP_NAME in resource group $RESOURCE_GROUP";
+          if ! az webapp show -n "$APP_NAME" -g "$RESOURCE_GROUP" >/dev/null 2>&1; then
+            echo "Web App $APP_NAME not found in resource group $RESOURCE_GROUP.";
+            echo "Ensure the app exists and the service principal in AZURE_CREDENTIALS has access to this subscription.";
+            exit 1;
+          fi
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
