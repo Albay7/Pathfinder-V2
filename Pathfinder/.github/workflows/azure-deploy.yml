@@ -15,6 +15,18 @@ on:
         options:
           - dev
           - prod
+      deploy_infra:
+        description: 'Whether to deploy infrastructure (Bicep)'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      location:
+        description: 'Location to deploy infra (used for Bicep)'
+        required: false
+        default: 'westeurope'
 
 jobs:
   build-and-deploy:
@@ -78,14 +90,22 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Deploy infrastructure (Bicep)
+        if: ${{ github.event.inputs.deploy_infra == 'true' }}
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            echo "Deploying Bicep template..."
+            az deployment sub create --location ${{ github.event.inputs.location || 'westeurope' }} --template-file Pathfinder/infra/main.bicep --parameters prefix='pathfinder' environment='${{ github.event.inputs.environment || 'dev' }}' mysqlAdminPassword='${{ secrets.MYSQL_ADMIN_PASSWORD }}'
+
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           package: app.tar.gz
 
       - name: Run database migrations
-        uses: azure/CLI@v1
+        uses: azure/cli@v1
         with:
           inlineScript: |
             az webapp ssh --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_WEBAPP_NAME }} --command "cd /home/site/wwwroot && php artisan migrate --force"
