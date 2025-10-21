@@ -1,0 +1,52 @@
+name: ML Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1" # Weekly Monday 02:00 UTC retrain
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  train-register-deploy:
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: "3.11"
+      WORKSPACE_NAME: ml-pathfinder-prod
+      RESOURCE_GROUP: pathfinder-rg # adjust to actual RG name
+      LOCATION: southeastasia
+      MODEL_NAME: pathfinder-recommender
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Azure ML CLI
+        run: |
+          pip install azure-ai-ml azure-identity
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run Training Script
+        working-directory: Pathfinder/ml/scripts
+        run: |
+          python prepare_data.py
+          python train_recommender.py --epochs 3 --model-out model.pkl
+
+      - name: Register & (Placeholder) Deploy
+        working-directory: Pathfinder/ml/scripts
+        env:
+          MODEL_NAME: ${{ env.MODEL_NAME }}
+        run: |
+          python register_and_deploy.py --model-file model.pkl --model-name $MODEL_NAME

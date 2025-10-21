@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": { "value": "dev" },
+    "location": { "value": "southeastasia" },
+    "prefix": { "value": "pathfinder" },
+    "enableSlot": { "value": true },
+    "enableRedis": { "value": true },
+    "enablePrivateEndpoints": { "value": true },
+    "mysqlAdminUser": { "value": "pfadmin" },
+    "mysqlVersion": { "value": "8.0.21" },
+    "mysqlStorageGb": { "value": 32 }
+  }
+}

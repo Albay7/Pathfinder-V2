@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder - Career Guidance Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Pathfinder</h2>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-link active" data-page="home">Home</button>
+                <button class="nav-link" data-page="career-guidance">Career Guidance</button>
+                <button class="nav-link" data-page="career-path">Career Path</button>
+                <button class="nav-link" data-page="skill-gap">Skill Gap</button>
+                <button class="nav-link" data-page="mbti">MBTI Assessment</button>
+                <button class="nav-link" data-page="login">Login</button>
+                <button class="nav-link" data-page="register">Register</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <section id="home" class="page active">
+            <div class="hero-section">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1>Navigate Your Career Path with Confidence</h1>
+                        <p>Discover your potential, assess your skills, and plan your future with our comprehensive career guidance tools.</p>
+                        <div class="cta-buttons">
+                            <button class="btn btn--primary" data-page="career-guidance">Start Your Journey</button>
+                            <button class="btn btn--outline" data-page="mbti">Take Assessment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tools-overview">
+                <div class="container">
+                    <h2>Our Tools</h2>
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <div class="tool-icon">🎯</div>
+                            <h3>Career Guidance</h3>
+                            <p>Find the perfect courses and job opportunities tailored to your interests.</p>
+                            <button class="btn btn--secondary" data-page="career-guidance">Explore</button>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">📊</div>
+                            <h3>Skill Gap Analysis</h3>
+                            <p>Identify skill gaps and get personalized recommendations for improvement.</p>
+                            <button class="btn btn--secondary" data-page="skill-gap">Analyze</button>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">👨‍💼</div>
+                            <h3>MBTI Assessment</h3>
+                            <p>Understand your personality type and how it affects your career choices.</p>
+                            <button class="btn btn--secondary" data-page="mbti">Take Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Career Guidance Page -->
+        <section id="career-guidance" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Career Guidance</h1>
+                    <p>What are you looking for today?</p>
+                </div>
+                
+                <div class="guidance-options">
+                    <div class="option-card">
+                        <div class="option-icon">📚</div>
+                        <h3>Find Courses</h3>
+                        <p>Discover learning opportunities that align with your career goals and interests.</p>
+                        <div class="features-list">
+                            <span class="feature-tag">Personalized recommendations</span>
+                            <span class="feature-tag">Industry-relevant skills</span>
+                            <span class="feature-tag">Flexible learning paths</span>
+                        </div>
+                        <button class="btn btn--primary">Browse Courses</button>
+                    </div>
+                    
+                    <div class="option-card">
+                        <div class="option-icon">💼</div>
+                        <h3>Find Jobs</h3>
+                        <p>Explore career opportunities that match your skills and aspirations.</p>
+                        <div class="features-list">
+                            <span class="feature-tag">Smart job matching</span>
+                            <span class="feature-tag">Salary insights</span>
+                            <span class="feature-tag">Growth potential</span>
+                        </div>
+                        <button class="btn btn--primary">Search Jobs</button>
+                    </div>
+                </div>
+
+                <div class="benefits-section">
+                    <h2>Why Choose Our Career Guidance?</h2>
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <h4>Expert Insights</h4>
+                            <p>Get guidance from industry professionals and career experts.</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Personalized Approach</h4>
+                            <p>Recommendations tailored to your unique skills and interests.</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Market Trends</h4>
+                            <p>Stay updated with the latest industry trends and demands.</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Success Stories</h4>
+                            <p>Learn from others who've successfully navigated their career paths.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Career Path Visualizer Page -->
+        <section id="career-path" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Career Path Visualizer</h1>
+                    <p>Plan Your Career Journey</p>
+                </div>
+                
+                <div class="career-form-section">
+                    <form class="career-path-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Current Role</label>
+                                <select class="form-control" id="currentRole">
+                                    <option value="">Select your current role</option>
+                                    <option value="Software Developer">Software Developer</option>
+                                    <option value="Data Scientist">Data Scientist</option>
+                                    <option value="Product Manager">Product Manager</option>
+                                    <option value="UX Designer">UX Designer</option>
+                                    <option value="Marketing Manager">Marketing Manager</option>
+                                    <option value="Business Analyst">Business Analyst</option>
+                                    <option value="Project Manager">Project Manager</option>
+                                    <option value="Sales Manager">Sales Manager</option>
+                                    <option value="HR Manager">HR Manager</option>
+                                    <option value="Financial Analyst">Financial Analyst</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Target Role</label>
+                                <select class="form-control" id="targetRole">
+                                    <option value="">Select your target role</option>
+                                    <option value="Software Developer">Software Developer</option>
+                                    <option value="Data Scientist">Data Scientist</option>
+                                    <option value="Product Manager">Product Manager</option>
+                                    <option value="UX Designer">UX Designer</option>
+                                    <option value="Marketing Manager">Marketing Manager</option>
+                                    <option value="Business Analyst">Business Analyst</option>
+                                    <option value="Project Manager">Project Manager</option>
+                                    <option value="Sales Manager">Sales Manager</option>
+                                    <option value="HR Manager">HR Manager</option>
+                                    <option value="Financial Analyst">Financial Analyst</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn--primary">Generate Career Path</button>
+                    </form>
+                </div>
+
+                <div class="what-you-get">
+                    <h2>What You'll Get</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🗺️</div>
+                            <h3>Step-by-Step Roadmap</h3>
+                            <p>Clear, actionable steps to transition from your current role to your dream job.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⏱️</div>
+                            <h3>Timeline Estimates</h3>
+                            <p>Realistic timeframes for each milestone in your career journey.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💡</div>
+                            <h3>Actionable Insights</h3>
+                            <p>Specific recommendations for skills to develop and experiences to gain.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skill Gap Analyzer Page -->
+        <section id="skill-gap" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Skill Gap Analyzer</h1>
+                    <p>Analyze Your Skill Gap</p>
+                </div>
+                
+                <form class="skill-analysis-form">
+                    <div class="form-group">
+                        <label class="form-label">Target Role</label>
+                        <select class="form-control" id="skillTargetRole">
+                            <option value="">Select your target role</option>
+                            <option value="Software Developer">Software Developer</option>
+                            <option value="Data Scientist">Data Scientist</option>
+                            <option value="Product Manager">Product Manager</option>
+                            <option value="UX Designer">UX Designer</option>
+                            <option value="Marketing Manager">Marketing Manager</option>
+                            <option value="Business Analyst">Business Analyst</option>
+                            <option value="Project Manager">Project Manager</option>
+                            <option value="Sales Manager">Sales Manager</option>
+                            <option value="HR Manager">HR Manager</option>
+                            <option value="Financial Analyst">Financial Analyst</option>
+                        </select>
+                    </div>
+
+                    <div class="skills-categories">
+                        <div class="skill-category">
+                            <h3>Technical Skills</h3>
+                            <div class="skills-grid">
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="technical" value="HTML">
+                                    <span class="checkmark"></span>
+                                    HTML
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="technical" value="CSS">
+                                    <span class="checkmark"></span>
+                                    CSS
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="technical" value="JavaScript">
+                                    <span class="checkmark"></span>
+                                    JavaScript
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="technical" value="React">
+                                    <span class="checkmark"></span>
+                                    React
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="technical" value="Python">
+                                    <span class="checkmark"></span>
+                                    Python
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="technical" value="Java">
+                                    <span class="checkmark"></span>
+                                    Java
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="technical" value="SQL">
+                                    <span class="checkmark"></span>
+                                    SQL
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="technical" value="Git">
+                                    <span class="checkmark"></span>
+                                    Git
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="skill-category">
+                            <h3>Soft Skills</h3>
+                            <div class="skills-grid">
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="soft" value="Communication">
+                                    <span class="checkmark"></span>
+                                    Communication
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="soft" value="Leadership">
+                                    <span class="checkmark"></span>
+                                    Leadership
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="soft" value="Problem Solving">
+                                    <span class="checkmark"></span>
+                                    Problem Solving
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="soft" value="Time Management">
+                                    <span class="checkmark"></span>
+                                    Time Management
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="soft" value="Teamwork">
+                                    <span class="checkmark"></span>
+                                    Teamwork
+                                </label>
+                                <label class="skill-checkbox">
+                                    <input type="checkbox" name="soft" value="Critical Thinking">
+                                    <span class="checkmark"></span>
+                                    Critical Thinking
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary">Analyze Skill Gap</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- MBTI Assessment Page -->
+        <section id="mbti" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1>MBTI Personality Assessment</h1>
+                    <p>Discover your personality type and how it influences your career path</p>
+                </div>
+                
+                <div class="assessment-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 10%"></div>
+                    </div>
+                    <div class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></div>
+                </div>
+
+                <div class="question-container">
+                    <div class="question-card">
+                        <h3 id="questionText">You regularly make new friends.</h3>
+                        <div class="answer-options">
+                            <div class="scale-labels">
+                                <span>Strongly Disagree</span>
+                                <span>Strongly Agree</span>
+                            </div>
+                            <div class="rating-scale">
+                                <label class="rating-option">
+                                    <input type="radio" name="answer" value="1">
+                                    <span class="rating-number">1</span>
+                                </label>
+                                <label class="rating-option">
+                                    <input type="radio" name="answer" value="2">
+                                    <span class="rating-number">2</span>
+                                </label>
+                                <label class="rating-option">
+                                    <input type="radio" name="answer" value="3">
+                                    <span class="rating-number">3</span>
+                                </label>
+                                <label class="rating-option">
+                                    <input type="radio" name="answer" value="4">
+                                    <span class="rating-number">4</span>
+                                </label>
+                                <label class="rating-option">
+                                    <input type="radio" name="answer" value="5">
+                                    <span class="rating-number">5</span>
+                                </label>
+                                <label class="rating-option">
+                                    <input type="radio" name="answer" value="6">
+                                    <span class="rating-number">6</span>
+                                </label>
+                                <label class="rating-option">
+                                    <input type="radio" name="answer" value="7">
+                                    <span class="rating-number">7</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="question-navigation">
+                            <button id="prevQuestion" class="btn btn--outline" disabled>Previous</button>
+                            <button id="nextQuestion" class="btn btn--primary" disabled>Next</button>
+                            <button id="finishAssessment" class="btn btn--primary" style="display: none;">Finish Assessment</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="assessmentResults" class="results-section" style="display: none;">
+                    <h2>Your Personality Type</h2>
+                    <div class="personality-result">
+                        <div class="personality-type">
+                            <h3 id="personalityCode">INFP</h3>
+                            <h4 id="personalityName">The Mediator</h4>
+                        </div>
+                        <div class="personality-description">
+                            <p id="personalityDesc">You are creative, idealistic, and driven by your values. You see potential in everyone and everything.</p>
+                        </div>
+                        <div class="career-suggestions">
+                            <h4>Recommended Career Paths:</h4>
+                            <ul id="careerList">
+                                <li>UX Designer</li>
+                                <li>Content Creator</li>
+                                <li>Counselor</li>
+                                <li>Marketing Specialist</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Page -->
+        <section id="login" class="page">
+            <div class="auth-container">
+                <div class="auth-welcome">
+                    <div class="welcome-content">
+                        <h1>Welcome Back to Pathfinder</h1>
+                        <p>Continue your career journey with personalized guidance and expert insights.</p>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <div class="feature-icon">🎯</div>
+                                <span>Personalized Career Roadmaps</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">📊</div>
+                                <span>Skills Assessment & Analysis</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">👨‍🏫</div>
+                                <span>Expert Career Mentorship</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth-form-panel">
+                    <div class="auth-form-container">
+                        <div class="form-header">
+                            <h2>Sign In to Your Account</h2>
+                            <p>Welcome back! Please sign in to continue.</p>
+                        </div>
+                        
+                        <form class="auth-form" id="loginFormElement">
+                            <div class="form-group">
+                                <label class="form-label" for="loginEmail">Email Address</label>
+                                <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="loginPassword">Password</label>
+                                <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                            </div>
+                            
+                            <div class="form-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="rememberMe">
+                                    <span class="checkmark"></span>
+                                    Remember me
+                                </label>
+                                <a href="#" class="forgot-link">Forgot password?</a>
+                            </div>
+                            
+                            <button type="submit" class="btn btn--primary btn--full-width">Sign In</button>
+                            
+                            <div class="form-footer">
+                                <p>Don't have an account? <button type="button" class="link-btn" data-page="register">Create one here</button></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Register Page -->
+        <section id="register" class="page">
+            <div class="auth-container">
+                <div class="auth-welcome">
+                    <div class="welcome-content">
+                        <h1>Start Your Career Journey</h1>
+                        <p>Join Pathfinder and unlock your potential with our comprehensive career guidance tools.</p>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <div class="feature-icon">🎯</div>
+                                <span>Personalized Career Roadmaps</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">📊</div>
+                                <span>Skills Assessment & Analysis</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">👨‍🏫</div>
+                                <span>Expert Career Mentorship</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth-form-panel">
+                    <div class="auth-form-container">
+                        <div class="form-header">
+                            <h2>Create Your Account</h2>
+                            <p>Join Pathfinder and start your career journey today.</p>
+                        </div>
+                        
+                        <form class="auth-form" id="registerFormElement">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="firstName">First Name</label>
+                                    <input type="text" id="firstName" class="form-control" placeholder="First name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" class="form-control" placeholder="Last name" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="registerEmail">Email Address</label>
+                                <input type="email" id="registerEmail" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="registerPassword">Password</label>
+                                <input type="password" id="registerPassword" class="form-control" placeholder="Create a password" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="confirmPassword">Confirm Password</label>
+                                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                            </div>
+                            
+                            <div class="form-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="agreeTerms" required>
+                                    <span class="checkmark"></span>
+                                    I agree to the <a href="#" class="terms-link">Terms and Conditions</a>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn--primary btn--full-width">Create Account</button>
+                            
+                            <div class="form-footer">
+                                <p>Already have an account? <button type="button" class="link-btn" data-page="login">Sign in here</button></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
