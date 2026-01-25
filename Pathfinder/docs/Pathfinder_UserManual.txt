@@ -1,0 +1,136 @@
+Pathfinder App User Manual
+
+Repository: https://github.com/Albay7/Pathfinder-V2.git
+Deployment platform: Railway
+
+1. Overview
+Pathfinder is a web-based career guidance application that helps users understand their current skill profile, discover suitable roles, and follow a structured learning path. It combines short assessments, skill-gap analysis, and curated resources to guide users toward target technology roles. The design emphasizes clear explanations, interpretable scoring, and a consistent user experience across desktop and mobile.
+
+In practice: you provide interests and experience, complete brief assessments, and Pathfinder returns role suggestions, the key gaps to close, and stepwise modules to progress.
+
+2. Intended Use
+Pathfinder serves students, career-switchers, and junior professionals pursuing roles in software, data, and cloud. It is accessed via a modern web browser. Users can explore roles, run assessments, and track progress over time. Organizations may adopt it to standardize guidance and centralize learning resources. Recommendations are advisory; personal judgment and mentorship should complement app suggestions.
+
+3. Safety and Use Notes
+Recommendations are informational and based on available role data and interpretable scoring. Avoid entering sensitive personal data in free text fields. Treat learning paths as adaptable—adjust pace and focus based on your context. A stable internet connection improves reliability and loading speed.
+
+4. System Requirements
+A modern browser (Chrome, Edge, Firefox, Safari) is sufficient. Desktop offers the best experience for dashboards and charts; mobile supports core flows such as assessments and recommendations. End users do not install anything; administrators deploy the application to Railway.
+
+5. Setup and Deployment on Railway
+Deployment follows a simple, repeatable sequence:
+1) Connect the GitHub repository to Railway and create a web service.
+2) Provision a managed SQL database (MySQL or Postgres) and capture credentials.
+3) Configure environment variables for application identity (name, environment), encryption key, session/cookie security, and database connection.
+4) First release: install dependencies, generate the application key, run database migrations to create tables and indexes, and optionally seed starter content.
+5) Verification: check a health endpoint, confirm the homepage loads, and review logs.
+6) Performance: enable configuration/route caching once the service is stable.
+7) Maintenance: trigger redeploys via repo updates, run migrations with schema changes, rotate credentials periodically, and monitor logs/metrics.
+
+This approach keeps operations predictable: configure -> deploy -> migrate -> verify -> cache -> monitor.
+
+6. Getting Started (User Flow)
+Pathfinder onboarding is guided and incremental:
+- Profile: Provide interests (e.g., web, data, cloud) and experience level to tailor questions.
+- Assessment: Complete concise questionnaires covering technical categories (programming, web, databases, cloud/devops, mobile, data science, UI/UX) and soft skills (communication, leadership, analytical thinking, problem solving).
+- Results: Review normalized category scores for an interpretable snapshot of strengths and areas to improve.
+- Role Matching: Explore roles that align with interests and scores; each role outlines typical skill requirements and responsibilities.
+- Skill-Gap Analysis: Compare your current profile to target role thresholds; the largest gaps and priorities are highlighted to focus effort.
+- Learning Path: Follow stepwise modules with goals, estimated time, and prerequisites; mark modules complete to track progress.
+- Dashboard: Monitor milestones, progress trends, and suggested next steps; adjust the target role as goals evolve.
+
+Users repeat the loop periodically: reassess, observe score changes, and refine plans.
+
+7. Core Features
+Pathfinder’s features address common guidance needs:
+- Skill Assessment: Structured questions produce consistent category scores focused on direction rather than perfection.
+- Job Role Discovery: Role suggestions reflect alignment between your profile and typical requirements; adjacent roles are available for exploration.
+- Skill-Gap Analysis: Direct comparison between your current scores and target role thresholds ranks gaps by impact, clarifying where to invest time.
+- Learning Path: Curated modules translate gaps into practical actions, moving from fundamentals to applied tasks.
+- Resource Hub: Quality tutorials and tools mapped to categories reduce search overhead.
+- Progress Tracking: Visual indicators and milestones sustain momentum and encourage steady improvement.
+- Job Insights (optional): Aggregated job profile data provides context for market expectations and helps calibrate plans.
+
+8. Data and Models (General Description)
+Pathfinder balances performance with interpretability:
+- Job Profiles: Each record stores role metadata (title, company, description, source, URL), interpretable skill vectors (programming, web development, database, cloud/devops, mobile development, data science, UI/UX, project management, communication, leadership, analytical thinking, problem solving), and raw JSON skill lists (technical skills, soft skills, frameworks/libraries, tools, skill scores). Numeric fields support fast comparisons; JSON fields keep human-readable context.
+- User Data: Assessment responses, normalized scores, target role selections, and progress events (module completions with timestamps). Timestamps and indexes ensure reliable ordering and responsive querying.
+
+This structure enables clear rationale for recommendations, making guidance transparent to users.
+
+9. Technical Documentation (Design Specification)
+The application follows a modular web architecture:
+- Presentation: Templates render onboarding, assessments, recommendations, skill-gap views, learning paths, and dashboards with consistent navigation and responsive layout.
+- Services: Encapsulated logic for scoring assessments, matching roles, prioritizing gaps, and assembling learning paths; inputs are translated into normalized vectors and actionable plans.
+- Data: Migrations define tables, types, and indexes for job profiles and user-related data. Numeric vectors enable similarity and comparisons; JSON fields preserve interpretability.
+- Flow: Assessments -> scoring -> profile vector -> role matching -> gap ranking -> plan generation -> progress tracking -> reassessment.
+- Reliability & Performance: Indexes on commonly queried fields (titles, sources, timestamps, status flags); configuration and route caching in production; health checks for smoke tests.
+- Observability: Logs capture warnings and errors for troubleshooting; environment variables drive configuration without code changes.
+
+This separation of concerns supports incremental feature development and stable releases.
+
+10. Operating the App
+Users interact with clear sections:
+- Home: Overview of your state with quick actions (start assessment, view recommendations, resume learning path).
+- Assessments: Start or resume questionnaires; progress is saved for multi-session completion.
+- Recommendations: View role suggestions and why they match (categories driving alignment).
+- Skill-Gap: Inspect deficits against role thresholds with an ordered priority list.
+- Learning Path: Follow modules; mark completion and see relationships to gaps.
+- Dashboard: Track milestones, recent activity, and suggested next steps; switch target roles anytime and regenerate plans.
+
+Common actions include saving progress, exploring alternate roles, and re-running assessments to validate improvement.
+
+11. Maintenance and Updates
+Routine care keeps Pathfinder effective:
+- Application Updates: Maintain dependencies, apply security patches, and run migrations when data structures change.
+- Content Refresh: Update curated resources and role definitions to match market trends; recalibrate scoring if category definitions evolve.
+- Monitoring: Review application and platform logs after deployments, validate health checks, and track performance metrics; address warnings promptly.
+
+12. Privacy and Security
+Pathfinder respects privacy through minimal data collection and secure operation:
+- Use HTTPS to protect data in transit and secure credentials at rest.
+- Rotate encryption keys and database passwords periodically.
+- Limit access to administrative functions and audit changes when possible.
+- Allow users to update or remove their profile data; administrators should document retention policies aligned with local regulations.
+
+13. Troubleshooting
+Typical issues and remedies:
+- Access Problems: Confirm service URL and internet connectivity; check Railway status and application logs for configuration errors.
+- Slow or Blank Pages: Clear browser cache; ensure assets were built; enable configuration/route caching; verify environment variables.
+- Assessment Save Failures: Confirm database connectivity; ensure migrations ran successfully; inspect logs for validation errors or timeouts.
+- Off-Target Recommendations: Re-run assessments, confirm target role selection, and verify category weighting/recalibration if recently changed.
+- Learning Path Not Updating: Ensure modules were marked complete, refresh the dashboard, and regenerate the path after role changes if needed.
+
+Record steps, timestamps, and error messages when escalating.
+
+14. FAQs
+- Can I change my target role later? Yes. Switch roles anytime; recommendations and skill-gap analysis will refresh accordingly.
+- Do I need an account? If authentication is enabled, an account is required to save progress; some demo flows may be accessible without an account.
+- How are recommendations generated? The system compares your normalized skill profile to typical role requirements, identifies closest matches, and surfaces resources aligned to your gaps.
+
+15. Source Code Repository (General Description)
+The repository is organized for clarity:
+- Structure: Web MVC with templates for presentation, services for business logic, and migrations for database schema.
+- Migrations: Create and index tables for job profiles, assessments, progress tracking, and timestamps.
+- Configuration: Environment-driven settings for local and production; logging and health checks improve observability.
+- Tests: Core flows (assessments, matching, plan generation) covered by unit/integration tests to sustain reliability.
+- CI/CD: Connected to Railway for deployments; workflows can build, test, and perform smoke checks.
+
+This supports collaborative development and stable releases.
+
+16. Deployment Guide (Railway)
+A predictable deployment sequence:
+1) Connect repository to Railway and create a web service.
+2) Configure environment variables: application environment, encryption key, session and cache drivers, database host/port/name/user/password.
+3) Install dependencies and compile assets; generate the application key.
+4) Run migrations in a production-safe mode to create/update schema.
+5) Verify the health endpoint and homepage; review logs for warnings or errors.
+6) Enable configuration and route caching for performance once stable.
+7) Operate and secure: monitor logs/metrics, rotate keys, and limit access to environment settings.
+
+17. Support and Contact
+For operational support:
+- Review deployment and application logs.
+- Confirm environment variables and database connectivity.
+- Re-run migrations and clear caches if behavior is inconsistent.
+- Capture issue summary, reproducible steps, expected vs. actual results, and timestamps to accelerate diagnosis.

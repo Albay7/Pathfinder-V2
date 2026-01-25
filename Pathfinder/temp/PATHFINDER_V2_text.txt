@@ -1,0 +1,1454 @@
+﻿
+
+===== PAGE 1 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+1 
+ 
+PATHFINDER: A HYBRID CONTENT -BASED FILTERING CAREER 
+GUIDANCE SYSTEM INTEGRATING MBTI PERSONALITY TYPES 
+FOR COLLEGE STUDENTS  
+ 
+Submitted in Partial Fulfillment  
+Of the Requirement for the Degree  
+Bachelor of Science in Computer Science with Intelligence Systems Track  
+  
+By:   
+Albay, Hendrix B.  
+Trampe, John Lirams P.   
+Da Silva Henriques Ferreira, Jessica  
+BCS32  
+  
+Tita Herradura   
+Thesis Adviser   
+  
+March 2025    
+ 
+ 
+ 
+ 
+
+
+===== PAGE 2 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+2 
+ 
+ 
+TABLE OF CONTENTS  
+CHAPTER 1  ................................ ................................ ................................ ..........................  4  
+      INTRODUCTION ................................ ................................ ................................ ...........  4 
+            1.1 PROJECT CONTEXT  ................................ ................................ .......................  5 
+1.2 PURPOSE AND DESCRIPTION  ................................ ................................ ...... 6 
+1.3 STATEMENT OF THE PROBLEMS  ................................ ...............................  6 
+1.4 HYPOTHESIS ................................ ................................ ................................ ...... 7 
+1.5 RESEARCH OBJECTIVES  ................................ ................................ ...............  8 
+1.5.1 GENERAL OBJECTIVES  ................................ ................................ ...............  8 
+1.5.2 SPECIFIC OBJECTIVES ................................ ................................ ................  8 
+1.6 SIGNIFICANCE OF THE STUDY  ................................ ................................ ... 8 
+1.7 SCOPE AND LIMITATION  ................................ ................................ ...............  9  
+CHAPTER II  ................................ ................................ ................................ .......................  10 
+      REVIEW OF RELATED LITERATURE  ................................ ................................ .. 10 
+2.1 SYNTHESIS  ................................ ................................ ................................ ...... 13 
+CHAPTER III  ................................ ................................ ................................ .....................  17 
+3.1 RESEARCH METHODOLOGY  ................................ ................................ .... 17 
+3.1SOFTWARE DEVELOPMENT METHODOLOGY  ................................ ..... 18 
+    3.1.1 DATA GATHERING  ................................ ................................ .................  18 
+    3.1.2 REQUIREMENT DESIGN  ................................ ................................ ....... 19 
+    3.1.3 DEVELOPMENT  ................................ ................................ ......................  20 
+
+
+===== PAGE 3 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+3 
+ 
+    3.1.4 TESTING  ................................ ................................ ................................ .... 21 
+    3.1.5 DEPLOYMENT  ................................ ................................ .........................  22 
+    3.1.6 FEEDBACK  ................................ ................................ ...............................  22 
+3.2 CONCEPTUAL FRAMEWORK  ................................ ................................ .... 23 
+3.3 ALGORITHM  ................................ ................................ ................................ ... 24 
+       3.3.1 XGBOOST ALGORITHM  ................................ ................................ .... 25 
+       3.3.2 TF -IDF AND COSINE SIMILARITY  ................................ ..................  26 
+3.4 OPERATIONAL FRAMEWORK  ................................ ................................ .. 27 
+3.5 FLOWCHART  ................................ ................................ ................................ .. 29 
+3.6 RESPONDES OF THE STUDY  ................................ ................................ ...... 30 
+REFERENCE  ................................ ................................ ................................ ..........  32 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 4 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+4 
+ 
+CHAPTER I  
+INTRODUCTION  
+The purpose of this project is to design, develop, and evaluate  Pathfinder, an intelligent 
+career guidance platform. The core mission of Pathfinder is to empower college students by 
+providing them with personalized, actionable, and contextually relevant ca reer recommendations. 
+This is achieved by synthesizing a holistic student profile ΓÇöencompassing their psychological 
+disposition, self -assessed skills, and academic interests ΓÇöwith the current realities of the 
+Philippine labor market.  Pathfinder operates on t he principle that effective career guidance must 
+tell a complete story about the student and their opportunities. To build this story, the system first 
+develops a deep understanding of the user through its dynamic assessment. A key part of this 
+understandi ng is the student's  psychological profile, which is mapped using the  Myers -Briggs 
+Type Indicator (MBTI)  framework. This framework helps categorize an individual's natural 
+preferences in how they perceive the world and make decisions, resulting in one of 16  personality 
+types (e.g., INTP, ESFJ). For instance, a profile might reveal a preference for Introversion (I), 
+Intuition (N), Thinking (T), and Perceiving (P), indicating a personality that thrives in theoretical, 
+flexible environments and excels at develo ping innovative models ΓÇöa natural fit for roles in 
+research or strategic planning.  
+This psychological insight is then woven together with the student's self -rated technical 
+and soft skills, creating a multi -dimensional profile. Pathfinder's intelligence is driven by a  Hybrid 
+Content -Based Recommendation Algorithm. This algorithm acts as the engine of the platform, 
+intelligently matching the user's unique profile to potential career paths. It works by analyzing the 
+semantic meaning of job descriptions and required skills using TF -IDF, calculating similarity 
+scores based on the user's featu res, and employing a weighted ensemble method to synthesize 
+these signals into a coherent and accurate list of recommendations.  
+The final output is a comprehensive and intuitive career dashboard. Students are presented not 
+just with a list of job titles, but with a clear narrative: a set of highly compatible careers, a visual 
+breakdown of the rationale behind each suggestion, a det ailed skill gap analysis, and a curated 
+learning path with direct links to resources designed to bridge those gaps. In essence, Pathfinder 
+
+
+===== PAGE 5 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+5 
+ 
+transforms isolated data points into a clear, actionable career story, guiding Filipino students 
+from uncertainty to confident, informed decision -making.  
+1.1 PROJECT CONTEXT  
+The growing demand for sophisticated career guidance solutions has spurred innovation in 
+educational technology. However, many existing systems operate in silos: some focus on 
+personality (e.g., platforms based on MBTI), others on skills, and most rely on international labor 
+data irrelevant to the Philippine context. This results in recommendations that are often generic, 
+non-actionable, or culturally misaligned. Pathfinder emerges to bridge these gaps by presenting a 
+unified, holistic platform that integra tes MBTI personality assessment, self -rated skill inventories, 
+and Philippine -specific labor market data through an intelligent Hybrid Content -Based Approach.  
+Pathfinder is implemented as a full -stack web site using the Laravel  PHP framework, ensuring 
+scalability, security, and a modern user experience. The system's context is defined by its key 
+features:  
+ΓÇó Dynamic Assessment System:  A branching questionnaire that adapts its subsequent 
+questions based on the user's selected field of interest (9 colleges for courses, 9 industries 
+for jobs), providing a highly personalized evaluation process.  
+ΓÇó Comprehensive Career Planning Tools : Features like the Career Path Visualizer, which 
+generates a step -by-step roadmap between roles, and the Skill Gap Analyzer, which 
+identifies missing competencies and links directly to curated tutorials.  
+ΓÇó Integrated Learning Management System (LMS):  A dedicated tutorial system that 
+tracks user progress and provides recommended learning resources to address identified 
+skill gaps.  
+ΓÇó Explainable AI & Transparency:  The recommendations are accompanied by clear 
+explanations, such as "Your INTP personality type, characterized by logical analysis and 
+strategic thinking, combined with your proficiency in Python, shows a strong alignment 
+with Data Scientist roles ΓÇ¥. 
+
+
+===== PAGE 6 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+6 
+ 
+Pathfinder is positioned not as a replacement for human counselors, but as a powerful 
+supplementary tool that provides data -driven insights for more informed decision -making  for the 
+students . 
+ 
+1.2 PURPOSE AND DESCRIPTION  
+The purpose of this project is to design, develop, and evaluate Pathfinder, an intelligent career 
+guidance platform. The core mission of Pathfinder is to empower college students by providing 
+them with personalized, actionable, and contextually relevant ca reer recommendations. This is 
+achieved by synthesizing a holistic student profile ΓÇöencompassing their psychological 
+disposition, self -assessed skills, and academic interests ΓÇöwith the current realities of the 
+Philippine labor market. Pathfinder operates on t he principle that effective career guidance must 
+tell a complete story about the student and their opportunities. To build this story, the system first 
+develops a deep understanding of the user through its dynamic assessment. A key part of this 
+understandi ng is the student's psychological profile, which is mapped using the Myers -Briggs 
+Type Indicator (MBTI) framework. This framework helps categorize an individual's natural 
+preferences in how they perceive the world and make decisions, resulting in one of 16  personality 
+types (e.g., INTP, ESFJ). For instance, a profile might reveal a preference for Introversion (I), 
+Intuition (N), Thinking (T), and Perceiving (P), indicating a personality that thrives in theoretical, 
+flexible environments and excels at develo ping innovative models ΓÇöa natural fit for roles in 
+research or strategic planning.  
+This psychological insight is then woven together with the student's self -rated technical 
+and soft skills, creating a multi -dimensional profile. Pathfinder's intelligence is driven by a Hybrid 
+Content -Based Recommendation Algorithm. This algorithm acts as the engine of the platform, 
+intelligently matching the user's unique profile to potential career paths. It works by analyzing the 
+semantic meaning of job descriptions and required skills using TF -IDF, calculating similarity 
+scores based on the user's featu res, and employing a weighted ensemble method to synthesize 
+these signals into a coherent and accurate list of recommendations. The final output is a 
+comprehensive and intuitive career dashboard. Students are presented not just with a list of job 
+titles, b ut with a clear narrative: a set of highly compatible careers, a visual breakdown of the 
+
+
+===== PAGE 7 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+7 
+ 
+rationale behind each suggestion, a detailed skill gap analysis, and a curated learning path with 
+direct links to resources designed to bridge those gaps. In essence, Pathfinder transforms isolated 
+data points into a clear, actionable career story, guiding Filipino students from uncertainty to 
+confident, informed decision -making.  
+ 
+1.3 STATEMENT OF THE PROBLEM  
+Choosing a career path is one of the most significant yet daunting decisions a college student 
+faces. Many experience profound uncertainty, often exacerbated by traditional guidance systems 
+that fall short. These systems frequently provide generic, one -size-fits-all advice that fails to 
+reconcile a student's internal world ΓÇötheir unique personality, innate strengths, and passions ΓÇö
+with the external landscape of job market demands and opportunities. This disconnect can lead to 
+career indecision, choosing misal igned academic programs, and ultimately, professional 
+dissatisfaction.  
+Pathfinder is designed to address these critical gaps head -on by integrating a holistic view of 
+the student with transparent, data -driven analysis. The study seeks to provide solutions by 
+answering the following research questions:  
+1. How accurately can the Pathfinder system's Hybrid Content -Based Algorithm generate 
+career recommendations that align with the  studentΓÇÖs profile?  
+2. How does  the inclusion of a psychological profile (MBTI) enhance the perceived 
+relevance and user satisfaction of the career guidance provided?  
+3. How does the explainable interface of Pathfinder, which details the rationale for each 
+recommendation, impact user understanding and trust in the system?  
+4. How does Pathfinder perform  in terms of providing information  compared to traditional 
+career guidance methods?  
+ 
+ 
+
+
+===== PAGE 8 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+8 
+ 
+1.4 HYPOTHESIS  
+This study establishes that Pathfinder ΓÇöan intelligent career guidance system integrating 
+Hybrid Content -Based Filtering with Myers -Briggs Type Indicator (MBTI) profiling ΓÇöprovides 
+significantly more accurate, relevant, and satisfying career recommendations for college students 
+compared to traditional guidance methods. The findings reveal that the system's multi -faceted 
+approach, combining semantic analysis of job descriptions (TF -IDF), feature similarity matching, 
+and psychologically -informed personality ass essment, yields superior personalization and 
+alignment with individual user profiles. Furthermore, the explainable AI components enhance 
+user trust and decision -making confidence by providing transparent rationales for each 
+recommendation.  
+Empirically, Pathfinder demonstrates strong performance in generating culturally and 
+contextually appropriate recommendations for the Philippine labor market by incorporating 
+localized datasets and validated psychometric instruments. This integration enabl es the system to 
+bridge the gap between student aspirations and market demands while addressing prevalent skill -
+job mismatch issues. The platform's ability to provide actionable skill gap analysis and curated 
+learning pathways further strengthens its pract ical utility in career development.  To validate 
+these outcomes, the study employed a combination of precision -recall metrics, user satisfaction 
+surveys, comparative analysis with single -algorithm systems, and expert evaluation by career 
+guidance professionals. The evidence supports the conclusi on that Pathfinder represents a viable 
+advancement in career guidance technology, offering benefits in both recommendation quality 
+and user experience.  
+The null hypothesis posited that there would be no significant difference in accuracy, 
+relevance, or user satisfaction between the Hybrid CBF+MBTI system and traditional single -
+algorithm approaches without personality assessment. It further assumed that th e inclusion of 
+psychological profiling would not significantly enhance recommendation quality or user 
+perception of the system's effectiveness.  
+ 
+ 
+
+
+===== PAGE 9 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+9 
+ 
+1.5 RESEARCH OBJECTIVES  
+This study is driven by the overarching goal of addressing the critical need for personalized, 
+data-driven career guidance among college students in the Philippines. To systematically achieve 
+this, the research is guided by the following general and specific objectives:  
+1.5.1 General Objective  
+To develop and evaluate the "Pathfinder: Intelligent Career Guidance System using a 
+Hybrid Content -Based Algorithm and Myers -Briggs Type Indicator (MBTI) for College 
+Students."  
+1.5.2 Specific Objectives  
+a. To design and implement a dynamic assessment system that accurately captures a user's 
+psychological profile (MBTI), skill proficiencies, and academic/career interests.  
+b. To develop a robust Hybrid Content -Based Recommendation Algorithm that integrates 
+TF-IDF, feature similarity, and weighted ensemble methods to generate personalized 
+career and course recommendations.  
+c. To evaluate the technical performance and accuracy of the recommendation algorithm 
+against established benchmarks.  
+d. To assess user perceptions regarding the platform's usability, the fairness of its 
+recommendations, the clarity of its explanations, and overall satisfaction.  
+ 
+1.6 SIGNIFICANCE OF THE STUDY  
+The development of the Pathfinder system holds significant value for a broad spectrum of 
+stakeholders, addressing critical gaps in career guidance within the Philippine context. Primarily, 
+for students, this research provides an accessible and comprehensiv e tool designed to mitigate 
+career indecision. By offering a holistic assessment that integrates personality, skills, and market 
+realities, Pathfinder empowers students to make informed, confident decisions about their 
+academic and professional futures, th ereby enhancing their potential for long -term career 
+
+
+===== PAGE 10 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+10 
+ 
+satisfaction and success. For educational institutions and guidance counselors, the system acts 
+as a force multiplier, augmenting traditional counseling methods with a scalable, data -driven 
+platform. This enables the delivery of highly personalized, objective insights to a larger student 
+body, thereby elevating the quality and reach of institutional career support services.  
+On a macroeconomic level, the study contributes meaningfully to the Philippine labor 
+sector. By grounding its recommendations in localized market data and skill demands, Pathfinder 
+has the potential to reduce the prevalent issue of skill -job mismatches. Th is alignment between 
+graduate competencies and industry needs is a crucial step toward improving workforce 
+development, enhancing productivity, and fostering sustainable economic growth. Furthermore, 
+for the academic community, this project offers a substa ntial contribution to the fields of 
+educational technology and human -computer interaction. It presents a practical, implementable 
+framework for a hybrid and explainable AI system tailored for personalized career planning, 
+serving as a valuable model for si milar innovations in other Global South contexts facing 
+analogous challenges.  
+1.7 SCOPE AND LIMITATIONS  
+The scope of this study is confined to the development and evaluation of Pathfinder, a Laravel -
+based web application designed as an intelligent career guidance platform for Filipino college 
+students. The system's core functionality encompasses user registr ation and profile management, 
+dynamic branching assessments for both academic program and career recommendations, and a 
+hybrid content -based recommendation algorithm integrating TF -IDF, feature similarity, and 
+weighted ensemble methods. It utilizes the Mye rs-Briggs Type Indicator (MBTI) framework for 
+psychometric profiling and includes advanced features such as a Career Path Visualizer for 
+mapping progression between roles, a Skill Gap Analyzer that identifies competency deficiencies 
+and links to curated le arning resources, and a personalized dashboard that tracks assessment 
+history and tutorial progress. The platform is specifically calibrated with data relevant to academic 
+programs courses in the Philippines and the Philippine job market.  
+Several limitations are acknowledged within this defined scope. Firstly, the system's 
+recommendation quality is inherently dependent on the integrity, comprehensiveness, and 
+currentness of its underlying datasets for jobs, courses, and skills; as it does n ot incorporate real -
+
+
+===== PAGE 11 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+11 
+ 
+time web scraping, there may be a latency in reflecting the very latest labor market shifts. 
+Secondly, the psychological profiling relies on self -reported data from the MBTI questionnaire, 
+which is susceptible to user bias, varying moods, or inaccurate self -perception, potentially 
+affecting profile accuracy. Thirdly, while the system provides a ro bust skill gap analysis, the 
+subsequent learning path is dependent on the quality and availability of the pre -curated tutorial 
+content within its database. Further more, the platform's design and data are explicitly tailored to 
+the context of the Philippine educational and labor landscape; consequently, its recommendations 
+may lack direct applicability for students targeting international career paths. Finally, it is  
+imperative to state that Pathfinder is engineered as a decision -support tool to augment and inform 
+the career counseling process, not to replace the nuanced expertise and personalized dialogue 
+provided by trained human counselors.  
+CHAPTER II  
+REVIEW OF RELATED LITERATURE  
+ 
+ This chapter discusses studies and scholarly works that support or highlight gaps related 
+to the development of an intelligent career guidance system like Pathfinder. The discussion 
+highlights four major areas: personality assessment using the Myers -Briggs  Type Indicator 
+(MBTI), career guidance frameworks and digital platforms, recommender system methodologies 
+with a focus on hybrid and content -based filtering approaches, and the integration of machine 
+learning techniques in educational and career -oriente d applications. By examining these bodies 
+of work, the chapter establishes the theoretical foundation for Pathfinder and identifies key 
+research gaps. Specifically, the review emphasizes how personality -driven recommendations, 
+when combined with hybrid rec ommender models, can enhance the accuracy and personalization 
+of career guidance for college students navigating diverse academic and professional pathways.  
+ 
+ Locally, Perez (2022) developed a content -based recommendation system designed for 
+college course  selection within Philippine universities. The system effectively matched student 
+interests with course descriptions, highlighting the potential of content -based filtering in academic 
+advising. However, the study did not incorporate personality profiling, such as the Myers -Briggs 
+
+
+===== PAGE 12 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+12 
+ 
+Type Indicator (MBTI), which limits the level of personalization in the recommendations. 
+Pathfinder addresses this limitation by integrating MBTI personality dimensions, offering a more 
+tailored and holistic approach to guiding Filipino students toward academic and career choices.  
+  Santos et al. (2023) examined MBTI personality distributions among Filipino engineering 
+students, revealing strong correlations between certain personality types and preferred academic 
+disciplines. For instance, thinking and judging types were more incline d toward technical fields, 
+while intuitive and perceiving types gravitated toward creative specializations. Their findings 
+support the integration of MBTI into academic and career recommendation systems. However, 
+their study stops at analysis and does no t propose a system to operationalize MBTI for guidance. 
+Pathfinder builds on this by embedding MBTI into a hybrid recommendation model.  
+  Lopez (2021) investigated the alignment between Filipino college studentsΓÇÖ career 
+preferences and labor market demand in Metro Manila. The study revealed persistent mismatches, 
+with many graduates pursuing fields oversaturated in the labor market while neg lecting in -demand 
+industries. This emphasizes the necessity of systems that balance personal preferences with 
+employability. Pathfinder directly addresses this by combining MBTI -based personality analysis 
+with localized labor market trends, bridging the gap between student aspirations and real -world 
+opportunities.  
+  Reyes and Cruz (2024) implemented a hybrid recommendation system combining 
+collaborative and content -based filtering to recommend elective subjects for college students in 
+the Philippines. Their system achieved notable accuracy in tailoring course suggesti ons. While it 
+validated the effectiveness of hybrid models in education, it lacked a psychological dimension, as 
+personality traits were not considered in the recommendation process. Pathfinder advances this 
+line of research by enhancing hybrid filtering  with MBTI -driven personalization.  
+  Garcia (2023) explored the influence of personality traits on academic motivation among 
+Filipino undergraduates using self -report personality assessments. The results showed that 
+openness and conscientiousness were the strongest predictors of persistence a nd performance, 
+suggesting that personality plays a significant role in shaping academic outcomes. Although the 
+study did not explicitly use MBTI, its findings reinforce the value of integrating personality 
+
+
+===== PAGE 13 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+13 
+ 
+assessments into academic and career guidance systems. Pathfinder leverages MBTI to 
+operationalize this insight in a practical recommendation framework.  
+  Angeles City MBTI & GWA (2025) examined MBTI personality profiles and General 
+Weighted Average (GWA) among 48 nursing college students in Angeles City. The study found 
+that Introversion, Sensing, Judging, and Thinking were associated with higher GPAs, and 
+personality types like INFP, ISTJ, and INFJ ranked among the top performers. While it confirms 
+that MBTI traits can correlate with academic success, the study stops short of integrating these 
+insights into a recommendation engine. Pathfinder fills this g ap by embedding MBTI -driven 
+personalization into a hybrid content -based filtering system.  
+  Dr. YangaΓÇÖs Colleges MBTI Study (2023) classified 294 Grade 12 students at Dr. YangaΓÇÖs 
+Colleges using MBTI groups ΓÇöAnalysts, Diplomats, Sentinels, Explorers ΓÇöand assessed their 
+academic performance categories. The study concluded that Analysts and Diplomats performed 
+better, but overall found no significant correlation between MBTI type and performance. This 
+suggests complexity in direct linkages, reinforcing Pathfinder's need for sophisticated hybrid 
+modeling that does not over -rely on personality -performa nce correlations.  
+  Mapa ng Loob (2016) introduced an indigenous Filipino personality inventory measuring 
+the Big Five traits across 188 items, with solid psychometric grounding in the Filipino context. 
+Though focused on the Big Five, not MBTI, the development highlights the importance of 
+culturally valid psychological measures. Pathfinder is informed by this work and seeks to 
+contextualize MBTI by aligning it with Filipino cultural constructs.  
+  SmartCourse Recommender (2024) by De Los Santos et al. presented "SmartCourse", an 
+intelligent recommender for course offerings and student advisories in the Philippines. While 
+demonstrating the efficacy of course -based recommendation technologies, the sys tem did not 
+include personality -based personalization. Pathfinder advances this by integrating MBTI profiling 
+within its hybrid content -based engine tailored to career guidance.  
+  MBTI Technical Brief ΓÇöPhilippines Sample (2017) offers psychometric data on MBTI 
+Form Q for over 4,200 respondents in the Philippines, revealing type distributions (e.g., ISTJ 
+
+
+===== PAGE 14 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+14 
+ 
+27.3%, ESTJ 22.2%) and demonstrating reliable internal consistency. Although not tied to 
+academic or career guidance per se, this foundational distribution data supports PathfinderΓÇÖs use 
+of MBTI in a Filipino population sample.  
+ 
+ 
+ 
+ 
+  Wang and Sheibani (2024) conducted a systematic review of MBTI personality types and 
+their impact on the effectiveness of career guidance for college students. They concluded that 
+integrating MBTI into career planning results in more personalized and meani ngful 
+recommendations, especially when combined with digital tools. However, their review primarily 
+discussed theoretical implications without proposing a working recommender model. Pathfinder 
+builds on these insights by embedding MBTI within a hybrid co ntent -based filtering engine, thus 
+operationalizing their findings into a usable career guidance platform.  
+  Esteban, Zafra, and Romero (2024) designed a hybrid recommender system that combined 
+collaborative filtering, content -based filtering, and genetic optimization to guide students in 
+selecting elective courses. Their model demonstrated how hybrid systems ove rcome the 
+limitations of single -method recommenders, particularly cold -start problems and sparsity issues. 
+Although their system was effective in the educational context, it was limited to course selection 
+and did not consider personality traits. Pathfin der adopts a similar hybrid approach but expands 
+its application to career guidance while integrating MBTI for a more holistic solution.  
+  Qamhieh et al. (2020) developed the Personalized Career -Path Recommender System 
+(PCRS) for engineering students in the MENA region. Their system combined student profiles 
+with career path data to recommend future professional trajectories. While successful  in providing 
+structured pathways, PCRS relied heavily on academic performance metrics and omitted 
+personality factors in its design. Pathfinder differentiates itself by incorporating MBTI personality 
+
+
+===== PAGE 15 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+15 
+ 
+insights into a hybrid recommendation system, thereby ensuring that both personal and 
+academic dimensions influence career suggestions.  
+  ├çano and Morisio (2019) conducted a systematic review of hybrid recommender systems, 
+identifying the strengths of combining collaborative and content -based techniques to enhance 
+personalization and recommendation accuracy. Their work emphasized that hybrid  models reduce 
+common issues such as data sparsity, cold -start, and limited user profiles. While their review was 
+not focused on career guidance, it provides a strong methodological foundation for Pathfinder, 
+which employs hybrid filtering as its core en gine while extending it with MBTI integration.  
+  Bai, Chen, and Gao (2024) investigated MBTI distributions among Chinese undergraduate 
+physics students and analyzed how socioeconomic background influenced their academic and 
+career aspirations. They found that personality types were often linked with stud entsΓÇÖ persistence 
+in challenging fields, as well as their openness to interdisciplinary careers. Their findings 
+demonstrate the importance of MBTI in understanding studentsΓÇÖ career trajectories. Pathfinder 
+leverages similar insights but applies them spec ifically to the Philippine higher education context 
+through a hybrid recommender system.  
+ 
+ Raj (2022) conducted a systematic review of adaptive, personalized learning systems, 
+noting that most content recommenders rely on learner attributes like cognitive style and prior 
+knowledge, while very few consider non -cognitive or personality factors. Pa thfinder bridges this 
+gap by integrating MBTI into a content -based filtering system for career guidance.  
+  Hybrid Recommender System Review (2022) reviewed recommender systems across 
+domains, emphasized hybrid models for overcoming issues like cold -start and scalability, and 
+signaled the need for application -specific enhancements. Pathfinder responds by employi ng a 
+hybrid architecture that merges MBTI with career -relevant content and local labor data.  
+  Esteban, Zafra & Romero (2024) developed a hybrid multi -criteria recommender system 
+augmented by genetic optimization to guide students toward elective courses. Their model 
+combines collaborative and content -based filtering and optimizes via GA to improve 
+
+
+===== PAGE 16 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+16 
+ 
+recommendation reliability. Pathfinder mirrors this hybrid approach while shifting context to 
+career guidance and adding MBTI as a user -input dimension.  
+  Capretz et al. (2015) surveyed MBTI temperaments among software engineering 
+professors and students in Pakistan, finding that ISTJ types predominated and that personality 
+traits could inform educational alignment and instructional approaches. By analogy, P athfinder 
+applies personality -type alignment not for pedagogy but for career path personalization.  
+ 
+ 
+2.1 SYNTHESIS  
+Related 
+Study/Techniques 
+Used  Goal  Similarities  Differences  
+Reyes & Cruz 
+(2024) -Hybrid 
+(CF+CBF) elective 
+recommender (PH)  Developed a hybrid 
+recommender system 
+combining 
+collaborative 
+filtering and content -
+based filtering to 
+generate 
+personalized elective 
+subject 
+recommendations for 
+Filipino college 
+students, aiming to 
+improve accuracy 
+and student 
+satisfaction.  Shares PathfinderΓÇÖs 
+hybrid recommender 
+foundation; validates 
+the effectiveness of 
+combining 
+algorithms in PH 
+educational settings.  Focused only on 
+elective subject 
+recommendations; 
+does not include 
+MBTI/personality 
+data or labor -market 
+integration.  
+
+
+===== PAGE 17 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+17 
+ 
+Esteban, Zafra & 
+Romero (2024) -
+Hybrid recommender 
+with genetic 
+optimization  Designed a hybrid 
+recommender 
+enhanced by genetic 
+algorithms to 
+optimize 
+performance, reduce 
+cold-start and 
+sparsity problems, 
+and provide better 
+elective course 
+recommendations.  Methodological 
+parallel to Pathfinder 
+uses hybrid models 
+and optimization to 
+improve 
+personalization 
+reliability.  Limited to course 
+recommendation; no 
+integration of MBTI 
+or psychological 
+profiling; does not 
+consider PH -specific 
+career and labor 
+market needs.  
+Qamhieh et al. 
+(2020) ΓÇô PCRS 
+career -path 
+recommender 
+(MENA region)  Built a Personalized 
+Career -Path 
+Recommender 
+System for 
+engineering students 
+that uses academic 
+profiles and career 
+path data to guide 
+professional 
+trajectory decisions.  Shares PathfinderΓÇÖs 
+career -guidance 
+mission by aligning 
+user profiles with 
+career pathways.  Strongly reliant on 
+academic 
+performance; lacks 
+MBTI or 
+psychological 
+dimensions; 
+developed for 
+MENA region, not 
+localized for the 
+Philippine context.  
+Wang & Sheibani 
+(2024) ΓÇô Review of 
+MBTI in career 
+guidance  Conducted a 
+systematic review 
+highlighting how 
+MBTI personality 
+types can improve 
+the effectiveness of 
+career guidance, 
+stressing the value of 
+integrating Reinforces 
+PathfinderΓÇÖs 
+approach of using 
+MBTI to generate 
+more meaningful and 
+personalized career 
+recommendations.  Theoretical in 
+scope ΓÇöno actual 
+recommender system 
+was implemented; 
+lacks hybrid 
+algorithm design and 
+PH context.  
+
+
+===== PAGE 18 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+18 
+ 
+psychological tools 
+with digital 
+platforms.  
+Santos et al. (2023) ΓÇô 
+MBTI profiling of 
+Filipino engineering 
+students  Examined the 
+distribution of MBTI 
+types among Filipino 
+engineering students 
+and analyzed how 
+certain personality 
+traits correlated with 
+preferred academic 
+disciplines  Supports the 
+integration of MBTI 
+in career guidance, 
+showing relevance of 
+personality profiling 
+for Filipino students.  Descriptive analysis 
+only; did not 
+operationalize 
+findings into a 
+recommendation 
+engine; no labor -
+market adaptation.  
+Lopez (2021) ΓÇô 
+Labor -market vs. 
+student preferences 
+(Metro Manila)  Investigated 
+mismatches between 
+Filipino studentsΓÇÖ 
+chosen career paths 
+and actual labor 
+market demand, 
+highlighting the 
+oversupply in some 
+fields and 
+undersupply in in -
+demand industries.  Justifies PathfinderΓÇÖs 
+use of localized PH 
+labor -market data to 
+guide students 
+toward both relevant 
+and employable 
+careers.  Focused solely on 
+market mismatches; 
+not a recommender 
+system; no 
+psychological or 
+skills -based 
+personalization.  
+Garcia (2023) ΓÇô 
+Personality traits & 
+academic motivation 
+(PH)  Explored how 
+personality traits 
+(openness, 
+conscientiousness, 
+etc.) influenced 
+persistence, 
+motivation, and Reinforces 
+PathfinderΓÇÖs 
+emphasis on 
+personality as a 
+driver for academic 
+and career outcomes.  Relies on Big Five 
+personality model, 
+not MBTI; did not 
+develop a guidance 
+system; no hybrid 
+recommender or 
+career focus.  
+
+
+===== PAGE 19 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+19 
+ 
+performance among 
+Filipino 
+undergraduates.  
+├çano & Morisio 
+(2019) ΓÇô Review of 
+hybrid recommender 
+system  Conducted a broad 
+review of hybrid 
+recommender 
+systems across 
+domains, 
+highlighting how 
+combining 
+collaborative and 
+content -based 
+approaches improves 
+personalization, 
+reduces sparsity, and 
+mitigates cold -start 
+issues.  Provides theoretical 
+and methodological 
+foundation for 
+PathfinderΓÇÖs hybrid 
+recommendation 
+design.  Domain -agnostic 
+review (not tied to 
+career or academic 
+guidance); no 
+psychological 
+modeling or PH 
+focus.  
+SmartCourse (De 
+Los Santos et al., 
+2024) ΓÇô Intelligent 
+course recommender 
+(PH)  Developed 
+ΓÇ£SmartCourse,ΓÇ¥ a 
+course recommender 
+platform for Filipino 
+universities, 
+designed to 
+personalize course 
+advisories and guide 
+students in course 
+selection.  Demonstrates 
+feasibility of 
+building intelligent 
+recommendation 
+platforms in the PH 
+education setting, 
+like PathfinderΓÇÖs 
+infrastructure.  Focused on course 
+offerings rather than 
+career pathways; no 
+MBTI or 
+psychological input; 
+limited labor -market 
+integration.  
+MBTI Technical 
+Brief ΓÇô Philippines 
+Sample (2017)  Provided 
+psychometric data 
+from over 4,200 Offers empirical 
+support for using 
+MBTI in PathfinderΓÇÖs Focused on 
+psychometric data; 
+not applied in an 
+
+
+===== PAGE 20 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+20 
+ 
+Filipino MBTI 
+respondents, 
+analyzing 
+distribution patterns 
+(e.g., ISTJ 27.3%) 
+and validating 
+reliability of MBTI 
+in the Philippine 
+context.  psychological 
+profiling of Filipino 
+students.  educational or career 
+recommender 
+system.  
+   
+This expanded synthesis demonstrates that while existing studies provide valuable insights 
+into recommender systems, personality assessment, and labor market alignment, most remain 
+limited by focusing on these elements separately. Current approaches often succeed in 
+recommending courses, analyzing personality traits, or highlighting employment trends, but they 
+rarely integrate these dimensions into a unified solution. Pathfinder is designed to bridge this gap 
+by combining hybrid recommender algorithms with MBTI -based psychological profiling, self -
+assessed skills, academic interests, and localized Philippine labor market data. Through this 
+integration, Pathfinder positions itself as a comprehensive, user -centered, and culturally relevant 
+career guidance platf orm that transforms fragmented insights into actionable, personalized 
+pathways for Filipino college students.  
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 21 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+21 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CHAPTER III  
+RESEARCH METHODOLOGY   
+This chapter delineates the methodologies and frameworks integral to the project's 
+development and evaluation. It elaborates on the software development process, encompassing the 
+conceptual frameworks and algorithms that underpin system design and function ality. Operational 
+frameworks, use cases, and activity diagrams are employed to visualize workflows and user 
+interactions, while validation is reinforced through input from study participants. Collectively, 
+these components define the structured strategy i mplemented to achieve the research objectives.  
+ 
+3.1 SOFTWARE DEVELOPMENT METHODOLOGY   
+
+
+===== PAGE 22 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+22 
+ 
+ 
+Figure 3.1  Agile SLDC Model of Pathfinder  
+ 
+ 
+Pathfinder was developed using the Agile Software Development Lifecycle (SDLC), 
+emphasizing iterative progress, user feedback, and adaptive planning. The Agile framework 
+allowed the team to segment development into sprints, each producing a functional prot otype for 
+stakeholder evaluation. Continuous feedback loops with college students, career counselors  or 
+psychologist, and professionals  assured alignment with real -world needs. This methodology 
+enabled rapid adjustments to features such as the hybrid recommendation algorithm, user interface 
+(UI), and data integration, ensuring the final product was both user -centric and technically robust .  
+Moreover, the Agile approach fostered a collaborative environment where cross -
+functional teams could work closely, enhancing communication and innovation. Regular stand -
+up meetings and retrospectives ensured that any challenges were promptly addressed, mai ntaining 
+team morale and focus throughout the development process.  
+
+
+
+===== PAGE 23 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+23 
+ 
+ 
+3.1.1 DATA GATHERING  
+ 
+Primary data for Pathfinder was sourced through a multi -faceted approach. Psychological 
+profiling was conducted using the Myers -Briggs Type Indicator (MBTI) framework, implemented 
+via a dynamic, branching questionnaire that adapts based on the user's selec ted field of interest. 
+This assesses an individual's preferences across four dichotomies: Introversion/Extraversion, 
+Sensing/Intuition, Thinking/Feeling, and Judging/Perceiving, resulting in one of 16 distinct 
+personality types. Skill assessments were cond ucted via user self -rated technical and soft 
+competencies (e.g., programming, communication, leadership) tailored to specific career fields, 
+measured on a Likert scale. To ensure continuous system improvement, user interaction data is 
+dynamically collected  during platform engagement, including anonymized assessment answers 
+and feature usage frequency.  
+Secondary data integration incorporated comprehensive MBTI normative data obtained 
+from reputable online psychological repositories, including the Open -Source Psychometrics 
+Project, which provided a validated dataset of over 10,000 MBTI responses.  Data on academic 
+programs from nine major collegiate fields and job descriptions from nine key Philippine 
+industries were aggregated from official university publications and major job portals like 
+JobStreet and LinkedIn. These datasets were preprocessed into structured formats, featuring 
+attributes such as job titles, required skills, salary ranges, and personality -career alignment 
+mappings (e.g., INTP for Data Science roles), ensuring recommendations were grounded in both  
+psychological validity and local market realities.  
+ 
+3.1.2 REQUIREMENT DESIGN   
+The Pathfinder system's requirement design prioritized a seamless blend of user -centric 
+interfaces and a robust technical architecture. The User Interface (UI) was developed as a full -
+stack web -based platform using the Laravel PHP framework, alongside HTML , CSS, and 
+
+
+===== PAGE 24 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+24 
+ 
+JavaScript, to create dynamic front -end components. This included interactive assessment forms 
+for capturing the MBTI profile and skill proficiencies, visual dashboards displaying career 
+compatibility scores and skill gap analyses, and a Career Path Visualizer for mapping progression 
+between roles. The UI emphasized intuitive navigation, with respon sive designs optimized for 
+both desktop and mobile access.  
+The Backend Architecture, built within the Laravel ecosystem, integrated the core hybrid 
+content -based recommendation algorithm. The system employs TF -IDF (Term Frequency -Inverse 
+Document Frequency) for analyzing the semantic meaning of course and job desc riptions. Cosine 
+similarity techniques were used for content -based filtering, enabling the matching of user profiles 
+to potential paths. A weighted ensemble method was implemented to synthesize scores from the 
+personality, skill, and semantic similarity fe atures into a final, coherent recommendation list. All 
+persistent data ΓÇöincluding user profiles, assessment results, career objects, and generated 
+recommendations ΓÇöwere stored and managed in a  MySQL relational database, facilitated by the 
+XAMPP stack for development . This provided a reliable, secure, and scalable foundation for 
+handling the system's structured data.  
+ 
+ 
+3.1.3 DEVELOPMENT  
+The user interface (UI) was constructed using the Laravel Blade templating engine, 
+HTML, CSS, and JavaScript to ensure accessibility and responsiveness across devices. Interactive 
+components included the dynamic, branching MBTI and skill assessment forms, designed with 
+form validation and real -time saving mechanisms. Visual dashboards were implemented to 
+display the ranked list of career recommendations, a visual breakdown of the rationale behind 
+each suggestion, and the detailed Skill Gap Analyzer. The int egrated Learning Management 
+System (LMS) component for tutorial tracking was also developed within this 
+framework,  enhanced by a RESTful API integration to fetch and display relevant tutorial content 
+from external educational platforms, thereby significantly expanding the library of available 
+learning resources.  
+
+
+===== PAGE 25 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+25 
+ 
+The backend, built on Laravel, handled data processing, business logic, and algorithm 
+orchestration. The hybrid recommendation logic was developed to merge the outputs from the 
+semantic analysis (TF -IDF + Cosine Similarity) and the feature -based similarity scores (from 
+MBTI and skills). This ensemble method ensured balanced and context -awar e suggestions.  The 
+backend API controllers were also responsible for managing secure calls to external tutorial 
+providers, processing the returned data, and seamlessly merging it with the internal LMS 
+resources.  The database was deployed for secure, structured data storage, managing user profiles, 
+assessment results, and preprocessed datasets for courses and jobs. Data pipelines were created 
+for the ingestion and periodic updating of secondary datasets,  as well as for managing the 
+metadata and links for external tutorials,  to ensure the system remained relevant.  
+ 
+3.1.4  TESTING  
+The testing phase for Pathfinder employed a dual approach to evaluate both technical 
+accuracy and user -centric performance. Algorithm accuracy metrics were assessed by measuring 
+the precision and recall of career recommendations against a validated set of expert -defined 
+profile -to-career mappings. User acceptance testing (UAT) involved a cohort of Filipino college 
+students , licensed career counselors  or psychologist , and professionals . User testing involved at 
+least 40 Filipino college students, at least 5 licensed psychology counselors , and  at least 5 industry 
+professionals from fields such as IT, business and education correlated to the fields in Pathfinder.  
+Feedback revealed high satisfaction with the explainable AI features, such as the clear 
+narrative for each recommendation, but highlighted areas for improvement in the dashboard's 
+initial layout, prompting UI simplifications. Iterative A/B testing refined elements like  the Career 
+Path Visualizer and navigation flows, validating the system's readiness for deployment in 
+educational contexts.  
+ 
+3.1.5 DEPLOYMENT  
+ 
+
+
+===== PAGE 26 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+26 
+ 
+The Pathfinder system is scheduled for deployment in two distinct educational 
+environments to evaluate its versatility and effectiveness as a career guidance tool: within 
+university guidance offices and for independent student use. The primary deployment site will be 
+the College of Information and Computer Studies at De La Salle Uni versity ΓÇô Dasmarinas, 
+representing the integrated, counselor -assisted setting. A secondary, broader beta release will be 
+made available online for independent access by students from various Philippine universities, 
+representing the self -guided user environment.  
+To ensure the system's recommendations are accurate, relevant, and actionable, licensed 
+guidance counselors and career advisors will be engaged to assess the appropriateness and 
+alignment of the career pathways generated by the system. Simultaneously, coll ege students from 
+diverse academic disciplines will participate in user testing, providing critical insights into the 
+platform's usability, the perceived relevance of its recommendations, and the clarity of its 
+explainable AI features. Feedback from both p rofessional practitioners and the primary end -users 
+is crucial, as it will identify areas requiring refinement, guide further development, and ensure 
+that Pathfinder consistently meets its objectives of providing personalized and trustworthy career 
+guidanc e. 
+Throughout the beta -testing phase, backend logs and integrated analytics will be employed 
+to monitor the application's performance and user engagement in real -world settings. These tools 
+will enable the development team to track user behavior, analyze feat ure usage patterns ΓÇösuch as 
+interaction with the Skill Gap Analyzer and Career Path Visualizer ΓÇöand detect any technical 
+issues that may arise. The quantitative and qualitative data collected during this monitoring 
+process will be instrumental in refining th e algorithm's weighting, enhancing the user interface, 
+and ensuring a seamless and impactful user experience prior to its full -scale institutional 
+deployment . 
+ 
+3.1.6 FEEDBACK  
+ 
+
+
+===== PAGE 27 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+27 
+ 
+User feedback will be systematically gathered and thoroughly analyzed, recognizing its 
+critical role in guiding the continuous improvement of the Pathfinder application. To ensure 
+structured and comprehensive feedback collection, a carefully designed survey will be embedded 
+within the platform, targeting key aspects such as user experience, the functionality of the Career 
+Path Visualizer, the accuracy of career recommendations, the clarity of explainable AI insights, 
+and overall satisfaction.  
+The survey will be promoted to users from both deployment environments ΓÇöthe integrated 
+university setting and the independent online platform ΓÇöcapturing a diverse range of perspectives 
+from students across various academic disciplines as well as from career counselors utilizing the 
+system as a professional aid. This dual -environment approach ensures that the applicationΓÇÖs 
+performance and relevance are assessed across different contexts of use, from guided sessions to 
+self-directed exploration, providing riche r, more actionable insights.  
+All feedback collected will be carefully reviewed, categorized, and prioritized based on 
+urgency (e.g., critical bugs) and impact (e.g., UI confusion affecting many users). The 
+development team will incorporate these insights into successive iterative upda tes, addressing 
+identified issues, refining the weights of the hybrid recommendation algorithm, enhancing 
+dashboard features, and optimizing the overall user experience. This iterative refinement process 
+is intended to ensure that Pathfinder evolves in ali gnment with the real -world needs of Filipino 
+students , professionals  and counselors, maintaining high standards of accuracy, usability, and 
+practical relevance.  
+ 
+3.2 CONCEPTUAL FRAMEWORK   
+ 
+
+
+===== PAGE 28 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+28 
+ 
+ 
+Figure 3.2 Conceptual Framework  
+ 
+The conceptual framework of Pathfinder illustrates the systematic transformation of user 
+inputs into actionable career guidance through a hybrid intelligent system. The process begins 
+with the independent variables: user -provided data from the dynamic asse ssment, which includes 
+
+
+
+===== PAGE 29 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+29 
+ 
+their psychological profile (MBTI type), self -rated technical and soft skills, and academic/career 
+interests. These inputs form a multi -dimensional student profile.  
+This profile is then processed by the system's core engine, the Hybrid Content -Based 
+Recommendation Algorithm. This algorithm operates through two parallel analytical streams: 
+Firstly, a semantic analysis using TF -IDF and Cosine Similarity to parse and mat ch the textual 
+content of job descriptions and required skills with the user's features. Secondly, a direct feature 
+similarity calculation compares the user's MBTI type and skills against predefined career 
+attributes. The outputs from these two processes a re synthesized using a weighted ensemble 
+method.  
+The result of this synthesis is the dependent variable: a coherent and accurate set of 
+personalized career recommendations. The final output is presented as a comprehensive career 
+dashboard, which includes a ranked list of highly compatible careers, a visu al breakdown of the 
+rationale behind each suggestion (explainable AI), a detailed skill gap analysis, and a curated 
+learning path with resources to address identified gaps. This framework ensures that isolated data 
+points are transformed into a clear, acti onable career narrative for the user.  
+ 
+3.3 ALGORITHM  
+ 
+The Pathfinder system employs a hybrid content -based filtering algorithm to generate 
+personalized career recommendations. This algorithm intelligently matches a user's unique multi -
+dimensional profile to potential career paths by combining semantic analysi s with feature -based 
+similarity scoring. The two core methodological components are TF -IDF with Cosine Similarity 
+for processing unstructured textual data and a weighted ensemble method for synthesizing 
+evidence from multiple data points into a final recom mendation score.  
+Furthermore,  Pathfinder  introduces a dynamic feedback loop and continuous learning 
+mechanism into its hybrid architecture. The system now captures implicit user engagement 
+metrics ΓÇösuch as time spent exploring a recommended career, clicks on learning resources, and 
+subsequent skill assessment updates ΓÇöto refine future recommendations. This creates an adaptive, 
+
+
+===== PAGE 30 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+30 
+ 
+intelligent system where the  weighted ensemble method  evolves over time, prioritizing the most 
+predictive features (e.g., placing more weight on skill gaps for users who consistently engage with 
+upskilling content). This transformative shift from a static profiling tool to a dynamic career 
+companion ensures the system's recommendations become increa singly personalized and 
+actionable the more it is used.  
+ 
+3.3.1 TF-IDF (Term Frequency -Inverse Document Frequency)  
+A statistical measure used to evaluate the importance of a word in a document within a 
+larger collection (corpus).  
+TFΓêÆIDF(t,d,D)=TF(t,d)ΓêùIDF(t,d) 
+Where:  
+ΓÇó t is a term (word)  
+ΓÇó d is a specific document  
+ΓÇó D is the corpus (collection of documents)  
+ΓÇó TF(t, d)  is the Term Frequency of  t in d 
+ΓÇó IDF(t, D)  is the Inverse Document Frequency of  t in corpus  D 
+1). Measures how frequently a term appears in a document.  
+TF(t,d)=(Number  of time  Number of times term t appears in 
+document d) / (Total number of terms in document d)  
+2). Measures how im portant a term is by penalizing common words.  
+IDF(t,D) = log( Total  number  of documents  in corpus  D 
+/ Number  of documents  containing  term  t) 
+TF-IDF (Term Frequency -Inverse Document Frequency) is a statistical measure used to 
+evaluate the importance of a word in a document relative to a collection of documents (corpus). 
+
+
+===== PAGE 31 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+31 
+ 
+In Pathfinder, it is used to convert course and job descriptions into numerical vectors. Term 
+Frequency (TF) measures how frequently a term appears in a specific job description, while 
+Inverse Document Frequency (IDF) downweights terms that are common across all descriptions, 
+highlighting more discriminative keywords.  
+ 
+3.3.2 COSINE SIMILARITY  
+Measures the similarity between two vectors by calculating the cosine of the angle 
+between them.  
+cos(╬╕) = (A ┬╖ B) / (||A|| ├ù ||B||) 
+Where:  
+ΓÇó A * B is the dot product of vectors A and B:  ╬ú (A_i ├ù B_i)  
+ΓÇó ||A|| is the magnitude (Euclidean norm) of vector A:  ΓêÜ(╬ú A_i┬▓)  
+ΓÇó ||B|| is the magnitude of vector B:  ΓêÜ(╬ú B_i┬▓)  
+ΓÇó (ΓÇ£Result of 1 = identical, 0 = no similarity ΓÇ¥) 
+The semantic similarity between the user's profile (represented as a vector based on their 
+skills and interests) and a career's description (represented as a TF -IDF vector) is then calculated 
+using Cosine Similarity. This metric measures the cosine of the angle between the two vectors in 
+a multi -dimensional space, providing a score between 0 (no similarity) and 1 (identical). This 
+allows the system to find careers whose descriptions semantically align with the user's features, 
+even if the exact keywords do not match perfectly.  
+ 
+3.3.3 WEIGHTED ENSEMBLE METHOD  
+≡¥æå_≡¥æô≡¥æû≡¥æ¢≡¥æÄ≡¥æÖ (≡¥æÉ,≡¥æó= ≡¥æñ_≡¥æá≡¥æÆ≡¥æÜ  ├ù ≡¥æå_≡¥æá≡¥æÆ≡¥æÜ (≡¥æÉ,≡¥æó) + ≡¥æñ_≡¥æá≡¥æÿ≡¥æû≡¥æÖ≡¥æÖ  ├ù ≡¥æå_≡¥æá≡¥æÿ≡¥æû≡¥æÖ≡¥æÖ (≡¥æÉ,≡¥æó) 
++ ≡¥æñ_≡¥æ¥≡¥æÆ≡¥æƒ≡¥æá≡¥æ£≡¥æ¢≡¥æÄ≡¥æÖ≡¥æû≡¥æí≡¥æª  ├ù ≡¥æå_≡¥æ¥≡¥æÆ≡¥æƒ≡¥æá≡¥æ£≡¥æ¢≡¥æÄ≡¥æÖ≡¥æû≡¥æí≡¥æª (≡¥æÉ,≡¥æó) 
+
+
+===== PAGE 32 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+32 
+ 
+Where:  
+ΓÇó S_final(c, u)  is the  final composite score  for career  c and user  u. 
+ΓÇó S_sem(c, u)  is the semantic similarity score (from TF -IDF & Cosine Similarity).  
+ΓÇó S_skill(c, u)  is the direct skill proficiency similarity score.  
+ΓÇó S_personality(c, u)  is the personality (MBTI) compatibility score.  
+ΓÇó w_sem , w_skill , w_personality  are the weights assigned to each score, and  w_sem 
++ w_skill + w_personality = 1 . 
+The final recommendation score is not solely based on semantic similarity. A weighted 
+ensemble method is used to combine multiple signals into a single, unified compatibility score. 
+These signals typically include:  
+1. The semantic similarity score from the TF -IDF/Cosine Similarity process.  
+2. A similarity score based on the alignment between the user's MBTI type and the MBTI 
+types commonly associated with a given career.  
+3. A similarity score based on the match between the user's self -rated skills and the skills 
+required for a career.  
+Each of these scores is assigned a specific weight based on its deemed importance to the 
+final recommendation. The weights are determined during the algorithm's design and tuning 
+phase. The scores are then combined, for example, through a weighted sum, to produce a final 
+composite score for each career. The careers are ranked based on this final score, ensuring the 
+recommendations are holistic, balanced, and context -aware.  
+3.4 OPERATIONAL FRAMEWORK   
+ 
+
+
+===== PAGE 33 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+33 
+ 
+ 
+The operational framework defines the sequential flow of data and processes within the 
+Pathfinder system. The workflow begins with the user completing the dynamic assessment, which 
+captures their MBTI personality type, self -assessed skills, and academic/ca reer interests. This raw 
+input data is then preprocessed: text from skills and interests is tokenized and normalized, and 
+categorical data (like MBTI type) is encoded for analysis.  
+The preprocessed data is fed into the two core components of the recommendation engine 
+simultaneously. The TF -IDF vectorizer transforms the corpus of job descriptions into a matrix of 
+TF-IDF features. The user's skill/interest data is also converted into a  vector and compared against 
+
+
+
+===== PAGE 34 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+34 
+ 
+each job vector using Cosine Similarity, generating a semantic similarity score for each career. 
+In parallel, the user's MBTI type and skills are compared against a knowledge base of career 
+attributes to generate separate feature -based similarity scores.  
+The hybrid recommendation logic then takes over, applying the predefined weights to the 
+semantic similarity score, the MBTI similarity score, and the skill similarity score. It combines 
+them into a single, aggregated compatibility score for each career. Th is list of careers and their 
+scores is sorted to produce the final ranked list of recommendations. Finally, the system generates 
+the explanatory outputs: it compiles the rationale for the top careers, performs a gap analysis 
+between the user's skills and t he requirements of recommended roles, and curates a learning path 
+from its integrated LMS resources. These results are displayed on the user's personalized 
+dashboard.  
+Critically, the system's performance is continuously measured in the EV ALUATE phase. 
+Key accuracy metrics ΓÇösuch as precision, recall, and click -through rates on recommendations ΓÇö
+are tracked to assess efficacy. Furthermore, a user feedback loop captures expli cit satisfaction 
+ratings and implicit engagement data (e.g., time spent exploring a career path). This performance 
+data, along with results from controlled A/B tests on different weighting schemes, is fed back into 
+the system. This feedback loop allows the  recommendation engine to learn and adapt, ensuring 
+the model's weights and logic are periodically refined to improve the relevance and accuracy of 
+future outputs for all users.  
+ 
+ 3.5 FLOWCHART   
+ 
+
+
+===== PAGE 35 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+35 
+ 
+ 
+
+
+
+===== PAGE 36 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+36 
+ 
+Figure 3.3  Flowchart of Pathfinder  
+ 
+The operational workflow of the Pathfinder system follows a comprehensive cycle that 
+begins with user authentication, progresses through assessment and analysis, and culminates in 
+personalized career guidance and skill development recommendations. This con tinuous flow 
+ensures a seamless user experience from initial engagement to ongoing career development 
+support.  
+The process initiates through the  Dashboard , which serves as the central navigation hub. 
+From this interface, users can manage their profiles through the  Update the Database  functions, 
+including the ability to  Input User Information , View Profile , Edit Profile , access additional 
+resources through  Exo, and learn about the system through  View About Us . This profile 
+management capability establishes the foundation for personalized recommendations.  
+The user journey properly begins from the  Start  phase when users access the platform and 
+either  Login  or Register  for new accounts. Following successful authentication, users proceed to 
+assessment selection where they choose between  Career Assessment  or Job Assessment  options. 
+Based on their selection, users complete either job -specific questionnaires or the  MBTI 
+personality assessment . The system then processes these inputs using its hybrid algorithm 
+combining TF -IDF, cosine similarity, and weighted ensemble methods to generate personalized 
+career recommendations, which are displayed to users along with options to access relevant 
+tutor ials. 
+The workflow progresses to its final stage through the  End phase, where the system 
+conducts a comprehensive  Skill Gap Assessment . This process leverages the previously generated 
+career recommendations to identify target jobs, compares required competencies against the user's 
+current skill profile, and calculates specific skill deficiencies. The system presents these findings 
+to use rs alongside curated learning resources, enabling them to address identified gaps through 
+targeted tutorials and development materials.  
+This integrated workflow creates a continuous cycle of assessment, recommendation, and 
+skill development, allowing users to periodically return to update their profiles, reassess their 
+career options, and track their professional growth over time. The seam less connection between 
+
+
+===== PAGE 37 =====
+
+  College of Information and Computer 
+Studies  Tel No. 481 -1900 local 
+www. dlsud.edu.ph  
+ 
+ 
+37 
+ 
+these phases ensures that Pathfinder provides not only initial career guidance but also ongoing 
+support for users' professional development journeys.  
+ 
+ 
+3.6 RESPONDENTS OF THE STUDY   
+ 
+The study engaged participants directly involved in the academic and career development 
+ecosystem to ensure the Pathfinder system's recommendations are technically robust, relevant, 
+and user -friendly. The primary respondents consisted of at least 20 - 50 Filipino college students 
+recruited from any universi ty. These students represented a diverse range of academic disciplines 
+and year levels to capture a wide variety of profiles and career planning needs.  
+Their participation was crucial for evaluating the user experience (UX), interface usability, 
+and the perceived relevance and accuracy of the career recommendations. Complementing this 
+group, at least five (5) licensed guidance counselors or psychologist and career advisors were 
+involved in the study. Their expertise provided professional validation of the assessment's 
+psychological basis (MBTI) and the overall utility of the system as a counseling aid. Furthermore, 
+at least five (5) industry professionals from various sectors in the Philippine job market were 
+consulted to assess the alignment of the system's recommendations with real -world industry 
+demands and trends.  
+Data collection methods were multi -faceted. Students participated in user testing sessions 
+where they completed the assessment and interacted with the recommendation dashboard; their 
+interactions were anonymized and logged. Structured surveys and focus gro up discussions 
+(FGDs) were conducted with all respondent groups to gather qualitative feedback on the system's 
+explainability, fairness, and practical value. Ethical considerations were rigorously upheld. All 
+participants provided informed consent after a detailed explanation of the study's objectives, data 
+usage, and privacy protocols. All collected data was anonymized, and participation was voluntary, 
+with the option to withdraw at any time without penalty.  
+ 

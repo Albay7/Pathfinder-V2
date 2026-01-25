@@ -1,0 +1,39 @@
+name: Deploy to Vercel with Database
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+        
+      - name: Generate App Key
+        run: |
+          echo "APP_KEY=$(php artisan key:generate --show)" >> $GITHUB_ENV
+        
+      - name: Deploy to Vercel
+        run: |
+          vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes \
+          --build-env APP_KEY=${{ env.APP_KEY }} \
+          --env APP_KEY=${{ env.APP_KEY }} \
+          --env APP_ENV=production \
+          --env APP_DEBUG=false \
+          --env APP_URL=https://pathfinder-v2-zm1l-git-main-chasing-haze-exias-projects.vercel.app \
+          --env DB_CONNECTION=mysql \
+          --env DB_HOST=${{ secrets.DB_HOST }} \
+          --env DB_PORT=3306 \
+          --env DB_DATABASE=${{ secrets.DB_DATABASE }} \
+          --env DB_USERNAME=${{ secrets.DB_USERNAME }} \
+          --env DB_PASSWORD=${{ secrets.DB_PASSWORD }}
