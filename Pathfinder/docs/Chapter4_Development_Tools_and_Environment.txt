@@ -1,0 +1,63 @@
+Chapter 4 — Development Tools and Environment (Railway-first)
+
+1) Stack (with justification)
+
+- Programming languages
+  - PHP 8.x — Backend for business logic, routing, authentication. Chosen for Laravel support, mature ecosystem, rapid CRUD development.
+  - JavaScript (ES6) — Client-side enhancements (form validation, dynamic questionnaire steps). Ubiquitous, lightweight.
+  - HTML5 + Blade templating — Server-rendered views for reliability and SEO; Blade keeps logic separated from presentation.
+  - CSS (Tailwind utility classes or concise custom stylesheet) — Fast styling iteration, consistent design tokens, reduces bespoke CSS.
+  - SQL (MySQL or PostgreSQL on Railway) — Relational data (users, assessments, results). Strong ACID guarantees, ORM-friendly.
+  - Optional Python (prototype scripts for scoring/weight tuning) — Faster experimentation before porting logic to PHP services.
+
+- Frameworks / libraries
+  - Laravel — MVC, routing, validation, queue-ready; Eloquent ORM for clean data access. Reduces boilerplate and improves maintainability.
+  - Blade — Secure templating (auto-escaping), component reuse for forms/layout.
+  - Tailwind CSS (if in use) — Utility-first approach accelerates UI assembly; reduces CSS cascade complexity.
+  - Laravel Mix / Webpack (if assets are compiled) — Bundling, versioning, minification. Vite is not used in this project status.
+  - SweetAlert2 or similar (if included) — User feedback (alerts/modals) with minimal integration cost.
+
+- Tooling / platform
+  - Composer — PHP dependency management and PSR-4 autoloading.
+  - NPM/Yarn (only if a JS build pipeline is still needed) — Manages frontend dependencies such as Tailwind or Laravel Mix.
+  - Git + GitHub — Version control, collaboration, and CI hooks.
+  - Railway — Hosted environment with automated builds, environment variables, and runtime/container abstraction; faster provisioning than manual VPS.
+  - Local Dev Environment — Windows + VS Code: debugging, IntelliSense, integrated terminal, and tests.
+  - Environment management — .env files locally; Railway dashboard variables in production for secrets isolation.
+  - Optional Docker (local parity) — Reproducible services (app, database) to reduce “works on my machine” issues.
+
+- Hardware
+  - Development machine: ≥8 GB RAM, local PHP runtime, Node (only if asset build is required), and a local DB server or container.
+  - Production: Railway-managed container instance(s) with auto-restarts, a managed DB (PostgreSQL or MySQL), and SSL termination.
+
+2) Why these tools are appropriate
+
+- Productivity
+  - Laravel’s built-in validation, routing, and auth scaffolding accelerate questionnaire and recommendation features.
+  - Blade keeps most logic server-side, reducing client complexity and avoiding over-reliance on SPA frameworks.
+  - Tailwind (or concise custom CSS) shortens UI iteration cycles.
+
+- Maintainability
+  - Clear separation of concerns: controllers (request flow), services (domain logic), views (presentation).
+  - Composer and (if used) Mix keep dependency updates centralized; version pinning prevents regressions.
+
+- Performance and scalability
+  - Railway abstracts infrastructure (build + deploy) without manual server patching; easy horizontal scaling path if traffic grows.
+  - A relational database fits structured questionnaire results and joins (users ↔ attempts ↔ recommendations).
+  - Asset bundling (Mix) minimizes payload size; omitting Vite avoids unnecessary tooling if it’s not needed.
+
+- Reliability and security
+  - Environment variables via Railway prevent hard-coded secrets.
+  - Laravel provides CSRF tokens, input sanitation, and secure password hashing (bcrypt/argon2).
+  - Database migrations keep schema evolution controlled (artisan migrate workflow).
+
+- Flexibility
+  - Python prototyping enables faster experimentation with scoring before stabilizing logic in PHP.
+  - Modular service classes enable future replacement (e.g., swapping recommendation engine or adding caching).
+
+- Cost and complexity balance
+  - Railway reduces operational overhead (no manual Nginx/PHP-FPM tuning required).
+  - Avoiding Vite while it’s not in use lowers cognitive load; Mix (or even plain compiled CSS/JS) is sufficient for current needs.
+
+Summary
+The selected stack—Laravel + Blade + Tailwind/utility CSS + MySQL/PostgreSQL on Railway—offers rapid development, secure defaults, low operational burden, and clear scalability paths while avoiding unnecessary tooling complexity (e.g., Vite) that isn’t required for the current feature scope.
