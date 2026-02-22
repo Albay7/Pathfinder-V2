@@ -2,6 +2,33 @@
 
 A comprehensive, intelligent career guidance platform built with Laravel that helps users discover their ideal career path through dynamic assessments, personalized recommendations, and structured learning paths.
 
+## 📋 Recent Changes & Current System State
+
+### Latest Updates (February 2026)
+
+**🧹 Deployment Cleanup**
+- Removed Vercel deployment configuration and related files
+- Removed Azure deployment scripts and workflows
+- Streamlined to Railway-only deployment for simplified maintenance
+- Cleaned up legacy GitHub Actions workflows
+
+**📁 Workspace Reorganization**
+- Created `workspace/` directory for better project organization
+- Moved documentation files to `workspace/docs/` (CHANGELOG.md, PATHFINDER.V2.pdf)
+- Moved database schema to `workspace/data/` (pathfinder_database_schema.sql)
+- Organized local development scripts in `workspace/scripts/local/`
+- Maintained backward compatibility with root-level script wrappers
+
+**🚀 Current Deployment**
+- **Production Platform**: Railway (single deployment target)
+- **Configuration**: `railway.json` (root and Pathfinder directory)
+- **Simplified Workflow**: One deployment pipeline for easier maintenance
+
+**🔄 Version Control**
+- Backup branch created: `pathfinder-v2-backup` (preserved on GitHub)
+- Main branch updated with latest stable version
+- Clean commit history with organized changes
+
 ## ✨ Key Features
 
 ### 🎓 **Intelligent Assessment System**
@@ -80,10 +107,10 @@ Ensure these PHP extensions are installed:
 ### 1. Clone or Download the Project
 ```bash
 # If using Git
-git clone <repository-url>
-cd Pathfinder
+git clone https://github.com/Albay7/Pathfinder-V2.git
+cd PathfinderApp/Pathfinder
 
-# Or extract the downloaded ZIP file and navigate to the Pathfinder directory
+# Or extract the downloaded ZIP file and navigate to the Pathfinder directory within PathfinderApp
 ```
 
 ### 2. Install PHP Dependencies
@@ -161,8 +188,21 @@ composer run dev
 ```
 This runs both the Laravel server and queue listener simultaneously.
 
-### Method 3: Production Setup
-For production, configure your web server (Apache/Nginx) to point to the `public` directory.
+### Method 3: Using Root-Level Scripts (Windows)
+```bash
+# From the project root (PathfinderApp/)
+start-local.bat    # Starts the development server
+migrate-local.bat  # Runs database migrations
+```
+These wrapper scripts automatically call the corresponding scripts in `workspace/scripts/local/`.
+
+### Method 4: Production Deployment
+**Railway Platform** (Current deployment method):
+- Configuration: See `railway.json` in root directory
+- Automatic deployment from GitHub repository
+- Environment variables managed in Railway dashboard
+
+For manual production setup, configure your web server (Apache/Nginx) to point to the `Pathfinder/public` directory.
 
 ## 📱 Application Usage
 
@@ -239,8 +279,35 @@ This Laravel application follows the standard MVC architecture with additional f
 ### 📁 Folder Structure
 
 ```
-Pathfinder/
-├── app/                          # Backend Application Logic
+PathfinderApp/                    # Root Project Directory
+├── workspace/                    # Project Organization (New)
+│   ├── docs/                    # Project Documentation
+│   │   ├── CHANGELOG.md         # Version history and changes
+│   │   └── PATHFINDER.V2.pdf    # System documentation
+│   ├── data/                    # Database Resources
+│   │   └── pathfinder_database_schema.sql  # DB schema
+│   └── scripts/                 # Development Scripts
+│       └── local/               # Local development tools
+│           ├── start-local.bat  # Local server startup
+│           └── migrate-local.bat # Database migration helper
+│
+├── Courses/                     # Course Assessment Modules
+│   ├── Business.py              # Business field assessments
+│   ├── Engineering.py           # Engineering field assessments
+│   ├── It.py                    # IT/CS assessments
+│   └── ...                      # Other field-specific modules
+│
+├── Jobs/                        # Career Assessment Modules
+│   ├── business_careers_assessor.py
+│   ├── it_cs_careers_assessor.py
+│   └── ...                      # Industry-specific assessors
+│
+├── Datasets/                    # ML Training Data
+│   ├── preprocess_resumes.py    # Data preprocessing scripts
+│   └── Cloude-Resume/           # Resume dataset
+│
+├── Pathfinder/                  # Main Laravel Application
+│   ├── app/                     # Backend Application Logic
 │   ├── Http/                     # HTTP Layer (Controllers, Middleware, Requests)
 │   │   ├── Controllers/          # Application Controllers
 │   │   │   ├── PathfinderController.php    # Main career guidance with smart algorithms
@@ -328,34 +395,51 @@ Pathfinder/
 ├── vendor/                      # Composer Dependencies
 │   └── ...                     # Third-party packages
 │
-├── .env                        # Environment Configuration
-├── .env.example               # Environment template
-├── composer.json              # PHP dependencies
-├── package.json               # Node.js dependencies
-├── webpack.mix.js             # Laravel Mix configuration
-├── tailwind.config.js         # Tailwind CSS configuration
-└── README.md                  # Project documentation
+│   ├── .env                    # Environment Configuration
+│   ├── .env.example           # Environment template
+│   ├── composer.json          # PHP dependencies
+│   ├── package.json           # Node.js dependencies
+│   ├── webpack.mix.js         # Laravel Mix configuration
+│   ├── tailwind.config.js     # Tailwind CSS configuration
+│   └── railway.json           # Railway deployment config
+│
+├── railway.json                # Root Railway configuration
+├── postcss.config.js           # PostCSS configuration
+├── tailwind.config.js          # Tailwind CSS configuration
+├── vite.config.js              # Vite build configuration
+├── start-local.bat             # Wrapper script (calls workspace version)
+├── migrate-local.bat           # Wrapper script (calls workspace version)
+└── README.md                   # Project documentation (this file)
 ```
 
 ### 🎯 Key Components
 
-**Frontend (User Interface)**
-- `resources/views/` - All user-facing templates and UI components
-- `resources/css/` - Styling with Tailwind CSS framework
-- `resources/js/` - Interactive JavaScript functionality
-- `public/` - Compiled assets served to users
+**Main Laravel Application** (`Pathfinder/`)
+- `app/` - Backend logic, controllers, models, and services
+- `resources/` - Frontend views, CSS, and JavaScript
+- `database/` - Migrations, seeders, and schema
+- `config/` - Application configuration files
+- `routes/` - Web and API route definitions
+- `public/` - Web server document root with compiled assets
 
-**Backend (Server Logic)**
-- `app/Http/Controllers/` - Business logic and request handling
-- `app/Models/` - Data models and database interactions
-- `database/` - Database schema and data management
-- `routes/` - URL routing and endpoint definitions
+**Assessment Modules** (`Courses/`, `Jobs/`)
+- Python-based assessment engines
+- Field-specific and industry-specific evaluators
+- Integration with main Laravel application
 
-**Configuration & Setup**
-- `config/` - Application settings and configurations
-- `.env` - Environment-specific settings (database, keys)
-- `composer.json` - PHP package management
-- `package.json` - Frontend asset management
+**ML & Data** (`Datasets/`)
+- Training datasets for CV analysis
+- Resume preprocessing scripts
+- ML model resources
+
+**Workspace Organization** (`workspace/`)
+- `docs/` - Project documentation and changelogs
+- `data/` - Database schemas and seed data
+- `scripts/` - Development and maintenance scripts
+
+**Deployment Configuration**
+- `railway.json` - Railway platform deployment settings
+- Database, build, and runtime configurations
 
 ## 🧠 Technical Implementation
 
