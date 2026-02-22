@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Auth;
 class MbtiController extends Controller
 {
     /**
+     * Display the MBTI intro landing page
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showIntro()
+    {
+        return view('pathfinder.mbti-intro');
+    }
+
+    /**
      * Display the MBTI questionnaire form
      *
      * @return \Illuminate\View\View
@@ -47,15 +57,15 @@ class MbtiController extends Controller
 
             // Load MBTI questions (you might want to create a separate service for this)
             $allQuestions = $this->getMbtiQuestions();
-            
+
             // Simple adaptive logic - you can enhance this with your RL algorithm
             $questionsAsked = count($currentResponses);
-            
+
             // If we've asked enough questions (minimum 10, maximum 30)
             if ($questionsAsked >= 10) {
                 // Calculate current confidence
                 $confidence = $this->calculateConfidence($currentResponses);
-                
+
                 // If confidence is high enough or we've reached max questions, stop
                 if ($confidence > 0.85 || $questionsAsked >= 30) {
                     return response()->json([
@@ -69,7 +79,7 @@ class MbtiController extends Controller
 
             // Select next question based on current responses
             $nextQuestionIndex = $this->selectNextQuestion($currentResponses, $allQuestions);
-            
+
             if ($nextQuestionIndex === null) {
                 return response()->json([
                     'success' => true,
@@ -91,7 +101,7 @@ class MbtiController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Failed to get next question: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to get next question',
@@ -125,7 +135,7 @@ class MbtiController extends Controller
             // Update responses
             $responses = $testSession->responses ?? [];
             $responses["q{$questionIndex}"] = $response;
-            
+
             // Update questions asked
             $questionsAsked = $testSession->questions_asked ?? [];
             if (!in_array($questionIndex, $questionsAsked)) {
@@ -144,7 +154,7 @@ class MbtiController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Failed to record response: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to record response',
@@ -179,7 +189,7 @@ class MbtiController extends Controller
 
             // Calculate MBTI type from responses
             $mbtiType = $this->calculateMbtiTypeFromResponses($finalResponses);
-            
+
             // Calculate efficiency (questions saved)
             $totalQuestions = 60;
             $questionsAsked = count($testSession->questions_asked ?? []);
@@ -213,7 +223,7 @@ class MbtiController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Failed to complete assessment: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to complete assessment',
@@ -248,7 +258,7 @@ class MbtiController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Failed to get session data: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Session not found',
@@ -339,7 +349,7 @@ class MbtiController extends Controller
     private function selectNextQuestion($currentResponses, $allQuestions)
     {
         $askedQuestions = array_keys($currentResponses);
-        
+
         // Simple strategy: ask questions from dimensions with least certainty
         $dimensionCounts = [
             'EI' => 0, // Questions 1-15
@@ -347,7 +357,7 @@ class MbtiController extends Controller
             'TF' => 0, // Questions 31-45
             'JP' => 0  // Questions 46-60
         ];
-        
+
         foreach ($askedQuestions as $questionKey) {
             $questionNum = (int) str_replace('q', '', $questionKey);
             if ($questionNum <= 15) $dimensionCounts['EI']++;
@@ -355,10 +365,10 @@ class MbtiController extends Controller
             elseif ($questionNum <= 45) $dimensionCounts['TF']++;
             else $dimensionCounts['JP']++;
         }
-        
+
         // Find dimension with least questions asked
         $minDimension = array_keys($dimensionCounts, min($dimensionCounts))[0];
-        
+
         // Select a random question from that dimension
         $dimensionRanges = [
             'EI' => [1, 15],
@@ -366,16 +376,16 @@ class MbtiController extends Controller
             'TF' => [31, 45],
             'JP' => [46, 60]
         ];
-        
+
         $range = $dimensionRanges[$minDimension];
         $availableQuestions = [];
-        
+
         for ($i = $range[0]; $i <= $range[1]; $i++) {
             if (!in_array("q{$i}", $askedQuestions)) {
                 $availableQuestions[] = $i;
             }
         }
-        
+
         return empty($availableQuestions) ? null : $availableQuestions[array_rand($availableQuestions)];
     }
 
@@ -388,10 +398,10 @@ class MbtiController extends Controller
     private function calculateConfidence($responses)
     {
         if (empty($responses)) return 0.0;
-        
+
         // Simple confidence calculation based on response consistency
         $dimensionScores = $this->calculateDimensionScores($responses);
-        
+
         $confidences = [];
         foreach ($dimensionScores as $dimension => $scores) {
             $total = $scores['positive'] + $scores['negative'];
@@ -400,7 +410,7 @@ class MbtiController extends Controller
                 $confidences[] = $ratio;
             }
         }
-        
+
         return empty($confidences) ? 0.0 : array_sum($confidences) / count($confidences);
     }
 
@@ -418,11 +428,11 @@ class MbtiController extends Controller
             'TF' => ['positive' => 0, 'negative' => 0],
             'JP' => ['positive' => 0, 'negative' => 0]
         ];
-        
+
         foreach ($responses as $questionKey => $response) {
             $questionNum = (int) str_replace('q', '', $questionKey);
             $score = (int) $response;
-            
+
             if ($questionNum <= 15) {
                 // E/I dimension
                 if (in_array($questionNum, [2, 4, 6, 8, 10, 12, 14])) {
@@ -453,7 +463,7 @@ class MbtiController extends Controller
                 }
             }
         }
-        
+
         return $scores;
     }
 
@@ -466,13 +476,13 @@ class MbtiController extends Controller
     private function calculateMbtiTypeFromResponses($responses)
     {
         $scores = $this->calculateDimensionScores($responses);
-        
+
         $type = '';
         $type .= $scores['EI']['positive'] > $scores['EI']['negative'] ? 'E' : 'I';
         $type .= $scores['SN']['positive'] > $scores['SN']['negative'] ? 'S' : 'N';
         $type .= $scores['TF']['positive'] > $scores['TF']['negative'] ? 'T' : 'F';
         $type .= $scores['JP']['positive'] > $scores['JP']['negative'] ? 'J' : 'P';
-        
+
         return [
             'type' => $type,
             'scores' => $scores,
@@ -568,7 +578,7 @@ class MbtiController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Adaptive MBTI assessment processing failed: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to save assessment results',
@@ -593,17 +603,17 @@ class MbtiController extends Controller
 
         // Decode the JSON responses
         $responses = json_decode($request->input('responses'), true);
-        
+
         // Validate that we have all 60 questions with valid values
         if (!$responses || count($responses) !== 60) {
             return back()->withErrors(['error' => 'Please complete all questions before submitting.']);
         }
-        
+
         // Convert responses to the expected format and validate values
         $answers = [];
         for ($i = 1; $i <= 60; $i++) {
             $questionKey = "q{$i}";
-            if (!isset($responses[$questionKey]) || !is_numeric($responses[$questionKey]) || 
+            if (!isset($responses[$questionKey]) || !is_numeric($responses[$questionKey]) ||
                 $responses[$questionKey] < 1 || $responses[$questionKey] > 7) {
                 return back()->withErrors(['error' => "Invalid response for question {$i}."]);
             }
@@ -612,7 +622,7 @@ class MbtiController extends Controller
 
         // Calculate MBTI dimension scores using improved algorithm
         // Each dimension has 15 questions (questions 1-15: E/I, 16-30: S/N, 31-45: T/F, 46-60: J/P)
-        
+
         // Extraversion vs Introversion (Questions 1-15)
         $eScore = 0;
         $iScore = 0;
@@ -622,7 +632,7 @@ class MbtiController extends Controller
             // Reverse I questions (higher score = more introverted, so reverse for E)
             2, 4, 6, 8, 10, 12, 14
         ];
-        
+
         foreach ($eiQuestions as $qNum) {
             if (in_array($qNum, [2, 4, 6, 8, 10, 12, 14])) {
                 // Reverse scoring for introverted questions
@@ -634,7 +644,7 @@ class MbtiController extends Controller
                 $iScore += (8 - $answers["q{$qNum}"]);
             }
         }
-        
+
         // Sensing vs Intuition (Questions 16-30)
         $sScore = 0;
         $nScore = 0;
@@ -644,7 +654,7 @@ class MbtiController extends Controller
             // Reverse N questions (higher score = more intuitive, so reverse for S)
             17, 19, 21, 23, 25, 27, 29
         ];
-        
+
         foreach ($snQuestions as $qNum) {
             if (in_array($qNum, [17, 19, 21, 23, 25, 27, 29])) {
                 // Reverse scoring for intuitive questions
@@ -656,7 +666,7 @@ class MbtiController extends Controller
                 $nScore += (8 - $answers["q{$qNum}"]);
             }
         }
-        
+
         // Thinking vs Feeling (Questions 31-45)
         $tScore = 0;
         $fScore = 0;
@@ -666,7 +676,7 @@ class MbtiController extends Controller
             // Reverse F questions (higher score = more feeling, so reverse for T)
             32, 34, 36, 38, 40, 42, 44
         ];
-        
+
         foreach ($tfQuestions as $qNum) {
             if (in_array($qNum, [32, 34, 36, 38, 40, 42, 44])) {
                 // Reverse scoring for feeling questions
@@ -678,7 +688,7 @@ class MbtiController extends Controller
                 $fScore += (8 - $answers["q{$qNum}"]);
             }
         }
-        
+
         // Judging vs Perceiving (Questions 46-60)
         $jScore = 0;
         $pScore = 0;
@@ -688,7 +698,7 @@ class MbtiController extends Controller
             // Reverse P questions (higher score = more perceiving, so reverse for J)
             47, 49, 51, 53, 55, 57, 59
         ];
-        
+
         foreach ($jpQuestions as $qNum) {
             if (in_array($qNum, [47, 49, 51, 53, 55, 57, 59])) {
                 // Reverse scoring for perceiving questions
@@ -761,7 +771,7 @@ class MbtiController extends Controller
                 'mbti_scores' => $mbtiScores,
                 'mbti_description' => $personalityType->description
             ]);
-            
+
             // Store career recommendations in user_progress
             $this->storeCareerRecommendations($user->id, $mbtiType, $personalityType);
         } else {
@@ -805,7 +815,7 @@ class MbtiController extends Controller
             $personalityType = session('personality_type');
 
             if (!$mbtiType) {
-                return redirect()->route('pathfinder.mbti.questionnaire')
+                return redirect()->route('pathfinder.mbti-questionnaire')
                     ->with('error', 'Please complete the MBTI questionnaire first.');
             }
         }
@@ -817,11 +827,11 @@ class MbtiController extends Controller
 
         $careerRecommendations = $this->getMbtiCareerRecommendations($mbtiType);
         $learningStyle = $this->getMbtiLearningStyle($mbtiType);
-        
+
         // Get course and job recommendations with compatibility scores
         $courseRecommendations = [];
         $jobRecommendations = [];
-        
+
         if (Auth::check()) {
             // Get top 6 course recommendations with compatibility scores
             $courseRecommendations = Course::with('recommendedUsers')
@@ -844,7 +854,7 @@ class MbtiController extends Controller
                 ->sortByDesc('compatibility_score')
                 ->take(6)
                 ->values();
-                
+
             // Get top 6 job recommendations with compatibility scores
             $jobRecommendations = Job::with('recommendedUsers')
                 ->whereHas('recommendedUsers', function($query) {
@@ -1238,7 +1248,7 @@ class MbtiController extends Controller
             'recommendations' => ['Try different learning approaches to find what works best for you.']
         ];
     }
-    
+
     /**
      * Store career recommendations in user_progress table
      *
@@ -1251,7 +1261,7 @@ class MbtiController extends Controller
     {
         // Get career recommendations for this MBTI type
         $careerRecommendations = $this->getMbtiCareerRecommendations($mbtiType);
-        
+
         // Store MBTI results with career recommendations in user_progress
         UserProgress::create([
             'user_id' => $userId,
@@ -1267,11 +1277,11 @@ class MbtiController extends Controller
             ],
             'completed' => true
         ]);
-        
+
         // Generate course and job recommendations with compatibility scores
         $this->generateAndStoreRecommendations($userId, $mbtiType);
     }
-    
+
     /**
      * Generate and store course/job recommendations with compatibility scores
      *
@@ -1285,7 +1295,7 @@ class MbtiController extends Controller
         $courses = Course::active()->get();
         foreach ($courses as $course) {
             $compatibilityScore = $this->calculateCourseCompatibility($course, $mbtiType);
-            
+
             if ($compatibilityScore >= 60) { // Only store high compatibility recommendations
                 $course->recommendedUsers()->attach($userId, [
                     'compatibility_score' => $compatibilityScore,
@@ -1293,12 +1303,12 @@ class MbtiController extends Controller
                 ]);
             }
         }
-        
+
         // Get all active jobs and calculate compatibility
         $jobs = Job::active()->get();
         foreach ($jobs as $job) {
             $compatibilityScore = $this->calculateJobCompatibility($job, $mbtiType);
-            
+
             if ($compatibilityScore >= 60) { // Only store high compatibility recommendations
                 $job->recommendedUsers()->attach($userId, [
                     'compatibility_score' => $compatibilityScore,
@@ -1307,7 +1317,7 @@ class MbtiController extends Controller
             }
         }
     }
-    
+
     /**
      * Calculate compatibility score between a course and MBTI type
      *
@@ -1320,10 +1330,10 @@ class MbtiController extends Controller
         if (!$course->mbti_compatibility || !is_array($course->mbti_compatibility)) {
             return 50; // Default neutral score
         }
-        
+
         return $course->mbti_compatibility[$mbtiType] ?? 50;
     }
-    
+
     /**
      * Calculate compatibility score between a job and MBTI type
      *
@@ -1336,7 +1346,7 @@ class MbtiController extends Controller
         if (!$job->mbti_compatibility || !is_array($job->mbti_compatibility)) {
             return 50; // Default neutral score
         }
-        
+
         return $job->mbti_compatibility[$mbtiType] ?? 50;
     }
 }

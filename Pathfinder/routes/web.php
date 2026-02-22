@@ -50,6 +50,7 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
     Route::post('/skill-gap/analyze', [PathfinderController::class, 'analyzeSkillGap'])->name('skill-gap.analyze');
 
     // MBTI Personality Assessment routes
+    Route::get('/mbti', [MbtiController::class, 'showIntro'])->name('mbti-intro');
     Route::get('/mbti-questionnaire', [MbtiController::class, 'showQuestionnaire'])->name('mbti-questionnaire');
     Route::post('/mbti-questionnaire/process', [MbtiController::class, 'processQuestionnaire'])->name('mbti-questionnaire.process');
     Route::get('/mbti-results', [MbtiController::class, 'showResults'])->name('mbti.results');
@@ -61,6 +62,7 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
 
     // CV Analysis routes
     Route::get('/cv-upload', [CVAnalysisController::class, 'showUploadForm'])->name('cv-upload');
+    Route::post('/cv-upload/analyze', [CVAnalysisController::class, 'analyzeAndShowResult'])->name('cv-upload.analyze');
     Route::get('/cv-analysis/history', [CVAnalysisController::class, 'showAnalysisHistory'])->name('cv-analysis.history');
     Route::get('/cv-analysis/{id}', [CVAnalysisController::class, 'showAnalysisDetails'])->name('cv-analysis.details');
 });

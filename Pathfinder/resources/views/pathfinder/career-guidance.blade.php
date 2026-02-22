@@ -29,7 +29,7 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             <!-- Course Option -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sm:p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 flex flex-col h-full">
                 <div class="text-center flex flex-col flex-grow">
@@ -63,7 +63,7 @@
                         </li>
                     </ul>
                     <div class="mt-auto">
-                        <a href="{{ route('pathfinder.questionnaire', ['type' => 'courses']) }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200 min-h-[48px]" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                        <a href="{{ route('pathfinder.questionnaire', ['type' => 'courses']) }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white text-sm font-medium rounded-lg transition-colors duration-200 h-[48px] whitespace-nowrap" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                             <span>Start Course Assessment</span>
                             <svg class="ml-2 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -106,7 +106,7 @@
                         </li>
                     </ul>
                     <div class="mt-auto">
-                        <a href="{{ route('pathfinder.questionnaire', ['type' => 'job']) }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200 min-h-[48px]" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                        <a href="{{ route('pathfinder.questionnaire', ['type' => 'job']) }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white text-sm font-medium rounded-lg transition-colors duration-200 h-[48px] whitespace-nowrap" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                             <span>Start Job Assessment</span>
                             <svg class="ml-2 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -150,22 +150,19 @@
                     </ul>
                     <div class="mt-auto">
                         @auth
-                            <a href="{{ route('pathfinder.cv-upload') }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200 min-h-[48px]" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                            <a href="{{ route('pathfinder.cv-upload') }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white text-sm font-medium rounded-lg transition-colors duration-200 h-[48px] whitespace-nowrap" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                                 <span>Upload Your CV</span>
                                 <svg class="ml-2 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
                             </a>
                         @else
-                            <div class="space-y-3">
-                                <p class="text-sm text-gray-500 italic mb-3">Login required to upload CV</p>
-                                <a href="{{ route('login') }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200 min-h-[48px]" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
-                                    <span>Login to Upload CV</span>
-                                    <svg class="ml-2 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013 3v1"></path>
-                                    </svg>
-                                </a>
-                            </div>
+                            <a href="{{ route('login') }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white text-sm font-medium rounded-lg transition-colors duration-200 h-[48px] whitespace-nowrap" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                                <span>Login to Upload CV</span>
+                                <svg class="ml-2 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013 3v1"></path>
+                                </svg>
+                            </a>
                         @endauth
                     </div>
                 </div>

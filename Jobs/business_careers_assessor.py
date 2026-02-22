@@ -14,7 +14,8 @@ def get_user_input(prompt: str) -> int:
             pass
         print("Please enter a number between 1 and 5.")
 
-# Business roles and initial scoresoles = [
+# Business roles and initial scores
+roles = [
     "Accountant",
     "Sales Representative",
     "Administrative Officer",

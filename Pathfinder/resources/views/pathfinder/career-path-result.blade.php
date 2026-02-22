@@ -25,16 +25,6 @@
 <!-- Career Ladder Visualization -->
 <div class="py-16 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4" style="color: #13264D;">
-                CAREER LADDER
-            </h2>
-            <p class="text-lg text-gray-600 mb-6">
-                Your progression path to {{ $targetRole }}
-            </p>
-        </div>
-
         <!-- New Vertical Journey Timeline -->
         @php
             /* Reorder so earliest (junior) level appears first (top). */
@@ -77,10 +67,22 @@
                         <div id="journey-panel-{{$i}}" class="journey-card" role="group" aria-label="{{ e($title) }}">
                             <div class="journey-card-front">
                                 <div class="flex items-center gap-3 mb-3">
-                                    <span class="inline-flex items-center justify-center rounded-full bg-gradient-to-br from-[#1D3E73] to-[#4E90B1] text-white text-sm font-semibold w-9 h-9 shadow" title="Step {{ $i+1 }}">{{ $i+1 }}</span>
                                     <h3 class="font-semibold text-lg text-[#13264D] leading-snug tracking-tight">{{ $title }}</h3>
                                 </div>
-                                <p class="text-[15px] text-gray-600 line-clamp-2 leading-relaxed">{{ $step['description'] ?? 'Overview not provided.' }}</p>
+                                <p class="text-[15px] text-gray-600 leading-relaxed">{{ $step['description'] ?? 'Overview not provided.' }}</p>
+                                @if (!empty($step['responsibilities']))
+                                <div class="mt-4">
+                                  <h4 class="text-xs font-semibold uppercase tracking-wide text-[#13264D] mb-2">Key Responsibilities:</h4>
+                                  <ul class="text-xs text-gray-600 space-y-1">
+                                    @foreach ($step['responsibilities'] as $resp)
+                                      <li class="flex items-start gap-2">
+                                        <span class="inline-block text-[#4E90B1] font-bold mt-0.5">•</span>
+                                        <span>{{ $resp }}</span>
+                                      </li>
+                                    @endforeach
+                                  </ul>
+                                </div>
+                                @endif
                                 <div class="mt-3 flex flex-wrap gap-2 text-[11px] tracking-wide font-medium text-gray-500">
                                     @if($years)<span class="badge-years">{{$years}}</span>@endif
                                     @if($salary)<span class="badge-salary">{{$salary}}</span>@endif
@@ -91,87 +93,11 @@
                                         @endforeach
                                     @endif
                                 </div>
-                                <button class="journey-toggle-btn mt-4 text-xs font-semibold uppercase tracking-wide text-indigo-700 hover:text-indigo-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400" data-action="expand">Details</button>
-                                <div class="journey-progress" aria-hidden="true">
-                                    <span style="--p:{{$pct}}%"></span>
-                                </div>
-                            </div>
-                            <div class="journey-card-detail" hidden>
-                                <div class="detail-inner">
-                                    <p class="text-base text-gray-700 leading-relaxed mb-5">{{ $step['description'] ?? 'No description available.' }}</p>
-                                    <ul class="text-xs text-gray-600 space-y-1 mb-5">
-                                        @if($years)<li><strong class="text-gray-800">Typical Duration:</strong> {{$years}}</li>@endif
-                                        @if($salary)<li><strong class="text-gray-800">Salary Range:</strong> {{$salary}}</li>@endif
-                                        <li><strong class="text-gray-800">Seniority:</strong> {{$levelLabel}}</li>
-                                        @if(is_array($certs) && count($certs))
-                                            <li><strong class="text-gray-800">Suggested Certs:</strong> {{ implode(', ', array_slice($certs,0,5)) }}</li>
-                                        @endif
-                                    </ul>
-                                    @if(is_array($achievements) && count($achievements))
-                                        <div class="mb-6">
-                                            <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-600 mb-2">Micro-Achievements</h4>
-                                            <ul class="journey-achievements" data-step="{{$i}}">
-                                                @foreach($achievements as $aIdx => $ach)
-                                                    @php $aid = 'ach-'.$i.'-'.$aIdx; @endphp
-                                                    <li>
-                                                        <label for="{{$aid}}" class="ach-label">
-                                                            <input id="{{$aid}}" type="checkbox" class="ach-cb" data-achievement-index="{{$aIdx}}" />
-                                                            <span class="ach-text">{{ $ach }}</span>
-                                                        </label>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    @endif
-                                    <div class="flex items-center justify-between gap-4 flex-wrap">
-                                        <div class="flex gap-2">
-                                            <button class="journey-nav-prev inline-flex items-center px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 disabled:opacity-40 disabled:cursor-not-allowed" data-dir="prev">Prev</button>
-                                            <button class="journey-nav-next inline-flex items-center px-3 py-1.5 rounded-md bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 disabled:opacity-40 disabled:cursor-not-allowed" data-dir="next">Next</button>
-                                        </div>
-                                        <button class="journey-toggle-btn text-xs font-semibold uppercase tracking-wide text-indigo-700 hover:text-indigo-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400" data-action="collapse">Collapse</button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </li>
                 @endforeach
             </ol>
-        </div>
-
-        <!-- Career Path Summary -->
-        <div class="mt-12 bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-            <div class="text-center">
-                <h3 class="text-2xl font-bold mb-4" style="color: #13264D;">
-                    Your Path Summary
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-blue-600 mb-2">{{ count($pathSteps) }}</div>
-                        <p class="text-gray-600">Career Levels</p>
-                    </div>
-                    <div class="text-center">
-                        @php
-                            $lastStep = end($pathSteps);
-                            $yearsToTop = explode(' ', $lastStep['duration'])[0];
-                        @endphp
-                        <div class="text-3xl font-bold text-blue-600 mb-2">{{ $yearsToTop }}+</div>
-                        <p class="text-gray-600">Years to Leadership</p>
-                    </div>
-                    <div class="text-center">
-                        @php
-                            $lastSalary = isset($lastStep['salary_range']) ? explode(' - ', $lastStep['salary_range'])[1] : '₱300k+';
-                            $salaryNum = str_replace(['₱', ',', '/month', '+'], '', $lastSalary);
-                            $salaryDisplay = is_numeric(str_replace(',', '', $salaryNum)) ? $salaryNum : '500k+';
-                        @endphp
-                        <div class="text-3xl font-bold text-purple-600 mb-2">{{ $salaryDisplay }}</div>
-                        <p class="text-gray-600">Peak Salary Potential</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-indigo-600 mb-2">∞</div>
-                        <p class="text-gray-600">Growth Opportunities</p>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -399,6 +325,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Scroll-triggered node highlight
+    let scrollHighlightIdx = -1;
+    const observer = new IntersectionObserver((entries) => {
+        let mostVisible = -1;
+        let maxRatio = 0;
+        entries.forEach(entry => {
+            if(entry.intersectionRatio > maxRatio){
+                maxRatio = entry.intersectionRatio;
+                mostVisible = items.indexOf(entry.target);
+            }
+        });
+        if(mostVisible !== scrollHighlightIdx && mostVisible >= 0){
+            scrollHighlightIdx = mostVisible;
+            nodeButtons.forEach((btn, i) => {
+                btn.classList.toggle('scroll-active', i === scrollHighlightIdx);
+            });
+        }
+    }, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+    
+    items.forEach(item => observer.observe(item));
+
         // Restore last open step
         try {
             const stored = parseInt(localStorage.getItem(STORAGE_KEY_OPEN),10);
@@ -415,15 +362,19 @@ document.addEventListener('DOMContentLoaded', () => {
     .journey-item { position:relative; display:flex; gap:1.75rem; padding-bottom:3.75rem; }
     .journey-item:last-child { padding-bottom:0; }
     .journey-node-wrapper { position:relative; width:68px; flex:0 0 68px; display:flex; align-items:flex-start; justify-content:center; }
-    .journey-node { position:relative; z-index:2; height:38px; width:38px; border-radius:50%; background:linear-gradient(145deg,#FFFFFF 0%,#E9F2F7 100%); border:2px solid #fff; box-shadow:0 4px 14px -4px rgba(0,0,0,.2),0 2px 6px -2px rgba(0,0,0,.12); cursor:pointer; transition:transform .45s cubic-bezier(.16,.8,.24,1), box-shadow .45s; display:flex; align-items:center; justify-content:center; }
-    .journey-node-core { display:block; height:12px; width:12px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-accent-strong)); border-radius:50%; box-shadow:0 0 0 5px rgba(19,38,77,0.15),0 0 0 10px rgba(90,167,198,0.12); transition:box-shadow .6s, transform .6s; }
+    .journey-node { position:relative; z-index:2; height:38px; width:38px; border-radius:50%; background:linear-gradient(145deg,#FFFFFF 0%,#E9F2F7 100%); border:2px solid #fff; box-shadow:0 4px 14px -4px rgba(0,0,0,.2),0 2px 6px -2px rgba(0,0,0,.12); cursor:pointer; transition:transform .45s cubic-bezier(.16,.8,.24,1), box-shadow .45s, background-color .4s ease; display:flex; align-items:center; justify-content:center; }
+    .journey-node-core { display:block; height:12px; width:12px; background:linear-gradient(135deg,var(--brand-primary),var(--brand-accent-strong)); border-radius:50%; box-shadow:0 0 0 5px rgba(19,38,77,0.15),0 0 0 10px rgba(90,167,198,0.12); transition:box-shadow .6s cubic-bezier(.16,.8,.24,1), transform .6s cubic-bezier(.16,.8,.24,1); }
     .journey-item.active .journey-node-core { box-shadow:0 0 0 5px rgba(90,167,198,0.45),0 0 0 10px rgba(19,38,77,0.35); transform:scale(1.28); }
     .journey-item.completed .journey-node-core { box-shadow:0 0 0 5px rgba(78,144,177,0.55),0 0 0 10px rgba(29,62,115,0.38); background:linear-gradient(135deg,#1D3E73,#4E90B1); }
-    .journey-node:hover { transform:translateY(-4px); box-shadow:0 10px 28px -8px rgba(0,0,0,.32),0 6px 18px -8px rgba(0,0,0,.22); }
+    .journey-node:hover { transform:translateY(-6px) scale(1.12); box-shadow:0 12px 32px -8px rgba(19,38,77,.28),0 8px 20px -6px rgba(90,167,198,.18); background:linear-gradient(145deg,#F0F8FF 0%,#E0EDF7 100%); }
+    .journey-node:active { transform:translateY(-3px) scale(1.08); }
+    .journey-node:focus-visible { outline:2px solid var(--brand-accent); outline-offset:3px; }
+    .journey-node.scroll-active { transform:scale(1.35); box-shadow:0 14px 40px -10px rgba(19,38,77,.35), 0 10px 24px -8px rgba(90,167,198,.25); }
     .journey-connector { position:absolute; top:38px; bottom:-3.75rem; left:50%; width:2px; background:linear-gradient(180deg,rgba(19,38,77,.28),rgba(90,167,198,.30)); transform:translateX(-50%); }
     .journey-item:last-child .journey-connector { display:none; }
     /* Base card now lighter blue gradient */
-    .journey-card { position:relative; flex:1; background:linear-gradient(145deg,#FFFFFF 0%,#ECF5FB 85%); border:1px solid #C9DCE7; border-radius:26px; padding:1.75rem 1.75rem 1.35rem; box-shadow:0 4px 16px -6px rgba(25,55,90,0.12),0 2px 6px -4px rgba(25,55,90,0.06); transition:box-shadow .55s, background .7s, border-color .5s; overflow:hidden; }
+    .journey-card { position:relative; flex:1; background:linear-gradient(145deg,#FFFFFF 0%,#ECF5FB 85%); border:1px solid #C9DCE7; border-radius:26px; padding:1.75rem 1.75rem 1.35rem; box-shadow:0 4px 16px -6px rgba(25,55,90,0.12),0 2px 6px -4px rgba(25,55,90,0.06); transition:box-shadow .55s, background .7s, border-color .5s, transform .45s cubic-bezier(.16,.8,.24,1); overflow:hidden; }
+    .journey-card:hover { transform:translateY(-6px); box-shadow:0 12px 36px -8px rgba(19,38,77,.2),0 8px 24px -6px rgba(90,167,198,.15); background:linear-gradient(145deg,#FFFFFF 0%,#E0EDF8 85%); }
     .journey-card::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 70% 18%,rgba(90,167,198,0.22),transparent 65%); opacity:0; transition:opacity .9s; pointer-events:none; }
     .journey-item.active .journey-card::before { opacity:1; }
     .journey-card-front { transition:opacity .5s .05s; }
@@ -449,14 +400,39 @@ document.addEventListener('DOMContentLoaded', () => {
     @media (prefers-reduced-motion: reduce){
         .journey-node, .journey-card, .journey-card-front { transition:none !important; animation:none !important; }
     }
-    /* Dark mode (future) placeholder */
+    /* Dark mode - maintain light card design for readability */
     @media (prefers-color-scheme: dark){
-        .journey-card { background:#0F1829; border-color:#223249; }
+        .journey-card {
+            background: linear-gradient(145deg, #FFFFFF 0%, #ECF5FB 85%) !important;
+            border-color: #C9DCE7 !important;
+        }
+        .journey-card-front {
+            color: #1D3E73 !important;
+        }
+        .journey-card-front h3 {
+            color: #1D3E73 !important;
+        }
+        .journey-card-front h4 {
+            color: #1D3E73 !important;
+        }
+        .journey-card-front p {
+            color: #374151 !important;
+        }
+        .journey-card-front ul li {
+            color: #374151 !important;
+        }
+        .badge-years, .badge-salary {
+            color: #1D3E73 !important;
+        }
+        .badge-level {
+            background: #E8EEF5 !important;
+            color: #1D3E73 !important;
+        }
         body.dark .journey-axis { opacity:.4; }
     }
     /* Badges */
-    .badge-years { @apply inline-flex items-center gap-1 px-2 py-1 rounded-md bg-blue-50 text-blue-700; }
-    .badge-salary { @apply inline-flex items-center gap-1 px-2 py-1 rounded-md bg-blue-50 text-blue-700; }
+    .badge-years { @apply inline-flex items-center gap-1 font-semibold text-gray-700; }
+    .badge-salary { @apply inline-flex items-center gap-1 font-semibold text-gray-700; }
     .badge-level { @apply inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 text-slate-600; }
     .badge-skill { @apply inline-flex items-center px-2 py-1 rounded-md bg-sky-50 text-sky-600; font-weight:500; }
     /* Achievements */

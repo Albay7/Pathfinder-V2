@@ -48,15 +48,11 @@
                         <option value="Student">Student</option>
                         <option value="Recent Graduate">Recent Graduate</option>
                         <option value="Entry Level Professional">Entry Level Professional</option>
-                        <option value="Junior Developer">Junior Developer</option>
-                        <option value="Marketing Assistant">Marketing Assistant</option>
-                        <option value="Sales Representative">Sales Representative</option>
-                        <option value="Customer Service Rep">Customer Service Representative</option>
-                        <option value="Administrative Assistant">Administrative Assistant</option>
-                        <option value="Freelancer">Freelancer</option>
-                        <option value="Career Changer">Career Changer</option>
-                        <option value="Unemployed">Currently Unemployed</option>
-                        <option value="Other">Other</option>
+                        <option value="Junior Apprentice (2 years of experience)">Junior Apprentice (2 years of experience)</option>
+                        <option value="Mid Level">Mid Level</option>
+                        <option value="Senior Level">Senior Level</option>
+                        <option value="Change Career">Change Career</option>
+                        <option value="Currently Unemployed">Currently Unemployed</option>
                     </select>
                 </div>
 

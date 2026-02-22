@@ -3,323 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login - Pathfinder Career Guidance</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+
+    <!-- Use the same CSS as main layout -->
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+
     <style>
-        /* Reset and base styles */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        /* Additional custom styles for auth pages */
+        body { min-width: 1024px; }
 
-        /* Custom colors */
-        .bg-blue-zodiac { background-color: #13264D; }
-        .bg-fountain-blue { background-color: #5AA7C6; }
-        .text-fountain-blue { color: #5AA7C6; }
-        .border-fountain-blue { border-color: #5AA7C6; }
-
-        /* Layout utilities */
-        .h-screen { height: 100vh; }
-        .bg-white { background-color: white; }
-        .flex { display: flex; }
-        .flex-col { flex-direction: column; }
-        .flex-1 { flex: 1; }
-        .items-center { align-items: center; }
-        .justify-center { justify-content: center; }
-        .justify-between { justify-content: space-between; }
-        .min-w-1024 { min-width: 1024px; }
-        .w-1\/2 { width: 50%; }
-        .w-full { width: 100%; }
-        .max-w-md { max-width: 28rem; }
-        .max-w-7xl { max-width: 80rem; }
-        .w-8 { width: 2rem; }
-        .h-8 { height: 2rem; }
-        .w-5 { width: 1.25rem; }
-        .h-5 { height: 1.25rem; }
-        .w-16 { width: 4rem; }
-        .h-16 { height: 4rem; }
-        .w-12 { width: 3rem; }
-        .h-12 { height: 3rem; }
-        .w-6 { width: 1.5rem; }
-        .h-6 { height: 1.5rem; }
-        .w-4 { width: 1rem; }
-        .h-4 { height: 1rem; }
-        .mx-auto { margin-left: auto; margin-right: auto; }
-        .mb-8 { margin-bottom: 2rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .mb-6 { margin-bottom: 1.5rem; }
-        .mb-12 { margin-bottom: 3rem; }
-        .mb-3 { margin-bottom: 0.75rem; }
-        .mr-4 { margin-right: 1rem; }
-        .p-12 { padding: 3rem; }
-        .p-4 { padding: 1rem; }
-        .px-8 { padding-left: 2rem; padding-right: 2rem; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        .space-x-2 > * + * { margin-left: 0.5rem; }
-        .space-x-6 > * + * { margin-left: 1.5rem; }
-        .space-x-4 > * + * { margin-left: 1rem; }
-        .space-y-6 > * + * { margin-top: 1.5rem; }
-        .space-y-4 > * + * { margin-top: 1rem; }
-        .space-y-2 > * + * { margin-top: 0.5rem; }
-        .hidden { display: none; }
-        .md\:flex { display: flex; }
-        .grid { display: grid; }
-        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .gap-4 { gap: 1rem; }
-        .text-center { text-align: center; }
-        .leading-relaxed { line-height: 1.625; }
-
-        /* Spacing */
-        .p-12 { padding: 3rem; }
-        .p-8 { padding: 2rem; }
-        .p-4 { padding: 1rem; }
-        .px-8 { padding-left: 2rem; padding-right: 2rem; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .mb-6 { margin-bottom: 1.5rem; }
-        .mb-8 { margin-bottom: 2rem; }
-        .mb-12 { margin-bottom: 3rem; }
-        .mt-6 { margin-top: 1.5rem; }
-        .ml-2 { margin-left: 0.5rem; }
-        .mr-4 { margin-right: 1rem; }
-        .mx-auto { margin-left: auto; margin-right: auto; }
-        .space-x-2 > * + * { margin-left: 0.5rem; }
-        .space-x-6 > * + * { margin-left: 1.5rem; }
-        .space-y-6 > * + * { margin-top: 1.5rem; }
-        .gap-4 { gap: 1rem; }
-
-        /* Typography */
-        .text-base { font-size: 1rem; }
-        .text-xl { font-size: 1.25rem; }
-        .text-2xl { font-size: 1.5rem; }
-        .text-4xl { font-size: 2.25rem; }
-        .text-lg { font-size: 1.125rem; }
-        .text-sm { font-size: 0.875rem; }
-        .font-bold { font-weight: 700; }
-        .font-semibold { font-weight: 600; }
-        .font-medium { font-weight: 500; }
-        .text-white { color: white; }
-        .text-gray-900 { color: #111827; }
-        .text-gray-700 { color: #374151; }
-        .text-gray-600 { color: #4B5563; }
-        .text-red-500 { color: #EF4444; }
-        .text-center { text-align: center; }
-        .leading-relaxed { line-height: 1.625; }
-
-        /* Backgrounds and gradients */
-        .bg-gray-100 { background-color: #F3F4F6; }
-        .bg-blue-50 { background-color: #EFF6FF; }
-        .bg-gradient-to-br { background: linear-gradient(to bottom right, #13264D, #5AA7C6); }
-        .from-blue-zodiac { --tw-gradient-from: #13264D; }
-        .to-fountain-blue { --tw-gradient-to: #5AA7C6; }
-        .bg-white\/10 { background-color: rgba(255, 255, 255, 0.1); }
-        .bg-white\/20 { background-color: rgba(255, 255, 255, 0.2); }
-        .text-white\/90 { color: rgba(255, 255, 255, 0.9); }
-        .text-white\/80 { color: rgba(255, 255, 255, 0.8); }
-        .text-white\/70 { color: rgba(255, 255, 255, 0.7); }
-        .backdrop-blur-sm { backdrop-filter: blur(4px); }
-        .bg-pink-500 { background-color: #EC4899; }
-        .bg-pink-400 { background-color: #F472B6; }
-        .bg-blue-500 { background-color: #3B82F6; }
-        .bg-blue-400 { background-color: #60A5FA; }
-        .bg-teal-500 { background-color: #14B8A6; }
-        .bg-teal-400 { background-color: #2DD4BF; }
-
-        /* Borders and shadows */
-        .border { border-width: 1px; }
-        .border-b { border-bottom-width: 1px; }
-        .border-gray-200 { border-color: #E5E7EB; }
-        .border-gray-300 { border-color: #D1D5DB; }
-        .rounded { border-radius: 0.25rem; }
-        .rounded-md { border-radius: 0.375rem; }
-        .rounded-lg { border-radius: 0.5rem; }
-        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
-        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .min-w-\[1024px\] { min-width: 1024px; }
-
-        /* Grid */
-        .grid { display: grid; }
-        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-        /* Positioning */
-        .relative { position: relative; }
-        .block { display: block; }
-        .hidden { display: none; }
-
-        /* Forms */
-        input[type="email"], input[type="password"], input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
+        /* Custom gradient for left panel */
+        .bg-gradient-custom {
+            background: linear-gradient(135deg, #13264D 0%, #5AA7C6 100%);
         }
 
-        .form-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #D1D5DB;
-            border-radius: 0.5rem;
-            background-color: white;
-            transition: all 0.3s ease;
+        /* Icon backgrounds */
+        .icon-bg {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
-        .form-input:focus {
-            outline: none;
-            border-color: #5AA7C6;
-            box-shadow: 0 0 0 3px rgba(90, 167, 198, 0.1);
+        .icon-bg-card {
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
-        .form-input:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        /* Ensure dropdown works properly */
+        .group:hover > div.absolute {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
         }
 
-        .checkbox {
-            width: 1rem;
-            height: 1rem;
-            border: 1px solid #D1D5DB;
-            border-radius: 0.25rem;
-            background-color: #F9FAFB;
-        }
-
-        .checkbox:checked {
-            background-color: #5AA7C6;
-            border-color: #5AA7C6;
-        }
-
-        .btn {
-            width: 100%;
+        /* Register button */
+        .register-btn {
             background-color: #5AA7C6;
             color: white;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            display: inline-block;
+        }
+        .register-btn:hover {
+            background-color: #13264D;
         }
 
-        .btn:hover {
-            background-color: #13264D;
-            transform: translateY(-1px);
+        /* Primary action button styling */
+        .primary-btn {
+            background-color: #5AA7C6;
+            color: white;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-
-        /* Links */
-        a {
-            text-decoration: none;
-        }
-
-        .link {
-            color: #5AA7C6;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .link:hover {
-            color: #13264D;
-        }
-
-        .nav-link {
-            color: #4B5563;
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        .nav-link:hover {
-            color: #5AA7C6;
-        }
-
-        .nav-btn {
-            background-color: #F3F4F6;
-            color: #374151;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .nav-btn:hover {
-            background-color: #5AA7C6;
-            color: white;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-
-        .nav-btn-primary {
-            background-color: #5AA7C6;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .nav-btn-primary:hover {
+        .primary-btn:hover {
             background-color: #13264D;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
-
-        /* Responsive utilities */
-        @media (min-width: 768px) {
-            .md\:flex { display: flex; }
+        .primary-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(90, 167, 198, 0.35);
         }
-
-        /* Transitions */
-        .transition-colors { transition-property: color, background-color, border-color; transition-duration: 0.2s; }
-        .transition-all { transition-property: all; transition-duration: 0.2s; }
-        .duration-200 { transition-duration: 0.2s; }
-        .duration-300 { transition-duration: 0.3s; }
-        .transform { transform: translateZ(0); }
-
-        /* Hover and focus effects */
-        .hover\:bg-fountain-blue:hover { background-color: #5AA7C6; }
-        .hover\:bg-blue-zodiac:hover { background-color: #13264D; }
-        .hover\:text-white:hover { color: white; }
-        .hover\:text-fountain-blue:hover { color: #5AA7C6; }
-        .hover\:shadow-sm:hover { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
-        .hover\:shadow-md:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .hover\:bg-white\/20:hover { background-color: rgba(255, 255, 255, 0.2); }
-        .hover\:scale-105:hover { transform: scale(1.05); }
-        .hover\:-translate-y-0\.5:hover { transform: translateY(-2px); }
-        .hover\:bg-pink-400:hover { background-color: #F472B6; }
-        .hover\:bg-blue-400:hover { background-color: #60A5FA; }
-        .hover\:bg-teal-400:hover { background-color: #2DD4BF; }
-        .cursor-pointer { cursor: pointer; }
     </style>
     <script src="{{ asset('js/page-transitions.js') }}"></script>
 </head>
 <body class="h-screen bg-white flex flex-col min-w-[1024px]">
-    <!-- Navigation Header -->
-    <nav class="bg-white border-b border-gray-200 px-8 py-4">
-        <div class="flex justify-between items-center max-w-7xl mx-auto">
-            <!-- Logo -->
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-fountain-blue rounded flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                    </svg>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-16">
+                <div class="flex items-center">
+                    <!-- Logo -->
+                    <a href="{{ route('pathfinder.index') }}" class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-7 w-7 md:h-8 md:w-8" style="color: #5AA7C6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-2 text-lg md:text-xl font-bold text-gray-900">Pathfinder</span>
+                    </a>
                 </div>
-                <h2 class="text-xl font-bold text-gray-900">Pathfinder</h2>
-            </div>
 
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center space-x-6 mr-4">
-                <a href="{{ route('pathfinder.index') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">Home</a>
-                <a href="{{ route('pathfinder.career-guidance') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">Career Guidance</a>
-                <a href="{{ route('pathfinder.career-path') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">Career Path</a>
-                <a href="{{ route('pathfinder.skill-gap') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">Skill Gap</a>
-                <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="text-gray-600 hover:text-fountain-blue text-sm font-medium transition-colors duration-200">MBTI Assessment</a>
-                <a href="#" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-fountain-blue hover:text-white transition-all duration-200 hover:shadow-sm">Login</a>
-                <a href="{{ route('register') }}" class="bg-fountain-blue text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-zodiac transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5">Register</a>
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{{ route('pathfinder.home') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                        Home
+                    </a>
+
+                    <!-- Explore Dropdown -->
+                    <div class="relative group">
+                        <button class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            Explore
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-xl transition-all duration-200" style="opacity: 0; visibility: hidden; pointer-events: none; z-index: 50;">
+                            <a href="{{ route('pathfinder.career-guidance') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 first:rounded-t-md transition-colors">
+                                Career Guidance
+                            </a>
+                            <a href="{{ route('pathfinder.career-path') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                Career Path
+                            </a>
+                            <a href="{{ route('pathfinder.skill-gap') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                Skill Gap
+                            </a>
+                            <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 last:rounded-b-md transition-colors">
+                                MBTI Assessment
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                        Login
+                    </a>
+                    <a href="{{ route('register') }}" class="register-btn px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                        Register
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -327,7 +127,7 @@
     <!-- Main Content -->
     <div class="flex-1 flex">
         <!-- Left Panel -->
-        <div class="w-1/2 bg-gradient-to-br from-blue-zodiac to-fountain-blue flex items-center justify-center p-12">
+        <div class="w-1/2 bg-gradient-custom bg-gradient-to-br from-blue-zodiac to-fountain-blue flex items-center justify-center p-12">
             <div class="max-w-md text-center text-white">
                 <!-- Icon -->
                 <div class="mx-auto w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center mb-8">
@@ -413,7 +213,7 @@
                                 required
                                 autofocus
                                 autocomplete="username"
-                                class="form-input"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md hover:shadow-lg focus:shadow-xl focus:ring-2 focus:ring-fountain-blue focus:border-fountain-blue transition-all duration-300 bg-white"
                                 placeholder="Email Address"
                             >
                             @error('email')
@@ -430,7 +230,7 @@
                                 name="password"
                                 required
                                 autocomplete="current-password"
-                                class="form-input"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md hover:shadow-lg focus:shadow-xl focus:ring-2 focus:ring-fountain-blue focus:border-fountain-blue transition-all duration-300 bg-white"
                                 placeholder="Password"
                             >
                             @error('password')
@@ -445,7 +245,7 @@
                                 id="remember_me"
                                 type="checkbox"
                                 name="remember"
-                                class="checkbox"
+                                class="h-4 w-4 text-fountain-blue focus:ring-fountain-blue border-gray-300 rounded"
                             >
                             <label for="remember_me" class="ml-2 text-sm text-gray-600">Remember me</label>
                             </div>
@@ -458,7 +258,7 @@
                         </div>
 
                         <!-- Sign In Button -->
-                        <button type="submit" class="btn">
+                        <button type="submit" class="w-full primary-btn py-3 px-4 rounded-lg font-semibold transition-all duration-200">
                             Sign in
                         </button>
                     </form>

@@ -3,246 +3,198 @@
 @section('title', 'External Learning Resources - Pathfinder')
 
 @section('content')
+<style>
+    :root {
+        --sea-900: #0f2742;
+        --sea-700: #1b4b6d;
+        --sea-500: #2f7ea2;
+        --sea-300: #9dd1e5;
+        --sun-200: #f7e1a1;
+        --stone-100: #f6f7f9;
+    }
+</style>
+
 <!-- Header Section -->
-<div class="bg-gradient-to-br from-purple-600 to-indigo-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                External Learning Resources
-            </h1>
-            <p class="text-xl text-purple-100 max-w-3xl mx-auto">
-                Curated RSS feeds and external resources to help you develop your skills.
+<div class="relative" style="background: radial-gradient(1200px 400px at 20% 0%, #2f7ea2 0%, #1b4b6d 45%, #0f2742 100%);">
+    <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(135deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(225deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(315deg, rgba(255,255,255,0.08) 25%, transparent 25%); background-position: 12px 0, 12px 0, 0 0, 0 0; background-size: 24px 24px; background-repeat: repeat;"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" style="font-family: 'Poppins', 'Segoe UI', sans-serif;">
+        <div class="text-center text-white">
+            <p class="uppercase tracking-[0.3em] text-xs mb-3" style="color: var(--sea-300);">Learning Resources</p>
+            <h1 class="text-4xl md:text-5xl font-semibold mb-3">Build a Focused Learning Path</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto" style="color: #d7eef8;">
+                @if(!empty($targetRole))
+                    Learning resources for <span class="font-semibold">{{ $targetRole }}</span>
+                    @if(!empty($targetCategory))
+                        <span class="inline-flex items-center px-3 py-1 ml-2 rounded-full text-xs" style="background-color: rgba(247, 225, 161, 0.2); color: var(--sun-200);">
+                            {{ $targetCategory }}
+                        </span>
+                    @endif
+                @else
+                    Curated playlists and feeds to help you close your skill gaps.
+                @endif
             </p>
         </div>
     </div>
 </div>
 
-<!-- RSS Feeds Section -->
+<!-- Summary -->
+<div class="py-10" style="background-color: var(--stone-100);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-900">Your Learning Snapshot</h2>
+                    <p class="text-gray-600">Playlists are built directly from your missing skills to keep results precise.</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    @if(!empty($missingSkills))
+                        @foreach(array_slice($missingSkills, 0, 8) as $skill)
+                            <span class="px-3 py-1 rounded-full text-xs font-medium" style="background-color: #e6f3f8; color: var(--sea-700);">
+                                {{ $skill }}
+                            </span>
+                        @endforeach
+                    @else
+                        <span class="px-3 py-1 rounded-full text-xs font-medium" style="background-color: #fef3c7; color: #92400e;">
+                            Run a skill gap analysis to personalize results.
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- YouTube Playlists (Middle Section) -->
 <div class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">RSS Learning Feeds</h2>
-            <p class="text-lg text-gray-700">
-                Stay updated with the latest content from top learning platforms tailored to your skill gaps.
-            </p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            <!-- Technical Skills Feed -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
-                <div class="p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-blue-100 rounded-full p-2 mr-3">
-                            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900">Technical Skills</h3>
-                    </div>
-                    
-                    <div class="space-y-4 mb-6">
-                        <div class="border-b border-gray-200 pb-4">
-                            <h4 class="font-medium text-gray-900 mb-1">Introduction to Machine Learning</h4>
-                            <p class="text-gray-600 text-sm mb-2">Learn the fundamentals of machine learning algorithms and applications.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">Coursera • Updated 2 days ago</span>
-                                <a href="https://www.coursera.org/learn/machine-learning" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Read more</a>
-                            </div>
-                        </div>
-                        
-                        <div class="border-b border-gray-200 pb-4">
-                            <h4 class="font-medium text-gray-900 mb-1">Advanced JavaScript Techniques</h4>
-                            <p class="text-gray-600 text-sm mb-2">Master modern JavaScript patterns and best practices for web development.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">MDN Web Docs • Updated 5 days ago</span>
-                                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Read more</a>
-                            </div>
-                        </div>
-                        
-                        <div class="pb-2">
-                            <h4 class="font-medium text-gray-900 mb-1">Data Structures and Algorithms</h4>
-                            <p class="text-gray-600 text-sm mb-2">Comprehensive guide to essential data structures and algorithms.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">freeCodeCamp • Updated 1 week ago</span>
-                                <a href="https://www.freecodecamp.org/news/algorithms-and-data-structures-free-treehouse-course/" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Read more</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium">
-                        Subscribe to feed
-                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                    </a>
-                </div>
+        <div class="flex items-center justify-between mb-10">
+            <div>
+                <h2 class="text-3xl font-semibold text-gray-900">YouTube Playlists by Skill</h2>
+                <p class="text-gray-600">Each playlist is matched to a missing skill and filtered by your target role.</p>
             </div>
-            
-            <!-- Soft Skills Feed -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
-                <div class="p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-green-100 rounded-full p-2 mr-3">
-                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900">Soft Skills</h3>
-                    </div>
-                    
-                    <div class="space-y-4 mb-6">
-                        <div class="border-b border-gray-200 pb-4">
-                            <h4 class="font-medium text-gray-900 mb-1">Effective Communication in the Workplace</h4>
-                            <p class="text-gray-600 text-sm mb-2">Learn strategies for clear and impactful communication with colleagues and clients.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">LinkedIn Learning • Updated 3 days ago</span>
-                                <a href="https://www.linkedin.com/learning/topics/communication" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Read more</a>
-                            </div>
-                        </div>
-                        
-                        <div class="border-b border-gray-200 pb-4">
-                            <h4 class="font-medium text-gray-900 mb-1">Time Management and Productivity</h4>
-                            <p class="text-gray-600 text-sm mb-2">Master techniques to optimize your workflow and increase productivity.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">Harvard Business Review • Updated 1 week ago</span>
-                                <a href="https://hbr.org/topic/time-management" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Read more</a>
-                            </div>
-                        </div>
-                        
-                        <div class="pb-2">
-                            <h4 class="font-medium text-gray-900 mb-1">Leadership and Team Management</h4>
-                            <p class="text-gray-600 text-sm mb-2">Develop essential leadership skills to effectively manage teams and projects.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">MindTools • Updated 4 days ago</span>
-                                <a href="https://www.mindtools.com/pages/main/newMN_LDR.htm" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Read more</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium">
-                        Subscribe to feed
-                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                    </a>
-                </div>
+            <div class="hidden md:flex items-center gap-2 text-sm text-gray-500">
+                <span class="inline-flex items-center w-2 h-2 rounded-full" style="background-color: var(--sea-500);"></span>
+                Updated daily via YouTube API
             </div>
         </div>
-        
-        <!-- Industry-Specific Feeds -->
-        <div class="mb-12">
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">Industry-Specific Resources</h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold text-gray-900 mb-2">Software Development</h4>
-                        <p class="text-gray-600 mb-4">
-                            Latest trends, tools, and best practices in software development from industry leaders.
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">10+ sources • Daily updates</span>
-                            <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-800">
-                                View feed
-                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
+
+        @if(!empty($youtubeRecommendations))
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                @foreach($youtubeRecommendations as $group)
+                    <div class="rounded-2xl border border-gray-200 p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold text-gray-900">{{ $group['skill'] }}</h3>
+                            <span class="text-xs px-2 py-1 rounded-full" style="background-color: #e6f3f8; color: var(--sea-700);">Playlists</span>
+                        </div>
+                        <div class="space-y-4">
+                            @foreach($group['items'] as $item)
+                                <div class="p-4 rounded-xl border border-gray-100" style="background-color: #fbfdff;">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div>
+                                            <a href="{{ $item['url'] }}" target="_blank" class="font-semibold text-gray-900 hover:underline">
+                                                {{ $item['label'] }}
+                                            </a>
+                                            <p class="text-sm text-gray-600 mt-1">{{ $item['description'] }}</p>
+                                        </div>
+                                        <div class="text-right text-xs text-gray-500">
+                                            @if(!empty($item['channel']))
+                                                <div>{{ $item['channel'] }}</div>
+                                            @endif
+                                            @if(!empty($item['videoCount']))
+                                                <div>{{ $item['videoCount'] }} videos</div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold text-gray-900 mb-2">Data Science</h4>
-                        <p class="text-gray-600 mb-4">
-                            Cutting-edge research, tutorials, and resources for data scientists and analysts.
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">8+ sources • Weekly updates</span>
-                            <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-800">
-                                View feed
-                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold text-gray-900 mb-2">UX/UI Design</h4>
-                        <p class="text-gray-600 mb-4">
-                            Design principles, case studies, and inspiration for creating exceptional user experiences.
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">6+ sources • Bi-weekly updates</span>
-                            <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-800">
-                                View feed
-                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
+        @else
+            <div class="rounded-2xl border border-dashed border-gray-300 p-10 text-center">
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No playlists yet</h3>
+                <p class="text-gray-600 mb-6">Run a skill gap analysis so we can generate playlists for your missing skills.</p>
+                <a href="{{ route('pathfinder.skill-gap') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-lg" style="background-color: var(--sea-500);">
+                    Start Skill Gap Analysis
+                </a>
+            </div>
+        @endif
+    </div>
+</div>
+
+<!-- RSS Feeds -->
+<div class="py-16" style="background-color: var(--stone-100);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-10">
+            <h2 class="text-3xl font-semibold text-gray-900">Live RSS Feeds</h2>
+            <p class="text-gray-600">Fresh articles from trusted sources, updated and cached automatically.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            @forelse($rssFeeds as $groupName => $feeds)
+                <div class="bg-white rounded-2xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            {{ $groupName === 'technical' ? 'Technical Skills' : 'Soft Skills' }}
+                        </h3>
+                        <span class="text-xs px-2 py-1 rounded-full" style="background-color: #e6f3f8; color: var(--sea-700);">Live</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        @foreach($feeds as $feedName => $items)
+                            <div class="border border-gray-100 rounded-xl p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">{{ $feedName }}</h4>
+                                    @if(!empty($rssSources[$groupName][$feedName]))
+                                        <a href="{{ $rssSources[$groupName][$feedName][0]['url'] }}" target="_blank" class="text-xs font-medium" style="color: var(--sea-700);">Subscribe</a>
+                                    @endif
+                                </div>
+                                <ul class="space-y-2">
+                                    @foreach($items as $item)
+                                        <li class="text-sm text-gray-700">
+                                            <a href="{{ $item['url'] }}" target="_blank" class="hover:underline">{{ $item['title'] }}</a>
+                                            @if(!empty($item['publishedAt']))
+                                                <span class="text-xs text-gray-500 ml-2">{{ $item['publishedAt'] }}</span>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @empty
+                <div class="bg-white rounded-2xl border border-gray-200 p-8">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Feeds unavailable</h3>
+                    <p class="text-gray-600">We could not fetch feeds right now. Please try again later.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 </div>
 
 <!-- External Learning Platforms -->
-<div class="py-16 bg-gray-50">
+<div class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Recommended Learning Platforms</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="bg-white rounded-xl shadow-md p-8 text-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Udemy_logo.svg" alt="Udemy" class="h-12 mx-auto mb-4">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Udemy</h3>
-                <p class="text-gray-600 mb-4">Practical, skills-based courses taught by industry experts.</p>
-                <a href="https://www.udemy.com/" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-medium">Visit platform</a>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-md p-8 text-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Coursera_logo.PNG" alt="Coursera" class="h-12 mx-auto mb-4">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Coursera</h3>
-                <p class="text-gray-600 mb-4">University-level courses from top institutions worldwide.</p>
-                <a href="https://www.coursera.org/" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-medium">Visit platform</a>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-md p-8 text-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Pluralsight-logo.png" alt="Pluralsight" class="h-12 mx-auto mb-4">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Pluralsight</h3>
-                <p class="text-gray-600 mb-4">Technology and creative skills courses for professionals.</p>
-                <a href="https://www.pluralsight.com/" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-medium">Visit platform</a>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-md p-8 text-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo.svg" alt="LinkedIn Learning" class="h-12 mx-auto mb-4">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">LinkedIn Learning</h3>
-                <p class="text-gray-600 mb-4">Business, creative, and technology courses with professional focus.</p>
-                <a href="https://www.linkedin.com/learning/" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-medium">Visit platform</a>
-            </div>
+        <div class="flex items-center justify-between mb-10">
+            <h2 class="text-3xl font-semibold text-gray-900">Recommended Learning Platforms</h2>
+            <a href="{{ route('dashboard') }}" class="text-sm font-medium" style="color: var(--sea-700);">Back to dashboard</a>
         </div>
-    </div>
-</div>
 
-<!-- Call to Action -->
-<div class="bg-indigo-700 py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold text-white mb-4">Ready to accelerate your learning?</h2>
-        <p class="text-xl text-indigo-100 mb-8 max-w-3xl mx-auto">
-            Subscribe to our personalized learning recommendations based on your skill gaps and career goals.
-        </p>
-        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <a href="#" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50">
-                Subscribe to updates
-            </a>
-            <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                Return to dashboard
-            </a>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            @foreach($platforms as $platform)
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-lg font-semibold text-gray-900 mb-2">{{ $platform['name'] }}</div>
+                    <p class="text-sm text-gray-600 mb-4">{{ $platform['description'] }}</p>
+                    <a href="{{ $platform['url'] }}" target="_blank" class="inline-flex items-center text-sm font-medium" style="color: var(--sea-700);">
+                        Visit platform
+                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                    </a>
+                </div>
+            @endforeach
         </div>
     </div>
 </div>

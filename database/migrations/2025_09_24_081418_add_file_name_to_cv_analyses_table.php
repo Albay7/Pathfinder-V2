@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cv_analyses', function (Blueprint $table) {
-            $table->string('file_name')->after('user_id');
-        });
+        if (!Schema::hasColumn('cv_analyses', 'file_name')) {
+            Schema::table('cv_analyses', function (Blueprint $table) {
+                $table->string('file_name')->after('user_id');
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cv_analyses', function (Blueprint $table) {
-            $table->dropColumn('file_name');
-        });
+        if (Schema::hasColumn('cv_analyses', 'file_name')) {
+            Schema::table('cv_analyses', function (Blueprint $table) {
+                $table->dropColumn('file_name');
+            });
+        }
     }
 };

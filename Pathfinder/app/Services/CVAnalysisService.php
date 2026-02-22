@@ -6,6 +6,7 @@ use App\Models\CVAnalysis;
 use App\Models\JobProfile;
 use App\Models\UserProgress;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Smalot\PdfParser\Parser as PdfParser;
@@ -14,30 +15,70 @@ use PhpOffice\PhpWord\Settings;
 
 class CVAnalysisService
 {
-    private array $skillKeywords;
     private array $stopWords;
-    
+
+    // TF-IDF model data (loaded from JSON)
+    private array $vocabulary;
+    private array $idfValues;
+    private array $categoryCentroids;
+    private array $categoryRoles;
+    private array $categoryTopKeywords;
+    private array $termClusters;
+    private array $categoryClusterProfiles;
+    private array $skillFlags;
+
+    // Transient state for current analysis
+    private array $currentFullVector = [];
+    private array $allTfidfScores = []; // All matched term scores (for full vector)
+
     public function __construct()
     {
-        $this->initializeSkillKeywords();
+        $this->loadTfidfModel();
         $this->initializeStopWords();
-        
+
         // Configure PhpWord settings
         Settings::setOutputEscapingEnabled(true);
     }
-    
+
     /**
-     * Analyze uploaded CV file
+     * Load pre-computed TF-IDF model from JSON artifact
+     */
+    private function loadTfidfModel(): void
+    {
+        $model = Cache::remember('tfidf_model_v2', 3600, function () {
+            $modelPath = storage_path('app/data/tfidf_model.json');
+
+            if (!file_exists($modelPath)) {
+                throw new \RuntimeException(
+                    'TF-IDF model not found at ' . $modelPath . '. Run: python Datasets/preprocess_resumes.py'
+                );
+            }
+
+            return json_decode(file_get_contents($modelPath), true);
+        });
+
+        $this->vocabulary = $model['vocabulary'];
+        $this->idfValues = $model['idf_values'];
+        $this->categoryCentroids = $model['category_centroids'];
+        $this->categoryRoles = $model['category_roles'];
+        $this->categoryTopKeywords = $model['category_top_keywords'];
+        $this->termClusters = $model['term_clusters'];
+        $this->categoryClusterProfiles = $model['category_cluster_profiles'];
+        $this->skillFlags = $model['skill_flags'] ?? array_fill(0, count($model['vocabulary']), true);
+    }
+
+    /**
+     * Analyze uploaded CV file (legacy database method)
      */
     public function analyzeCVFile(UploadedFile $file, ?int $userId = null, ?string $sessionId = null): CVAnalysis
     {
         $startTime = microtime(true);
-        
+
         // Create initial analysis record
         $analysis = CVAnalysis::create([
             'user_id' => $userId,
             'session_id' => $sessionId,
-            'file_name' => $file->getClientOriginalName(), // Add the file_name field
+            'file_name' => $file->getClientOriginalName(),
             'original_filename' => $file->getClientOriginalName(),
             'file_path' => '',
             'file_type' => $file->getClientMimeType(),
@@ -50,31 +91,20 @@ class CVAnalysisService
         ]);
 
         try {
-            // Store the file
             $filePath = $file->store('cv-uploads', 'local');
             $analysis->update(['file_path' => $filePath]);
 
-            // Extract text from file
             $extractedText = $this->extractTextFromFile($file);
             $analysis->update(['extracted_text' => $extractedText]);
 
-            // Process text and extract skills
             $processedText = $this->preprocessText($extractedText);
             $skillsExtracted = $this->extractSkillsWithTFIDF($processedText);
-            
-            // Generate skill vector for similarity calculations
             $skillVector = $this->generateSkillVector($skillsExtracted);
-            
-            // Find matching jobs
-            $jobMatches = $this->findMatchingJobs($skillVector, $skillsExtracted);
-            
-            // Create analysis summary
-            $analysisSummary = $this->createAnalysisSummary($skillsExtracted, $jobMatches);
-            
-            // Calculate processing time
+            $jobMatches = $this->matchJobsFromBuiltInRoles($skillVector, $skillsExtracted);
+            $analysisSummary = $this->createAnalysisSummaryFromBuiltIn($skillsExtracted, $jobMatches);
+
             $processingTime = microtime(true) - $startTime;
-            
-            // Update analysis with results
+
             $analysis->update([
                 'skills_extracted' => $skillsExtracted,
                 'skill_vector' => $skillVector,
@@ -91,9 +121,30 @@ class CVAnalysisService
 
         return $analysis;
     }
-    
+
     /**
-     * Extract text from different file types (public method for testing)
+     * Analyze CV and return results as array (no database dependency)
+     */
+    public function analyzeCV(UploadedFile $file): array
+    {
+        $extractedText = $this->extractTextFromFile($file);
+        $processedText = $this->preprocessText($extractedText);
+        $skillsExtracted = $this->extractSkillsWithTFIDF($processedText);
+        $skillVector = $this->generateSkillVector($skillsExtracted);
+        $jobMatches = $this->matchJobsFromBuiltInRoles($skillVector, $skillsExtracted);
+        $analysisSummary = $this->createAnalysisSummaryFromBuiltIn($skillsExtracted, $jobMatches);
+
+        return [
+            'extracted_skills' => $skillsExtracted,
+            'skill_vector' => $skillVector,
+            'job_matches' => $jobMatches,
+            'analysis_summary' => $analysisSummary,
+            'file_name' => $file->getClientOriginalName(),
+        ];
+    }
+
+    /**
+     * Extract text from different file types
      */
     public function extractTextFromFile(UploadedFile $file): string
     {
@@ -101,30 +152,23 @@ class CVAnalysisService
         $extension = strtolower($file->getClientOriginalExtension());
         $tempPath = $file->store('temp_cv');
         $fullPath = Storage::path($tempPath);
-        
+
         try {
             switch ($mimeType) {
                 case 'application/pdf':
                     return $this->extractTextFromPDF($fullPath);
-                    
                 case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     return $this->extractTextFromDOCX($fullPath);
-                    
                 case 'application/msword':
                     return $this->extractTextFromDOC($fullPath);
-                    
                 case 'text/plain':
                     return $this->extractTextFromTXT($fullPath);
-                    
                 case 'application/rtf':
                 case 'text/rtf':
                     return $this->extractTextFromRTF($fullPath);
-                    
                 case 'application/vnd.oasis.opendocument.text':
                     return $this->extractTextFromODT($fullPath);
-                    
                 default:
-                    // Try to determine by file extension if MIME type detection fails
                     return $this->extractTextByExtension($fullPath, $extension);
             }
         } catch (\Exception $e) {
@@ -134,18 +178,12 @@ class CVAnalysisService
                 'extension' => $extension,
                 'error' => $e->getMessage()
             ]);
-            
-            // Fallback: try to read as plain text
             return $this->extractTextFromTXT($fullPath);
         } finally {
-            // Clean up temporary file
             Storage::delete($tempPath);
         }
     }
 
-    /**
-     * Extract text by file extension as fallback
-     */
     private function extractTextByExtension(string $filePath, string $extension): string
     {
         switch ($extension) {
@@ -166,9 +204,6 @@ class CVAnalysisService
         }
     }
 
-    /**
-     * Extract text from PDF file
-     */
     private function extractTextFromPDF(string $filePath): string
     {
         $parser = new PdfParser();
@@ -176,14 +211,11 @@ class CVAnalysisService
         return $pdf->getText();
     }
 
-    /**
-     * Extract text from DOCX file
-     */
     private function extractTextFromDOCX(string $filePath): string
     {
         $phpWord = IOFactory::load($filePath);
         $text = '';
-        
+
         foreach ($phpWord->getSections() as $section) {
             foreach ($section->getElements() as $element) {
                 if (method_exists($element, 'getText')) {
@@ -197,27 +229,20 @@ class CVAnalysisService
                 }
             }
         }
-        
+
         return $text;
     }
 
-    /**
-     * Extract text from DOC file (legacy format)
-     */
     private function extractTextFromDOC(string $filePath): string
     {
-        // For DOC files, we'll try to use PhpWord's reader
         try {
             $phpWord = IOFactory::load($filePath);
-            return $this->extractTextFromDOCX($filePath); // Use same method as DOCX
+            return $this->extractTextFromDOCX($filePath);
         } catch (\Exception $e) {
             throw new \Exception('DOC file format not fully supported. Please convert to DOCX or PDF.');
         }
     }
 
-    /**
-     * Extract text from TXT files
-     */
     private function extractTextFromTXT(string $filePath): string
     {
         try {
@@ -228,77 +253,58 @@ class CVAnalysisService
         }
     }
 
-    /**
-     * Extract text from RTF files
-     */
     private function extractTextFromRTF(string $filePath): string
     {
         try {
             $content = file_get_contents($filePath);
-            
-            // Basic RTF to text conversion
-            // Remove RTF control words and formatting
             $text = preg_replace('/\{\\\\[^}]*\}/', '', $content);
             $text = preg_replace('/\\\\[a-z]+[0-9]*\s?/', '', $text);
             $text = preg_replace('/\{|\}/', '', $text);
             $text = str_replace(['\par', '\line'], "\n", $text);
             $text = html_entity_decode($text);
-            
             return trim($text);
         } catch (\Exception $e) {
             \Log::error('RTF extraction failed: ' . $e->getMessage());
             return '';
         }
     }
-    
-    /**
-     * Extract text from ODT files
-     */
+
     private function extractTextFromODT(string $filePath): string
     {
         try {
-            // ODT files are ZIP archives containing XML
             $zip = new \ZipArchive();
             if ($zip->open($filePath) === TRUE) {
                 $content = $zip->getFromName('content.xml');
                 $zip->close();
-                
+
                 if ($content) {
-                    // Parse XML and extract text
                     $xml = simplexml_load_string($content);
                     if ($xml) {
-                        // Remove XML tags and get plain text
                         $text = strip_tags($xml->asXML());
                         return trim($text);
                     }
                 }
             }
-            
             throw new \Exception('Could not extract ODT content');
         } catch (\Exception $e) {
             \Log::error('ODT extraction failed: ' . $e->getMessage());
             return '';
         }
     }
-    
+
     /**
-     * Enhanced text preprocessing for different CV formats
+     * Enhanced text preprocessing for CV formats
      */
     public function preprocessText(string $text): string
     {
-        // Normalize whitespace and line breaks
         $text = preg_replace('/\s+/', ' ', $text);
         $text = preg_replace('/\n+/', "\n", $text);
-        
-        // Remove common CV formatting artifacts
-        $text = preg_replace('/[•·▪▫◦‣⁃]/', '', $text); // Remove bullet points
-        $text = preg_replace('/_{3,}/', '', $text); // Remove underlines
-        $text = preg_replace('/-{3,}/', '', $text); // Remove dashes
-        $text = preg_replace('/={3,}/', '', $text); // Remove equals signs
-        
-        // Normalize common CV section headers (multilingual support)
+        $text = preg_replace('/[•·▪▫◦‣⁃]/', '', $text);
+        $text = preg_replace('/_{3,}/', '', $text);
+        $text = preg_replace('/-{3,}/', '', $text);
+        $text = preg_replace('/={3,}/', '', $text);
+
         $sectionHeaders = [
-            // English
             'WORK EXPERIENCE', 'PROFESSIONAL EXPERIENCE', 'EMPLOYMENT HISTORY',
             'EDUCATION', 'ACADEMIC BACKGROUND', 'QUALIFICATIONS',
             'SKILLS', 'TECHNICAL SKILLS', 'CORE COMPETENCIES',
@@ -309,356 +315,236 @@ class CVAnalysisService
             'SUMMARY', 'PROFESSIONAL SUMMARY', 'CAREER SUMMARY',
             'OBJECTIVE', 'CAREER OBJECTIVE',
             'ACHIEVEMENTS', 'KEY ACHIEVEMENTS', 'ACCOMPLISHMENTS',
-            
-            // Common international variations
-            'EXPERIENCIA LABORAL', 'EXPERIENCIA PROFESIONAL', // Spanish
-            'EXPÉRIENCE PROFESSIONNELLE', 'EXPÉRIENCE', // French
-            'BERUFSERFAHRUNG', 'ARBEITSERFAHRUNG', // German
-            'ESPERIENZA LAVORATIVA', 'ESPERIENZA PROFESSIONALE', // Italian
-            'WERKERVARING', 'PROFESSIONELE ERVARING', // Dutch
-            'EXPERIÊNCIA PROFISSIONAL', 'EXPERIÊNCIA DE TRABALHO', // Portuguese
+            'EXPERIENCIA LABORAL', 'EXPERIENCIA PROFESIONAL',
+            'EXPÉRIENCE PROFESSIONNELLE', 'EXPÉRIENCE',
+            'BERUFSERFAHRUNG', 'ARBEITSERFAHRUNG',
+            'ESPERIENZA LAVORATIVA', 'ESPERIENZA PROFESSIONALE',
+            'WERKERVARING', 'PROFESSIONELE ERVARING',
+            'EXPERIÊNCIA PROFISSIONAL', 'EXPERIÊNCIA DE TRABALHO',
         ];
-        
+
         foreach ($sectionHeaders as $header) {
             $text = preg_replace('/\b' . preg_quote($header, '/') . '\b/i', "\n" . $header . "\n", $text);
         }
-        
-        // Convert to lowercase
+
         $text = strtolower($text);
-        
-        // Remove special characters but keep spaces and alphanumeric
-        $text = preg_replace('/[^a-z0-9\s\+\#]/', ' ', $text);
-        
-        // Clean up extra whitespace
+        $text = preg_replace('/[^a-z0-9\s\+\#\.]/', ' ', $text);
         $text = trim(preg_replace('/\s+/', ' ', $text));
-        
+
         return $text;
     }
-    
+
     /**
-     * Extract skills using TF-IDF algorithm (public method for testing)
+     * Extract skills using real TF-IDF with pre-computed IDF values from corpus
      */
     public function extractSkillsWithTFIDF(string $text): array
     {
         $words = explode(' ', $text);
         $totalWords = count($words);
-        
-        // Calculate term frequency (TF)
-        $termFrequency = [];
-        foreach ($words as $word) {
-            if (!in_array($word, $this->stopWords) && strlen($word) > 2) {
-                $termFrequency[$word] = ($termFrequency[$word] ?? 0) + 1;
+
+        if ($totalWords === 0) {
+            return [];
+        }
+
+        // Build vocabulary lookup
+        $vocabFlipped = array_flip($this->vocabulary);
+
+        // Count term frequencies for vocabulary terms (unigrams)
+        $termCounts = [];
+        for ($i = 0, $len = count($words); $i < $len; $i++) {
+            $word = $words[$i];
+            if (isset($vocabFlipped[$word])) {
+                $termCounts[$word] = ($termCounts[$word] ?? 0) + 1;
+            }
+            // Check bigrams
+            if ($i < $len - 1) {
+                $bigram = $word . ' ' . $words[$i + 1];
+                if (isset($vocabFlipped[$bigram])) {
+                    $termCounts[$bigram] = ($termCounts[$bigram] ?? 0) + 1;
+                }
             }
         }
-        
-        // Calculate TF scores
-        foreach ($termFrequency as $term => $freq) {
-            $termFrequency[$term] = $freq / $totalWords;
+
+        if (empty($termCounts)) {
+            return [];
         }
-        
-        // Calculate IDF and TF-IDF for skill-related terms
+
+        // Compute TF-IDF using real IDF values
+        $tfidfScores = [];
+        foreach ($termCounts as $term => $count) {
+            $termIndex = $vocabFlipped[$term];
+            $tf = 1 + log($count); // sublinear TF, matching sklearn
+            $idf = $this->idfValues[$termIndex];
+            $tfidfScores[$term] = $tf * $idf;
+        }
+
+        // Sort descending by score
+        arsort($tfidfScores);
+
+        // Store ALL matched term scores for full vector construction
+        $this->allTfidfScores = $tfidfScores;
+
+        // Build top 20 skills with category assignment (filtered by skill_flags)
         $skillScores = [];
-        foreach ($this->skillKeywords as $category => $skills) {
-            foreach ($skills as $skill) {
-                $skillLower = strtolower($skill);
-                
-                // Check for exact matches and partial matches
-                $matches = 0;
-                if (isset($termFrequency[$skillLower])) {
-                    $matches = $termFrequency[$skillLower] * $totalWords;
-                } else {
-                    // Check for partial matches in the text
-                    $matches = substr_count($text, $skillLower);
-                }
-                
-                if ($matches > 0) {
-                    // Simple IDF calculation (can be enhanced with a larger corpus)
-                    $idf = log(1000 / (1 + $matches)); // Assuming corpus of 1000 documents
-                    $tfIdf = ($matches / $totalWords) * $idf;
-                    
-                    $skillScores[$skill] = [
-                        'category' => $category,
-                        'score' => $tfIdf,
-                        'frequency' => $matches
-                    ];
+        $count = 0;
+        foreach ($tfidfScores as $term => $score) {
+            if ($count >= 20) break;
+            $termIndex = $vocabFlipped[$term];
+
+            // Only display terms tagged as real skills by O*NET whitelist
+            if (!($this->skillFlags[$termIndex] ?? true)) {
+                continue;
+            }
+
+            // Find which category this term is most distinctive for
+            $bestCategory = '';
+            $bestCategoryScore = 0;
+            foreach ($this->categoryCentroids as $cat => $centroid) {
+                if ($centroid[$termIndex] > $bestCategoryScore) {
+                    $bestCategoryScore = $centroid[$termIndex];
+                    $bestCategory = $cat;
                 }
             }
+
+            $skillScores[$term] = [
+                'category' => $this->formatCategoryName($bestCategory),
+                'score' => $score,
+                'frequency' => $termCounts[$term],
+            ];
+            $count++;
         }
-        
-        // Sort by TF-IDF score and return top skills
-        uasort($skillScores, function($a, $b) {
-            return $b['score'] <=> $a['score'];
-        });
-        
-        return array_slice($skillScores, 0, 20, true); // Return top 20 skills
+
+        return $skillScores;
     }
-    
+
     /**
-     * Generate skill vector for cosine similarity matching (public method for testing)
+     * Generate skill vector: full 500-dim for matching + 8-dim cluster profile for display
      */
     public function generateSkillVector(array $extractedSkills): array
     {
-        $vector = [
-            'programming' => 0,
-            'web_development' => 0,
-            'database' => 0,
-            'cloud_devops' => 0,
-            'mobile_development' => 0,
-            'data_science' => 0,
-            'ui_ux' => 0,
-            'project_management' => 0,
-            'communication' => 0,
-            'leadership' => 0,
-            'analytical_thinking' => 0,
-            'problem_solving' => 0
-        ];
-        
-        foreach ($extractedSkills as $skill => $data) {
-            $category = $data['category'];
-            $score = min($data['score'] * 10, 1.0); // Normalize to 0-1 range
-            
-            switch ($category) {
-                case 'programming':
-                    $vector['programming'] = max($vector['programming'], $score);
-                    break;
-                case 'web_development':
-                    $vector['web_development'] = max($vector['web_development'], $score);
-                    break;
-                case 'database':
-                    $vector['database'] = max($vector['database'], $score);
-                    break;
-                case 'cloud_devops':
-                    $vector['cloud_devops'] = max($vector['cloud_devops'], $score);
-                    break;
-                case 'mobile_development':
-                    $vector['mobile_development'] = max($vector['mobile_development'], $score);
-                    break;
-                case 'data_science':
-                    $vector['data_science'] = max($vector['data_science'], $score);
-                    break;
-                case 'ui_ux':
-                    $vector['ui_ux'] = max($vector['ui_ux'], $score);
-                    break;
-                case 'project_management':
-                    $vector['project_management'] = max($vector['project_management'], $score);
-                    break;
-                case 'soft_skills':
-                    // Distribute soft skills across relevant categories
-                    if (strpos(strtolower($skill), 'communication') !== false) {
-                        $vector['communication'] = max($vector['communication'], $score);
-                    } elseif (strpos(strtolower($skill), 'leadership') !== false) {
-                        $vector['leadership'] = max($vector['leadership'], $score);
-                    } elseif (strpos(strtolower($skill), 'analytical') !== false) {
-                        $vector['analytical_thinking'] = max($vector['analytical_thinking'], $score);
-                    } else {
-                        $vector['problem_solving'] = max($vector['problem_solving'], $score);
-                    }
-                    break;
+        // Build full 500-dimensional TF-IDF vector using ALL matched terms
+        $fullVector = array_fill(0, count($this->vocabulary), 0.0);
+        $vocabFlipped = array_flip($this->vocabulary);
+
+        // Use all matched terms (not just top 20 displayed skills) for accurate matching
+        foreach ($this->allTfidfScores as $term => $score) {
+            if (isset($vocabFlipped[$term])) {
+                $fullVector[$vocabFlipped[$term]] = $score;
             }
         }
-        
-        return $vector;
+
+        // Store for use by matchJobsFromBuiltInRoles()
+        $this->currentFullVector = $fullVector;
+
+        // Compute 8-dimensional cluster profile for display and storage
+        $clusterProfile = [];
+        foreach ($this->termClusters as $clusterName => $indices) {
+            $sum = 0;
+            foreach ($indices as $idx) {
+                $sum += $fullVector[$idx];
+            }
+            $clusterProfile[$clusterName] = count($indices) > 0
+                ? round($sum / count($indices), 4)
+                : 0;
+        }
+
+        return $clusterProfile;
     }
-    
+
     /**
-     * Find matching jobs using cosine similarity
+     * Match CV against category centroids using cosine similarity
      */
-    private function findMatchingJobs(array $skillVector, array $skillsExtracted): array
+    private function matchJobsFromBuiltInRoles(array $skillVector, array $skillsExtracted): array
     {
-        $jobProfiles = JobProfile::all();
         $matches = [];
-        
-        foreach ($jobProfiles as $job) {
-            $jobSkillVector = $job->skill_vector ?? [];
-            
-            if (empty($jobSkillVector)) {
-                continue;
-            }
-            
-            $similarity = $this->calculateCosineSimilarity($skillVector, $jobSkillVector);
-            
-            if ($similarity > 0.1) { // Only include jobs with >10% similarity
-                $matchingSkills = $this->findMatchingSkills($skillsExtracted, $job);
-                
-                $matches[] = [
-                    'job_id' => $job->id,
-                    'job_title' => $job->job_title,
-                    'company' => $job->company ?? null,
-                    'description' => Str::limit($job->description, 200),
-                    'similarity_score' => round($similarity * 100, 1),
-                    'matching_skills' => $matchingSkills,
-                    'required_skills' => $job->required_skills ?? [],
-                    'salary_range' => [
-                        'min' => $job->salary_min ?? null,
-                        'max' => $job->salary_max ?? null
-                    ]
-                ];
+
+        // Compare full 500-dim vector against each category centroid
+        $categoryScores = [];
+        foreach ($this->categoryCentroids as $category => $centroid) {
+            $similarity = $this->calculateCosineSimilarityArrays(
+                $this->currentFullVector,
+                $centroid
+            );
+            if ($similarity > 0.05) {
+                $categoryScores[$category] = $similarity;
             }
         }
-        
-        // Sort by similarity score (highest first)
-        usort($matches, function($a, $b) {
-            return $b['similarity_score'] <=> $a['similarity_score'];
-        });
-        
-        return array_slice($matches, 0, 10); // Return top 10 matches
+
+        // Sort by similarity, take top 5
+        arsort($categoryScores);
+        $topCategories = array_slice($categoryScores, 0, 5, true);
+
+        // Expand each category into a specific job role
+        foreach ($topCategories as $category => $similarity) {
+            $roles = $this->categoryRoles[$category] ?? [];
+            $role = $roles[0] ?? [
+                'title' => $this->formatCategoryName($category),
+                'description' => 'Career in ' . $this->formatCategoryName($category),
+            ];
+
+            // Compute matching dimensions from cluster profiles
+            $userClusterProfile = $skillVector; // already 8-dimensional
+            $categoryClusterProfile = $this->categoryClusterProfiles[$category] ?? [];
+            $matchingDimensions = $this->getMatchingDimensions($userClusterProfile, $categoryClusterProfile);
+
+            $matches[] = [
+                'job_title' => $role['title'],
+                'category' => $this->formatCategoryName($category),
+                'description' => $role['description'],
+                'similarity_score' => round($similarity * 100, 1),
+                'matching_dimensions' => $matchingDimensions,
+            ];
+        }
+
+        return $matches;
     }
 
     /**
-     * Find matching skills between extracted skills and job requirements
+     * Identify which cluster dimensions contributed most to a match
      */
-    private function findMatchingSkills(array $extractedSkills, JobProfile $job): array
+    private function getMatchingDimensions(array $userProfile, array $categoryProfile): array
     {
-        $matchingSkills = [];
-        $jobRequiredSkills = $job->required_skills ?? [];
-        
-        foreach ($extractedSkills as $skillName => $skillData) {
-            $tfidfScore = $skillData['score'];
-            
-            // Check if this skill matches any job requirement
-            foreach ($jobRequiredSkills as $requiredSkill) {
-                $similarity = $this->calculateStringSimilarity($skillName, $requiredSkill);
-                
-                if ($similarity > 0.8) { // 80% string similarity
-                    $matchStrength = $this->determineMatchStrength($tfidfScore, $similarity);
-                    
-                    $matchingSkills[] = [
-                        'skill' => $skillName,
-                        'required_skill' => $requiredSkill,
-                        'match_strength' => $matchStrength,
-                        'tfidf_score' => $tfidfScore,
-                        'similarity' => $similarity
-                    ];
-                    break;
-                }
-            }
-        }
-        
-        return $matchingSkills;
-    }
+        $dimensions = [];
 
-    /**
-     * Calculate string similarity between two skills
-     */
-    private function calculateStringSimilarity(string $str1, string $str2): float
-    {
-        $str1 = strtolower(trim($str1));
-        $str2 = strtolower(trim($str2));
-        
-        if ($str1 === $str2) {
-            return 1.0;
-        }
-        
-        // Use Levenshtein distance for similarity
-        $maxLen = max(strlen($str1), strlen($str2));
-        if ($maxLen === 0) {
-            return 0.0;
-        }
-        
-        $distance = levenshtein($str1, $str2);
-        return 1 - ($distance / $maxLen);
-    }
-
-    /**
-     * Determine match strength based on TF-IDF score and similarity
-     */
-    private function determineMatchStrength(float $tfidfScore, float $similarity): string
-    {
-        $combinedScore = ($tfidfScore * 0.6) + ($similarity * 0.4);
-        
-        if ($combinedScore >= 0.8) {
-            return 'Strong';
-        } elseif ($combinedScore >= 0.6) {
-            return 'Medium';
-        } else {
-            return 'Weak';
-        }
-    }
-    
-    /**
-     * Calculate cosine similarity between two vectors
-     */
-    private function calculateCosineSimilarity(array $vectorA, array $vectorB): float
-    {
-        $dotProduct = 0;
-        $magnitudeA = 0;
-        $magnitudeB = 0;
-        
-        foreach ($vectorA as $key => $valueA) {
-            $valueB = $vectorB[$key] ?? 0;
-            
-            $dotProduct += $valueA * $valueB;
-            $magnitudeA += $valueA * $valueA;
-            $magnitudeB += $valueB * $valueB;
-        }
-        
-        $magnitudeA = sqrt($magnitudeA);
-        $magnitudeB = sqrt($magnitudeB);
-        
-        if ($magnitudeA == 0 || $magnitudeB == 0) {
-            return 0;
-        }
-        
-        return $dotProduct / ($magnitudeA * $magnitudeB);
-    }
-    
-    /**
-     * Get matching skills between user and job vectors
-     */
-    private function getMatchingSkills(array $userVector, array $jobVector): array
-    {
-        $matchingSkills = [];
-        
-        foreach ($userVector as $skill => $userScore) {
-            $jobScore = $jobVector[$skill] ?? 0;
-            if ($userScore > 0.1 && $jobScore > 0.1) {
-                $matchingSkills[] = [
-                    'skill' => ucfirst(str_replace('_', ' ', $skill)),
+        foreach ($userProfile as $cluster => $userScore) {
+            $catScore = $categoryProfile[$cluster] ?? 0;
+            if ($userScore > 0.001 && $catScore > 0.01) {
+                $dimensions[] = [
+                    'dimension' => $cluster,
                     'user_score' => round($userScore, 2),
-                    'job_score' => round($jobScore, 2),
-                    'match_strength' => round(min($userScore, $jobScore), 2)
+                    'job_score' => round($catScore, 2),
+                    'contribution' => round($userScore * $catScore, 3),
                 ];
             }
         }
-        
-        return $matchingSkills;
+
+        usort($dimensions, fn($a, $b) => $b['contribution'] <=> $a['contribution']);
+
+        return array_slice($dimensions, 0, 4);
     }
-    
+
     /**
      * Create analysis summary
      */
-    private function createAnalysisSummary(array $skillsExtracted, array $jobMatches): array
+    private function createAnalysisSummaryFromBuiltIn(array $skillsExtracted, array $jobMatches): array
     {
-        // Sort skills by TF-IDF score descending
-        usort($skillsExtracted, function($a, $b) {
-            return $b['score'] <=> $a['score'];
-        });
-        
-        $topSkills = array_slice(
-            array_keys(
-                array_slice($skillsExtracted, 0, 10, true)
-            ), 
-            0, 
-            10
-        );
-        
+        $topSkills = array_slice(array_keys($skillsExtracted), 0, 10);
         $bestMatch = !empty($jobMatches) ? $jobMatches[0] : null;
-        
+
         return [
             'total_skills_found' => count($skillsExtracted),
             'total_job_matches' => count($jobMatches),
             'top_skills' => $topSkills,
             'best_match' => $bestMatch ? [
                 'job_title' => $bestMatch['job_title'],
-                'similarity' => $bestMatch['similarity_score']
+                'similarity' => $bestMatch['similarity_score'],
             ] : null,
             'skill_categories' => $this->categorizeSkills($skillsExtracted),
-            'analysis_date' => now()->toDateTimeString()
         ];
     }
 
     /**
-     * Categorize skills into different types (public method for testing)
+     * Categorize skills using cluster assignments from the TF-IDF model
      */
     public function categorizeSkills(array $skills): array
     {
@@ -667,116 +553,102 @@ class CVAnalysisService
             'soft' => [],
             'tools' => [],
             'languages' => [],
-            'other' => []
+            'other' => [],
         ];
-        
-        $technicalKeywords = ['programming', 'development', 'software', 'database', 'api', 'framework', 'algorithm'];
-        $softKeywords = ['communication', 'leadership', 'teamwork', 'management', 'problem-solving'];
-        $toolKeywords = ['excel', 'word', 'powerpoint', 'photoshop', 'git', 'docker', 'kubernetes'];
-        $languageKeywords = ['english', 'spanish', 'french', 'german', 'chinese', 'japanese'];
-        
+
+        $vocabFlipped = array_flip($this->vocabulary);
+        $technicalClusters = ['Technical Skills', 'Healthcare & Sciences', 'Trades & Applied'];
+        $softClusters = ['Communication & Interpersonal', 'Education & Training'];
+        $businessClusters = ['Business & Management', 'Legal & Compliance'];
+        $creativeClusters = ['Creative & Design'];
+
         foreach ($skills as $skillName => $skillData) {
-            $skillNameLower = strtolower($skillName);
-            $categorized = false;
-            
-            foreach ($technicalKeywords as $keyword) {
-                if (strpos($skillNameLower, $keyword) !== false) {
-                    $categories['technical'][] = $skillName;
-                    $categorized = true;
+            $termIndex = $vocabFlipped[strtolower($skillName)] ?? null;
+            if ($termIndex === null) {
+                $categories['other'][] = $skillName;
+                continue;
+            }
+
+            $assignedCluster = null;
+            foreach ($this->termClusters as $cluster => $indices) {
+                if (in_array($termIndex, $indices)) {
+                    $assignedCluster = $cluster;
                     break;
                 }
             }
-            
-            if (!$categorized) {
-                foreach ($softKeywords as $keyword) {
-                    if (strpos($skillNameLower, $keyword) !== false) {
-                        $categories['soft'][] = $skillName;
-                        $categorized = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (!$categorized) {
-                foreach ($toolKeywords as $keyword) {
-                    if (strpos($skillNameLower, $keyword) !== false) {
-                        $categories['tools'][] = $skillName;
-                        $categorized = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (!$categorized) {
-                foreach ($languageKeywords as $keyword) {
-                    if (strpos($skillNameLower, $keyword) !== false) {
-                        $categories['languages'][] = $skillName;
-                        $categorized = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (!$categorized) {
+
+            if (in_array($assignedCluster, $technicalClusters)) {
+                $categories['technical'][] = $skillName;
+            } elseif (in_array($assignedCluster, $softClusters)) {
+                $categories['soft'][] = $skillName;
+            } elseif (in_array($assignedCluster, $businessClusters)) {
+                $categories['tools'][] = $skillName;
+            } elseif (in_array($assignedCluster, $creativeClusters)) {
+                $categories['languages'][] = $skillName; // reuse slot for creative
+            } else {
                 $categories['other'][] = $skillName;
             }
         }
-        
+
         return $categories;
     }
-    
+
     /**
-     * Initialize skill keywords for different categories
+     * Cosine similarity for two numeric arrays of the same length
      */
-    private function initializeSkillKeywords(): void
+    private function calculateCosineSimilarityArrays(array $a, array $b): float
     {
-        $this->skillKeywords = [
-            'programming' => [
-                'PHP', 'JavaScript', 'Python', 'Java', 'C++', 'C#', 'Ruby', 'Go', 'Rust',
-                'TypeScript', 'Kotlin', 'Swift', 'Scala', 'R', 'MATLAB', 'Perl', 'Shell',
-                'PowerShell', 'Bash', 'SQL', 'HTML', 'CSS', 'SASS', 'LESS'
-            ],
-            'web_development' => [
-                'React', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Laravel', 'Django',
-                'Flask', 'Spring Boot', 'ASP.NET', 'Ruby on Rails', 'Next.js', 'Nuxt.js',
-                'Svelte', 'jQuery', 'Bootstrap', 'Tailwind CSS', 'Webpack', 'Vite'
-            ],
-            'database' => [
-                'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite', 'Oracle', 'SQL Server',
-                'Cassandra', 'DynamoDB', 'Elasticsearch', 'Neo4j', 'Firebase', 'Supabase'
-            ],
-            'cloud_devops' => [
-                'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Jenkins', 'GitLab CI',
-                'GitHub Actions', 'Terraform', 'Ansible', 'Chef', 'Puppet', 'Vagrant',
-                'Linux', 'Ubuntu', 'CentOS', 'NGINX', 'Apache'
-            ],
-            'mobile_development' => [
-                'React Native', 'Flutter', 'iOS', 'Android', 'Xamarin', 'Ionic', 'Cordova',
-                'Swift', 'Objective-C', 'Kotlin', 'Java Android', 'Dart'
-            ],
-            'data_science' => [
-                'Machine Learning', 'Deep Learning', 'TensorFlow', 'PyTorch', 'Scikit-learn',
-                'Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'Jupyter', 'Apache Spark',
-                'Hadoop', 'Tableau', 'Power BI', 'Statistics', 'Data Mining'
-            ],
-            'ui_ux' => [
-                'Figma', 'Adobe XD', 'Sketch', 'Photoshop', 'Illustrator', 'InVision',
-                'Principle', 'Framer', 'User Research', 'Wireframing', 'Prototyping',
-                'User Testing', 'Design Systems', 'Accessibility'
-            ],
-            'project_management' => [
-                'Agile', 'Scrum', 'Kanban', 'JIRA', 'Trello', 'Asana', 'Monday.com',
-                'Project Planning', 'Risk Management', 'Stakeholder Management',
-                'Budget Management', 'Team Coordination'
-            ],
-            'soft_skills' => [
-                'Communication', 'Leadership', 'Team Work', 'Problem Solving',
-                'Critical Thinking', 'Analytical Thinking', 'Creativity', 'Adaptability',
-                'Time Management', 'Conflict Resolution', 'Negotiation', 'Presentation'
-            ]
-        ];
+        $dot = 0;
+        $magA = 0;
+        $magB = 0;
+        $len = min(count($a), count($b));
+
+        for ($i = 0; $i < $len; $i++) {
+            $dot += $a[$i] * $b[$i];
+            $magA += $a[$i] * $a[$i];
+            $magB += $b[$i] * $b[$i];
+        }
+
+        $magA = sqrt($magA);
+        $magB = sqrt($magB);
+
+        return ($magA > 0 && $magB > 0) ? $dot / ($magA * $magB) : 0;
     }
-    
+
+    /**
+     * Cosine similarity for two associative arrays (kept for legacy compatibility)
+     */
+    private function calculateCosineSimilarity(array $vectorA, array $vectorB): float
+    {
+        $dotProduct = 0;
+        $magnitudeA = 0;
+        $magnitudeB = 0;
+
+        foreach ($vectorA as $key => $valueA) {
+            $valueB = $vectorB[$key] ?? 0;
+            $dotProduct += $valueA * $valueB;
+            $magnitudeA += $valueA * $valueA;
+            $magnitudeB += $valueB * $valueB;
+        }
+
+        $magnitudeA = sqrt($magnitudeA);
+        $magnitudeB = sqrt($magnitudeB);
+
+        if ($magnitudeA == 0 || $magnitudeB == 0) {
+            return 0;
+        }
+
+        return $dotProduct / ($magnitudeA * $magnitudeB);
+    }
+
+    /**
+     * Format category name for display (e.g., HEALTHCARE -> Healthcare)
+     */
+    private function formatCategoryName(string $category): string
+    {
+        return ucwords(strtolower(str_replace('-', ' ', $category)));
+    }
+
     /**
      * Initialize stop words for text processing
      */

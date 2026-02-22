@@ -132,6 +132,30 @@ class Job extends Model
     }
 
     /**
+     * Get job description with fallback for common titles
+     */
+    public function getJobDescription(): string
+    {
+        if ($this->description && !empty(trim($this->description))) {
+            return $this->description;
+        }
+
+        $jobTitleDescriptions = [
+            'Software Developer' => 'Design, build, and maintain software applications across various platforms and languages.',
+            'Research Scientist' => 'Conduct original research to advance knowledge in specialized scientific fields and publish findings.',
+            'Systems Analyst' => 'Evaluate and improve IT systems, bridging the gap between business needs and technical solutions.',
+            'Mathematician' => 'Develop mathematical theories, conduct research, and solve complex problems using mathematical principles.',
+            'University Professor' => 'Teach students, conduct research, and contribute to academic knowledge in your field of expertise.',
+            'Data Scientist' => 'Analyze complex data sets to extract insights and build predictive models for business decisions.',
+            'Systems Architect' => 'Design and plan the structure of complex IT systems and infrastructure solutions.',
+            'Engineer' => 'Apply scientific and mathematical principles to design and develop practical solutions and products.',
+            'Consultant' => 'Provide expert advice to organizations on strategic business and operational improvements.'
+        ];
+
+        return $jobTitleDescriptions[$this->title] ?? $this->description ?? 'Job description details available upon application.';
+    }
+
+    /**
      * Get work environment insights based on MBTI type
      */
     private function getEnvironmentInsights(string $mbtiType): string

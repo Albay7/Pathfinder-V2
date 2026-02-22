@@ -12,12 +12,12 @@ use App\Models\UserProgress;
 class CVAnalysisController extends Controller
 {
     private $cvAnalysisService;
-    
+
     public function __construct(CVAnalysisService $cvAnalysisService)
     {
         $this->cvAnalysisService = $cvAnalysisService;
     }
-    
+
     /**
      * Show CV upload form
      */
@@ -25,7 +25,58 @@ class CVAnalysisController extends Controller
     {
         return view('pathfinder.cv-upload');
     }
-    
+
+    /**
+     * Handle CV upload via form POST and show server-rendered result
+     */
+    public function analyzeAndShowResult(Request $request)
+    {
+        $request->validate([
+            'cv_file' => 'required|file|mimes:pdf,doc,docx,txt|max:10240',
+        ]);
+
+        try {
+            $file = $request->file('cv_file');
+            $results = $this->cvAnalysisService->analyzeCV($file);
+
+            $topMatch = $results['job_matches'][0] ?? null;
+            $extractedSkills = $results['extracted_skills'];
+            $allMatches = $results['job_matches'];
+            $skillVector = $results['skill_vector'];
+            $analysisSummary = $results['analysis_summary'];
+            $fileName = $results['file_name'];
+
+            // Save progress if authenticated
+            if (Auth::check()) {
+                try {
+                    UserProgress::create([
+                        'user_id' => Auth::id(),
+                        'feature_type' => 'cv_analysis',
+                        'assessment_type' => 'cv',
+                        'selected_category' => $topMatch['category'] ?? 'general',
+                        'calculated_scores' => $results['skill_vector'],
+                        'recommendation' => $topMatch['job_title'] ?? '',
+                        'completed' => true,
+                    ]);
+                } catch (\Exception $e) {
+                    // Database may not be available, continue without saving
+                }
+            }
+
+            return view('pathfinder.cv-analysis-result', compact(
+                'topMatch',
+                'extractedSkills',
+                'allMatches',
+                'skillVector',
+                'analysisSummary',
+                'fileName'
+            ));
+        } catch (\Exception $e) {
+            return redirect()->route('pathfinder.cv-upload')
+                ->with('error', 'CV analysis failed: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Handle CV upload and analysis
      */
@@ -36,7 +87,7 @@ class CVAnalysisController extends Controller
             $validator = Validator::make($request->all(), [
                 'cv_file' => 'required|file|mimes:pdf,doc,docx,txt|max:10240', // 10MB max
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
@@ -44,20 +95,20 @@ class CVAnalysisController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-            
+
             // Get user ID if authenticated, otherwise use null for anonymous users
             $userId = Auth::check() ? Auth::id() : null;
             $file = $request->file('cv_file');
-            
+
             // Analyze the CV
             $analysisResult = $this->cvAnalysisService->analyzeCVFile($file, $userId);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'CV analyzed successfully',
                 'data' => $analysisResult
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -65,7 +116,7 @@ class CVAnalysisController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Get user's CV analysis history
      */
@@ -78,7 +129,7 @@ class CVAnalysisController extends Controller
                     'message' => 'Authentication required'
                 ], 401);
             }
-            
+
             $analyses = UserProgress::where('user_id', Auth::id())
                 ->where('feature_type', 'cv_analysis')
                 ->where('completed', true)
@@ -93,12 +144,12 @@ class CVAnalysisController extends Controller
                         'top_job_match' => $analysis->analysis_result['job_matches'][0] ?? null
                     ];
                 });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $analyses
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -106,7 +157,7 @@ class CVAnalysisController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Get detailed analysis results by ID
      */
@@ -119,19 +170,19 @@ class CVAnalysisController extends Controller
                     'message' => 'Authentication required'
                 ], 401);
             }
-            
+
             $analysis = UserProgress::where('id', $analysisId)
                 ->where('user_id', Auth::id())
                 ->where('feature_type', 'cv_analysis')
                 ->first();
-            
+
             if (!$analysis) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Analysis not found'
                 ], 404);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -143,7 +194,7 @@ class CVAnalysisController extends Controller
                     'analysis_summary' => $analysis->analysis_result['analysis_summary'] ?? null
                 ]
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -151,7 +202,7 @@ class CVAnalysisController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Get job recommendations based on latest CV analysis
      */
@@ -164,23 +215,23 @@ class CVAnalysisController extends Controller
                     'message' => 'Authentication required'
                 ], 401);
             }
-            
+
             // Get the latest CV analysis
             $latestAnalysis = UserProgress::where('user_id', Auth::id())
                 ->where('feature_type', 'cv_analysis')
                 ->where('completed', true)
                 ->orderBy('created_at', 'desc')
                 ->first();
-            
+
             if (!$latestAnalysis) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No CV analysis found. Please upload your CV first.'
                 ], 404);
             }
-            
+
             $jobMatches = $latestAnalysis->analysis_result['job_matches'] ?? [];
-            
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -189,7 +240,7 @@ class CVAnalysisController extends Controller
                     'total_matches' => count($jobMatches)
                 ]
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -197,7 +248,7 @@ class CVAnalysisController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Compare user skills with a specific job
      */
@@ -207,7 +258,7 @@ class CVAnalysisController extends Controller
             $validator = Validator::make($request->all(), [
                 'job_id' => 'required|integer|exists:job_profiles,id'
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
@@ -215,40 +266,40 @@ class CVAnalysisController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-            
+
             if (!Auth::check()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Authentication required'
                 ], 401);
             }
-            
+
             // Get the latest CV analysis
             $latestAnalysis = UserProgress::where('user_id', Auth::id())
                 ->where('feature_type', 'cv_analysis')
                 ->where('completed', true)
                 ->orderBy('created_at', 'desc')
                 ->first();
-            
+
             if (!$latestAnalysis) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No CV analysis found. Please upload your CV first.'
                 ], 404);
             }
-            
+
             $userSkillVector = $latestAnalysis->analysis_result['skill_vector'] ?? [];
             $jobId = $request->input('job_id');
-            
+
             // Get job details and calculate detailed comparison
             $jobProfile = \App\Models\JobProfile::find($jobId);
             $jobSkillVector = $jobProfile->getSkillVector();
-            
+
             // Calculate similarity and detailed comparison
             $similarity = $this->calculateCosineSimilarity($userSkillVector, $jobSkillVector);
             $skillGaps = $this->identifySkillGaps($userSkillVector, $jobSkillVector);
             $strengths = $this->identifyStrengths($userSkillVector, $jobSkillVector);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -260,7 +311,7 @@ class CVAnalysisController extends Controller
                     'recommendations' => $this->generateImprovementRecommendations($skillGaps)
                 ]
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -268,7 +319,7 @@ class CVAnalysisController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Calculate cosine similarity between two skill vectors
      */
@@ -277,36 +328,36 @@ class CVAnalysisController extends Controller
         $dotProduct = 0;
         $magnitudeA = 0;
         $magnitudeB = 0;
-        
+
         foreach ($vectorA as $key => $valueA) {
             $valueB = $vectorB[$key] ?? 0;
-            
+
             $dotProduct += $valueA * $valueB;
             $magnitudeA += $valueA * $valueA;
             $magnitudeB += $valueB * $valueB;
         }
-        
+
         $magnitudeA = sqrt($magnitudeA);
         $magnitudeB = sqrt($magnitudeB);
-        
+
         if ($magnitudeA == 0 || $magnitudeB == 0) {
             return 0;
         }
-        
+
         return $dotProduct / ($magnitudeA * $magnitudeB);
     }
-    
+
     /**
      * Identify skill gaps between user and job requirements
      */
     private function identifySkillGaps(array $userVector, array $jobVector): array
     {
         $gaps = [];
-        
+
         foreach ($jobVector as $skill => $jobScore) {
             $userScore = $userVector[$skill] ?? 0;
             $gap = $jobScore - $userScore;
-            
+
             if ($gap > 0.2) { // Significant gap threshold
                 $gaps[] = [
                     'skill' => ucfirst(str_replace('_', ' ', $skill)),
@@ -317,25 +368,25 @@ class CVAnalysisController extends Controller
                 ];
             }
         }
-        
+
         // Sort by gap size (descending)
         usort($gaps, function($a, $b) {
             return $b['gap_size'] <=> $a['gap_size'];
         });
-        
+
         return $gaps;
     }
-    
+
     /**
      * Identify user strengths compared to job requirements
      */
     private function identifyStrengths(array $userVector, array $jobVector): array
     {
         $strengths = [];
-        
+
         foreach ($userVector as $skill => $userScore) {
             $jobScore = $jobVector[$skill] ?? 0;
-            
+
             if ($userScore > 0.3 && $userScore >= $jobScore) {
                 $strengths[] = [
                     'skill' => ucfirst(str_replace('_', ' ', $skill)),
@@ -345,25 +396,25 @@ class CVAnalysisController extends Controller
                 ];
             }
         }
-        
+
         // Sort by user score (descending)
         usort($strengths, function($a, $b) {
             return $b['user_level'] <=> $a['user_level'];
         });
-        
+
         return $strengths;
     }
-    
+
     /**
      * Generate improvement recommendations based on skill gaps
      */
     private function generateImprovementRecommendations(array $skillGaps): array
     {
         $recommendations = [];
-        
+
         foreach (array_slice($skillGaps, 0, 5) as $gap) { // Top 5 gaps
             $skill = strtolower(str_replace(' ', '_', $gap['skill']));
-            
+
             $recommendations[] = [
                 'skill' => $gap['skill'],
                 'priority' => $gap['priority'],
@@ -371,10 +422,10 @@ class CVAnalysisController extends Controller
                 'estimated_time' => $this->getEstimatedLearningTime($gap['gap_size'])
             ];
         }
-        
+
         return $recommendations;
     }
-    
+
     /**
      * Get skill improvement suggestions
      */
@@ -394,10 +445,10 @@ class CVAnalysisController extends Controller
             'analytical_thinking' => 'Solve complex problems, learn data analysis techniques, and practice logical reasoning.',
             'problem_solving' => 'Practice algorithmic thinking, debug complex issues, and learn systematic problem-solving approaches.'
         ];
-        
+
         return $suggestions[$skill] ?? 'Focus on practical experience and continuous learning in this area.';
     }
-    
+
     /**
      * Get estimated learning time based on skill gap size
      */

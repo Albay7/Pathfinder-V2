@@ -79,18 +79,6 @@
                     @endif
                 </div>
 
-                <!-- Progress Bar -->
-                <div class="mb-6">
-                    <div class="flex justify-between text-sm text-gray-600 mb-2">
-                        <span>{{ count($analysis['matching_skills']) }} skills acquired</span>
-                        <span>{{ count($analysis['missing_skills']) }} skills to learn</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-3">
-                        <div class="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500"
-                             style="width: {{ $analysis['match_percentage'] }}%"></div>
-                    </div>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                     <div class="bg-green-50 rounded-lg p-4">
                         <div class="text-2xl font-bold text-green-600">{{ count($analysis['matching_skills']) }}</div>
@@ -109,40 +97,131 @@
         </div>
 
         <!-- Skills Breakdown -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-start">
             <!-- Skills You Have -->
             @if(count($analysis['matching_skills']) > 0)
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="flex-shrink-0">
-                            <div class="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
-                                <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
+                                    <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-xl font-bold text-gray-900">Skills You Have</h3>
+                                <p class="text-sm text-gray-600">Great! You already possess these skills</p>
                             </div>
                         </div>
-                        <div class="ml-3">
-                            <h3 class="text-xl font-bold text-gray-900">Skills You Have</h3>
-                            <p class="text-sm text-gray-600">Great! You already possess these skills</p>
-                        </div>
+                        @if(count($analysis['matching_skills']) > 10)
+                            <button id="toggle-matching-skills" class="text-blue-500 hover:text-blue-600 text-sm font-semibold transition-colors duration-200">
+                                <span class="flex items-center">
+                                    <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                    Show All ({{ count($analysis['matching_skills']) }})
+                                </span>
+                            </button>
+                        @endif
                     </div>
-                    <div class="space-y-2">
-                        @foreach($analysis['matching_skills'] as $skill)
-                            <div class="flex items-center p-3 bg-green-50 rounded-lg">
-                                <svg class="h-4 w-4 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span class="text-gray-900 font-medium">{{ $skill }}</span>
+
+                    @php
+                        // Skills are already sorted by controller
+                        $sortedMatchingSkills = $analysis['matching_skills'];
+                    @endphp
+
+                    <!-- First 10 matching skills with hierarchy -->
+                    <div class="space-y-2" id="visible-matching-skills">
+                        @foreach(array_slice($sortedMatchingSkills, 0, 10) as $index => $skill)
+                            @php
+                                // Determine priority based on skill category
+                                $category = is_array($skill) ? $skill['category'] : 'unknown';
+                                $skillName = is_array($skill) ? $skill['name'] : $skill;
+
+                                $priority = match($category) {
+                                    'advanced' => ['label' => 'High Priority', 'text' => 'text-gray-900'],
+                                    'medium' => ['label' => 'Medium Priority', 'text' => 'text-gray-900'],
+                                    'fundamental' => ['label' => 'Low Priority', 'text' => 'text-gray-900'],
+                                    'soft' => ['label' => 'Priority', 'text' => 'text-gray-900'],
+                                    default => ['label' => 'Skill', 'text' => 'text-gray-900']
+                                };
+                            @endphp
+                            <div class="flex items-center p-3 bg-green-50 rounded-lg border border-green-100">
+                                <span class="flex items-center justify-center w-6 h-6 bg-green-600 text-white text-xs font-bold rounded-full mr-3">
+                                    <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </span>
+                                <span class="text-gray-900 font-medium">{{ $skillName }}</span>
                             </div>
                         @endforeach
                     </div>
+
+                    <!-- Additional matching skills (hidden by default) -->
+                    @if(count($analysis['matching_skills']) > 10)
+                        <div class="space-y-2 mt-2 hidden" id="additional-matching-skills">
+                            @foreach(array_slice($sortedMatchingSkills, 10) as $index => $skill)
+                                @php
+                                    $category = is_array($skill) ? $skill['category'] : 'unknown';
+                                    $skillName = is_array($skill) ? $skill['name'] : $skill;
+
+                                    $priority = match($category) {
+                                        'advanced' => ['label' => 'High Priority', 'text' => 'text-gray-900'],
+                                        'medium' => ['label' => 'Medium Priority', 'text' => 'text-gray-900'],
+                                        'fundamental' => ['label' => 'Low Priority', 'text' => 'text-gray-900'],
+                                        'soft' => ['label' => 'Priority', 'text' => 'text-gray-900'],
+                                        default => ['label' => 'Skill', 'text' => 'text-gray-900']
+                                    };
+                                @endphp
+                                <div class="flex items-center p-3 bg-green-50 rounded-lg border border-green-100">
+                                    <span class="flex items-center justify-center w-6 h-6 bg-green-600 text-white text-xs font-bold rounded-full mr-3">
+                                        <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="text-gray-900 font-medium">{{ $skillName }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <script>
+                            document.getElementById('toggle-matching-skills').addEventListener('click', function() {
+                                const additionalSkills = document.getElementById('additional-matching-skills');
+                                const button = this;
+
+                                if (additionalSkills.classList.contains('hidden')) {
+                                    additionalSkills.classList.remove('hidden');
+                                    button.innerHTML = `
+                                        <span class="flex items-center">
+                                            <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                            Show Less
+                                        </span>
+                                    `;
+                                } else {
+                                    additionalSkills.classList.add('hidden');
+                                    button.innerHTML = `
+                                        <span class="flex items-center">
+                                            <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                            Show All ({{ count($analysis['matching_skills']) }})
+                                        </span>
+                                    `;
+                                }
+                            });
+                        </script>
+                    @endif
                 </div>
             @endif
 
             <!-- Skills You Need -->
             @if(count($analysis['missing_skills']) > 0)
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                    <div class="flex items-center justify-between mb-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
                                 <div class="flex items-center justify-center w-10 h-10 bg-red-100 rounded-full">
@@ -153,68 +232,129 @@
                             </div>
                             <div class="ml-3">
                                 <h3 class="text-xl font-bold text-gray-900">Skills to Develop</h3>
-                                <p class="text-sm text-gray-600">Your top learning priorities</p>
+                                <p class="text-sm text-gray-600">Prioritized by skill level and importance</p>
                             </div>
                         </div>
-                        @if(count($analysis['missing_skills']) > 8)
-                            <button id="toggle-skills" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                                Show All ({{ count($analysis['missing_skills']) }})
+                        @if(count($analysis['missing_skills']) > 10)
+                            <button id="toggle-skills" class="text-blue-500 hover:text-blue-600 text-sm font-semibold transition-colors duration-200 whitespace-nowrap flex-shrink-0">
+                                <span class="flex items-center">
+                                    <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                    Show All ({{ count($analysis['missing_skills']) }})
+                                </span>
                             </button>
                         @endif
                     </div>
 
-                    <!-- Top Priority Skills (Always visible) -->
+                    @php
+                        // Skills are already sorted by controller, but fallback sorting for safety
+                        $sortedMissingSkills = $analysis['missing_skills'];
+                        if (!empty($sortedMissingSkills)) {
+                            $priorityOrder = [
+                                'advanced' => 1,
+                                'medium' => 2,
+                                'fundamental' => 3,
+                                'soft' => 4,
+                                'unknown' => 5,
+                            ];
+
+                            usort($sortedMissingSkills, function ($left, $right) use ($priorityOrder) {
+                                $leftCategory = is_array($left) ? ($left['category'] ?? 'unknown') : 'unknown';
+                                $rightCategory = is_array($right) ? ($right['category'] ?? 'unknown') : 'unknown';
+                                return ($priorityOrder[$leftCategory] ?? 5) <=> ($priorityOrder[$rightCategory] ?? 5);
+                            });
+                        }
+                    @endphp
+
+                    <!-- All Skills with Category-Based Priority (First 10 always visible) -->
                     <div class="space-y-2" id="priority-skills">
-                        @foreach(array_slice($analysis['missing_skills'], 0, 8) as $index => $skill)
+                        @foreach(array_slice($sortedMissingSkills, 0, 10) as $index => $skill)
+                            @php
+                                // Determine priority based on skill category
+                                $category = is_array($skill) ? $skill['category'] : 'unknown';
+                                $skillName = is_array($skill) ? $skill['name'] : $skill;
+
+                                $priority = match($category) {
+                                    'advanced' => ['label' => 'High Priority', 'text' => 'text-red-600'],
+                                    'medium' => ['label' => 'Medium Priority', 'text' => 'text-orange-600'],
+                                    'fundamental' => ['label' => 'Low Priority', 'text' => 'text-yellow-600'],
+                                    'soft' => ['label' => 'Priority', 'text' => 'text-purple-600'],
+                                    default => ['label' => 'Priority', 'text' => 'text-gray-600']
+                                };
+                            @endphp
                             <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
                                 <div class="flex items-center">
                                     <span class="flex items-center justify-center w-6 h-6 bg-red-600 text-white text-xs font-bold rounded-full mr-3">
                                         {{ $index + 1 }}
                                     </span>
-                                    <span class="text-gray-900 font-medium">{{ $skill }}</span>
+                                    <span class="text-gray-900 font-medium">{{ $skillName }}</span>
                                 </div>
-                                <span class="text-xs px-2 py-1 rounded-full font-medium
-                                    {{ $index < 3 ? 'bg-red-100 text-red-600' : ($index < 6 ? 'bg-orange-100 text-orange-600' : 'bg-yellow-100 text-yellow-600') }}">
-                                    {{ $index < 3 ? 'High Priority' : ($index < 6 ? 'Medium Priority' : 'Low Priority') }}
+                                <span class="text-xs px-2 py-1 rounded-full font-medium {{ $priority['text'] }}">
+                                    {{ $priority['label'] }}
                                 </span>
                             </div>
                         @endforeach
                     </div>
 
-                    <!-- Additional Skills (Collapsible) -->
-                    @if(count($analysis['missing_skills']) > 8)
-                        <div class="space-y-2 mt-4 hidden" id="additional-skills">
-                            <div class="border-t border-gray-200 pt-4">
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">Additional Skills to Consider</h4>
-                                @foreach(array_slice($analysis['missing_skills'], 8) as $index => $skill)
-                                    <div class="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                                        <div class="flex items-center">
-                                            <span class="flex items-center justify-center w-5 h-5 bg-gray-400 text-white text-xs font-bold rounded-full mr-3">
-                                                {{ $index + 9 }}
-                                            </span>
-                                            <span class="text-gray-800 text-sm">{{ $skill }}</span>
-                                        </div>
-                                        <span class="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full font-medium">
-                                            Future Learning
+                    <!-- Additional Skills (Collapsible, Unified Design) -->
+                    @if(count($analysis['missing_skills']) > 10)
+                        <div class="space-y-2 mt-2 hidden" id="additional-skills">
+                            @foreach(array_slice($sortedMissingSkills, 10) as $index => $skill)
+                                @php
+                                    // Determine priority based on skill category
+                                    $category = is_array($skill) ? $skill['category'] : 'unknown';
+                                    $skillName = is_array($skill) ? $skill['name'] : $skill;
+
+                                    $priority = match($category) {
+                                        'advanced' => ['label' => 'High Priority', 'text' => 'text-red-600'],
+                                        'medium' => ['label' => 'Medium Priority', 'text' => 'text-orange-600'],
+                                        'fundamental' => ['label' => 'Low Priority', 'text' => 'text-yellow-600'],
+                                        'soft' => ['label' => 'Priority', 'text' => 'text-purple-600'],
+                                        default => ['label' => 'Priority', 'text' => 'text-gray-600']
+                                    };
+                                @endphp
+                                <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <span class="flex items-center justify-center w-6 h-6 bg-red-600 text-white text-xs font-bold rounded-full mr-3">
+                                            {{ $index + 11 }}
                                         </span>
+                                        <span class="text-gray-900 font-medium">{{ $skillName }}</span>
                                     </div>
-                                @endforeach
-                            </div>
+                                    <span class="text-xs px-2 py-1 rounded-full font-medium {{ $priority['text'] }}">
+                                        {{ $priority['label'] }}
+                                    </span>
+                                </div>
+                            @endforeach
                         </div>
                     @endif
 
-                    @if(count($analysis['missing_skills']) > 8)
+                    @if(count($analysis['missing_skills']) > 10)
                         <script>
                             document.getElementById('toggle-skills').addEventListener('click', function() {
                                 const additionalSkills = document.getElementById('additional-skills');
-                                const button = document.getElementById('toggle-skills');
+                                const button = this;
 
                                 if (additionalSkills.classList.contains('hidden')) {
                                     additionalSkills.classList.remove('hidden');
-                                    button.textContent = 'Show Less';
+                                    button.innerHTML = `
+                                        <span class="flex items-center">
+                                            <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                            Show Less
+                                        </span>
+                                    `;
                                 } else {
                                     additionalSkills.classList.add('hidden');
-                                    button.textContent = 'Show All ({{ count($analysis['missing_skills']) }})';
+                                    button.innerHTML = `
+                                        <span class="flex items-center">
+                                            <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                            Show All ({{ count($analysis['missing_skills']) }})
+                                        </span>
+                                    `;
                                 }
                             });
                         </script>
@@ -224,95 +364,6 @@
         </div>
 
 
-
-        <!-- Tutorial Recommendations -->
-        @if(isset($analysis['tutorial_recommendations']) && count($analysis['tutorial_recommendations']) > 0)
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 mb-8">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6">Recommended Tutorials</h3>
-                <p class="text-gray-600 mb-6">Start learning with these curated tutorials for your missing skills:</p>
-
-                @foreach($analysis['tutorial_recommendations'] as $skill => $tutorials)
-                    <div class="mb-8">
-                        <h4 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                            <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 text-sm font-medium rounded-full mr-3">
-                                {{ $skill }}
-                            </span>
-                            Learning Resources
-                        </h4>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            @foreach($tutorials as $tutorial)
-                                <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200">
-                                    <div class="flex items-start justify-between mb-3">
-                                        <div class="flex-1">
-                                            <h5 class="font-semibold text-gray-900 text-sm mb-1">{{ $tutorial->title }}</h5>
-                                            <p class="text-xs text-gray-600 mb-2">{{ Str::limit($tutorial->description, 80) }}</p>
-                                        </div>
-                                        <div class="flex items-center ml-2">
-                                            @if($tutorial->type === 'video')
-                                                <svg class="h-4 w-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m6-6V7a3 3 0 00-3-3H6a3 3 0 00-3 3v1M5 10h14l-5 7H5V10z"></path>
-                                                </svg>
-                                            @elseif($tutorial->type === 'article')
-                                                <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                                </svg>
-                                            @else
-                                                <svg class="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                                                </svg>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
-                                        <span class="flex items-center">
-                                            <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                            {{ $tutorial->formatted_duration }}
-                                        </span>
-                                        <span class="flex items-center">
-                                            <svg class="h-3 w-3 mr-1 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                            </svg>
-                                            {{ $tutorial->rating }}
-                                        </span>
-                                    </div>
-
-                                    <div class="flex items-center justify-between">
-                                        <span class="inline-flex items-center px-2 py-1 bg-{{ $tutorial->level === 'beginner' ? 'green' : ($tutorial->level === 'intermediate' ? 'yellow' : 'red') }}-100 text-{{ $tutorial->level === 'beginner' ? 'green' : ($tutorial->level === 'intermediate' ? 'yellow' : 'red') }}-800 text-xs font-medium rounded">
-                                            {{ ucfirst($tutorial->level) }}
-                                        </span>
-
-                                        <div class="flex space-x-2">
-                                            @auth
-                                                <form action="{{ route('tutorials.bookmark') }}" method="POST" class="inline">
-                                                    @csrf
-                                                    <input type="hidden" name="tutorial_id" value="{{ $tutorial->id }}">
-                                                    <button type="submit" class="text-gray-400 hover:text-yellow-500 transition-colors duration-200" title="Bookmark">
-                                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                                                        </svg>
-                                                    </button>
-                                                </form>
-                                            @endauth
-
-                                            <a href="{{ $tutorial->url }}" target="_blank" class="inline-flex items-center px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors duration-200">
-                                                Start
-                                                <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @endif
 
         <!-- Action Plan -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
@@ -406,23 +457,41 @@
                 </div>
             </div>
         </div>
+
+        <!-- Important Disclaimer -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl shadow-xl border-l-8 border-amber-500 p-8 mt-8">
+            <div>
+                <h4 class="text-lg font-extrabold text-amber-900 mb-3 flex items-center">
+                    Important Notice
+                    <span class="ml-2 inline-block w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                </h4>
+                <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
+                    <p class="text-sm text-gray-800 leading-relaxed">
+                        This skill gap analysis provides general guidance based on typical requirements for the selected role.
+                        <span class="font-bold text-gray-900 bg-yellow-200 px-1.5 py-0.5 rounded">The results do not guarantee job placement or acceptance.</span>
+                        Actual hiring decisions depend on specific company standards, job requirements, industry demands,
+                        and individual qualifications. Use this analysis as a learning guide to improve your skills and increase your competitiveness in the job market.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Action Buttons -->
-<div class="py-16 bg-white">
+<div class="py-16 bg-gray-50">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-2xl font-bold text-gray-900 mb-8">
-            What's Next?
+            Ready to Take the Next Step?
         </h2>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{ route('pathfinder.external-resources') }}" class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
+            <a href="{{ route('pathfinder.external-resources') }}" class="inline-flex items-center justify-center px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors duration-200">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
                 Find Learning Resources
             </a>
-            <a href="{{ route('pathfinder.career-path') }}" class="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200">
+            <a href="{{ route('pathfinder.career-path') }}" class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                 </svg>

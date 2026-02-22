@@ -127,7 +127,7 @@
                             </div>
                             <h3 class="text-2xl font-bold text-gray-900 pt-1">{{ $type['name'] }}</h3>
                         </div>
-                        
+
                         <!-- Description -->
                         <p class="text-gray-700 leading-relaxed text-base">{{ $type['description'] }}</p>
                     </div>
@@ -172,7 +172,7 @@
         <!-- CTA Section -->
         <div class="text-center">
             <div class="inline-block">
-                <a href="{{ route('pathfinder.mbti-questionnaire') }}" 
+                <a href="{{ route('pathfinder.mbti-questionnaire') }}"
                    class="inline-flex items-center justify-center px-8 py-4 rounded-lg font-semibold text-white text-lg transition-transform hover:scale-105"
                    style="background: linear-gradient(135deg, #5AA7C6, #13264D);">
                     Let's Get Started

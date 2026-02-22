@@ -42,6 +42,9 @@ use App\Services\SkillMappingService;
             <form action="{{ route('pathfinder.skill-gap.analyze') }}" method="POST" class="space-y-8" id="skillGapForm">
                 @csrf
 
+                <!-- Hidden target_category field for tracking -->
+                <input type="hidden" name="target_category" id="target_category" value="">
+
                 <!-- Target Role Section -->
                 <div>
                     <label for="target_role" class="block text-lg font-semibold text-gray-900 mb-4">
@@ -74,58 +77,96 @@ use App\Services\SkillMappingService;
                     </div>
                 </div>
 
-                <!-- Pro Tip -->
-                <div id="pro-tip" class="rounded-lg p-6 hidden" style="background-color: #EFF6FF; border: 1px solid #5AA7C6;">
-                    <h3 class="text-lg font-semibold mb-3" style="color: #13264D;">
-                        💡 Pro Tip for <span id="tip-role-name"></span>
-                    </h3>
-                    <p style="color: #13264D;">
-                        Be honest about your current skill level. Our analysis will help you identify exactly what you need to focus on to reach your career goals. The skills shown above are specifically selected for your target role to give you the most accurate assessment possible.
-                    </p>
-                </div>
-
                 <!-- Current Skills Section -->
                 <div id="skills-section" class="hidden">
                     <label class="block text-lg font-semibold text-gray-900 mb-4">
                         What are your current skills?
                     </label>
                     <p class="text-sm text-gray-600 mb-6">
-                        Select all skills that you currently possess. We're showing skills specifically relevant to your target role plus essential soft skills. Be honest about your skill level to get accurate recommendations.
+                        Select all skills that you currently possess. Skills are categorized by level and specifically selected for your target role. Be honest about your skill level—our analysis will identify exactly what you need to focus on to reach your career goals.
                     </p>
 
-                    <!-- Skills Container -->
-                    <div class="space-y-6" id="skills-container">
-                        <!-- Technical Skills - Will be populated dynamically -->
-                        <div class="skill-category rounded-lg p-6" style="background-color: #EFF6FF; border: 1px solid #5AA7C6;" id="technical-skills">
-                            <h3 class="text-lg font-semibold mb-4" style="color: #13264D;">
-                                <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                                </svg>
-                                Technical Skills for <span id="role-name-tech"></span>
-                            </h3>
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="technical-skills-grid">
-                                <!-- Technical skills will be populated by JavaScript -->
+                    <!-- Single Unified Skills Container -->
+                    <div class="space-y-6 rounded-xl p-6" style="background-color: #F9FAFB; border: 2px solid #E5E7EB;" id="skills-container">
+                        <!-- Fundamental Skills Section -->
+                        <div class="skill-category" id="fundamental-skills-section" style="display: none;">
+                            <div class="flex items-center mb-3">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3" style="background-color: #10B981;">
+                                    <span class="text-white font-bold text-sm">1</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold" style="color: #065F46;">
+                                        Fundamental Skills (Entry-Level)
+                                    </h3>
+                                    <p class="text-xs text-gray-600">Essential skills required to start in this role</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 ml-11" id="fundamental-skills-grid">
+                                <!-- Populated by JavaScript -->
                             </div>
                         </div>
 
-                        <!-- Soft Skills - Always shown -->
-                        <div class="skill-category rounded-lg p-6" style="background-color: #F0F9FF; border: 1px solid #0EA5E9;">
-                            <h3 class="text-lg font-semibold text-sky-800 mb-4">
-                                <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                </svg>
-                                Essential Soft Skills
+                        <!-- Medium Skills Section -->
+                        <div class="skill-category" id="medium-skills-section" style="display: none;">
+                            <div class="flex items-center mb-3">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3" style="background-color: #3B82F6;">
+                                    <span class="text-white font-bold text-sm">2</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold" style="color: #1E40AF;">
+                                        Medium Skills (Mid-Level)
+                                    </h3>
+                                    <p class="text-xs text-gray-600">Skills that demonstrate professional competency</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 ml-11" id="medium-skills-grid">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Advanced Skills Section -->
+                        <div class="skill-category" id="advanced-skills-section" style="display: none;">
+                            <div class="flex items-center mb-3">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3" style="background-color: #8B5CF6;">
+                                    <span class="text-white font-bold text-sm">3</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold" style="color: #5B21B6;">
+                                        Advanced Skills (Senior-Level)
+                                    </h3>
+                                    <p class="text-xs text-gray-600">Specialized skills for senior positions</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 ml-11" id="advanced-skills-grid">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Soft Skills Section -->
+                        <div class="skill-category" id="soft-skills-section" style="display: none;">
+                            <div class="flex items-center mb-3">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-lg mr-3" style="background-color: #F59E0B;">
+                                    <span class="text-white font-bold text-sm">4</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold" style="color: #92400E;">
+                                        Soft Skills (Essential)
+                                    </h3>
+                                    <p class="text-xs text-gray-600">Interpersonal skills crucial for success</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 ml-11" id="soft-skills-grid">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Fallback for non-categorized roles (old structure) -->
+                        <div class="skill-category" id="uncategorized-skills-section" style="display: none;">
+                            <h3 class="text-lg font-semibold mb-4" style="color: #13264D;">
+                                Technical & Soft Skills for <span id="role-name-uncategorized"></span>
                             </h3>
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                                @php
-                                    $universalSoftSkills = SkillMappingService::getUniversalSoftSkills();
-                                @endphp
-                                @foreach($universalSoftSkills as $skill)
-                                    <label class="flex items-center p-2 border border-sky-200 rounded-lg cursor-pointer transition-colors duration-200 skill-checkbox" style="background-color: white;" onmouseover="this.style.backgroundColor='#F0F9FF';" onmouseout="this.style.backgroundColor='white';">
-                                        <input type="checkbox" name="current_skills[]" value="{{ $skill }}" class="mr-2" style="color: #0EA5E9;">
-                                        <span class="text-sm text-gray-700">{{ $skill }}</span>
-                                    </label>
-                                @endforeach
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="uncategorized-skills-grid">
+                                <!-- Populated by JavaScript for old structure roles -->
                             </div>
                         </div>
                     </div>
@@ -158,19 +199,13 @@ use App\Services\SkillMappingService;
                     const skillsSection = document.getElementById('skills-section');
                     const skillsNotice = document.getElementById('skills-notice');
                     const selectedRoleName = document.getElementById('selected-role-name');
-                    const technicalSkillsGrid = document.getElementById('technical-skills-grid');
-                    const roleNameTech = document.getElementById('role-name-tech');
-                    const proTip = document.getElementById('pro-tip');
-                    const tipRoleName = document.getElementById('tip-role-name');
                     const submitSection = document.getElementById('submit-section');
 
                     // Check if all elements exist
                     console.log('Elements found:', {
                         targetRoleSelect: !!targetRoleSelect,
                         skillsSection: !!skillsSection,
-                        skillsNotice: !!skillsNotice,
-                        technicalSkillsGrid: !!technicalSkillsGrid,
-                        proTip: !!proTip
+                        skillsNotice: !!skillsNotice
                     });
 
                     // Get skill mapping data
@@ -182,35 +217,122 @@ use App\Services\SkillMappingService;
                             const selectedRole = this.value;
                             console.log('Role selected:', selectedRole);
 
+                            // Capture category from the optgroup label
+                            if (selectedRole) {
+                                const selectedOption = this.querySelector('option:checked');
+                                if (selectedOption && selectedOption.parentElement.tagName === 'OPTGROUP') {
+                                    const category = selectedOption.parentElement.getAttribute('label');
+                                    document.getElementById('target_category').value = category;
+                                    console.log('Category captured:', category);
+                                }
+                            }
+
                             if (selectedRole) {
                                 // Show sections
                                 if (skillsSection) skillsSection.classList.remove('hidden');
                                 if (skillsNotice) skillsNotice.classList.remove('hidden');
-                                if (proTip) proTip.classList.remove('hidden');
                                 if (submitSection) submitSection.style.display = 'block';
 
                                 // Update role names
                                 if (selectedRoleName) selectedRoleName.textContent = selectedRole;
-                                if (roleNameTech) roleNameTech.textContent = selectedRole;
-                                if (tipRoleName) tipRoleName.textContent = selectedRole;
 
-                                // Get skills for selected role
                                 const roleSkills = skillMappingData[selectedRole];
                                 console.log('Role skills found:', !!roleSkills, roleSkills ? Object.keys(roleSkills) : 'none');
 
-                                if (roleSkills && roleSkills.technical_skills) {
-                                    console.log('Technical skills count:', roleSkills.technical_skills.length);
-                                    // Clear existing technical skills
-                                    technicalSkillsGrid.innerHTML = '';
+                                // Get grid elements
+                                const fundamentalGrid = document.getElementById('fundamental-skills-grid');
+                                const mediumGrid = document.getElementById('medium-skills-grid');
+                                const advancedGrid = document.getElementById('advanced-skills-grid');
+                                const softGrid = document.getElementById('soft-skills-grid');
+                                const uncategorizedGrid = document.getElementById('uncategorized-skills-grid');
 
-                                    // Add technical skills for this role
-                                    roleSkills.technical_skills.forEach(function(skill, index) {
-                                        console.log('Adding skill ' + (index + 1) + ':', skill);
+                                const fundamentalSection = document.getElementById('fundamental-skills-section');
+                                const mediumSection = document.getElementById('medium-skills-section');
+                                const advancedSection = document.getElementById('advanced-skills-section');
+                                const softSection = document.getElementById('soft-skills-section');
+                                const uncategorizedSection = document.getElementById('uncategorized-skills-section');
+
+                                // Hide all sections first
+                                fundamentalSection.style.display = 'none';
+                                mediumSection.style.display = 'none';
+                                advancedSection.style.display = 'none';
+                                softSection.style.display = 'none';
+                                uncategorizedSection.style.display = 'none';
+
+                                if (roleSkills) {
+                                    // Check if role uses new categorized structure
+                                    if (roleSkills.fundamental_skills) {
+                                        // NEW STRUCTURE: Display categorized skills
+                                        console.log('Using new categorized structure');
+
+                                        // Populate Fundamental Skills
+                                        if (roleSkills.fundamental_skills && roleSkills.fundamental_skills.length > 0) {
+                                            fundamentalSection.style.display = 'block';
+                                            fundamentalGrid.innerHTML = '';
+                                            roleSkills.fundamental_skills.forEach(function(skill) {
+                                                fundamentalGrid.appendChild(createSkillCheckbox(skill, '#10B981'));
+                                            });
+                                        }
+
+                                        // Populate Medium Skills
+                                        if (roleSkills.medium_skills && roleSkills.medium_skills.length > 0) {
+                                            mediumSection.style.display = 'block';
+                                            mediumGrid.innerHTML = '';
+                                            roleSkills.medium_skills.forEach(function(skill) {
+                                                mediumGrid.appendChild(createSkillCheckbox(skill, '#3B82F6'));
+                                            });
+                                        }
+
+                                        // Populate Advanced Skills
+                                        if (roleSkills.advanced_skills && roleSkills.advanced_skills.length > 0) {
+                                            advancedSection.style.display = 'block';
+                                            advancedGrid.innerHTML = '';
+                                            roleSkills.advanced_skills.forEach(function(skill) {
+                                                advancedGrid.appendChild(createSkillCheckbox(skill, '#8B5CF6'));
+                                            });
+                                        }
+
+                                        // Populate Soft Skills
+                                        if (roleSkills.soft_skills && roleSkills.soft_skills.length > 0) {
+                                            softSection.style.display = 'block';
+                                            softGrid.innerHTML = '';
+                                            roleSkills.soft_skills.forEach(function(skill) {
+                                                softGrid.appendChild(createSkillCheckbox(skill, '#F59E0B'));
+                                            });
+                                        }
+
+                                    } else if (roleSkills.technical_skills || roleSkills.soft_skills) {
+                                        // OLD STRUCTURE: Display uncategorized skills
+                                        console.log('Using old structure');
+                                        uncategorizedSection.style.display = 'block';
+                                        document.getElementById('role-name-uncategorized').textContent = selectedRole;
+                                        uncategorizedGrid.innerHTML = '';
+
+                                        // Add technical skills
+                                        if (roleSkills.technical_skills) {
+                                            roleSkills.technical_skills.forEach(function(skill) {
+                                                uncategorizedGrid.appendChild(createSkillCheckbox(skill, '#5AA7C6'));
+                                            });
+                                        }
+
+                                        // Add soft skills
+                                        if (roleSkills.soft_skills) {
+                                            roleSkills.soft_skills.forEach(function(skill) {
+                                                uncategorizedGrid.appendChild(createSkillCheckbox(skill, '#F59E0B'));
+                                            });
+                                        }
+                                    }
+
+                                    console.log('All skills populated successfully');
+                                }
+
+                                // Helper function to create skill checkbox
+                                function createSkillCheckbox(skill, color) {
                                     const label = document.createElement('label');
                                     label.className = 'flex items-center p-2 border rounded-lg cursor-pointer transition-colors duration-200 skill-checkbox';
                                     label.style.backgroundColor = 'white';
-                                    label.style.borderColor = '#5AA7C6';
-                                    label.onmouseover = function() { this.style.backgroundColor = '#EFF6FF'; };
+                                    label.style.borderColor = color;
+                                    label.onmouseover = function() { this.style.backgroundColor = color + '15'; };
                                     label.onmouseout = function() { this.style.backgroundColor = 'white'; };
 
                                     const checkbox = document.createElement('input');
@@ -218,7 +340,7 @@ use App\Services\SkillMappingService;
                                     checkbox.name = 'current_skills[]';
                                     checkbox.value = skill;
                                     checkbox.className = 'mr-2';
-                                    checkbox.style.color = '#5AA7C6';
+                                    checkbox.style.accentColor = color;
 
                                     const span = document.createElement('span');
                                     span.className = 'text-sm text-gray-700';
@@ -226,11 +348,7 @@ use App\Services\SkillMappingService;
 
                                     label.appendChild(checkbox);
                                     label.appendChild(span);
-                                    technicalSkillsGrid.appendChild(label);
-                                    });
-                                    console.log('All technical skills added successfully');
-                                } else {
-                                    console.warn('No technical skills found for role:', selectedRole);
+                                    return label;
                                 }
                             } else {
                                 // Hide sections if no role selected

@@ -182,6 +182,8 @@
             </div>
         </div>
 
+
+
         <!-- Next Steps Section -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 mb-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-6">Next Steps</h3>

@@ -252,18 +252,28 @@
 
             <!-- Empty State -->
             @if($inProgress->count() === 0 && $bookmarked->count() === 0 && $completed->count() === 0)
-                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
-                    <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No tutorials yet</h3>
-                    <p class="text-gray-600 mb-6">Start your learning journey by taking a skill gap analysis to get personalized tutorial recommendations.</p>
-                    <a href="{{ route('pathfinder.skill-gap') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
-                        Analyze Your Skills
-                        <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-12">
+                    <div class="flex flex-col items-center justify-center text-center mb-8">
+                        <svg class="h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
-                    </a>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No tutorials yet</h3>
+                        <p class="text-gray-600">Start your learning journey by taking a skill gap analysis to get personalized tutorial recommendations.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="{{ route('pathfinder.skill-gap') }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                            Analyze Your Skills
+                            <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                        <a href="{{ route('pathfinder.external-resources') }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg" style="background: linear-gradient(135deg, #5AA7C6 0%, #13264D 100%);">
+                            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Learning Resources
+                        </a>
+                    </div>
                 </div>
             @endif
         </div>

@@ -33,11 +33,24 @@ class PathfinderController extends Controller
         $answers = $request->all();
         $type = $request->get('type');
         $selectedCategory = $request->get('selected_category');
-        $allResponses = $request->get('all_responses');
+        $allResponses = $request->get('all_responses') ?? $request->get('responses');
+        $jobScoresInput = $request->get('job_scores');
+        $topRecommendationInput = $request->get('top_recommendation');
 
         // Parse the responses if they're JSON
         if (is_string($allResponses)) {
             $allResponses = json_decode($allResponses, true);
+        }
+
+        // Normalize optional job score inputs
+        if (is_string($jobScoresInput) && $jobScoresInput !== '') {
+            $decodedJobScores = json_decode($jobScoresInput, true);
+            if (is_array($decodedJobScores)) {
+                $allResponses['jobScores'] = $decodedJobScores;
+            }
+        }
+        if (is_string($topRecommendationInput) && $topRecommendationInput !== '') {
+            $allResponses['topRecommendation'] = $topRecommendationInput;
         }
 
         // Generate recommendation based on actual questionnaire data
@@ -71,7 +84,7 @@ class PathfinderController extends Controller
         // Handle both GET and POST requests
         $currentRole = $request->input('current_role');
         $targetRole = $request->input('target_role');
-        
+
         // If required parameters are missing, redirect back to the form
         if (!$currentRole || !$targetRole) {
             return redirect()->route('pathfinder.career-path')
@@ -105,12 +118,22 @@ class PathfinderController extends Controller
     {
         $currentSkills = $request->get('current_skills', []);
         $targetRole = $request->get('target_role');
+        $targetCategory = $request->get('target_category');
+
+        // Store category in session for use in subsequent requests
+        session(['skill_gap_category' => $targetCategory]);
+        session(['skill_gap_role' => $targetRole]);
+        session(['skill_gap_missing_skills' => []]);
 
         $analysis = $this->performSkillGapAnalysis($currentSkills, $targetRole);
 
-        // Get tutorial recommendations for missing skills
-        $tutorialRecommendations = Tutorial::getRecommendationsForSkills($analysis['missing_skills'], 3);
+        // Get tutorial recommendations for missing skills (use simple skill names if available)
+        $skillNamesForTutorials = $analysis['missing_skill_names'] ?? $analysis['missing_skills'];
+        $tutorialRecommendations = Tutorial::getRecommendationsForSkills($skillNamesForTutorials, 3);
         $analysis['tutorial_recommendations'] = $tutorialRecommendations;
+
+        // Store missing skills in session for YouTube recommendation use (use simple skill names)
+        session(['skill_gap_missing_skills' => $skillNamesForTutorials]);
 
         // Save progress if user is authenticated
         if (Auth::check()) {
@@ -118,6 +141,7 @@ class PathfinderController extends Controller
                 'user_id' => Auth::id(),
                 'feature_type' => 'skill_gap',
                 'target_role' => $targetRole,
+                'target_category' => $targetCategory,
                 'current_skills' => $currentSkills,
                 'analysis_result' => $analysis,
                 'match_percentage' => $analysis['match_percentage'],
@@ -179,14 +203,32 @@ class PathfinderController extends Controller
     }
 
     /**
-     * Display external learning resources and RSS feeds
+     * Display external learning resources with YouTube playlists from skill gap analysis
      *
      * @return \Illuminate\View\View
      */
     public function externalResources()
     {
-        // Mock RSS feed data
-        $rssFeeds = [
+        // Get skill gap data from session
+        $missingSkills = session('skill_gap_missing_skills', []);
+        $targetRole = session('skill_gap_role');
+        $targetCategory = session('skill_gap_category');
+        $youtubeRecommendations = [];
+
+        // If we have missing skills from skill gap analysis, fetch YouTube playlists
+        if (!empty($missingSkills) && !empty($targetRole)) {
+            $youtubeService = app(\App\Services\YouTubeService::class);
+            $youtubeRecommendations = $youtubeService->searchPlaylistsForSkills(
+                $missingSkills,
+                perSkill: 2,
+                maxSkills: 8,
+                roleContext: $targetRole,
+                categoryContext: $targetCategory
+            );
+        }
+
+        // RSS feed sources (live fetched and cached)
+        $rssSources = [
             'technical' => [
                 'Software Development' => [
                     ['title' => 'CSS-Tricks', 'url' => 'https://css-tricks.com/feed/'],
@@ -205,11 +247,16 @@ class PathfinderController extends Controller
                 ]
             ],
             'soft_skills' => [
-                ['title' => 'Harvard Business Review', 'url' => 'https://hbr.org/feed'],
-                ['title' => 'Mind Tools', 'url' => 'https://www.mindtools.com/blog/feed/'],
-                ['title' => 'Fast Company', 'url' => 'https://www.fastcompany.com/feed']
+                'Soft Skills' => [
+                    ['title' => 'Harvard Business Review', 'url' => 'https://hbr.org/feed'],
+                    ['title' => 'Mind Tools', 'url' => 'https://www.mindtools.com/blog/feed/'],
+                    ['title' => 'Fast Company', 'url' => 'https://www.fastcompany.com/feed']
+                ]
             ]
         ];
+
+        $rssService = app(\App\Services\RssFeedService::class);
+        $rssFeeds = $rssService->fetchFeedGroups($rssSources, 3);
 
         // Learning platforms
         $platforms = [
@@ -219,7 +266,15 @@ class PathfinderController extends Controller
             ['name' => 'LinkedIn Learning', 'url' => 'https://www.linkedin.com/learning', 'description' => 'Professional courses on business, technology and creative skills']
         ];
 
-        return view('pathfinder.external-resources', ['rssFeeds' => $rssFeeds, 'platforms' => $platforms]);
+        return view('pathfinder.external-resources', [
+            'rssFeeds' => $rssFeeds,
+            'rssSources' => $rssSources,
+            'platforms' => $platforms,
+            'youtubeRecommendations' => $youtubeRecommendations,
+            'targetRole' => $targetRole,
+            'targetCategory' => $targetCategory,
+            'missingSkills' => $missingSkills
+        ]);
     }
 
     // Helper Methods
@@ -251,6 +306,11 @@ class PathfinderController extends Controller
     {
         // Get job scores from the responses
         $jobScores = $allResponses['jobScores'] ?? [];
+        $topRecommendation = $allResponses['topRecommendation'] ?? null;
+
+        if (!empty($topRecommendation)) {
+            return $topRecommendation;
+        }
 
         if (empty($jobScores)) {
             // Fallback to category-based recommendation
@@ -737,53 +797,29 @@ class PathfinderController extends Controller
                     'level' => 'Entry-Level',
                     'duration' => '0 - 1 Year',
                     'salary_range' => '₱18,000 - ₱25,000/month',
-                    'description' => 'Fresh graduate or career switcher starting your technology journey in the Philippines.',
-                    'responsibilities' => [
-                        'Complete company onboarding and training programs',
-                        'Learn development tools and coding standards',
-                        'Fix minor bugs and implement small features',
-                        'Shadow senior team members on projects',
-                        'Participate in code reviews as observer'
-                    ]
+                    'description' => $this->getDescriptionForRole($targetRole, 'Entry-Level'),
+                    'responsibilities' => $this->getResponsibilitiesForRole($targetRole, 'Entry-Level')
                 ],
                 [
                     'level' => 'Junior-Level',
                     'duration' => '1 - 2.5 Years',
                     'salary_range' => '₱25,000 - ₱40,000/month',
-                    'description' => 'Gaining practical experience and building foundational technical skills.',
-                    'responsibilities' => [
-                        'Develop complete features under supervision',
-                        'Write and maintain technical documentation',
-                        'Participate actively in team meetings and planning',
-                        'Handle customer support tickets and bug reports',
-                        'Learn testing frameworks and quality assurance'
-                    ]
+                    'description' => $this->getDescriptionForRole($targetRole, 'Junior-Level'),
+                    'responsibilities' => $this->getResponsibilitiesForRole($targetRole, 'Junior-Level')
                 ],
                 [
                     'level' => 'Mid-Level',
                     'duration' => '2.5 - 5 Years',
                     'salary_range' => '₱40,000 - ₱70,000/month',
-                    'description' => 'Independent contributor with proven ability to deliver complex projects.',
-                    'responsibilities' => [
-                        'Design and implement complete modules independently',
-                        'Mentor junior developers and interns',
-                        'Participate in technical architecture discussions',
-                        'Lead small project teams (2-3 people)',
-                        'Interface with QA and DevOps teams'
-                    ]
+                    'description' => $this->getDescriptionForRole($targetRole, 'Mid-Level'),
+                    'responsibilities' => $this->getResponsibilitiesForRole($targetRole, 'Mid-Level')
                 ],
                 [
                     'level' => 'Senior-Level',
                     'duration' => '5 - 8 Years',
                     'salary_range' => '₱70,000 - ₱120,000/month',
-                    'description' => 'Technical expert leading complex initiatives and driving best practices.',
-                    'responsibilities' => [
-                        'Lead end-to-end project architecture and design',
-                        'Establish coding standards and development practices',
-                        'Conduct technical interviews and team assessments',
-                        'Interface with clients and stakeholders',
-                        'Drive technical innovation and research initiatives'
-                    ]
+                    'description' => $this->getDescriptionForRole($targetRole, 'Senior-Level'),
+                    'responsibilities' => $this->getResponsibilitiesForRole($targetRole, 'Senior-Level')
                 ],
                 [
                     'level' => 'Principal-Level',
@@ -845,27 +881,15 @@ class PathfinderController extends Controller
                     'level' => 'Senior-Level',
                     'duration' => '5 - 8 Years',
                     'salary_range' => '₱80,000 - ₱150,000/month',
-                    'description' => 'Expert-level professional leading initiatives and driving innovation.',
-                    'responsibilities' => [
-                        'Lead end-to-end project development and delivery',
-                        'Define standards and best practices in field',
-                        'Interface with clients and stakeholders',
-                        'Drive decision-making for team and department',
-                        'Conduct assessments and strategic planning'
-                    ]
+                    'description' => $this->getDescriptionForRole($targetRole, 'Senior-Level'),
+                    'responsibilities' => $this->getResponsibilitiesForRole($targetRole, 'Senior-Level')
                 ],
                 [
                     'level' => 'Leadership-Level',
                     'duration' => '8+ Years',
                     'salary_range' => '₱150,000 - ₱300,000+/month',
-                    'description' => 'Strategic leader managing teams and driving organizational vision.',
-                    'responsibilities' => [
-                        'Define strategic roadmap and organizational goals',
-                        'Manage teams, budgets, and resources',
-                        'Drive transformation and innovation initiatives',
-                        'Partner with business leaders on strategic solutions',
-                        'Represent organization at industry events'
-                    ]
+                    'description' => $this->getDescriptionForRole($targetRole, 'Leadership-Level'),
+                    'responsibilities' => $this->getResponsibilitiesForRole($targetRole, 'Leadership-Level')
                 ]
             ];
         }
@@ -880,6 +904,828 @@ class PathfinderController extends Controller
 
         // Reverse the array so highest step number (leadership) appears first in layout
         return array_reverse($careerLevels);
+    }
+
+    /**
+     * Get role-specific descriptions for each career level
+     */
+    private function getDescriptionForRole($targetRole, $level)
+    {
+        $descriptions = [
+            'Software Developer' => [
+                'Entry-Level' => 'Fresh graduate developing basic software features under guidance from senior engineers. Learning industry practices and development tools.',
+                'Junior-Level' => 'Building competence in full development lifecycle with increasing responsibility for feature delivery. Contributing to team projects independently.',
+                'Mid-Level' => 'Independent contributor designing and delivering complex features with minimal supervision. Mentoring junior developers and driving code quality.',
+                'Senior-Level' => 'Leading architectural decisions and technical excellence while mentoring junior developers. Setting standards and driving innovation.',
+                'Principal-Level' => 'Shaping company-wide engineering practices and driving strategic technology initiatives. Leading major platform decisions.',
+                'Executive-Level' => 'Setting enterprise engineering vision and leading large-scale technology transformation. Building high-performing teams.'
+            ],
+            'Web Developer' => [
+                'Entry-Level' => 'Learning web development fundamentals and building simple static and dynamic web pages. Working under guidance and building foundational skills.',
+                'Junior-Level' => 'Developing responsive web applications with both front-end and back-end technologies. Contributing to team projects with growing independence.',
+                'Mid-Level' => 'Architecting scalable web solutions and leading development of complete web platforms. Mentoring junior developers.',
+                'Senior-Level' => 'Defining web technology strategy and leading high-performing web development teams. Driving innovation and best practices.',
+                'Principal-Level' => 'Shaping digital transformation strategy and establishing web development excellence across organization. Leading enterprise initiatives.',
+                'Executive-Level' => 'Leading digital innovation and aligning web technology with business objectives. Building and managing large teams.'
+            ],
+            'Data Analyst' => [
+                'Entry-Level' => 'Learning data analysis tools and supporting analysts on basic reporting and data queries. Building foundational analytical skills.',
+                'Junior-Level' => 'Creating analytical reports and dashboards with increasing complexity and business impact. Contributing to data-driven insights.',
+                'Mid-Level' => 'Leading analytical projects and providing strategic insights that drive business decisions. Mentoring junior analysts.',
+                'Senior-Level' => 'Designing data strategies and influencing major decisions through advanced analytics and insights. Driving data culture.',
+                'Principal-Level' => 'Shaping data-driven culture and establishing enterprise analytics standards and practices. Leading transformation initiatives.',
+                'Executive-Level' => 'Leading data transformation initiatives and aligning analytics with organizational strategy. Building analytics leadership.'
+            ],
+            'Systems Administrator' => [
+                'Entry-Level' => 'Supporting infrastructure operations and learning system administration under supervision. Building technical foundation.',
+                'Junior-Level' => 'Managing IT infrastructure and handling system administration tasks independently. Growing operational expertise.',
+                'Mid-Level' => 'Leading infrastructure initiatives and optimizing systems for performance and reliability. Mentoring junior administrators.',
+                'Senior-Level' => 'Defining infrastructure strategy and driving adoption of cloud and modern DevOps practices. Setting standards.',
+                'Principal-Level' => 'Shaping organizational infrastructure vision and establishing enterprise IT excellence standards. Leading transformation.',
+                'Executive-Level' => 'Leading IT operations transformation and aligning infrastructure with business strategy. Building and managing teams.'
+            ],
+            'IT Support Specialist' => [
+                'Entry-Level' => 'Providing helpdesk support and learning IT troubleshooting fundamentals. Supporting user success.',
+                'Junior-Level' => 'Handling tier-2 support issues and managing IT systems independently. Growing technical expertise.',
+                'Mid-Level' => 'Leading IT support operations and implementing process improvements. Mentoring junior support staff.',
+                'Senior-Level' => 'Defining IT support strategy and ensuring organizational technology enablement. Driving service excellence.',
+                'Principal-Level' => 'Shaping IT service delivery and driving customer-centric support excellence. Leading operational transformation.',
+                'Executive-Level' => 'Leading IT operations and aligning support services with business objectives. Building support leadership.'
+            ],
+            'Cybersecurity Analyst' => [
+                'Entry-Level' => 'Learning security fundamentals and supporting security operations under supervision. Building security knowledge.',
+                'Junior-Level' => 'Conducting vulnerability assessments and implementing security controls independently. Growing security expertise.',
+                'Mid-Level' => 'Leading security initiatives and managing comprehensive security programs. Mentoring junior analysts.',
+                'Senior-Level' => 'Defining organizational cybersecurity strategy and driving enterprise security transformation. Setting standards.',
+                'Principal-Level' => 'Shaping security culture and establishing industry-leading security practices. Leading transformation.',
+                'Executive-Level' => 'Leading enterprise security transformation and aligning security with business strategy. Building security leadership.'
+            ],
+            'Administrative Officer' => [
+                'Entry-Level' => 'Supporting office operations, managing schedules, and learning administrative systems and procedures.',
+                'Mid-Level' => 'Managing office administration independently and implementing process improvements. Mentoring junior staff.',
+                'Senior-Level' => 'Leading administrative functions and optimizing organizational processes and systems. Driving efficiency.',
+                'Leadership-Level' => 'Directing administrative operations and driving operational excellence across organization. Building operations teams.'
+            ],
+            'Accountant' => [
+                'Entry-Level' => 'Learning accounting procedures and supporting senior accountants on financial transactions and records.',
+                'Mid-Level' => 'Managing accounting functions independently and ensuring financial accuracy and compliance. Mentoring junior accountants.',
+                'Senior-Level' => 'Leading accounting operations and providing strategic financial insights to management. Driving financial excellence.',
+                'Leadership-Level' => 'Directing accounting department and aligning financial management with business strategy. Building accounting leadership.'
+            ],
+            'Sales Representative' => [
+                'Entry-Level' => 'Learning sales techniques and supporting team on customer prospecting and account management.',
+                'Mid-Level' => 'Managing client relationships and closing sales independently with strong revenue impact. Mentoring junior sales staff.',
+                'Senior-Level' => 'Leading sales initiatives and mentoring team while managing key strategic accounts. Driving revenue growth.',
+                'Leadership-Level' => 'Directing sales operations and driving revenue growth through team development and strategy. Building sales leadership.'
+            ],
+            'Marketing Coordinator' => [
+                'Entry-Level' => 'Supporting marketing campaigns and learning marketing fundamentals and tools. Building marketing knowledge.',
+                'Mid-Level' => 'Managing marketing projects and campaigns with increasing strategic responsibility. Mentoring junior marketers.',
+                'Senior-Level' => 'Leading marketing initiatives and developing strategies that drive brand growth. Driving brand excellence.',
+                'Leadership-Level' => 'Directing marketing operations and aligning marketing strategy with business objectives. Building marketing leadership.'
+            ],
+            'Human Resources Specialist' => [
+                'Entry-Level' => 'Supporting HR functions and learning human resources processes and policies. Building HR foundation.',
+                'Mid-Level' => 'Managing HR programs and initiatives independently with focus on employee engagement. Mentoring junior HR staff.',
+                'Senior-Level' => 'Leading HR operations and implementing strategic people programs that drive organizational success. Driving talent excellence.',
+                'Leadership-Level' => 'Directing HR functions and aligning people strategy with business growth objectives. Building HR leadership.'
+            ],
+            'Customer Service Representative' => [
+                'Entry-Level' => 'Providing customer support through various channels and learning service best practices. Supporting customer success.',
+                'Mid-Level' => 'Managing customer relationships and resolving complex issues with minimal escalation. Mentoring junior service staff.',
+                'Senior-Level' => 'Leading customer service operations and implementing improvements that enhance satisfaction. Driving service excellence.',
+                'Leadership-Level' => 'Directing customer service functions and ensuring exceptional service delivery organizational-wide. Building service leadership.'
+            ],
+            'Business Development Manager' => [
+                'Entry-Level' => 'Supporting business development activities and learning market analysis and client development.',
+                'Mid-Level' => 'Identifying growth opportunities and developing business relationships independently. Mentoring junior BD staff.',
+                'Senior-Level' => 'Leading business development initiatives and driving significant revenue expansion. Driving growth strategy.',
+                'Leadership-Level' => 'Directing business development strategy and establishing new market opportunities. Building BD leadership.'
+            ],
+            'Operations Manager' => [
+                'Entry-Level' => 'Supporting operations and learning process management and operational systems. Building operations foundation.',
+                'Mid-Level' => 'Managing operations independently and implementing efficiency improvements. Mentoring junior operations staff.',
+                'Senior-Level' => 'Leading operational transformation and optimizing organizational processes and systems. Driving operational excellence.',
+                'Leadership-Level' => 'Directing operations strategy and ensuring operational excellence across organization. Building operations leadership.'
+            ]
+        ];
+
+        // Generic fallback
+        $generic = [
+            'Entry-Level' => 'Starting your career with foundational skills and on-the-job training in the Philippines.',
+            'Junior-Level' => 'Gaining practical experience and building competence in your chosen field.',
+            'Mid-Level' => 'Established professional with proven skills managing significant responsibilities independently.',
+            'Senior-Level' => 'Expert professional leading initiatives and driving innovation in your organization.',
+            'Principal-Level' => 'Distinguished professional shaping organizational strategy and thought leadership.',
+            'Leadership-Level' => 'Strategic leader managing teams and driving organizational success and vision.',
+            'Executive-Level' => 'Executive leader setting enterprise vision and driving organizational transformation.'
+        ];
+
+        return $descriptions[$targetRole][$level] ?? $generic[$level] ?? 'Professional development opportunity.';
+    }
+
+    /**
+     * Get role-specific responsibilities for each career level
+     */
+    private function getResponsibilitiesForRole($targetRole, $level)
+    {
+        $responsibilities = [
+            'Software Developer' => [
+                'Entry-Level' => [
+                    'Complete company onboarding and training programs',
+                    'Learn development tools and coding standards',
+                    'Fix minor bugs and implement small features',
+                    'Shadow senior team members on projects',
+                    'Participate in code reviews as observer'
+                ],
+                'Junior-Level' => [
+                    'Develop complete features under supervision',
+                    'Write and maintain technical documentation',
+                    'Participate actively in team meetings and planning',
+                    'Handle customer support tickets and bug reports',
+                    'Learn testing frameworks and quality assurance',
+                    'Contribute to code optimization and refactoring'
+                ],
+                'Mid-Level' => [
+                    'Design and implement complete modules independently',
+                    'Mentor junior developers and interns',
+                    'Participate in technical architecture discussions',
+                    'Lead small project teams (2-3 people)',
+                    'Interface with QA and DevOps teams',
+                    'Drive code quality improvements and standards',
+                    'Evaluate and recommend new technologies'
+                ],
+                'Senior-Level' => [
+                    'Lead end-to-end project architecture and design',
+                    'Establish coding standards and development practices',
+                    'Conduct technical interviews and team assessments',
+                    'Interface with clients and stakeholders',
+                    'Drive technical innovation and research initiatives',
+                    'Mentor and develop senior team members',
+                    'Define system architecture for complex projects',
+                    'Evaluate enterprise tools and frameworks'
+                ],
+                'Principal-Level' => [
+                    'Define long-term technical vision and roadmap',
+                    'Lead cross-functional technical initiatives',
+                    'Mentor senior engineers and technical leaders',
+                    'Represent company in technical conferences and forums',
+                    'Drive digital transformation and innovation projects',
+                    'Shape organizational technology stack decisions',
+                    'Architect major platform-wide systems',
+                    'Build partnerships with external technical organizations'
+                ],
+                'Executive-Level' => [
+                    'Set enterprise technology strategy and budget',
+                    'Build and manage large technical organizations',
+                    'Partner with C-suite on business technology alignment',
+                    'Drive mergers, acquisitions, and strategic partnerships',
+                    'Represent company as industry thought leader',
+                    'Manage technology investments and ROI',
+                    'Lead organizational transformation initiatives',
+                    'Shape company culture around technical excellence'
+                ]
+            ],
+            'Web Developer' => [
+                'Entry-Level' => [
+                    'Build static and dynamic web pages using HTML, CSS, JavaScript',
+                    'Work under supervision implementing design mockups',
+                    'Test web applications for functionality and usability',
+                    'Fix bugs identified in code review',
+                    'Learn web development frameworks and libraries'
+                ],
+                'Junior-Level' => [
+                    'Develop responsive web applications',
+                    'Implement frontend features from design specifications',
+                    'Write clean and maintainable code',
+                    'Collaborate with backend developers on APIs',
+                    'Test applications across browsers and devices',
+                    'Learn performance optimization techniques'
+                ],
+                'Mid-Level' => [
+                    'Design and implement complex web applications',
+                    'Lead frontend architecture decisions',
+                    'Mentor junior web developers',
+                    'Optimize website performance and user experience',
+                    'Interface with product and design teams',
+                    'Lead small development teams',
+                    'Implement responsive design patterns'
+                ],
+                'Senior-Level' => [
+                    'Lead end-to-end web application design and development',
+                    'Establish web development standards and best practices',
+                    'Mentor and develop junior and mid-level developers',
+                    'Interface with clients and stakeholders',
+                    'Drive innovation in web technologies',
+                    'Architect scalable web applications',
+                    'Conduct technical interviews',
+                    'Establish website performance and security standards'
+                ],
+                'Principal-Level' => [
+                    'Define long-term web technology vision and strategy',
+                    'Lead organization-wide web transformation',
+                    'Mentor senior engineers and web architects',
+                    'Represent company in web development forums',
+                    'Drive digital experience innovation',
+                    'Shape organizational web platform decisions',
+                    'Lead major web infrastructure initiatives',
+                    'Establish enterprise web standards'
+                ],
+                'Executive-Level' => [
+                    'Set web and digital strategy for the organization',
+                    'Build and manage large web development teams',
+                    'Partner with business leadership on digital transformation',
+                    'Drive web innovation and competitive advantage',
+                    'Manage web development investments and budgets',
+                    'Lead organization-wide digital initiatives',
+                    'Represent company on digital transformation',
+                    'Drive business growth through digital platforms'
+                ]
+            ],
+            'Data Analyst' => [
+                'Entry-Level' => [
+                    'Extract and clean data from various sources',
+                    'Create basic SQL queries to retrieve data',
+                    'Build simple dashboards and reports',
+                    'Assist with data analysis under supervision',
+                    'Learn business intelligence tools'
+                ],
+                'Junior-Level' => [
+                    'Analyze datasets to identify trends and patterns',
+                    'Write moderate complexity SQL queries',
+                    'Create interactive dashboards for various departments',
+                    'Support business decision-making with data',
+                    'Learn statistical analysis techniques',
+                    'Collaborate with stakeholders on data needs'
+                ],
+                'Mid-Level' => [
+                    'Lead data analysis projects independently',
+                    'Design data models and analytical frameworks',
+                    'Mentor junior data analysts',
+                    'Create advanced visualizations and reports',
+                    'Analyze business problems and recommend solutions',
+                    'Work with data engineers on data pipelines',
+                    'Present findings to leadership'
+                ],
+                'Senior-Level' => [
+                    'Drive organizational data strategy and initiatives',
+                    'Lead complex analytical projects',
+                    'Mentor and develop analytics teams',
+                    'Interface with C-suite on strategic insights',
+                    'Design and oversee data governance',
+                    'Architect analytics solutions',
+                    'Conduct predictive and statistical analysis',
+                    'Lead cross-functional analytics initiatives'
+                ],
+                'Principal-Level' => [
+                    'Define organizational data and analytics vision',
+                    'Lead enterprise-wide analytics transformation',
+                    'Mentor senior analytics professionals',
+                    'Represent company in data science forums',
+                    'Drive advanced analytics and AI initiatives',
+                    'Shape organizational data strategy',
+                    'Build high-performing analytics teams',
+                    'Drive business transformation through data'
+                ],
+                'Executive-Level' => [
+                    'Set enterprise data and analytics strategy',
+                    'Build and manage large analytics organizations',
+                    'Partner with C-suite on data-driven decisions',
+                    'Drive business transformation through data',
+                    'Manage analytics investments and ROI',
+                    'Shape data culture across organization',
+                    'Lead organizational data governance',
+                    'Establish data as strategic business asset'
+                ]
+            ],
+            'Systems Administrator' => [
+                'Entry-Level' => [
+                    'Assist with server and system maintenance',
+                    'Monitor system performance and health',
+                    'Help users with technical issues',
+                    'Learn system administration best practices',
+                    'Assist with system backups and recovery'
+                ],
+                'Junior-Level' => [
+                    'Manage server and system operations',
+                    'Handle user access and permissions',
+                    'Perform system updates and patches',
+                    'Troubleshoot infrastructure issues',
+                    'Maintain system documentation',
+                    'Assist with disaster recovery planning'
+                ],
+                'Mid-Level' => [
+                    'Design and implement system solutions',
+                    'Mentor junior system administrators',
+                    'Manage complex infrastructure',
+                    'Plan and execute system upgrades',
+                    'Establish system management policies',
+                    'Lead infrastructure projects',
+                    'Optimize system performance'
+                ],
+                'Senior-Level' => [
+                    'Lead infrastructure strategy and planning',
+                    'Design enterprise systems architecture',
+                    'Mentor and develop administration teams',
+                    'Interface with business leaders on IT needs',
+                    'Establish infrastructure standards',
+                    'Drive infrastructure modernization',
+                    'Conduct capacity planning and forecasting',
+                    'Lead disaster recovery and continuity planning'
+                ],
+                'Principal-Level' => [
+                    'Define long-term infrastructure vision',
+                    'Lead organization-wide infrastructure initiatives',
+                    'Mentor infrastructure leaders',
+                    'Represent company in infrastructure forums',
+                    'Drive infrastructure innovation',
+                    'Shape organizational technology platform',
+                    'Build high-performing infrastructure teams',
+                    'Lead cloud and hybrid infrastructure transformation'
+                ],
+                'Executive-Level' => [
+                    'Set enterprise IT operations strategy',
+                    'Build and manage large IT operations teams',
+                    'Partner with business on IT strategy',
+                    'Drive IT transformation and modernization',
+                    'Manage IT operations budget and investments',
+                    'Shape IT culture in organization',
+                    'Lead organizational digital infrastructure',
+                    'Establish IT as strategic business enabler'
+                ]
+            ],
+            'IT Support Specialist' => [
+                'Entry-Level' => [
+                    'Respond to user technical support requests',
+                    'Troubleshoot basic hardware and software issues',
+                    'Document issues and solutions',
+                    'Assist with IT onboarding of new employees',
+                    'Learn IT support tools and processes'
+                ],
+                'Junior-Level' => [
+                    'Handle complex user support issues',
+                    'Provide technical training to users',
+                    'Maintain IT infrastructure components',
+                    'Assist with hardware installations',
+                    'Document and share knowledge base articles',
+                    'Support system deployments and migrations'
+                ],
+                'Mid-Level' => [
+                    'Lead IT support operations independently',
+                    'Mentor junior support staff',
+                    'Design support processes and procedures',
+                    'Manage hardware and software inventory',
+                    'Interface with vendors on technical issues',
+                    'Lead infrastructure projects',
+                    'Conduct technical training for users'
+                ],
+                'Senior-Level' => [
+                    'Lead IT operations and support strategy',
+                    'Mentor and develop support teams',
+                    'Interface with business leaders on IT support',
+                    'Design support solutions for complex problems',
+                    'Establish IT service management standards',
+                    'Lead infrastructure and system upgrades',
+                    'Conduct vendor negotiations and management',
+                    'Lead disaster recovery planning'
+                ],
+                'Principal-Level' => [
+                    'Define organizational IT support vision',
+                    'Lead enterprise IT operations transformation',
+                    'Mentor IT operations leaders',
+                    'Represent company in IT forums',
+                    'Drive IT operations innovation',
+                    'Shape organizational IT infrastructure',
+                    'Build high-performing IT operations teams',
+                    'Lead enterprise-wide system initiatives'
+                ],
+                'Executive-Level' => [
+                    'Set enterprise IT support and operations strategy',
+                    'Build and manage large IT operations teams',
+                    'Partner with C-suite on IT strategy',
+                    'Drive IT transformation and modernization',
+                    'Manage IT operations budget and investments',
+                    'Shape IT culture and service delivery',
+                    'Lead organizational digital infrastructure',
+                    'Position IT as strategic business partner'
+                ]
+            ],
+            'Cybersecurity Analyst' => [
+                'Entry-Level' => [
+                    'Monitor network and system security',
+                    'Assist with vulnerability assessments',
+                    'Learn security tools and frameworks',
+                    'Document security incidents and responses',
+                    'Support security compliance efforts'
+                ],
+                'Junior-Level' => [
+                    'Conduct vulnerability assessments and scans',
+                    'Respond to security incidents',
+                    'Analyze security logs and alerts',
+                    'Implement basic security controls',
+                    'Document security procedures',
+                    'Participate in security testing'
+                ],
+                'Mid-Level' => [
+                    'Lead security analysis and incident response',
+                    'Design and implement security solutions',
+                    'Mentor junior security analysts',
+                    'Conduct security assessments and audits',
+                    'Establish security best practices',
+                    'Lead security projects and initiatives',
+                    'Interface with vendors on security tools'
+                ],
+                'Senior-Level' => [
+                    'Lead organizational security strategy',
+                    'Design enterprise security architecture',
+                    'Mentor and develop security teams',
+                    'Interface with C-suite on security risks',
+                    'Establish organization-wide security standards',
+                    'Lead major security initiatives',
+                    'Conduct security risk assessments',
+                    'Lead incident response and forensics'
+                ],
+                'Principal-Level' => [
+                    'Define long-term organizational security vision',
+                    'Lead enterprise-wide security transformation',
+                    'Mentor security leaders and practitioners',
+                    'Represent company in security forums',
+                    'Drive security innovation and research',
+                    'Shape organizational security culture',
+                    'Build high-performing security teams',
+                    'Lead organization-wide security initiatives'
+                ],
+                'Executive-Level' => [
+                    'Set enterprise cybersecurity strategy',
+                    'Build and manage large security teams',
+                    'Partner with board and C-suite on security',
+                    'Drive organizational security transformation',
+                    'Manage security budget and investments',
+                    'Shape security culture across organization',
+                    'Lead security governance and risk management',
+                    'Position security as business enabler'
+                ]
+            ],
+            'Administrative Officer' => [
+                'Entry-Level' => [
+                    'Assist with office administration tasks',
+                    'Manage office supplies and inventory',
+                    'Support executive and team scheduling',
+                    'Learn administrative processes and procedures',
+                    'Help organize office events and meetings'
+                ],
+                'Mid-Level' => [
+                    'Manage office operations independently',
+                    'Coordinate team meetings and events',
+                    'Mentor junior administrative staff',
+                    'Establish office procedures and standards',
+                    'Interface with vendors and service providers',
+                    'Manage office facilities and resources',
+                    'Support multiple departments and teams'
+                ],
+                'Senior-Level' => [
+                    'Lead administrative and operations functions',
+                    'Mentor and develop administrative teams',
+                    'Interface with leadership on operations',
+                    'Design operational processes and systems',
+                    'Establish administrative standards',
+                    'Lead office relocation or renovation projects',
+                    'Manage contracts and vendor relationships',
+                    'Drive operational efficiency improvements'
+                ],
+                'Leadership-Level' => [
+                    'Direct organizational operations strategy',
+                    'Build and manage large operations teams',
+                    'Partner with leadership on operational needs',
+                    'Develop and implement operations systems',
+                    'Manage operations budget and investments',
+                    'Lead organizational transformation initiatives',
+                    'Establish organizational operational excellence',
+                    'Drive business efficiency and effectiveness'
+                ]
+            ],
+            'Accountant' => [
+                'Entry-Level' => [
+                    'Process accounting transactions',
+                    'Assist with month-end closing procedures',
+                    'Learn accounting principles and standards',
+                    'Support accounts payable and receivable',
+                    'Maintain accounting records and files'
+                ],
+                'Mid-Level' => [
+                    'Manage accounting functions independently',
+                    'Prepare financial statements and reports',
+                    'Mentor junior accounting staff',
+                    'Conduct account reconciliations',
+                    'Establish accounting procedures and controls',
+                    'Interface with external auditors',
+                    'Support financial planning and analysis'
+                ],
+                'Senior-Level' => [
+                    'Lead accounting operations and strategy',
+                    'Mentor and develop accounting teams',
+                    'Interface with leadership on financial matters',
+                    'Design accounting systems and controls',
+                    'Establish accounting standards',
+                    'Lead financial audits and reviews',
+                    'Support strategic financial decisions',
+                    'Drive accounting efficiency'
+                ],
+                'Leadership-Level' => [
+                    'Direct organizational accounting and finance',
+                    'Build and manage large accounting teams',
+                    'Partner with C-suite on financial strategy',
+                    'Develop accounting policies and systems',
+                    'Manage accounting budget and investments',
+                    'Lead financial planning and forecasting',
+                    'Drive organizational financial health',
+                    'Establish financial controls and governance'
+                ]
+            ],
+            'Sales Representative' => [
+                'Entry-Level' => [
+                    'Contact potential customers and prospects',
+                    'Learn sales techniques and processes',
+                    'Support account management for existing clients',
+                    'Prepare sales presentations and proposals',
+                    'Assist with sales pipeline management'
+                ],
+                'Mid-Level' => [
+                    'Manage assigned sales territory independently',
+                    'Build client relationships and nurture accounts',
+                    'Meet and exceed sales targets',
+                    'Mentor junior sales representatives',
+                    'Develop sales strategies for key accounts',
+                    'Interface with clients on needs and solutions',
+                    'Participate in sales planning and forecasting'
+                ],
+                'Senior-Level' => [
+                    'Lead sales initiatives and major accounts',
+                    'Mentor and develop sales teams',
+                    'Interface with C-suite and key customers',
+                    'Develop sales strategies and approaches',
+                    'Manage large complex deals and negotiations',
+                    'Drive sales team performance',
+                    'Build strategic partnerships',
+                    'Support business development initiatives'
+                ],
+                'Leadership-Level' => [
+                    'Direct organizational sales strategy',
+                    'Build and manage large sales teams',
+                    'Partner with business leadership on growth',
+                    'Develop sales systems and processes',
+                    'Manage sales budget and resources',
+                    'Lead sales transformation and growth',
+                    'Drive organizational revenue growth',
+                    'Drive competitive market positioning'
+                ]
+            ],
+            'Marketing Coordinator' => [
+                'Entry-Level' => [
+                    'Assist with marketing campaign execution',
+                    'Learn marketing tools and platforms',
+                    'Support content creation and distribution',
+                    'Help organize marketing events',
+                    'Maintain marketing materials and collateral'
+                ],
+                'Mid-Level' => [
+                    'Coordinate marketing campaigns independently',
+                    'Create and manage marketing content',
+                    'Mentor junior marketing staff',
+                    'Analyze campaign performance and results',
+                    'Develop marketing strategies for initiatives',
+                    'Interface with customers and stakeholders',
+                    'Manage social media and digital marketing'
+                ],
+                'Senior-Level' => [
+                    'Lead marketing strategy and initiatives',
+                    'Mentor and develop marketing teams',
+                    'Interface with business leaders on marketing',
+                    'Design marketing systems and approaches',
+                    'Develop go-to-market strategies',
+                    'Manage marketing budget and resources',
+                    'Drive marketing innovation and growth',
+                    'Lead marketing transformation'
+                ],
+                'Leadership-Level' => [
+                    'Direct organizational marketing strategy',
+                    'Build and manage large marketing teams',
+                    'Partner with C-suite on brand strategy',
+                    'Develop marketing systems and budgets',
+                    'Manage marketing investments and ROI',
+                    'Lead brand development and positioning',
+                    'Drive organizational market presence',
+                    'Drive business growth through marketing'
+                ]
+            ],
+            'Human Resources Specialist' => [
+                'Entry-Level' => [
+                    'Assist with recruitment and hiring',
+                    'Support employee onboarding process',
+                    'Learn HR processes and systems',
+                    'Help maintain HR records and files',
+                    'Assist with HR events and programs'
+                ],
+                'Mid-Level' => [
+                    'Manage recruitment and hiring independently',
+                    'Develop employee programs and initiatives',
+                    'Mentor junior HR staff',
+                    'Handle employee relations and concerns',
+                    'Establish HR procedures and processes',
+                    'Interface with leadership on people matters',
+                    'Support compensation and benefits'
+                ],
+                'Senior-Level' => [
+                    'Lead HR strategy and initiatives',
+                    'Mentor and develop HR teams',
+                    'Interface with C-suite on talent strategy',
+                    'Design HR systems and processes',
+                    'Develop organizational talent strategies',
+                    'Lead organizational culture initiatives',
+                    'Manage organizational development programs',
+                    'Lead HR transformation'
+                ],
+                'Leadership-Level' => [
+                    'Direct organizational HR and people strategy',
+                    'Build and manage large HR organizations',
+                    'Partner with C-suite on talent and culture',
+                    'Develop HR systems and strategies',
+                    'Manage HR budget and investments',
+                    'Lead organizational transformation',
+                    'Build high-performing organizational culture',
+                    'Drive organizational effectiveness and growth'
+                ]
+            ],
+            'Customer Service Representative' => [
+                'Entry-Level' => [
+                    'Respond to customer inquiries and requests',
+                    'Learn customer service best practices',
+                    'Resolve customer issues under guidance',
+                    'Document customer interactions',
+                    'Help with customer onboarding'
+                ],
+                'Mid-Level' => [
+                    'Handle complex customer issues independently',
+                    'Mentor junior service representatives',
+                    'Develop customer solutions and strategies',
+                    'Interface with customers on needs',
+                    'Improve customer satisfaction and experience',
+                    'Analyze customer feedback and trends',
+                    'Participate in service improvement projects'
+                ],
+                'Senior-Level' => [
+                    'Lead customer service strategy and operations',
+                    'Mentor and develop service teams',
+                    'Interface with leadership on customer needs',
+                    'Design customer service systems',
+                    'Develop customer retention and growth strategies',
+                    'Lead customer experience improvements',
+                    'Build strategic customer partnerships',
+                    'Lead service transformation'
+                ],
+                'Leadership-Level' => [
+                    'Direct organizational customer service strategy',
+                    'Build and manage large service organizations',
+                    'Partner with C-suite on customer strategy',
+                    'Develop customer service systems',
+                    'Manage service budget and resources',
+                    'Lead customer experience transformation',
+                    'Drive organizational customer focus',
+                    'Drive business growth through customer experience'
+                ]
+            ],
+            'Business Development Manager' => [
+                'Entry-Level' => [
+                    'Assist with business opportunity identification',
+                    'Support partnership development efforts',
+                    'Learn business development processes',
+                    'Help with market research and analysis',
+                    'Assist with business planning'
+                ],
+                'Mid-Level' => [
+                    'Identify and develop business opportunities',
+                    'Build and nurture business partnerships',
+                    'Mentor junior BD staff',
+                    'Conduct market research and analysis',
+                    'Develop business strategies for growth',
+                    'Interface with potential partners',
+                    'Support strategic initiatives'
+                ],
+                'Senior-Level' => [
+                    'Lead business development strategy',
+                    'Mentor and develop BD teams',
+                    'Interface with C-suite on growth opportunities',
+                    'Develop partnership strategies',
+                    'Build major strategic partnerships',
+                    'Lead market entry and expansion',
+                    'Drive organizational growth initiatives',
+                    'Lead BD transformation'
+                ],
+                'Leadership-Level' => [
+                    'Direct organizational growth strategy',
+                    'Build and manage large BD organizations',
+                    'Partner with C-suite on expansion strategy',
+                    'Develop growth systems and approaches',
+                    'Manage growth investments and resources',
+                    'Lead organizational expansion and transformation',
+                    'Drive business growth and market position',
+                    'Shape organizational strategic direction'
+                ]
+            ],
+            'Operations Manager' => [
+                'Entry-Level' => [
+                    'Assist with operational tasks and processes',
+                    'Learn operations procedures and systems',
+                    'Support team coordination and planning',
+                    'Help with operational improvements',
+                    'Maintain operational records'
+                ],
+                'Mid-Level' => [
+                    'Manage operations functions independently',
+                    'Mentor junior operations staff',
+                    'Develop operational processes and systems',
+                    'Coordinate multiple teams and functions',
+                    'Establish operations standards and procedures',
+                    'Interface with customers and vendors',
+                    'Drive operational efficiency'
+                ],
+                'Senior-Level' => [
+                    'Lead operations strategy and planning',
+                    'Mentor and develop operations teams',
+                    'Interface with business leadership',
+                    'Design operations systems and processes',
+                    'Lead major operational initiatives',
+                    'Manage operations budget and resources',
+                    'Drive operations excellence and efficiency',
+                    'Support business growth'
+                ],
+                'Leadership-Level' => [
+                    'Direct organizational operations strategy',
+                    'Build and manage large operations organizations',
+                    'Partner with C-suite on operational needs',
+                    'Develop operations systems and strategies',
+                    'Manage operations budget and investments',
+                    'Lead operational transformation',
+                    'Drive organizational operational excellence',
+                    'Enable business growth through operations'
+                ]
+            ]
+        ];
+
+        // Generic fallback
+        $generic = [
+            'Entry-Level' => [
+                'Complete company onboarding and foundational training',
+                'Learn role-specific tools and methodologies',
+                'Support senior team members on assigned tasks',
+                'Participate in team meetings and training sessions',
+                'Build professional relationships and understand company culture'
+            ],
+            'Junior-Level' => [
+                'Develop competence in core job responsibilities',
+                'Contribute independently to team projects',
+                'Document processes and maintain knowledge base',
+                'Seek feedback and continuously improve skills',
+                'Participate in professional development opportunities'
+            ],
+            'Mid-Level' => [
+                'Lead complete projects and deliverables',
+                'Mentor junior staff and new hires',
+                'Participate in strategic planning and decisions',
+                'Establish best practices and standards',
+                'Drive improvements and process optimization'
+            ],
+            'Senior-Level' => [
+                'Define strategic direction and vision',
+                'Lead major initiatives and transformation',
+                'Mentor and develop senior team members',
+                'Interface with executive leadership',
+                'Drive innovation and emerging opportunities'
+            ],
+            'Leadership-Level' => [
+                'Define organizational strategy and goals',
+                'Build and manage large teams and organizations',
+                'Drive transformation and innovation initiatives',
+                'Interface with C-level executives and board',
+                'Establish organizational culture and values'
+            ],
+            'Principal-Level' => [
+                'Shape organizational strategy and direction',
+                'Lead transformative initiatives across organization',
+                'Mentor leaders and build high-performing teams',
+                'Drive innovation and thought leadership',
+                'Establish best practices and standards'
+            ],
+            'Executive-Level' => [
+                'Set enterprise strategy and vision',
+                'Lead organizational transformation',
+                'Build and manage large organizations',
+                'Drive business growth and profitability',
+                'Establish company as industry leader'
+            ]
+        ];
+
+        return $responsibilities[$targetRole][$level] ?? $generic[$level] ?? [];
     }
 
     private function getCustomizedTitle($targetRole, $level)
@@ -1178,52 +2024,206 @@ class PathfinderController extends Controller
         // Use SkillMappingService to get accurate role requirements
         $roleSkills = \App\Services\SkillMappingService::getSkillsForRole($targetRole);
 
-        // Combine technical and soft skills for the role
-        $requiredSkills = array_merge(
-            $roleSkills['technical_skills'] ?? [],
-            $roleSkills['soft_skills'] ?? []
-        );
+        // Check if role uses new categorized structure
+        $usesNewStructure = isset($roleSkills['fundamental_skills']);
 
-        // If no specific skills found for role, use universal skills
-        if (empty($requiredSkills)) {
-            $requiredSkills = \App\Services\SkillMappingService::getUniversalSoftSkills();
+        if ($usesNewStructure) {
+            // NEW: Use weighted matching for IT/CS roles with categorized skills
+            $allSkills = \App\Services\SkillMappingService::getAllSkillsForRole($targetRole);
+            $matchingSkillNames = array_intersect($allSkills, $currentSkills);
+            $missingSkillNames = array_diff($allSkills, $currentSkills);
+
+            // Enrich both matching and missing skills with category information for priority display
+            $matchingSkills = $this->enrichSkillsWithCategory($matchingSkillNames, $targetRole);
+            $missingSkills = $this->enrichSkillsWithCategory($missingSkillNames, $targetRole);
+
+            // Calculate weighted match percentage
+            $matchPercentage = $this->calculateWeightedRoleMatch($targetRole, $currentSkills);
+
+            return [
+                'target_role' => $targetRole,
+                'required_skills' => $allSkills,
+                'current_skills' => $currentSkills,
+                'matching_skills' => $matchingSkills,
+                'matching_skill_names' => array_values($matchingSkillNames), // Simple array for compatibility
+                'missing_skills' => $missingSkills,
+                'missing_skill_names' => array_values($missingSkillNames), // Simple array for Tutorial compatibility
+                'match_percentage' => $matchPercentage,
+                'skill_readiness_level' => $this->getSkillReadinessLevel($matchPercentage),
+                'learning_recommendations' => $this->getLearningRecommendations($missingSkillNames, $targetRole),
+                'uses_weighted_scoring' => true
+            ];
+        } else {
+            // OLD: Keep existing simple matching for non-IT roles
+            $requiredSkills = array_merge(
+                $roleSkills['technical_skills'] ?? [],
+                $roleSkills['soft_skills'] ?? []
+            );
+
+            if (empty($requiredSkills)) {
+                $requiredSkills = \App\Services\SkillMappingService::getUniversalSoftSkills();
+            }
+
+            $missingSkills = array_diff($requiredSkills, $currentSkills);
+            $matchingSkills = array_intersect($requiredSkills, $currentSkills);
+
+            // Separate technical and soft skills in the analysis
+            $missingTechnicalSkills = array_intersect($missingSkills, $roleSkills['technical_skills'] ?? []);
+            $missingSoftSkills = array_intersect($missingSkills, $roleSkills['soft_skills'] ?? []);
+
+            $matchingTechnicalSkills = array_intersect($matchingSkills, $roleSkills['technical_skills'] ?? []);
+            $matchingSoftSkills = array_intersect($matchingSkills, $roleSkills['soft_skills'] ?? []);
+
+            // Calculate match percentage
+            $totalRequiredSkills = count($requiredSkills);
+            $totalMatchingSkills = count($matchingSkills);
+            $matchPercentage = $totalRequiredSkills > 0 ? round(($totalMatchingSkills / $totalRequiredSkills) * 100, 1) : 0;
+
+            // Calculate skill priority levels
+            $prioritySkills = $this->calculateSkillPriority($missingTechnicalSkills, $targetRole);
+
+            return [
+                'target_role' => $targetRole,
+                'required_skills' => $requiredSkills,
+                'required_technical_skills' => $roleSkills['technical_skills'] ?? [],
+                'required_soft_skills' => $roleSkills['soft_skills'] ?? [],
+                'current_skills' => $currentSkills,
+                'matching_skills' => $matchingSkills,
+                'matching_technical_skills' => $matchingTechnicalSkills,
+                'matching_soft_skills' => $matchingSoftSkills,
+                'missing_skills' => $missingSkills,
+                'missing_technical_skills' => $missingTechnicalSkills,
+                'missing_soft_skills' => $missingSoftSkills,
+                'match_percentage' => $matchPercentage,
+                'priority_skills' => $prioritySkills,
+                'skill_readiness_level' => $this->getSkillReadinessLevel($matchPercentage),
+                'learning_recommendations' => $this->getLearningRecommendations($missingTechnicalSkills, $targetRole),
+                'uses_weighted_scoring' => false
+            ];
+        }
+    }
+
+    /**
+     * Calculate weighted role match percentage using skill importance and level multipliers
+     *
+     * Formula: Σ(User Proficiency × Skill Weight × Level Multiplier) / Σ(Max Proficiency × Skill Weight × Level Multiplier) × 100
+     *
+     * @param string $role The target role
+     * @param array $currentSkills Array of skill names the user possesses
+     * @return float Match percentage (0-100)
+     */
+    private function calculateWeightedRoleMatch($role, $currentSkills): float
+    {
+        $allSkills = \App\Services\SkillMappingService::getAllSkillsForRole($role);
+
+        if (empty($allSkills)) {
+            return 0;
         }
 
-        $missingSkills = array_diff($requiredSkills, $currentSkills);
-        $matchingSkills = array_intersect($requiredSkills, $currentSkills);
+        $userScore = 0;
+        $maxScore = 0;
 
-        // Separate technical and soft skills in the analysis
-        $missingTechnicalSkills = array_intersect($missingSkills, $roleSkills['technical_skills'] ?? []);
-        $missingSoftSkills = array_intersect($missingSkills, $roleSkills['soft_skills'] ?? []);
+        foreach ($allSkills as $skillName) {
+            // Get skill importance weight (1-5 scale)
+            $weight = \App\Services\SkillMappingService::getSkillImportanceWeight($role, $skillName);
 
-        $matchingTechnicalSkills = array_intersect($matchingSkills, $roleSkills['technical_skills'] ?? []);
-        $matchingSoftSkills = array_intersect($matchingSkills, $roleSkills['soft_skills'] ?? []);
+            // Get skill level multiplier (fundamental/medium/advanced/soft)
+            $multiplier = $this->getSkillLevelMultiplier($role, $skillName);
 
-        // Calculate match percentage
-        $totalRequiredSkills = count($requiredSkills);
-        $totalMatchingSkills = count($matchingSkills);
-        $matchPercentage = $totalRequiredSkills > 0 ? round(($totalMatchingSkills / $totalRequiredSkills) * 100, 1) : 0;
+            // User proficiency: 5 if they have the skill, 0 if they don't
+            // (Binary for now until questionnaire adds proficiency ratings)
+            $userProficiency = in_array($skillName, $currentSkills) ? 5 : 0;
 
-        // Calculate skill priority levels
-        $prioritySkills = $this->calculateSkillPriority($missingTechnicalSkills, $targetRole);
+            // Calculate weighted scores
+            $userScore += $userProficiency * $weight * $multiplier;
+            $maxScore += 5 * $weight * $multiplier; // 5 is max proficiency
+        }
 
-        return [
-            'target_role' => $targetRole,
-            'required_skills' => $requiredSkills,
-            'required_technical_skills' => $roleSkills['technical_skills'] ?? [],
-            'required_soft_skills' => $roleSkills['soft_skills'] ?? [],
-            'current_skills' => $currentSkills,
-            'matching_skills' => $matchingSkills,
-            'matching_technical_skills' => $matchingTechnicalSkills,
-            'matching_soft_skills' => $matchingSoftSkills,
-            'missing_skills' => $missingSkills,
-            'missing_technical_skills' => $missingTechnicalSkills,
-            'missing_soft_skills' => $missingSoftSkills,
-            'match_percentage' => $matchPercentage,
-            'priority_skills' => $prioritySkills,
-            'skill_readiness_level' => $this->getSkillReadinessLevel($matchPercentage),
-            'learning_recommendations' => $this->getLearningRecommendations($missingTechnicalSkills, $targetRole)
-        ];
+        return $maxScore > 0 ? round(($userScore / $maxScore) * 100, 1) : 0;
+    }
+
+    /**
+     * Get skill level multiplier based on skill category
+     *
+     * Multipliers prioritize fundamental skills over advanced skills
+     * because fundamentals are critical for role entry
+     *
+     * @param string $role The target role
+     * @param string $skillName The skill name
+     * @return float Multiplier value
+     */
+    private function getSkillLevelMultiplier($role, $skillName): float
+    {
+        $roleData = \App\Services\SkillMappingService::getSkillsForRole($role);
+
+        // Check which category the skill belongs to
+        if (in_array($skillName, $roleData['fundamental_skills'] ?? [])) {
+            return 1.5; // Fundamental skills are most critical
+        }
+
+        if (in_array($skillName, $roleData['medium_skills'] ?? [])) {
+            return 1.2; // Medium skills are important for competency
+        }
+
+        if (in_array($skillName, $roleData['soft_skills'] ?? [])) {
+            return 1.3; // Soft skills are crucial for success
+        }
+
+        if (in_array($skillName, $roleData['advanced_skills'] ?? [])) {
+            return 1.0; // Advanced skills are nice-to-have, not required for entry
+        }
+
+        return 1.0; // Default multiplier
+    }
+
+    /**
+     * Enrich skill names with category information for priority-based display
+     * Skills are sorted by priority: advanced first, then medium, then fundamental, then soft
+     *
+     * @param array $skillNames Array of skill name strings
+     * @param string $role The target role
+     * @return array Array of skills with category info: ['name' => 'Skill Name', 'category' => 'advanced']
+     */
+    private function enrichSkillsWithCategory($skillNames, $role): array
+    {
+        $roleData = \App\Services\SkillMappingService::getSkillsForRole($role);
+        $enrichedSkills = [];
+
+        foreach ($skillNames as $skillName) {
+            $category = 'unknown';
+
+            // Determine which category this skill belongs to
+            if (in_array($skillName, $roleData['fundamental_skills'] ?? [])) {
+                $category = 'fundamental';
+            } elseif (in_array($skillName, $roleData['medium_skills'] ?? [])) {
+                $category = 'medium';
+            } elseif (in_array($skillName, $roleData['advanced_skills'] ?? [])) {
+                $category = 'advanced';
+            } elseif (in_array($skillName, $roleData['soft_skills'] ?? [])) {
+                $category = 'soft';
+            }
+
+            $enrichedSkills[] = [
+                'name' => $skillName,
+                'category' => $category
+            ];
+        }
+
+        // Sort skills by priority category
+        // Priority order: advanced (high) → medium → fundamental (low) → soft
+        usort($enrichedSkills, function($a, $b) {
+            $priorityOrder = [
+                'advanced' => 1,
+                'medium' => 2,
+                'fundamental' => 3,
+                'soft' => 4,
+                'unknown' => 5
+            ];
+
+            return $priorityOrder[$a['category']] <=> $priorityOrder[$b['category']];
+        });
+
+        return $enrichedSkills;
     }
 
     /**

@@ -119,6 +119,46 @@
             background-color: #EFF6FF !important;
         }
 
+        /* Dropdown styles - button hover */
+        .relative.group:hover > div.absolute {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+
+        /* Keep dropdown visible when hovering over the menu itself */
+        .relative.group > div.absolute:hover {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+
+        /* Extend hover zone - creates invisible area between button and dropdown */
+        .relative.group > div.absolute::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            pointer-events: auto;
+        }
+
+        /* Make sure dropdown items stay interactive */
+        .relative.group:hover > div.absolute,
+        .relative.group > div.absolute:hover {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            z-index: 50 !important;
+        }
+
+        /* Ensure dropdown items are always clickable when menu is visible */
+        .relative.group:hover > div.absolute a,
+        .relative.group > div.absolute:hover a {
+            pointer-events: auto !important;
+        }
+
         /* Mobile navigation styles */
         .mobile-nav-link.nav-active {
             color: #5AA7C6 !important;
@@ -283,18 +323,29 @@
                     <a href="{{ route('pathfinder.home') }}" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.home') ? 'nav-active' : 'nav-inactive' }}">
                         Home
                     </a>
-                    <a href="{{ route('pathfinder.career-guidance') }}" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.career-guidance*') ? 'nav-active' : 'nav-inactive' }}">
-                        Career Guidance
-                    </a>
-                    <a href="{{ route('pathfinder.career-path') }}" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.career-path*') ? 'nav-active' : 'nav-inactive' }}">
-                        Career Path
-                    </a>
-                    <a href="{{ route('pathfinder.skill-gap') }}" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.skill-gap*') ? 'nav-active' : 'nav-inactive' }}">
-                        Skill Gap
-                    </a>
-                    <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.mbti-questionnaire*') || request()->routeIs('pathfinder.mbti.results*') ? 'nav-active' : 'nav-inactive' }}">
-                        MBTI Assessment
-                    </a>
+
+                    <!-- Explore Dropdown -->
+                    <div class="relative group">
+                        <button class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('pathfinder.career-guidance*') || request()->routeIs('pathfinder.career-path*') || request()->routeIs('pathfinder.skill-gap*') || request()->routeIs('pathfinder.mbti-intro') || request()->routeIs('pathfinder.mbti-questionnaire*') || request()->routeIs('pathfinder.mbti.results*') ? 'nav-active' : 'nav-inactive' }}">
+                            Explore
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div class="absolute left-0 w-48 bg-white rounded-md shadow-xl transition-all duration-200" style="top: 100%; opacity: 0; visibility: hidden; pointer-events: none; z-index: 50; margin-top: 0.25rem;">
+                            <a href="{{ route('pathfinder.career-guidance') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 first:rounded-t-md transition-colors">
+                                Career Guidance
+                            </a>
+                            <a href="{{ route('pathfinder.career-path') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                Career Path
+                            </a>
+                            <a href="{{ route('pathfinder.skill-gap') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                Skill Gap
+                            </a>
+                            <a href="{{ route('pathfinder.mbti-intro') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 last:rounded-b-md transition-colors">
+                                MBTI Assessment
+                            </a>
+                        </div>
+                    </div>
 
                     @auth
                         <a href="{{ route('dashboard') }}" class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('dashboard*') ? 'nav-active' : 'nav-inactive' }}">
@@ -341,18 +392,30 @@
                 <a href="{{ route('pathfinder.home') }}" class="mobile-nav-link px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 flex items-center {{ request()->routeIs('pathfinder.home') ? 'nav-active' : 'nav-inactive' }}" style="min-height: 44px;">
                     Home
                 </a>
-                <a href="{{ route('pathfinder.career-guidance') }}" class="mobile-nav-link px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 flex items-center {{ request()->routeIs('pathfinder.career-guidance*') ? 'nav-active' : 'nav-inactive' }}" style="min-height: 44px;">
-                    Career Guidance
-                </a>
-                <a href="{{ route('pathfinder.career-path') }}" class="mobile-nav-link px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 flex items-center {{ request()->routeIs('pathfinder.career-path*') ? 'nav-active' : 'nav-inactive' }}" style="min-height: 44px;">
-                    Career Path
-                </a>
-                <a href="{{ route('pathfinder.skill-gap') }}" class="mobile-nav-link px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 flex items-center {{ request()->routeIs('pathfinder.skill-gap*') ? 'nav-active' : 'nav-inactive' }}" style="min-height: 44px;">
-                    Skill Gap
-                </a>
-                <a href="{{ route('pathfinder.mbti-questionnaire') }}" class="mobile-nav-link px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 flex items-center {{ request()->routeIs('pathfinder.mbti-questionnaire*') || request()->routeIs('pathfinder.mbti.results*') ? 'nav-active' : 'nav-inactive' }}" style="min-height: 44px;">
-                    MBTI Assessment
-                </a>
+
+                <!-- Mobile Explore Menu -->
+                <div class="relative">
+                    <button class="mobile-nav-link w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 flex items-center justify-between {{ request()->routeIs('pathfinder.career-guidance*') || request()->routeIs('pathfinder.career-path*') || request()->routeIs('pathfinder.skill-gap*') || request()->routeIs('pathfinder.mbti-intro') || request()->routeIs('pathfinder.mbti-questionnaire*') || request()->routeIs('pathfinder.mbti.results*') ? 'nav-active' : 'nav-inactive' }}" style="min-height: 44px;" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                        Explore
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                    </button>
+                    <div class="hidden pl-4 space-y-2 mt-2 border-l-2 border-gray-200">
+                        <a href="{{ route('pathfinder.career-guidance') }}" class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            Career Guidance
+                        </a>
+                        <a href="{{ route('pathfinder.career-path') }}" class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            Career Path
+                        </a>
+                        <a href="{{ route('pathfinder.skill-gap') }}" class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            Skill Gap
+                        </a>
+                        <a href="{{ route('pathfinder.mbti-intro') }}" class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            MBTI Assessment
+                        </a>
+                    </div>
+                </div>
 
                 @auth
                         <a href="{{ route('dashboard') }}" class="mobile-nav-link px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 flex items-center {{ request()->routeIs('dashboard*') ? 'nav-active' : 'nav-inactive' }}" style="min-height: 44px;">
