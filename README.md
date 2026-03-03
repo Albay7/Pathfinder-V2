@@ -220,7 +220,7 @@ For manual production setup, configure your web server (Apache/Nginx) to point t
 ### 📋 **Dynamic Questionnaires**
 - **Adaptive Questions**: Questions change based on your field/industry selection
 - **Progress Tracking**: Real-time progress bar and question counter
-- **Field-Specific Branching**: 
+- **Field-Specific Branching**:
   - **Course Assessment**: Engineering, Computer Science, Business, Education, Accounting, Liberal Arts, Tourism, Science, Criminal Justice
   - **Job Assessment**: Technology, Business, Finance, Healthcare, Education, Marketing, Engineering, Government, Tourism
 - **Intelligent Scoring**: Multi-factor algorithm considering interests, skills, and preferences

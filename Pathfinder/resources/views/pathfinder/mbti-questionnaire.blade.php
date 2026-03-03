@@ -351,7 +351,25 @@
         // Form submission
         document.getElementById('mbti-questionnaire-form').addEventListener('submit', function(e) {
             e.preventDefault();
+
+            // Validate current page first
+            if (!validateCurrentPage()) {
+                return;
+            }
+
             saveCurrentPageResponses();
+
+            // Verify all 60 questions are answered
+            const answeredCount = Object.keys(responses).length;
+            if (answeredCount < 60) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Incomplete Assessment',
+                    text: `Only ${answeredCount} of 60 questions answered. Please complete all pages.`,
+                    confirmButtonColor: '#5AA7C6'
+                });
+                return;
+            }
 
             // Prepare final responses
             document.getElementById('all-responses').value = JSON.stringify(responses);
@@ -526,21 +544,11 @@
 
             prevBtn.disabled = currentPage === 1;
 
-            // Check if we can complete early in standard mode
-            const canCompleteEarly = checkEarlyCompletion();
-
-            if (currentPage === totalPages || canCompleteEarly) {
+            if (currentPage === totalPages) {
                 nextBtn.style.display = 'none';
                 submitBtn.style.display = 'block';
-
-                // Update submit button text if completing early
-                if (canCompleteEarly && currentPage < totalPages) {
-                    submitBtn.textContent = 'Complete Assessment (Early)';
-                    submitBtn.style.backgroundColor = '#10b981';
-                } else {
-                    submitBtn.textContent = 'Complete Assessment';
-                    submitBtn.style.backgroundColor = '#5AA7C6';
-                }
+                submitBtn.textContent = 'Complete Assessment';
+                submitBtn.style.backgroundColor = '#5AA7C6';
             } else {
                 nextBtn.style.display = 'block';
                 submitBtn.style.display = 'none';
@@ -548,47 +556,8 @@
         }
 
         function checkEarlyCompletion() {
-            // Only allow early completion after at least 30 questions
-            if (Object.keys(responses).length < 30) {
-                return false;
-            }
-
-            // Calculate confidence for each dimension
-            const dimensions = {
-                'E': { questions: [1, 5, 9, 13, 17, 21, 25, 29, 33, 37, 41, 45, 49, 53, 57], score: 0, count: 0 },
-                'S': { questions: [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 54, 58], score: 0, count: 0 },
-                'T': { questions: [3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47, 51, 55, 59], score: 0, count: 0 },
-                'J': { questions: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60], score: 0, count: 0 }
-            };
-
-            // Calculate scores for answered questions
-            Object.keys(responses).forEach(questionKey => {
-                const questionNum = parseInt(questionKey.replace('q', ''));
-                const value = responses[questionKey];
-
-                Object.keys(dimensions).forEach(dim => {
-                    if (dimensions[dim].questions.includes(questionNum)) {
-                        dimensions[dim].score += value;
-                        dimensions[dim].count++;
-                    }
-                });
-            });
-
-            // Check if we have enough confidence (at least 8 questions per dimension with clear preference)
-            let confidenceMet = 0;
-            Object.keys(dimensions).forEach(dim => {
-                const dimension = dimensions[dim];
-                if (dimension.count >= 8) {
-                    const average = dimension.score / dimension.count;
-                    // Clear preference if average is significantly above or below neutral (4)
-                    if (Math.abs(average - 4) >= 1.5) {
-                        confidenceMet++;
-                    }
-                }
-            });
-
-            // Allow early completion if at least 3 out of 4 dimensions show clear preference
-            return confidenceMet >= 3;
+            // Disabled: require all 60 questions before completion
+            return false;
         }
     });
 

@@ -58,24 +58,8 @@ class MbtiController extends Controller
             // Load MBTI questions (you might want to create a separate service for this)
             $allQuestions = $this->getMbtiQuestions();
 
-            // Simple adaptive logic - you can enhance this with your RL algorithm
+            // Simple adaptive logic - select next question
             $questionsAsked = count($currentResponses);
-
-            // If we've asked enough questions (minimum 10, maximum 30)
-            if ($questionsAsked >= 10) {
-                // Calculate current confidence
-                $confidence = $this->calculateConfidence($currentResponses);
-
-                // If confidence is high enough or we've reached max questions, stop
-                if ($confidence > 0.85 || $questionsAsked >= 30) {
-                    return response()->json([
-                        'success' => true,
-                        'should_stop' => true,
-                        'confidence' => $confidence,
-                        'questions_asked' => $questionsAsked
-                    ]);
-                }
-            }
 
             // Select next question based on current responses
             $nextQuestionIndex = $this->selectNextQuestion($currentResponses, $allQuestions);

@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             QuestionnaireSeeder::class,
             CourseSeeder::class,
+            MbtiPersonalityTypesSeeder::class,
         ]);
     }
 }

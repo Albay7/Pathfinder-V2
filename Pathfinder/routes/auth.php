@@ -35,6 +35,19 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
+// Registration verification routes (no auth needed — token-based)
+Route::get('verify-registration/{token}', [RegisteredUserController::class, 'completeVerification'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.complete');
+
+Route::get('check-verification', [RegisteredUserController::class, 'checkVerification'])
+    ->middleware('throttle:30,1')
+    ->name('verification.check');
+
+Route::post('resend-verification', [RegisteredUserController::class, 'resendVerification'])
+    ->middleware('throttle:3,1')
+    ->name('verification.resend');
+
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');

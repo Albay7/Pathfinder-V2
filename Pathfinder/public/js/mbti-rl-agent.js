@@ -11,26 +11,26 @@ class MBTIRLAgent {
         this.epsilon = 0.2; // exploration rate
         this.discount_factor = 0.9;
         this.min_confidence_threshold = 0.65; // Lowered from 0.75 for better stopping
-        this.max_questions = 25; // Increased from 20 for better accuracy
+        this.max_questions = 60; // Require all 60 questions
         this.min_questions = 8; // Minimum questions before allowing early stop
-        
+
         // Dynamic thresholds based on question count
         this.confidence_thresholds = {
             early: 0.85,  // High confidence for very early stopping (8-12 questions)
             medium: 0.75, // Medium confidence for moderate stopping (13-18 questions)
             late: 0.65    // Lower confidence for later stopping (19+ questions)
         };
-        
+
         // Current session state
         this.questions_asked = [];
         this.responses = [];
         this.current_scores = { EI: 0, SN: 0, TF: 0, JP: 0 };
         this.confidence_scores = { EI: 0, SN: 0, TF: 0, JP: 0 };
-        
+
         // Training data
         this.training_episodes = 0;
         this.performance_history = [];
-        
+
         // Load pre-trained weights if available
         this.loadPretrainedWeights();
     }
@@ -57,7 +57,7 @@ class MBTIRLAgent {
         ];
         const questionsCount = this.questions_asked.length;
         const avgConfidence = Math.round(this.getAverageConfidence() * 10) / 10;
-        
+
         return `${scores.join(',')}_${questionsCount}_${avgConfidence}`;
     }
 
@@ -73,37 +73,16 @@ class MBTIRLAgent {
      * Check if agent is confident enough to stop asking questions
      */
     isConfident() {
-        const avgConfidence = this.getAverageConfidence();
-        const minDimensionConfidence = Math.min(...Object.values(this.confidence_scores));
-        const questionCount = this.questions_asked.length;
-        
-        // Don't stop before minimum questions
-        if (questionCount < this.min_questions) {
-            return false;
-        }
-        
-        // Dynamic threshold based on question count
-        let requiredThreshold;
-        if (questionCount <= 12) {
-            requiredThreshold = this.confidence_thresholds.early;
-        } else if (questionCount <= 18) {
-            requiredThreshold = this.confidence_thresholds.medium;
-        } else {
-            requiredThreshold = this.confidence_thresholds.late;
-        }
-        
-        // Check if we meet the dynamic threshold and minimum dimension confidence
-        return avgConfidence >= requiredThreshold && 
-               minDimensionConfidence >= 0.55 && // Slightly lowered from 0.6
-               this.hasStrongDimensionSignals(); // Additional check for clear preferences
+        // Disabled: require all 60 questions before completion
+        return false;
     }
-    
+
     /**
      * Check if we have strong signals for each dimension
      */
     hasStrongDimensionSignals() {
         const strongThreshold = 0.3; // Absolute score threshold for clear preference
-        return Object.values(this.current_scores).every(score => 
+        return Object.values(this.current_scores).every(score =>
             Math.abs(score) >= strongThreshold
         );
     }
@@ -123,7 +102,7 @@ class MBTIRLAgent {
         }
 
         const state = this.getStateKey();
-        const unaskedQuestions = availableQuestions.filter(q => 
+        const unaskedQuestions = availableQuestions.filter(q =>
             !this.questions_asked.includes(q.id)
         );
 
@@ -164,11 +143,11 @@ class MBTIRLAgent {
             Math.floor(Math.random() * underRepresentedDimensions.length)
         ];
 
-        const dimensionQuestions = unaskedQuestions.filter(q => 
+        const dimensionQuestions = unaskedQuestions.filter(q =>
             q.dimension === targetDimension
         );
 
-        return dimensionQuestions.length > 0 ? 
+        return dimensionQuestions.length > 0 ?
             dimensionQuestions[Math.floor(Math.random() * dimensionQuestions.length)] :
             unaskedQuestions[Math.floor(Math.random() * unaskedQuestions.length)];
     }
@@ -204,7 +183,7 @@ class MBTIRLAgent {
 
         // Update dimension scores
         this.updateDimensionScores(question, response);
-        
+
         // Update confidence scores
         this.updateConfidenceScores();
     }
@@ -256,7 +235,7 @@ class MBTIRLAgent {
             }).length;
 
             // Confidence increases with stronger scores and more questions
-            this.confidence_scores[dimension] = Math.min(0.95, 
+            this.confidence_scores[dimension] = Math.min(0.95,
                 score * 0.8 + (questionsForDimension / 15) * 0.2
             );
         });
@@ -269,11 +248,11 @@ class MBTIRLAgent {
         let reward = 0;
         const questionCount = this.questions_asked.length;
         const avgConfidence = this.getAverageConfidence();
-        
+
         // 1. Accuracy reward (most important)
         if (actualType === predictedType) {
             reward += 15; // Increased base reward for correct prediction
-            
+
             // Bonus for early correct prediction
             if (questionCount <= 12) {
                 reward += 8; // High bonus for very early correct prediction
@@ -286,7 +265,7 @@ class MBTIRLAgent {
             const predictedDims = this.typeToArray(predictedType);
             const correctDims = actualDims.filter((dim, i) => dim === predictedDims[i]).length;
             reward += correctDims * 2.5; // Increased partial credit
-            
+
             // Penalty for wrong prediction increases with confidence
             reward -= avgConfidence * 3;
         }
@@ -294,7 +273,7 @@ class MBTIRLAgent {
         // 2. Efficiency reward (question count optimization)
         const maxQuestions = 25;
         const optimalRange = [10, 18]; // Optimal question range
-        
+
         if (questionCount >= optimalRange[0] && questionCount <= optimalRange[1]) {
             // Reward for staying in optimal range
             reward += 6;
@@ -329,13 +308,13 @@ class MBTIRLAgent {
 
         return Math.max(-10, Math.min(50, reward)); // Clamp reward between -10 and 50
     }
-    
+
     /**
      * Calculate how well confidence matches actual accuracy
      */
     calculateConfidenceAccuracy(actualType, predictedType, confidence) {
         const isCorrect = actualType === predictedType;
-        
+
         if (isCorrect && confidence > 0.8) {
             return 1.0; // Perfect: confident and correct
         } else if (isCorrect && confidence > 0.6) {
@@ -348,66 +327,66 @@ class MBTIRLAgent {
             return 0.2; // Neutral cases
         }
     }
-    
+
     /**
      * Calculate reward for balanced dimension exploration
      */
     calculateDimensionBalance() {
         const dimensionCounts = { EI: 0, SN: 0, TF: 0, JP: 0 };
-        
+
         this.questions_asked.forEach(qId => {
             const question = this.findQuestionById(qId);
             if (question && question.dimension) {
                 dimensionCounts[question.dimension]++;
             }
         });
-        
+
         const counts = Object.values(dimensionCounts);
         const maxCount = Math.max(...counts);
         const minCount = Math.min(...counts);
         const balance = minCount / (maxCount || 1);
-        
+
         return balance; // Returns 0-1, higher is better
     }
-    
+
     /**
      * Calculate information gain from question selection
      */
     calculateInformationGain() {
         if (this.questions_asked.length < 2) return 0;
-        
+
         // Measure how much each question changed our confidence
         let totalGain = 0;
         const confidenceHistory = this.getConfidenceHistory();
-        
+
         for (let i = 1; i < confidenceHistory.length; i++) {
             const gain = confidenceHistory[i] - confidenceHistory[i-1];
             totalGain += Math.max(0, gain); // Only count positive gains
         }
-        
+
         return totalGain / this.questions_asked.length;
     }
-    
+
     /**
      * Calculate penalty for inconsistent predictions
      */
     calculateConsistencyPenalty() {
         if (this.questions_asked.length < 3) return 0;
-        
+
         // Check how much our prediction has changed
         const predictionHistory = this.getPredictionHistory();
         let changes = 0;
-        
+
         for (let i = 1; i < predictionHistory.length; i++) {
             if (predictionHistory[i] !== predictionHistory[i-1]) {
                 changes++;
             }
         }
-        
+
         // Penalize excessive changes (more than 2 changes is concerning)
         return Math.max(0, changes - 2) * 0.5;
     }
-    
+
     /**
      * Get confidence history (placeholder - would need to track this)
      */
@@ -415,7 +394,7 @@ class MBTIRLAgent {
         // Simplified version - in practice, we'd track this during assessment
         return [0.3, 0.5, 0.7, this.getAverageConfidence()];
     }
-    
+
     /**
      * Get prediction history (placeholder - would need to track this)
      */
@@ -433,10 +412,10 @@ class MBTIRLAgent {
         }
 
         const currentQ = this.q_table[state][action] || 0;
-        const nextMaxQ = nextState && this.q_table[nextState] ? 
+        const nextMaxQ = nextState && this.q_table[nextState] ?
             Math.max(...Object.values(this.q_table[nextState])) : 0;
 
-        this.q_table[state][action] = currentQ + this.learning_rate * 
+        this.q_table[state][action] = currentQ + this.learning_rate *
             (reward + this.discount_factor * nextMaxQ - currentQ);
     }
 
@@ -448,7 +427,7 @@ class MBTIRLAgent {
         const s_n = this.current_scores.SN > 0 ? 'N' : 'S';
         const t_f = this.current_scores.TF > 0 ? 'T' : 'F';
         const j_p = this.current_scores.JP > 0 ? 'J' : 'P';
-        
+
         return e_i + s_n + t_f + j_p;
     }
 

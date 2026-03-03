@@ -409,560 +409,80 @@
             }
         };
 
-        const liberalArtsWeightMapping = {
-            1: { // Literary Analysis
-                "BA English Language": 10,
-                "BA Literature": 10,
-                "BA Communication": 8,
-                "BA Philosophy": 7,
-                "BA History": 6,
-                "BA Political Science": 6,
-                "BA Psychology": 5,
-                "BA Sociology": 5
-            },
-            2: { // Historical Research
-                "BA History": 10,
-                "BA Political Science": 8,
-                "BA Sociology": 7,
-                "BA Philosophy": 6,
-                "BA Literature": 6,
-                "BA English Language": 5,
-                "BA Communication": 5,
-                "BA Psychology": 4
-            },
-            3: { // Social Sciences
-                "BA Psychology": 10,
-                "BA Sociology": 10,
-                "BA Political Science": 8,
-                "BA Communication": 7,
-                "BA History": 6,
-                "BA Philosophy": 6,
-                "BA English Language": 5,
-                "BA Literature": 5
-            },
-            4: { // Philosophy & Ethics
-                "BA Philosophy": 10,
-                "BA Political Science": 8,
-                "BA Literature": 7,
-                "BA History": 7,
-                "BA Psychology": 6,
-                "BA Sociology": 6,
-                "BA English Language": 5,
-                "BA Communication": 5
-            },
-            5: { // Academic Writing
-                "BA English Language": 10,
-                "BA Literature": 9,
-                "BA Communication": 9,
-                "BA Philosophy": 8,
-                "BA History": 8,
-                "BA Political Science": 7,
-                "BA Psychology": 7,
-                "BA Sociology": 7
-            },
-            6: { // Critical Analysis
-                "BA Philosophy": 10,
-                "BA Literature": 9,
-                "BA Political Science": 9,
-                "BA History": 8,
-                "BA Psychology": 8,
-                "BA English Language": 8,
-                "BA Sociology": 7,
-                "BA Communication": 7
-            },
-            7: { // Research Methods
-                "BA Psychology": 10,
-                "BA Sociology": 10,
-                "BA History": 9,
-                "BA Political Science": 9,
-                "BA Philosophy": 8,
-                "BA Literature": 7,
-                "BA English Language": 7,
-                "BA Communication": 6
-            },
-            8: { // Communication
-                "BA Communication": 10,
-                "BA English Language": 9,
-                "BA Political Science": 8,
-                "BA Psychology": 7,
-                "BA Sociology": 7,
-                "BA Literature": 7,
-                "BA Philosophy": 6,
-                "BA History": 6
-            },
-            9: { // Cultural Studies
-                "BA Sociology": 10,
-                "BA History": 9,
-                "BA Literature": 8,
-                "BA Communication": 8,
-                "BA Political Science": 7,
-                "BA English Language": 7,
-                "BA Philosophy": 6,
-                "BA Psychology": 6
-            },
-            10: { // Creative Expression
-                "BA Literature": 10,
-                "BA English Language": 9,
-                "BA Communication": 8,
-                "BA Philosophy": 7,
-                "BA History": 6,
-                "BA Psychology": 6,
-                "BA Sociology": 5,
-                "BA Political Science": 5
-            },
-            11: { // Political Science
-                "BA Political Science": 10,
-                "BA History": 8,
-                "BA Sociology": 7,
-                "BA Philosophy": 7,
-                "BA Communication": 6,
-                "BA Psychology": 6,
-                "BA English Language": 5,
-                "BA Literature": 5
-            },
-            12: { // Economics
-                "BA Political Science": 9,
-                "BA History": 7,
-                "BA Sociology": 7,
-                "BA Psychology": 6,
-                "BA Philosophy": 6,
-                "BA Communication": 5,
-                "BA English Language": 4,
-                "BA Literature": 4
-            },
-            13: { // Media & Communication
-                "BA Communication": 10,
-                "BA English Language": 8,
-                "BA Literature": 7,
-                "BA Sociology": 7,
-                "BA Political Science": 6,
-                "BA Psychology": 6,
-                "BA History": 5,
-                "BA Philosophy": 5
-            },
-            14: { // Art & Aesthetics
-                "BA Literature": 9,
-                "BA Philosophy": 8,
-                "BA History": 7,
-                "BA English Language": 7,
-                "BA Communication": 6,
-                "BA Sociology": 5,
-                "BA Psychology": 5,
-                "BA Political Science": 4
-            },
-            15: { // Environmental Studies
-                "BA Sociology": 8,
-                "BA Political Science": 8,
-                "BA Philosophy": 7,
-                "BA History": 6,
-                "BA Psychology": 6,
-                "BA Communication": 5,
-                "BA Literature": 4,
-                "BA English Language": 4
-            },
-            16: { // Interdisciplinary Studies
-                "BA Philosophy": 9,
-                "BA Literature": 8,
-                "BA Sociology": 8,
-                "BA Psychology": 8,
-                "BA History": 7,
-                "BA Political Science": 7,
-                "BA Communication": 7,
-                "BA English Language": 6
-            }
+                const liberalArtsWeightMapping = {
+            301: { "BA English Language": 5, "BA Literature": 2, "BA Communication": 10, "BA Philosophy": 5, "BA History": 2, "BA Political Science": 2, "BA Psychology": 10, "BA Sociology": 2 }, // Literary Analysis
+            302: { "BA English Language": 5, "BA Literature": 2, "BA Communication": 2, "BA Philosophy": 2, "BA History": 10, "BA Political Science": 2, "BA Psychology": 10, "BA Sociology": 5 }, // Historical Research
+            303: { "BA English Language": 2, "BA Literature": 2, "BA Communication": 5, "BA Philosophy": 2, "BA History": 2, "BA Political Science": 5, "BA Psychology": 10, "BA Sociology": 10 }, // Social Sciences
+            304: { "BA English Language": 2, "BA Literature": 2, "BA Communication": 2, "BA Philosophy": 10, "BA History": 5, "BA Political Science": 10, "BA Psychology": 5, "BA Sociology": 2 }, // Philosophy & Ethics
+            305: { "BA English Language": 10, "BA Literature": 5, "BA Communication": 10, "BA Philosophy": 2, "BA History": 2, "BA Political Science": 2, "BA Psychology": 5, "BA Sociology": 2 }, // Academic Writing
+            306: { "BA English Language": 5, "BA Literature": 10, "BA Communication": 2, "BA Philosophy": 10, "BA History": 2, "BA Political Science": 5, "BA Psychology": 2, "BA Sociology": 2 }, // Critical Analysis
+            307: { "BA English Language": 2, "BA Literature": 2, "BA Communication": 2, "BA Philosophy": 2, "BA History": 5, "BA Political Science": 5, "BA Psychology": 10, "BA Sociology": 10 }, // Research Methods
+            308: { "BA English Language": 10, "BA Literature": 5, "BA Communication": 10, "BA Philosophy": 2, "BA History": 2, "BA Political Science": 5, "BA Psychology": 2, "BA Sociology": 2 }, // Communication
+            309: { "BA English Language": 2, "BA Literature": 5, "BA Communication": 5, "BA Philosophy": 2, "BA History": 10, "BA Political Science": 2, "BA Psychology": 2, "BA Sociology": 10 }, // Cultural Studies
+            310: { "BA English Language": 10, "BA Literature": 10, "BA Communication": 5, "BA Philosophy": 5, "BA History": 2, "BA Political Science": 2, "BA Psychology": 2, "BA Sociology": 2 }, // Creative Expression
+            311: { "BA English Language": 2, "BA Literature": 2, "BA Communication": 5, "BA Philosophy": 2, "BA History": 10, "BA Political Science": 10, "BA Psychology": 5, "BA Sociology": 2 }, // Political Science
+            312: { "BA English Language": 2, "BA Literature": 2, "BA Communication": 2, "BA Philosophy": 5, "BA History": 10, "BA Political Science": 10, "BA Psychology": 2, "BA Sociology": 5 }, // Economics
+            313: { "BA English Language": 10, "BA Literature": 5, "BA Communication": 10, "BA Philosophy": 2, "BA History": 2, "BA Political Science": 2, "BA Psychology": 2, "BA Sociology": 5 }, // Media & Communication
+            314: { "BA English Language": 5, "BA Literature": 10, "BA Communication": 2, "BA Philosophy": 10, "BA History": 5, "BA Political Science": 2, "BA Psychology": 2, "BA Sociology": 2 }, // Art & Aesthetics
+            315: { "BA English Language": 2, "BA Literature": 2, "BA Communication": 2, "BA Philosophy": 5, "BA History": 5, "BA Political Science": 10, "BA Psychology": 2, "BA Sociology": 10 }, // Environmental Studies
+            316: { "BA English Language": 2, "BA Literature": 10, "BA Communication": 2, "BA Philosophy": 10, "BA History": 2, "BA Political Science": 2, "BA Psychology": 5, "BA Sociology": 5 }, // Interdisciplinary Studies
         };
 
-        const engineeringWeightMapping = {
-            501: { // Mathematical Foundations
-                "BS Civil Engineering": 9,
-                "BS Mechanical Engineering": 9,
-                "BS Electrical Engineering": 9,
-                "BS Computer Engineering": 9,
-                "BS Chemical Engineering": 9,
-                "BS Industrial Engineering": 8,
-                "BS Environmental Engineering": 8,
-                "BS Materials Engineering": 8
-            },
-            502: { // Structural Design
-                "BS Civil Engineering": 10,
-                "BS Mechanical Engineering": 7,
-                "BS Materials Engineering": 7,
-                "BS Environmental Engineering": 6,
-                "BS Industrial Engineering": 5,
-                "BS Electrical Engineering": 4,
-                "BS Computer Engineering": 3,
-                "BS Chemical Engineering": 3
-            },
-            503: { // Programming & Software
-                "BS Computer Engineering": 10,
-                "BS Electrical Engineering": 8,
-                "BS Industrial Engineering": 6,
-                "BS Mechanical Engineering": 5,
-                "BS Chemical Engineering": 4,
-                "BS Civil Engineering": 4,
-                "BS Environmental Engineering": 4,
-                "BS Materials Engineering": 3
-            },
-            504: { // Electrical Systems
-                "BS Electrical Engineering": 10,
-                "BS Computer Engineering": 9,
-                "BS Mechanical Engineering": 6,
-                "BS Industrial Engineering": 5,
-                "BS Chemical Engineering": 4,
-                "BS Civil Engineering": 4,
-                "BS Environmental Engineering": 4,
-                "BS Materials Engineering": 3
-            },
-            505: { // Mechanical Systems
-                "BS Mechanical Engineering": 10,
-                "BS Industrial Engineering": 8,
-                "BS Civil Engineering": 7,
-                "BS Chemical Engineering": 6,
-                "BS Materials Engineering": 6,
-                "BS Environmental Engineering": 5,
-                "BS Electrical Engineering": 4,
-                "BS Computer Engineering": 3
-            },
-            506: { // Chemical Processes
-                "BS Chemical Engineering": 10,
-                "BS Materials Engineering": 8,
-                "BS Environmental Engineering": 7,
-                "BS Industrial Engineering": 5,
-                "BS Mechanical Engineering": 4,
-                "BS Civil Engineering": 3,
-                "BS Electrical Engineering": 3,
-                "BS Computer Engineering": 2
-            },
-            507: { // Design & Modeling
-                "BS Mechanical Engineering": 9,
-                "BS Civil Engineering": 9,
-                "BS Computer Engineering": 8,
-                "BS Electrical Engineering": 7,
-                "BS Industrial Engineering": 7,
-                "BS Materials Engineering": 6,
-                "BS Chemical Engineering": 5,
-                "BS Environmental Engineering": 5
-            },
-            508: { // Environmental Engineering
-                "BS Environmental Engineering": 10,
-                "BS Chemical Engineering": 8,
-                "BS Civil Engineering": 7,
-                "BS Industrial Engineering": 6,
-                "BS Materials Engineering": 5,
-                "BS Mechanical Engineering": 4,
-                "BS Electrical Engineering": 3,
-                "BS Computer Engineering": 3
-            },
-            509: { // Project Management
-                "BS Industrial Engineering": 9,
-                "BS Civil Engineering": 8,
-                "BS Mechanical Engineering": 7,
-                "BS Chemical Engineering": 7,
-                "BS Environmental Engineering": 7,
-                "BS Computer Engineering": 6,
-                "BS Electrical Engineering": 6,
-                "BS Materials Engineering": 6
-            },
-            510: { // Research & Innovation
-                "BS Materials Engineering": 9,
-                "BS Chemical Engineering": 8,
-                "BS Computer Engineering": 8,
-                "BS Electrical Engineering": 8,
-                "BS Mechanical Engineering": 7,
-                "BS Environmental Engineering": 7,
-                "BS Civil Engineering": 6,
-                "BS Industrial Engineering": 6
-            },
-            511: { // Safety & Compliance
-                "BS Chemical Engineering": 9,
-                "BS Environmental Engineering": 9,
-                "BS Industrial Engineering": 8,
-                "BS Civil Engineering": 8,
-                "BS Materials Engineering": 7,
-                "BS Mechanical Engineering": 6,
-                "BS Electrical Engineering": 6,
-                "BS Computer Engineering": 5
-            },
-            512: { // Data Analysis
-                "BS Industrial Engineering": 9,
-                "BS Computer Engineering": 9,
-                "BS Chemical Engineering": 8,
-                "BS Electrical Engineering": 8,
-                "BS Materials Engineering": 7,
-                "BS Environmental Engineering": 7,
-                "BS Mechanical Engineering": 6,
-                "BS Civil Engineering": 6
-            },
-            513: { // Automation & AI
-                "BS Computer Engineering": 10,
-                "BS Electrical Engineering": 9,
-                "BS Industrial Engineering": 8,
-                "BS Mechanical Engineering": 6,
-                "BS Chemical Engineering": 5,
-                "BS Materials Engineering": 4,
-                "BS Civil Engineering": 4,
-                "BS Environmental Engineering": 4
-            },
-            514: { // Problem Solving
-                "BS Industrial Engineering": 9,
-                "BS Mechanical Engineering": 8,
-                "BS Computer Engineering": 8,
-                "BS Electrical Engineering": 8,
-                "BS Chemical Engineering": 8,
-                "BS Civil Engineering": 7,
-                "BS Environmental Engineering": 7,
-                "BS Materials Engineering": 7
-            },
-            515: { // Materials Science
-                "BS Materials Engineering": 10,
-                "BS Chemical Engineering": 8,
-                "BS Mechanical Engineering": 7,
-                "BS Civil Engineering": 6,
-                "BS Industrial Engineering": 5,
-                "BS Environmental Engineering": 5,
-                "BS Electrical Engineering": 4,
-                "BS Computer Engineering": 3
-            },
-            516: { // Communication & Collaboration
-                "BS Industrial Engineering": 8,
-                "BS Civil Engineering": 8,
-                "BS Environmental Engineering": 7,
-                "BS Computer Engineering": 7,
-                "BS Mechanical Engineering": 7,
-                "BS Chemical Engineering": 6,
-                "BS Electrical Engineering": 6,
-                "BS Materials Engineering": 6
-            }
+                const engineeringWeightMapping = {
+            501: { "BS Civil Engineering": 2, "BS Mechanical Engineering": 10, "BS Electrical Engineering": 5, "BS Computer Engineering": 5, "BS Chemical Engineering": 2, "BS Industrial Engineering": 2, "BS Environmental Engineering": 10, "BS Materials Engineering": 2 }, // Mathematical Foundations
+            502: { "BS Civil Engineering": 10, "BS Mechanical Engineering": 5, "BS Electrical Engineering": 2, "BS Computer Engineering": 2, "BS Chemical Engineering": 2, "BS Industrial Engineering": 2, "BS Environmental Engineering": 10, "BS Materials Engineering": 5 }, // Structural Design
+            503: { "BS Civil Engineering": 2, "BS Mechanical Engineering": 2, "BS Electrical Engineering": 10, "BS Computer Engineering": 10, "BS Chemical Engineering": 2, "BS Industrial Engineering": 2, "BS Environmental Engineering": 5, "BS Materials Engineering": 5 }, // Programming & Software
+            504: { "BS Civil Engineering": 2, "BS Mechanical Engineering": 2, "BS Electrical Engineering": 10, "BS Computer Engineering": 10, "BS Chemical Engineering": 2, "BS Industrial Engineering": 2, "BS Environmental Engineering": 5, "BS Materials Engineering": 5 }, // Electrical Systems
+            505: { "BS Civil Engineering": 5, "BS Mechanical Engineering": 10, "BS Electrical Engineering": 2, "BS Computer Engineering": 2, "BS Chemical Engineering": 5, "BS Industrial Engineering": 2, "BS Environmental Engineering": 2, "BS Materials Engineering": 10 }, // Mechanical Systems
+            506: { "BS Civil Engineering": 2, "BS Mechanical Engineering": 2, "BS Electrical Engineering": 2, "BS Computer Engineering": 2, "BS Chemical Engineering": 10, "BS Industrial Engineering": 5, "BS Environmental Engineering": 5, "BS Materials Engineering": 10 }, // Chemical Processes
+            507: { "BS Civil Engineering": 10, "BS Mechanical Engineering": 10, "BS Electrical Engineering": 5, "BS Computer Engineering": 2, "BS Chemical Engineering": 2, "BS Industrial Engineering": 2, "BS Environmental Engineering": 5, "BS Materials Engineering": 2 }, // Design & Modeling
+            508: { "BS Civil Engineering": 5, "BS Mechanical Engineering": 2, "BS Electrical Engineering": 2, "BS Computer Engineering": 2, "BS Chemical Engineering": 10, "BS Industrial Engineering": 5, "BS Environmental Engineering": 10, "BS Materials Engineering": 2 }, // Environmental Engineering
+            509: { "BS Civil Engineering": 10, "BS Mechanical Engineering": 2, "BS Electrical Engineering": 2, "BS Computer Engineering": 2, "BS Chemical Engineering": 5, "BS Industrial Engineering": 10, "BS Environmental Engineering": 2, "BS Materials Engineering": 5 }, // Project Management
+            510: { "BS Civil Engineering": 2, "BS Mechanical Engineering": 2, "BS Electrical Engineering": 10, "BS Computer Engineering": 5, "BS Chemical Engineering": 5, "BS Industrial Engineering": 2, "BS Environmental Engineering": 2, "BS Materials Engineering": 10 }, // Research & Innovation
+            511: { "BS Civil Engineering": 5, "BS Mechanical Engineering": 2, "BS Electrical Engineering": 2, "BS Computer Engineering": 2, "BS Chemical Engineering": 10, "BS Industrial Engineering": 5, "BS Environmental Engineering": 10, "BS Materials Engineering": 2 }, // Safety & Compliance
+            512: { "BS Civil Engineering": 2, "BS Mechanical Engineering": 2, "BS Electrical Engineering": 5, "BS Computer Engineering": 10, "BS Chemical Engineering": 5, "BS Industrial Engineering": 10, "BS Environmental Engineering": 2, "BS Materials Engineering": 2 }, // Data Analysis
+            513: { "BS Civil Engineering": 2, "BS Mechanical Engineering": 5, "BS Electrical Engineering": 10, "BS Computer Engineering": 10, "BS Chemical Engineering": 2, "BS Industrial Engineering": 5, "BS Environmental Engineering": 2, "BS Materials Engineering": 2 }, // Automation & AI
+            514: { "BS Civil Engineering": 2, "BS Mechanical Engineering": 10, "BS Electrical Engineering": 5, "BS Computer Engineering": 5, "BS Chemical Engineering": 2, "BS Industrial Engineering": 10, "BS Environmental Engineering": 2, "BS Materials Engineering": 2 }, // Problem Solving
+            515: { "BS Civil Engineering": 5, "BS Mechanical Engineering": 5, "BS Electrical Engineering": 2, "BS Computer Engineering": 2, "BS Chemical Engineering": 10, "BS Industrial Engineering": 2, "BS Environmental Engineering": 2, "BS Materials Engineering": 10 }, // Materials Science
+            516: { "BS Civil Engineering": 10, "BS Mechanical Engineering": 5, "BS Electrical Engineering": 2, "BS Computer Engineering": 5, "BS Chemical Engineering": 2, "BS Industrial Engineering": 10, "BS Environmental Engineering": 2, "BS Materials Engineering": 2 }, // Communication & Collaboration
         };
 
-        const lawWeightMapping = {
-            601: { // Legal Research
-                "LLB Law": 10,
-                "JD Juris Doctor": 10,
-                "BS Criminology": 7,
-                "BA Public Administration": 6,
-                "BS Forensic Science": 8
-            },
-            602: { // Constitutional Law
-                "LLB Law": 10,
-                "JD Juris Doctor": 10,
-                "BA Public Administration": 8,
-                "BS Criminology": 6,
-                "BS Forensic Science": 5
-            },
-            603: { // Criminal Justice
-                "BS Criminology": 10,
-                "BS Forensic Science": 9,
-                "LLB Law": 8,
-                "JD Juris Doctor": 8,
-                "BA Public Administration": 6
-            },
-            604: { // Advocacy & Oral Skills
-                "LLB Law": 10,
-                "JD Juris Doctor": 10,
-                "BA Public Administration": 7,
-                "BS Criminology": 6,
-                "BS Forensic Science": 5
-            },
-            605: { // Contract & Commercial Law
-                "LLB Law": 10,
-                "JD Juris Doctor": 10,
-                "BA Public Administration": 6,
-                "BS Criminology": 4,
-                "BS Forensic Science": 3
-            },
-            606: { // Legal Writing
-                "LLB Law": 10,
-                "JD Juris Doctor": 10,
-                "BA Public Administration": 7,
-                "BS Criminology": 6,
-                "BS Forensic Science": 6
-            },
-            607: { // Public Administration
-                "BA Public Administration": 10,
-                "LLB Law": 7,
-                "JD Juris Doctor": 7,
-                "BS Criminology": 6,
-                "BS Forensic Science": 4
-            },
-            608: { // Legal Ethics
-                "LLB Law": 10,
-                "JD Juris Doctor": 10,
-                "BA Public Administration": 7,
-                "BS Criminology": 7,
-                "BS Forensic Science": 6
-            },
-            609: { // Forensic Science
-                "BS Forensic Science": 10,
-                "BS Criminology": 8,
-                "LLB Law": 6,
-                "JD Juris Doctor": 6,
-                "BA Public Administration": 4
-            },
-            610: { // Alternative Dispute Resolution
-                "LLB Law": 9,
-                "JD Juris Doctor": 9,
-                "BA Public Administration": 7,
-                "BS Criminology": 6,
-                "BS Forensic Science": 5
-            },
-            611: { // International Law
-                "LLB Law": 10,
-                "JD Juris Doctor": 10,
-                "BA Public Administration": 8,
-                "BS Criminology": 5,
-                "BS Forensic Science": 4
-            },
-            612: { // Critical Analysis
-                "LLB Law": 9,
-                "JD Juris Doctor": 9,
-                "BA Public Administration": 8,
-                "BS Criminology": 7,
-                "BS Forensic Science": 8
-            },
-            613: { // Personal Legal Services
-                "LLB Law": 10,
-                "JD Juris Doctor": 10,
-                "BA Public Administration": 5,
-                "BS Criminology": 6,
-                "BS Forensic Science": 5
-            },
-            614: { // Legal Technology
-                "LLB Law": 8,
-                "JD Juris Doctor": 8,
-                "BA Public Administration": 7,
-                "BS Criminology": 6,
-                "BS Forensic Science": 7
-            },
-            615: { // Regulatory Affairs
-                "BA Public Administration": 10,
-                "LLB Law": 8,
-                "JD Juris Doctor": 8,
-                "BS Criminology": 6,
-                "BS Forensic Science": 5
-            },
-            616: { // Social Justice
-                "LLB Law": 9,
-                "JD Juris Doctor": 9,
-                "BA Public Administration": 8,
-                "BS Criminology": 8,
-                "BS Forensic Science": 6
-            }
+                const lawWeightMapping = {
+            601: { "LLB Law": 2, "JD Juris Doctor": 4, "BS Criminology": 8, "BA Public Administration": 10, "BS Forensic Science": 6 }, // Legal Research
+            602: { "LLB Law": 2, "JD Juris Doctor": 4, "BS Criminology": 8, "BA Public Administration": 6, "BS Forensic Science": 10 }, // Constitutional Law
+            603: { "LLB Law": 2, "JD Juris Doctor": 4, "BS Criminology": 10, "BA Public Administration": 6, "BS Forensic Science": 8 }, // Criminal Justice
+            604: { "LLB Law": 2, "JD Juris Doctor": 8, "BS Criminology": 4, "BA Public Administration": 6, "BS Forensic Science": 10 }, // Advocacy & Oral Skills
+            605: { "LLB Law": 2, "JD Juris Doctor": 8, "BS Criminology": 4, "BA Public Administration": 6, "BS Forensic Science": 10 }, // Contract & Commercial Law
+            606: { "LLB Law": 2, "JD Juris Doctor": 8, "BS Criminology": 4, "BA Public Administration": 6, "BS Forensic Science": 10 }, // Legal Writing
+            607: { "LLB Law": 8, "JD Juris Doctor": 6, "BS Criminology": 4, "BA Public Administration": 10, "BS Forensic Science": 2 }, // Public Administration
+            608: { "LLB Law": 2, "JD Juris Doctor": 8, "BS Criminology": 6, "BA Public Administration": 4, "BS Forensic Science": 10 }, // Legal Ethics
+            609: { "LLB Law": 6, "JD Juris Doctor": 4, "BS Criminology": 8, "BA Public Administration": 2, "BS Forensic Science": 10 }, // Forensic Science
+            610: { "LLB Law": 10, "JD Juris Doctor": 8, "BS Criminology": 4, "BA Public Administration": 6, "BS Forensic Science": 2 }, // Alternative Dispute Resolution
+            611: { "LLB Law": 10, "JD Juris Doctor": 8, "BS Criminology": 4, "BA Public Administration": 6, "BS Forensic Science": 2 }, // International Law
+            612: { "LLB Law": 10, "JD Juris Doctor": 2, "BS Criminology": 8, "BA Public Administration": 4, "BS Forensic Science": 6 }, // Critical Analysis
+            613: { "LLB Law": 10, "JD Juris Doctor": 8, "BS Criminology": 6, "BA Public Administration": 4, "BS Forensic Science": 2 }, // Personal Legal Services
+            614: { "LLB Law": 10, "JD Juris Doctor": 2, "BS Criminology": 8, "BA Public Administration": 6, "BS Forensic Science": 4 }, // Legal Technology
+            615: { "LLB Law": 8, "JD Juris Doctor": 6, "BS Criminology": 4, "BA Public Administration": 10, "BS Forensic Science": 2 }, // Regulatory Affairs
+            616: { "LLB Law": 10, "JD Juris Doctor": 8, "BS Criminology": 6, "BA Public Administration": 4, "BS Forensic Science": 2 }, // Social Justice
         };
 
-        const tourismWeightMapping = {
-            701: { // Travel Operations
-                "BS Tourism Management": 10,
-                "BS Hotel and Restaurant Management": 7,
-                "BS Hospitality Management": 9,
-                "BS Event Management": 8,
-                "BS Culinary Arts": 5
-            },
-            702: { // F&B Service
-                "BS Hotel and Restaurant Management": 10,
-                "BS Culinary Arts": 9,
-                "BS Hospitality Management": 8,
-                "BS Tourism Management": 6,
-                "BS Event Management": 7
-            },
-            703: { // Culinary Arts
-                "BS Culinary Arts": 10,
-                "BS Hotel and Restaurant Management": 9,
-                "BS Hospitality Management": 6,
-                "BS Tourism Management": 4,
-                "BS Event Management": 5
-            },
-            704: { // Housekeeping & Facilities
-                "BS Hotel and Restaurant Management": 9,
-                "BS Hospitality Management": 9,
-                "BS Tourism Management": 6,
-                "BS Event Management": 7,
-                "BS Culinary Arts": 5
-            },
-            705: { // Event Management
-                "BS Event Management": 10,
-                "BS Hospitality Management": 8,
-                "BS Hotel and Restaurant Management": 7,
-                "BS Tourism Management": 7,
-                "BS Culinary Arts": 6
-            },
-            706: { // Cruise Operations
-                "BS Tourism Management": 9,
-                "BS Hospitality Management": 8,
-                "BS Hotel and Restaurant Management": 7,
-                "BS Event Management": 6,
-                "BS Culinary Arts": 5
-            },
-            707: { // Hospitality Marketing
-                "BS Tourism Management": 9,
-                "BS Hospitality Management": 8,
-                "BS Event Management": 8,
-                "BS Hotel and Restaurant Management": 6,
-                "BS Culinary Arts": 4
-            },
-            708: { // Guest Relations
-                "BS Hospitality Management": 10,
-                "BS Hotel and Restaurant Management": 9,
-                "BS Tourism Management": 8,
-                "BS Event Management": 7,
-                "BS Culinary Arts": 5
-            },
-            709: { // Cultural Tourism
-                "BS Tourism Management": 10,
-                "BS Hospitality Management": 7,
-                "BS Event Management": 6,
-                "BS Hotel and Restaurant Management": 5,
-                "BS Culinary Arts": 4
-            },
-            710: { // Hotel Operations
-                "BS Hotel and Restaurant Management": 10,
-                "BS Hospitality Management": 9,
-                "BS Tourism Management": 7,
-                "BS Event Management": 6,
-                "BS Culinary Arts": 5
-            },
-            711: { // Sustainable Tourism
-                "BS Tourism Management": 10,
-                "BS Hospitality Management": 8,
-                "BS Event Management": 6,
-                "BS Hotel and Restaurant Management": 6,
-                "BS Culinary Arts": 4
-            },
-            712: { // Cross-Cultural Communication
-                "BS Tourism Management": 9,
-                "BS Hospitality Management": 8,
-                "BS Hotel and Restaurant Management": 7,
-                "BS Event Management": 7,
-                "BS Culinary Arts": 5
-            },
-            713: { // Tourism Research
-                "BS Tourism Management": 10,
-                "BS Hospitality Management": 7,
-                "BS Event Management": 6,
-                "BS Hotel and Restaurant Management": 5,
-                "BS Culinary Arts": 4
-            },
-            714: { // Financial Management
-                "BS Hospitality Management": 9,
-                "BS Hotel and Restaurant Management": 8,
-                "BS Tourism Management": 8,
-                "BS Event Management": 8,
-                "BS Culinary Arts": 6
-            },
-            715: { // Adventure Tourism
-                "BS Tourism Management": 10,
-                "BS Event Management": 7,
-                "BS Hospitality Management": 6,
-                "BS Hotel and Restaurant Management": 5,
-                "BS Culinary Arts": 4
-            },
-            716: { // Service Leadership
-                "BS Hospitality Management": 10,
-                "BS Hotel and Restaurant Management": 9,
-                "BS Tourism Management": 8,
-                "BS Event Management": 8,
-                "BS Culinary Arts": 7
-            }
+                const tourismWeightMapping = {
+            701: { "BS Tourism Management": 2, "BS Hotel and Restaurant Management": 6, "BS Hospitality Management": 4, "BS Event Management": 8, "BS Culinary Arts": 10 }, // Travel Operations
+            702: { "BS Tourism Management": 2, "BS Hotel and Restaurant Management": 4, "BS Hospitality Management": 6, "BS Event Management": 10, "BS Culinary Arts": 8 }, // F&B Service
+            703: { "BS Tourism Management": 2, "BS Hotel and Restaurant Management": 8, "BS Hospitality Management": 6, "BS Event Management": 4, "BS Culinary Arts": 10 }, // Culinary Arts
+            704: { "BS Tourism Management": 4, "BS Hotel and Restaurant Management": 10, "BS Hospitality Management": 8, "BS Event Management": 6, "BS Culinary Arts": 2 }, // Housekeeping & Facilities
+            705: { "BS Tourism Management": 6, "BS Hotel and Restaurant Management": 2, "BS Hospitality Management": 8, "BS Event Management": 10, "BS Culinary Arts": 4 }, // Event Management
+            706: { "BS Tourism Management": 2, "BS Hotel and Restaurant Management": 6, "BS Hospitality Management": 4, "BS Event Management": 8, "BS Culinary Arts": 10 }, // Cruise Operations
+            707: { "BS Tourism Management": 2, "BS Hotel and Restaurant Management": 4, "BS Hospitality Management": 8, "BS Event Management": 6, "BS Culinary Arts": 10 }, // Hospitality Marketing
+            708: { "BS Tourism Management": 6, "BS Hotel and Restaurant Management": 8, "BS Hospitality Management": 2, "BS Event Management": 4, "BS Culinary Arts": 10 }, // Guest Relations
+            709: { "BS Tourism Management": 10, "BS Hotel and Restaurant Management": 4, "BS Hospitality Management": 8, "BS Event Management": 6, "BS Culinary Arts": 2 }, // Cultural Tourism
+            710: { "BS Tourism Management": 6, "BS Hotel and Restaurant Management": 10, "BS Hospitality Management": 8, "BS Event Management": 4, "BS Culinary Arts": 2 }, // Hotel Operations
+            711: { "BS Tourism Management": 10, "BS Hotel and Restaurant Management": 6, "BS Hospitality Management": 8, "BS Event Management": 4, "BS Culinary Arts": 2 }, // Sustainable Tourism
+            712: { "BS Tourism Management": 10, "BS Hotel and Restaurant Management": 6, "BS Hospitality Management": 8, "BS Event Management": 4, "BS Culinary Arts": 2 }, // Cross-Cultural Communication
+            713: { "BS Tourism Management": 10, "BS Hotel and Restaurant Management": 4, "BS Hospitality Management": 8, "BS Event Management": 6, "BS Culinary Arts": 2 }, // Tourism Research
+            714: { "BS Tourism Management": 8, "BS Hotel and Restaurant Management": 6, "BS Hospitality Management": 2, "BS Event Management": 4, "BS Culinary Arts": 10 }, // Financial Management
+            715: { "BS Tourism Management": 10, "BS Hotel and Restaurant Management": 4, "BS Hospitality Management": 6, "BS Event Management": 8, "BS Culinary Arts": 2 }, // Adventure Tourism
+            716: { "BS Tourism Management": 6, "BS Hotel and Restaurant Management": 8, "BS Hospitality Management": 2, "BS Event Management": 4, "BS Culinary Arts": 10 }, // Service Leadership
         };
 
         // Job questionnaire database organized by category
@@ -1259,6 +779,167 @@
                 "Resort Operations Manager",
                 "Travel Consultant"
             ]
+        };
+
+        // Job weight mappings - each question maps to each job with a relevance weight (1-10)
+        // Balanced weight mappings: each job totals exactly 76 across all 16 questions
+        // Pattern: 2 primary jobs (10), 2 secondary jobs (5), 4 tertiary jobs (2) per question
+        // Each job: 4 primary, 4 secondary, 8 tertiary = 4*10 + 4*5 + 8*2 = 76
+        const businessJobWeightMapping = {
+            1: { "Business Analyst": 10, "Financial Analyst": 2, "Marketing Manager": 2, "Operations Manager": 5, "Human Resources Manager": 2, "Project Manager": 5, "Sales Manager": 2, "Management Consultant": 10 },
+            2: { "Business Analyst": 10, "Financial Analyst": 10, "Marketing Manager": 2, "Operations Manager": 5, "Human Resources Manager": 2, "Project Manager": 2, "Sales Manager": 2, "Management Consultant": 5 },
+            3: { "Business Analyst": 2, "Financial Analyst": 2, "Marketing Manager": 2, "Operations Manager": 10, "Human Resources Manager": 5, "Project Manager": 10, "Sales Manager": 2, "Management Consultant": 5 },
+            4: { "Business Analyst": 5, "Financial Analyst": 2, "Marketing Manager": 10, "Operations Manager": 2, "Human Resources Manager": 2, "Project Manager": 2, "Sales Manager": 10, "Management Consultant": 5 },
+            5: { "Business Analyst": 2, "Financial Analyst": 10, "Marketing Manager": 2, "Operations Manager": 5, "Human Resources Manager": 2, "Project Manager": 5, "Sales Manager": 2, "Management Consultant": 10 },
+            6: { "Business Analyst": 2, "Financial Analyst": 2, "Marketing Manager": 5, "Operations Manager": 2, "Human Resources Manager": 10, "Project Manager": 2, "Sales Manager": 10, "Management Consultant": 5 },
+            7: { "Business Analyst": 2, "Financial Analyst": 2, "Marketing Manager": 10, "Operations Manager": 10, "Human Resources Manager": 2, "Project Manager": 5, "Sales Manager": 5, "Management Consultant": 2 },
+            8: { "Business Analyst": 5, "Financial Analyst": 10, "Marketing Manager": 2, "Operations Manager": 5, "Human Resources Manager": 2, "Project Manager": 10, "Sales Manager": 2, "Management Consultant": 2 },
+            9: { "Business Analyst": 10, "Financial Analyst": 2, "Marketing Manager": 10, "Operations Manager": 2, "Human Resources Manager": 5, "Project Manager": 2, "Sales Manager": 5, "Management Consultant": 2 },
+            10: { "Business Analyst": 5, "Financial Analyst": 5, "Marketing Manager": 2, "Operations Manager": 10, "Human Resources Manager": 2, "Project Manager": 10, "Sales Manager": 2, "Management Consultant": 2 },
+            11: { "Business Analyst": 2, "Financial Analyst": 2, "Marketing Manager": 5, "Operations Manager": 2, "Human Resources Manager": 5, "Project Manager": 2, "Sales Manager": 10, "Management Consultant": 10 },
+            12: { "Business Analyst": 10, "Financial Analyst": 10, "Marketing Manager": 5, "Operations Manager": 2, "Human Resources Manager": 2, "Project Manager": 5, "Sales Manager": 2, "Management Consultant": 2 },
+            13: { "Business Analyst": 5, "Financial Analyst": 5, "Marketing Manager": 2, "Operations Manager": 2, "Human Resources Manager": 10, "Project Manager": 10, "Sales Manager": 2, "Management Consultant": 2 },
+            14: { "Business Analyst": 2, "Financial Analyst": 5, "Marketing Manager": 2, "Operations Manager": 2, "Human Resources Manager": 5, "Project Manager": 2, "Sales Manager": 10, "Management Consultant": 10 },
+            15: { "Business Analyst": 2, "Financial Analyst": 5, "Marketing Manager": 10, "Operations Manager": 2, "Human Resources Manager": 10, "Project Manager": 2, "Sales Manager": 5, "Management Consultant": 2 },
+            16: { "Business Analyst": 2, "Financial Analyst": 2, "Marketing Manager": 5, "Operations Manager": 10, "Human Resources Manager": 10, "Project Manager": 2, "Sales Manager": 5, "Management Consultant": 2 }
+        };
+
+        const healthcareJobWeightMapping = {
+            1: { "Registered Nurse": 10, "Medical Laboratory Technologist": 2, "Physical Therapist": 5, "Pharmacist": 2, "Radiologic Technologist": 2, "Respiratory Therapist": 5, "Public Health Specialist": 2, "Occupational Therapist": 10 },
+            2: { "Registered Nurse": 2, "Medical Laboratory Technologist": 10, "Physical Therapist": 2, "Pharmacist": 10, "Radiologic Technologist": 5, "Respiratory Therapist": 2, "Public Health Specialist": 5, "Occupational Therapist": 2 },
+            3: { "Registered Nurse": 5, "Medical Laboratory Technologist": 2, "Physical Therapist": 10, "Pharmacist": 2, "Radiologic Technologist": 2, "Respiratory Therapist": 2, "Public Health Specialist": 10, "Occupational Therapist": 5 },
+            4: { "Registered Nurse": 10, "Medical Laboratory Technologist": 2, "Physical Therapist": 2, "Pharmacist": 5, "Radiologic Technologist": 5, "Respiratory Therapist": 10, "Public Health Specialist": 2, "Occupational Therapist": 2 },
+            5: { "Registered Nurse": 2, "Medical Laboratory Technologist": 2, "Physical Therapist": 10, "Pharmacist": 5, "Radiologic Technologist": 2, "Respiratory Therapist": 5, "Public Health Specialist": 2, "Occupational Therapist": 10 },
+            6: { "Registered Nurse": 2, "Medical Laboratory Technologist": 10, "Physical Therapist": 2, "Pharmacist": 5, "Radiologic Technologist": 10, "Respiratory Therapist": 5, "Public Health Specialist": 2, "Occupational Therapist": 2 },
+            7: { "Registered Nurse": 5, "Medical Laboratory Technologist": 5, "Physical Therapist": 2, "Pharmacist": 10, "Radiologic Technologist": 2, "Respiratory Therapist": 2, "Public Health Specialist": 10, "Occupational Therapist": 2 },
+            8: { "Registered Nurse": 2, "Medical Laboratory Technologist": 5, "Physical Therapist": 2, "Pharmacist": 2, "Radiologic Technologist": 10, "Respiratory Therapist": 10, "Public Health Specialist": 5, "Occupational Therapist": 2 },
+            9: { "Registered Nurse": 10, "Medical Laboratory Technologist": 2, "Physical Therapist": 5, "Pharmacist": 2, "Radiologic Technologist": 2, "Respiratory Therapist": 10, "Public Health Specialist": 2, "Occupational Therapist": 5 },
+            10: { "Registered Nurse": 10, "Medical Laboratory Technologist": 5, "Physical Therapist": 2, "Pharmacist": 10, "Radiologic Technologist": 2, "Respiratory Therapist": 5, "Public Health Specialist": 2, "Occupational Therapist": 2 },
+            11: { "Registered Nurse": 5, "Medical Laboratory Technologist": 2, "Physical Therapist": 5, "Pharmacist": 2, "Radiologic Technologist": 2, "Respiratory Therapist": 2, "Public Health Specialist": 10, "Occupational Therapist": 10 },
+            12: { "Registered Nurse": 5, "Medical Laboratory Technologist": 2, "Physical Therapist": 10, "Pharmacist": 2, "Radiologic Technologist": 2, "Respiratory Therapist": 2, "Public Health Specialist": 5, "Occupational Therapist": 10 },
+            13: { "Registered Nurse": 2, "Medical Laboratory Technologist": 10, "Physical Therapist": 2, "Pharmacist": 5, "Radiologic Technologist": 10, "Respiratory Therapist": 2, "Public Health Specialist": 2, "Occupational Therapist": 5 },
+            14: { "Registered Nurse": 2, "Medical Laboratory Technologist": 2, "Physical Therapist": 2, "Pharmacist": 10, "Radiologic Technologist": 5, "Respiratory Therapist": 10, "Public Health Specialist": 2, "Occupational Therapist": 5 },
+            15: { "Registered Nurse": 2, "Medical Laboratory Technologist": 10, "Physical Therapist": 5, "Pharmacist": 2, "Radiologic Technologist": 5, "Respiratory Therapist": 2, "Public Health Specialist": 10, "Occupational Therapist": 2 },
+            16: { "Registered Nurse": 2, "Medical Laboratory Technologist": 5, "Physical Therapist": 10, "Pharmacist": 2, "Radiologic Technologist": 10, "Respiratory Therapist": 2, "Public Health Specialist": 5, "Occupational Therapist": 2 }
+        };
+
+        const technologyJobWeightMapping = {
+            1: { "Software Developer": 10, "Data Scientist": 2, "Cybersecurity Analyst": 2, "Network Administrator": 2, "UX/UI Designer": 10, "AI/ML Engineer": 5, "Database Administrator": 5, "IT Project Manager": 2 },
+            2: { "Software Developer": 5, "Data Scientist": 10, "Cybersecurity Analyst": 2, "Network Administrator": 2, "UX/UI Designer": 2, "AI/ML Engineer": 10, "Database Administrator": 5, "IT Project Manager": 2 },
+            3: { "Software Developer": 10, "Data Scientist": 2, "Cybersecurity Analyst": 10, "Network Administrator": 5, "UX/UI Designer": 2, "AI/ML Engineer": 5, "Database Administrator": 2, "IT Project Manager": 2 },
+            4: { "Software Developer": 2, "Data Scientist": 2, "Cybersecurity Analyst": 10, "Network Administrator": 10, "UX/UI Designer": 2, "AI/ML Engineer": 2, "Database Administrator": 5, "IT Project Manager": 5 },
+            5: { "Software Developer": 2, "Data Scientist": 2, "Cybersecurity Analyst": 5, "Network Administrator": 10, "UX/UI Designer": 2, "AI/ML Engineer": 2, "Database Administrator": 10, "IT Project Manager": 5 },
+            6: { "Software Developer": 5, "Data Scientist": 2, "Cybersecurity Analyst": 2, "Network Administrator": 2, "UX/UI Designer": 10, "AI/ML Engineer": 10, "Database Administrator": 2, "IT Project Manager": 5 },
+            7: { "Software Developer": 5, "Data Scientist": 10, "Cybersecurity Analyst": 5, "Network Administrator": 2, "UX/UI Designer": 2, "AI/ML Engineer": 10, "Database Administrator": 2, "IT Project Manager": 2 },
+            8: { "Software Developer": 2, "Data Scientist": 10, "Cybersecurity Analyst": 2, "Network Administrator": 5, "UX/UI Designer": 2, "AI/ML Engineer": 5, "Database Administrator": 10, "IT Project Manager": 2 },
+            9: { "Software Developer": 10, "Data Scientist": 2, "Cybersecurity Analyst": 5, "Network Administrator": 2, "UX/UI Designer": 5, "AI/ML Engineer": 2, "Database Administrator": 2, "IT Project Manager": 10 },
+            10: { "Software Developer": 5, "Data Scientist": 2, "Cybersecurity Analyst": 2, "Network Administrator": 10, "UX/UI Designer": 5, "AI/ML Engineer": 2, "Database Administrator": 2, "IT Project Manager": 10 },
+            11: { "Software Developer": 10, "Data Scientist": 5, "Cybersecurity Analyst": 10, "Network Administrator": 2, "UX/UI Designer": 2, "AI/ML Engineer": 5, "Database Administrator": 2, "IT Project Manager": 2 },
+            12: { "Software Developer": 2, "Data Scientist": 5, "Cybersecurity Analyst": 2, "Network Administrator": 5, "UX/UI Designer": 2, "AI/ML Engineer": 10, "Database Administrator": 10, "IT Project Manager": 2 },
+            13: { "Software Developer": 2, "Data Scientist": 2, "Cybersecurity Analyst": 5, "Network Administrator": 10, "UX/UI Designer": 5, "AI/ML Engineer": 2, "Database Administrator": 2, "IT Project Manager": 10 },
+            14: { "Software Developer": 2, "Data Scientist": 10, "Cybersecurity Analyst": 2, "Network Administrator": 2, "UX/UI Designer": 10, "AI/ML Engineer": 2, "Database Administrator": 5, "IT Project Manager": 5 },
+            15: { "Software Developer": 2, "Data Scientist": 5, "Cybersecurity Analyst": 2, "Network Administrator": 5, "UX/UI Designer": 10, "AI/ML Engineer": 2, "Database Administrator": 2, "IT Project Manager": 10 },
+            16: { "Software Developer": 2, "Data Scientist": 5, "Cybersecurity Analyst": 10, "Network Administrator": 2, "UX/UI Designer": 5, "AI/ML Engineer": 2, "Database Administrator": 10, "IT Project Manager": 2 }
+        };
+
+        // Balanced creative weights: each job totals 76 (4×10 + 4×5 + 8×2)
+        const creativeJobWeightMapping = {
+            1: { "Graphic Designer": 10, "Content Writer": 2, "Digital Marketing Specialist": 2, "Art Director": 10, "Photographer": 5, "Social Media Manager": 2, "Creative Director": 5, "Brand Manager": 2 },
+            2: { "Graphic Designer": 2, "Content Writer": 10, "Digital Marketing Specialist": 5, "Art Director": 2, "Photographer": 2, "Social Media Manager": 10, "Creative Director": 2, "Brand Manager": 5 },
+            3: { "Graphic Designer": 5, "Content Writer": 2, "Digital Marketing Specialist": 10, "Art Director": 2, "Photographer": 10, "Social Media Manager": 5, "Creative Director": 2, "Brand Manager": 2 },
+            4: { "Graphic Designer": 2, "Content Writer": 2, "Digital Marketing Specialist": 10, "Art Director": 2, "Photographer": 2, "Social Media Manager": 5, "Creative Director": 5, "Brand Manager": 10 },
+            5: { "Graphic Designer": 10, "Content Writer": 2, "Digital Marketing Specialist": 2, "Art Director": 5, "Photographer": 10, "Social Media Manager": 2, "Creative Director": 5, "Brand Manager": 2 },
+            6: { "Graphic Designer": 2, "Content Writer": 5, "Digital Marketing Specialist": 2, "Art Director": 10, "Photographer": 2, "Social Media Manager": 2, "Creative Director": 10, "Brand Manager": 5 },
+            7: { "Graphic Designer": 5, "Content Writer": 10, "Digital Marketing Specialist": 2, "Art Director": 5, "Photographer": 10, "Social Media Manager": 2, "Creative Director": 2, "Brand Manager": 2 },
+            8: { "Graphic Designer": 2, "Content Writer": 2, "Digital Marketing Specialist": 5, "Art Director": 5, "Photographer": 2, "Social Media Manager": 2, "Creative Director": 10, "Brand Manager": 10 },
+            9: { "Graphic Designer": 5, "Content Writer": 2, "Digital Marketing Specialist": 2, "Art Director": 10, "Photographer": 2, "Social Media Manager": 5, "Creative Director": 10, "Brand Manager": 2 },
+            10: { "Graphic Designer": 10, "Content Writer": 2, "Digital Marketing Specialist": 10, "Art Director": 2, "Photographer": 5, "Social Media Manager": 2, "Creative Director": 2, "Brand Manager": 5 },
+            11: { "Graphic Designer": 2, "Content Writer": 10, "Digital Marketing Specialist": 2, "Art Director": 2, "Photographer": 5, "Social Media Manager": 10, "Creative Director": 5, "Brand Manager": 2 },
+            12: { "Graphic Designer": 5, "Content Writer": 5, "Digital Marketing Specialist": 2, "Art Director": 2, "Photographer": 2, "Social Media Manager": 2, "Creative Director": 10, "Brand Manager": 10 },
+            13: { "Graphic Designer": 2, "Content Writer": 5, "Digital Marketing Specialist": 2, "Art Director": 10, "Photographer": 2, "Social Media Manager": 10, "Creative Director": 2, "Brand Manager": 5 },
+            14: { "Graphic Designer": 2, "Content Writer": 2, "Digital Marketing Specialist": 10, "Art Director": 5, "Photographer": 5, "Social Media Manager": 10, "Creative Director": 2, "Brand Manager": 2 },
+            15: { "Graphic Designer": 10, "Content Writer": 5, "Digital Marketing Specialist": 5, "Art Director": 2, "Photographer": 10, "Social Media Manager": 2, "Creative Director": 2, "Brand Manager": 2 },
+            16: { "Graphic Designer": 2, "Content Writer": 10, "Digital Marketing Specialist": 5, "Art Director": 2, "Photographer": 2, "Social Media Manager": 5, "Creative Director": 2, "Brand Manager": 10 }
+        };
+
+        // Balanced education weights: each job totals 76 (4×10 + 4×5 + 8×2)
+        const educationJobWeightMapping = {
+            1: { "Elementary School Teacher": 2, "High School English Teacher": 2, "High School Math Teacher": 2, "High School Science Teacher": 10, "Preschool Teacher": 5, "Special Education Teacher": 5, "Educational Coordinator": 10, "Curriculum Developer": 2 },
+            2: { "Elementary School Teacher": 10, "High School English Teacher": 5, "High School Math Teacher": 2, "High School Science Teacher": 2, "Preschool Teacher": 10, "Special Education Teacher": 2, "Educational Coordinator": 2, "Curriculum Developer": 5 },
+            3: { "Elementary School Teacher": 10, "High School English Teacher": 10, "High School Math Teacher": 5, "High School Science Teacher": 2, "Preschool Teacher": 2, "Special Education Teacher": 5, "Educational Coordinator": 2, "Curriculum Developer": 2 },
+            4: { "Elementary School Teacher": 2, "High School English Teacher": 2, "High School Math Teacher": 10, "High School Science Teacher": 10, "Preschool Teacher": 2, "Special Education Teacher": 2, "Educational Coordinator": 5, "Curriculum Developer": 5 },
+            5: { "Elementary School Teacher": 2, "High School English Teacher": 2, "High School Math Teacher": 2, "High School Science Teacher": 5, "Preschool Teacher": 5, "Special Education Teacher": 2, "Educational Coordinator": 10, "Curriculum Developer": 10 },
+            6: { "Elementary School Teacher": 5, "High School English Teacher": 2, "High School Math Teacher": 2, "High School Science Teacher": 2, "Preschool Teacher": 10, "Special Education Teacher": 10, "Educational Coordinator": 2, "Curriculum Developer": 5 },
+            7: { "Elementary School Teacher": 2, "High School English Teacher": 10, "High School Math Teacher": 5, "High School Science Teacher": 2, "Preschool Teacher": 5, "Special Education Teacher": 10, "Educational Coordinator": 2, "Curriculum Developer": 2 },
+            8: { "Elementary School Teacher": 5, "High School English Teacher": 2, "High School Math Teacher": 10, "High School Science Teacher": 2, "Preschool Teacher": 2, "Special Education Teacher": 2, "Educational Coordinator": 5, "Curriculum Developer": 10 },
+            9: { "Elementary School Teacher": 2, "High School English Teacher": 10, "High School Math Teacher": 5, "High School Science Teacher": 2, "Preschool Teacher": 5, "Special Education Teacher": 2, "Educational Coordinator": 10, "Curriculum Developer": 2 },
+            10: { "Elementary School Teacher": 2, "High School English Teacher": 2, "High School Math Teacher": 2, "High School Science Teacher": 10, "Preschool Teacher": 2, "Special Education Teacher": 5, "Educational Coordinator": 5, "Curriculum Developer": 10 },
+            11: { "Elementary School Teacher": 10, "High School English Teacher": 5, "High School Math Teacher": 2, "High School Science Teacher": 2, "Preschool Teacher": 2, "Special Education Teacher": 10, "Educational Coordinator": 2, "Curriculum Developer": 5 },
+            12: { "Elementary School Teacher": 5, "High School English Teacher": 2, "High School Math Teacher": 10, "High School Science Teacher": 5, "Preschool Teacher": 10, "Special Education Teacher": 2, "Educational Coordinator": 2, "Curriculum Developer": 2 },
+            13: { "Elementary School Teacher": 2, "High School English Teacher": 5, "High School Math Teacher": 2, "High School Science Teacher": 5, "Preschool Teacher": 2, "Special Education Teacher": 2, "Educational Coordinator": 10, "Curriculum Developer": 10 },
+            14: { "Elementary School Teacher": 5, "High School English Teacher": 10, "High School Math Teacher": 10, "High School Science Teacher": 2, "Preschool Teacher": 2, "Special Education Teacher": 5, "Educational Coordinator": 2, "Curriculum Developer": 2 },
+            15: { "Elementary School Teacher": 2, "High School English Teacher": 2, "High School Math Teacher": 2, "High School Science Teacher": 5, "Preschool Teacher": 10, "Special Education Teacher": 10, "Educational Coordinator": 5, "Curriculum Developer": 2 },
+            16: { "Elementary School Teacher": 10, "High School English Teacher": 5, "High School Math Teacher": 5, "High School Science Teacher": 10, "Preschool Teacher": 2, "Special Education Teacher": 2, "Educational Coordinator": 2, "Curriculum Developer": 2 }
+        };
+
+        // Balanced engineering weights: each job totals 76 (4×10 + 4×5 + 8×2)
+        const engineeringJobWeightMapping = {
+            1: { "Civil Engineer": 2, "Mechanical Engineer": 10, "Electrical Engineer": 10, "Software Engineer": 5, "Chemical Engineer": 2, "Environmental Engineer": 2, "Industrial Engineer": 5, "Biomedical Engineer": 2 },
+            2: { "Civil Engineer": 2, "Mechanical Engineer": 5, "Electrical Engineer": 5, "Software Engineer": 10, "Chemical Engineer": 10, "Environmental Engineer": 2, "Industrial Engineer": 2, "Biomedical Engineer": 2 },
+            3: { "Civil Engineer": 10, "Mechanical Engineer": 10, "Electrical Engineer": 2, "Software Engineer": 2, "Chemical Engineer": 2, "Environmental Engineer": 5, "Industrial Engineer": 5, "Biomedical Engineer": 2 },
+            4: { "Civil Engineer": 2, "Mechanical Engineer": 2, "Electrical Engineer": 10, "Software Engineer": 5, "Chemical Engineer": 2, "Environmental Engineer": 2, "Industrial Engineer": 5, "Biomedical Engineer": 10 },
+            5: { "Civil Engineer": 10, "Mechanical Engineer": 5, "Electrical Engineer": 2, "Software Engineer": 2, "Chemical Engineer": 2, "Environmental Engineer": 2, "Industrial Engineer": 10, "Biomedical Engineer": 5 },
+            6: { "Civil Engineer": 2, "Mechanical Engineer": 2, "Electrical Engineer": 2, "Software Engineer": 2, "Chemical Engineer": 10, "Environmental Engineer": 10, "Industrial Engineer": 5, "Biomedical Engineer": 5 },
+            7: { "Civil Engineer": 5, "Mechanical Engineer": 2, "Electrical Engineer": 2, "Software Engineer": 10, "Chemical Engineer": 5, "Environmental Engineer": 2, "Industrial Engineer": 10, "Biomedical Engineer": 2 },
+            8: { "Civil Engineer": 10, "Mechanical Engineer": 2, "Electrical Engineer": 2, "Software Engineer": 2, "Chemical Engineer": 5, "Environmental Engineer": 10, "Industrial Engineer": 2, "Biomedical Engineer": 5 },
+            9: { "Civil Engineer": 2, "Mechanical Engineer": 5, "Electrical Engineer": 5, "Software Engineer": 2, "Chemical Engineer": 2, "Environmental Engineer": 2, "Industrial Engineer": 10, "Biomedical Engineer": 10 },
+            10: { "Civil Engineer": 5, "Mechanical Engineer": 2, "Electrical Engineer": 10, "Software Engineer": 10, "Chemical Engineer": 2, "Environmental Engineer": 5, "Industrial Engineer": 2, "Biomedical Engineer": 2 },
+            11: { "Civil Engineer": 5, "Mechanical Engineer": 10, "Electrical Engineer": 2, "Software Engineer": 2, "Chemical Engineer": 10, "Environmental Engineer": 5, "Industrial Engineer": 2, "Biomedical Engineer": 2 },
+            12: { "Civil Engineer": 2, "Mechanical Engineer": 2, "Electrical Engineer": 5, "Software Engineer": 5, "Chemical Engineer": 2, "Environmental Engineer": 10, "Industrial Engineer": 2, "Biomedical Engineer": 10 },
+            13: { "Civil Engineer": 5, "Mechanical Engineer": 2, "Electrical Engineer": 2, "Software Engineer": 2, "Chemical Engineer": 5, "Environmental Engineer": 10, "Industrial Engineer": 2, "Biomedical Engineer": 10 },
+            14: { "Civil Engineer": 10, "Mechanical Engineer": 5, "Electrical Engineer": 5, "Software Engineer": 10, "Chemical Engineer": 2, "Environmental Engineer": 2, "Industrial Engineer": 2, "Biomedical Engineer": 2 },
+            15: { "Civil Engineer": 2, "Mechanical Engineer": 10, "Electrical Engineer": 2, "Software Engineer": 2, "Chemical Engineer": 5, "Environmental Engineer": 2, "Industrial Engineer": 10, "Biomedical Engineer": 5 },
+            16: { "Civil Engineer": 2, "Mechanical Engineer": 2, "Electrical Engineer": 10, "Software Engineer": 5, "Chemical Engineer": 10, "Environmental Engineer": 5, "Industrial Engineer": 2, "Biomedical Engineer": 2 }
+        };
+
+        // Balanced law weights: each job totals 76 (4×10 + 4×5 + 8×2)
+        const lawJobWeightMapping = {
+            1: { "Corporate Lawyer": 2, "Criminal Defense Attorney": 2, "Public Defender": 2, "Legal Researcher": 10, "Paralegal": 10, "Compliance Officer": 5, "Judge": 2, "Legal Consultant": 5 },
+            2: { "Corporate Lawyer": 10, "Criminal Defense Attorney": 2, "Public Defender": 2, "Legal Researcher": 5, "Paralegal": 10, "Compliance Officer": 2, "Judge": 2, "Legal Consultant": 5 },
+            3: { "Corporate Lawyer": 2, "Criminal Defense Attorney": 10, "Public Defender": 2, "Legal Researcher": 2, "Paralegal": 10, "Compliance Officer": 5, "Judge": 5, "Legal Consultant": 2 },
+            4: { "Corporate Lawyer": 5, "Criminal Defense Attorney": 2, "Public Defender": 2, "Legal Researcher": 2, "Paralegal": 2, "Compliance Officer": 10, "Judge": 10, "Legal Consultant": 5 },
+            5: { "Corporate Lawyer": 5, "Criminal Defense Attorney": 10, "Public Defender": 5, "Legal Researcher": 2, "Paralegal": 2, "Compliance Officer": 2, "Judge": 10, "Legal Consultant": 2 },
+            6: { "Corporate Lawyer": 10, "Criminal Defense Attorney": 2, "Public Defender": 2, "Legal Researcher": 5, "Paralegal": 5, "Compliance Officer": 2, "Judge": 2, "Legal Consultant": 10 },
+            7: { "Corporate Lawyer": 2, "Criminal Defense Attorney": 5, "Public Defender": 2, "Legal Researcher": 10, "Paralegal": 2, "Compliance Officer": 10, "Judge": 2, "Legal Consultant": 5 },
+            8: { "Corporate Lawyer": 10, "Criminal Defense Attorney": 5, "Public Defender": 2, "Legal Researcher": 2, "Paralegal": 10, "Compliance Officer": 2, "Judge": 5, "Legal Consultant": 2 },
+            9: { "Corporate Lawyer": 2, "Criminal Defense Attorney": 5, "Public Defender": 10, "Legal Researcher": 2, "Paralegal": 2, "Compliance Officer": 5, "Judge": 2, "Legal Consultant": 10 },
+            10: { "Corporate Lawyer": 2, "Criminal Defense Attorney": 10, "Public Defender": 10, "Legal Researcher": 5, "Paralegal": 5, "Compliance Officer": 2, "Judge": 2, "Legal Consultant": 2 },
+            11: { "Corporate Lawyer": 10, "Criminal Defense Attorney": 2, "Public Defender": 5, "Legal Researcher": 2, "Paralegal": 2, "Compliance Officer": 5, "Judge": 2, "Legal Consultant": 10 },
+            12: { "Corporate Lawyer": 5, "Criminal Defense Attorney": 2, "Public Defender": 2, "Legal Researcher": 10, "Paralegal": 5, "Compliance Officer": 10, "Judge": 2, "Legal Consultant": 2 },
+            13: { "Corporate Lawyer": 2, "Criminal Defense Attorney": 2, "Public Defender": 5, "Legal Researcher": 5, "Paralegal": 2, "Compliance Officer": 2, "Judge": 10, "Legal Consultant": 10 },
+            14: { "Corporate Lawyer": 5, "Criminal Defense Attorney": 10, "Public Defender": 10, "Legal Researcher": 2, "Paralegal": 2, "Compliance Officer": 2, "Judge": 5, "Legal Consultant": 2 },
+            15: { "Corporate Lawyer": 2, "Criminal Defense Attorney": 2, "Public Defender": 10, "Legal Researcher": 10, "Paralegal": 5, "Compliance Officer": 2, "Judge": 5, "Legal Consultant": 2 },
+            16: { "Corporate Lawyer": 2, "Criminal Defense Attorney": 5, "Public Defender": 5, "Legal Researcher": 2, "Paralegal": 2, "Compliance Officer": 10, "Judge": 10, "Legal Consultant": 2 }
+        };
+
+        // Balanced tourism weights: each job totals 76 (4×10 + 4×5 + 8×2)
+        const tourismJobWeightMapping = {
+            1: { "Travel Agent": 10, "Hotel Manager": 2, "Tour Guide": 5, "Event Planner": 2, "Restaurant Manager": 2, "Tourism Marketing Specialist": 5, "Resort Operations Manager": 2, "Travel Consultant": 10 },
+            2: { "Travel Agent": 2, "Hotel Manager": 10, "Tour Guide": 5, "Event Planner": 2, "Restaurant Manager": 10, "Tourism Marketing Specialist": 5, "Resort Operations Manager": 2, "Travel Consultant": 2 },
+            3: { "Travel Agent": 5, "Hotel Manager": 2, "Tour Guide": 10, "Event Planner": 2, "Restaurant Manager": 2, "Tourism Marketing Specialist": 2, "Resort Operations Manager": 5, "Travel Consultant": 10 },
+            4: { "Travel Agent": 2, "Hotel Manager": 10, "Tour Guide": 2, "Event Planner": 5, "Restaurant Manager": 5, "Tourism Marketing Specialist": 2, "Resort Operations Manager": 10, "Travel Consultant": 2 },
+            5: { "Travel Agent": 2, "Hotel Manager": 5, "Tour Guide": 2, "Event Planner": 10, "Restaurant Manager": 10, "Tourism Marketing Specialist": 2, "Resort Operations Manager": 5, "Travel Consultant": 2 },
+            6: { "Travel Agent": 2, "Hotel Manager": 2, "Tour Guide": 10, "Event Planner": 5, "Restaurant Manager": 5, "Tourism Marketing Specialist": 2, "Resort Operations Manager": 2, "Travel Consultant": 10 },
+            7: { "Travel Agent": 10, "Hotel Manager": 2, "Tour Guide": 5, "Event Planner": 2, "Restaurant Manager": 2, "Tourism Marketing Specialist": 10, "Resort Operations Manager": 2, "Travel Consultant": 5 },
+            8: { "Travel Agent": 2, "Hotel Manager": 10, "Tour Guide": 2, "Event Planner": 5, "Restaurant Manager": 10, "Tourism Marketing Specialist": 5, "Resort Operations Manager": 2, "Travel Consultant": 2 },
+            9: { "Travel Agent": 10, "Hotel Manager": 2, "Tour Guide": 10, "Event Planner": 2, "Restaurant Manager": 2, "Tourism Marketing Specialist": 5, "Resort Operations Manager": 5, "Travel Consultant": 2 },
+            10: { "Travel Agent": 5, "Hotel Manager": 2, "Tour Guide": 10, "Event Planner": 2, "Restaurant Manager": 2, "Tourism Marketing Specialist": 2, "Resort Operations Manager": 5, "Travel Consultant": 10 },
+            11: { "Travel Agent": 10, "Hotel Manager": 5, "Tour Guide": 2, "Event Planner": 2, "Restaurant Manager": 2, "Tourism Marketing Specialist": 10, "Resort Operations Manager": 2, "Travel Consultant": 5 },
+            12: { "Travel Agent": 2, "Hotel Manager": 5, "Tour Guide": 2, "Event Planner": 10, "Restaurant Manager": 5, "Tourism Marketing Specialist": 2, "Resort Operations Manager": 10, "Travel Consultant": 2 },
+            13: { "Travel Agent": 5, "Hotel Manager": 2, "Tour Guide": 5, "Event Planner": 2, "Restaurant Manager": 2, "Tourism Marketing Specialist": 10, "Resort Operations Manager": 10, "Travel Consultant": 2 },
+            14: { "Travel Agent": 2, "Hotel Manager": 10, "Tour Guide": 2, "Event Planner": 5, "Restaurant Manager": 5, "Tourism Marketing Specialist": 2, "Resort Operations Manager": 10, "Travel Consultant": 2 },
+            15: { "Travel Agent": 5, "Hotel Manager": 2, "Tour Guide": 2, "Event Planner": 10, "Restaurant Manager": 2, "Tourism Marketing Specialist": 10, "Resort Operations Manager": 2, "Travel Consultant": 5 },
+            16: { "Travel Agent": 2, "Hotel Manager": 5, "Tour Guide": 2, "Event Planner": 10, "Restaurant Manager": 10, "Tourism Marketing Specialist": 2, "Resort Operations Manager": 2, "Travel Consultant": 5 }
         };
 
         // Initialize first section
@@ -1658,8 +1339,8 @@
                     <div class="border-b border-gray-200 pb-6 last:border-b-0">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">${question.text}</h3>
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-sm font-medium text-green-600">Strongly Agree</span>
                             <span class="text-sm font-medium text-red-600">Strongly Disagree</span>
+                            <span class="text-sm font-medium text-green-600">Strongly Agree</span>
                         </div>
                         <div class="flex items-center justify-center gap-4">
                             ${createRatingScale(question.id)}
@@ -1727,657 +1408,81 @@
         }
 
         // Weight mapping for business courses (from Business.py)
-        const businessWeightMapping = {
-            1: { // Mathematical/Analytical Skills
-                "BS Business Administration": 7,
-                "BS Accountancy": 10,
-                "BS Marketing Management": 6,
-                "BS Financial Management": 9,
-                "BS Human Resource Management": 5,
-                "BS Entrepreneurship": 6,
-                "BS Management Accounting": 10,
-                "BS Operations Management": 8
-            },
-            2: { // Financial Analysis Interest
-                "BS Business Administration": 8,
-                "BS Accountancy": 10,
-                "BS Marketing Management": 5,
-                "BS Financial Management": 10,
-                "BS Human Resource Management": 4,
-                "BS Entrepreneurship": 7,
-                "BS Management Accounting": 9,
-                "BS Operations Management": 6
-            },
-            3: { // Communication Skills
-                "BS Business Administration": 9,
-                "BS Accountancy": 7,
-                "BS Marketing Management": 10,
-                "BS Financial Management": 7,
-                "BS Human Resource Management": 10,
-                "BS Entrepreneurship": 9,
-                "BS Management Accounting": 6,
-                "BS Operations Management": 8
-            },
-            4: { // Leadership/Management Interest
-                "BS Business Administration": 10,
-                "BS Accountancy": 6,
-                "BS Marketing Management": 8,
-                "BS Financial Management": 7,
-                "BS Human Resource Management": 10,
-                "BS Entrepreneurship": 10,
-                "BS Management Accounting": 5,
-                "BS Operations Management": 9
-            },
-            5: { // Technology Skills
-                "BS Business Administration": 8,
-                "BS Accountancy": 9,
-                "BS Marketing Management": 8,
-                "BS Financial Management": 8,
-                "BS Human Resource Management": 7,
-                "BS Entrepreneurship": 7,
-                "BS Management Accounting": 9,
-                "BS Operations Management": 9
-            },
-            6: { // Innovation/Entrepreneurship Interest
-                "BS Business Administration": 7,
-                "BS Accountancy": 3,
-                "BS Marketing Management": 8,
-                "BS Financial Management": 5,
-                "BS Human Resource Management": 6,
-                "BS Entrepreneurship": 10,
-                "BS Management Accounting": 4,
-                "BS Operations Management": 6
-            },
-            7: { // Accounting Knowledge
-                "BS Business Administration": 7,
-                "BS Accountancy": 10,
-                "BS Marketing Management": 4,
-                "BS Financial Management": 8,
-                "BS Human Resource Management": 5,
-                "BS Entrepreneurship": 6,
-                "BS Management Accounting": 10,
-                "BS Operations Management": 6
-            },
-            8: { // Marketing/Consumer Behavior Interest
-                "BS Business Administration": 7,
-                "BS Accountancy": 3,
-                "BS Marketing Management": 10,
-                "BS Financial Management": 4,
-                "BS Human Resource Management": 6,
-                "BS Entrepreneurship": 8,
-                "BS Management Accounting": 3,
-                "BS Operations Management": 5
-            },
-            9: { // Decision Making Skills
-                "BS Business Administration": 9,
-                "BS Accountancy": 7,
-                "BS Marketing Management": 8,
-                "BS Financial Management": 9,
-                "BS Human Resource Management": 8,
-                "BS Entrepreneurship": 10,
-                "BS Management Accounting": 7,
-                "BS Operations Management": 9
-            },
-            10: { // Economics/Business Environment Knowledge
-                "BS Business Administration": 9,
-                "BS Accountancy": 6,
-                "BS Marketing Management": 7,
-                "BS Financial Management": 8,
-                "BS Human Resource Management": 6,
-                "BS Entrepreneurship": 8,
-                "BS Management Accounting": 6,
-                "BS Operations Management": 7
-            },
-            11: { // Financial Planning Interest
-                "BS Business Administration": 8,
-                "BS Accountancy": 9,
-                "BS Marketing Management": 4,
-                "BS Financial Management": 10,
-                "BS Human Resource Management": 5,
-                "BS Entrepreneurship": 8,
-                "BS Management Accounting": 9,
-                "BS Operations Management": 6
-            },
-            12: { // Organization/Time Management Skills
-                "BS Business Administration": 9,
-                "BS Accountancy": 8,
-                "BS Marketing Management": 9,
-                "BS Financial Management": 8,
-                "BS Human Resource Management": 9,
-                "BS Entrepreneurship": 9,
-                "BS Management Accounting": 8,
-                "BS Operations Management": 10
-            },
-            13: { // Human Resources Interest
-                "BS Business Administration": 7,
-                "BS Accountancy": 4,
-                "BS Marketing Management": 6,
-                "BS Financial Management": 5,
-                "BS Human Resource Management": 10,
-                "BS Entrepreneurship": 7,
-                "BS Management Accounting": 4,
-                "BS Operations Management": 7
-            },
-            14: { // Data Analysis Skills
-                "BS Business Administration": 8,
-                "BS Accountancy": 9,
-                "BS Marketing Management": 8,
-                "BS Financial Management": 9,
-                "BS Human Resource Management": 6,
-                "BS Entrepreneurship": 7,
-                "BS Management Accounting": 9,
-                "BS Operations Management": 9
-            },
-            15: { // Business Law/Compliance Knowledge
-                "BS Business Administration": 8,
-                "BS Accountancy": 9,
-                "BS Marketing Management": 6,
-                "BS Financial Management": 7,
-                "BS Human Resource Management": 8,
-                "BS Entrepreneurship": 7,
-                "BS Management Accounting": 8,
-                "BS Operations Management": 7
-            },
-            16: { // Operations Management Interest
-                "BS Business Administration": 8,
-                "BS Accountancy": 5,
-                "BS Marketing Management": 6,
-                "BS Financial Management": 6,
-                "BS Human Resource Management": 7,
-                "BS Entrepreneurship": 7,
-                "BS Management Accounting": 6,
-                "BS Operations Management": 10
-            }
+                const businessWeightMapping = {
+            1: { "BS Business Administration": 2, "BS Accountancy": 2, "BS Marketing Management": 10, "BS Financial Management": 5, "BS Human Resource Management": 2, "BS Entrepreneurship": 2, "BS Management Accounting": 10, "BS Operations Management": 5 }, // Mathematical/Analytical Skills
+            2: { "BS Business Administration": 2, "BS Accountancy": 5, "BS Marketing Management": 2, "BS Financial Management": 10, "BS Human Resource Management": 2, "BS Entrepreneurship": 10, "BS Management Accounting": 5, "BS Operations Management": 2 }, // Financial Analysis Interest
+            3: { "BS Business Administration": 2, "BS Accountancy": 5, "BS Marketing Management": 10, "BS Financial Management": 5, "BS Human Resource Management": 10, "BS Entrepreneurship": 2, "BS Management Accounting": 2, "BS Operations Management": 2 }, // Communication Skills
+            4: { "BS Business Administration": 2, "BS Accountancy": 2, "BS Marketing Management": 5, "BS Financial Management": 2, "BS Human Resource Management": 10, "BS Entrepreneurship": 5, "BS Management Accounting": 2, "BS Operations Management": 10 }, // Leadership/Management Interest
+            5: { "BS Business Administration": 5, "BS Accountancy": 5, "BS Marketing Management": 2, "BS Financial Management": 2, "BS Human Resource Management": 2, "BS Entrepreneurship": 2, "BS Management Accounting": 10, "BS Operations Management": 10 }, // Technology Skills
+            6: { "BS Business Administration": 2, "BS Accountancy": 5, "BS Marketing Management": 10, "BS Financial Management": 2, "BS Human Resource Management": 5, "BS Entrepreneurship": 10, "BS Management Accounting": 2, "BS Operations Management": 2 }, // Innovation/Entrepreneurship Interest
+            7: { "BS Business Administration": 5, "BS Accountancy": 10, "BS Marketing Management": 2, "BS Financial Management": 5, "BS Human Resource Management": 2, "BS Entrepreneurship": 2, "BS Management Accounting": 10, "BS Operations Management": 2 }, // Accounting Knowledge
+            8: { "BS Business Administration": 5, "BS Accountancy": 2, "BS Marketing Management": 10, "BS Financial Management": 2, "BS Human Resource Management": 5, "BS Entrepreneurship": 10, "BS Management Accounting": 2, "BS Operations Management": 2 }, // Marketing/Consumer Behavior Interest
+            9: { "BS Business Administration": 2, "BS Accountancy": 2, "BS Marketing Management": 2, "BS Financial Management": 5, "BS Human Resource Management": 10, "BS Entrepreneurship": 10, "BS Management Accounting": 2, "BS Operations Management": 5 }, // Decision Making Skills
+            10: { "BS Business Administration": 2, "BS Accountancy": 2, "BS Marketing Management": 5, "BS Financial Management": 10, "BS Human Resource Management": 2, "BS Entrepreneurship": 5, "BS Management Accounting": 10, "BS Operations Management": 2 }, // Economics/Business Environment Knowledge
+            11: { "BS Business Administration": 5, "BS Accountancy": 10, "BS Marketing Management": 2, "BS Financial Management": 10, "BS Human Resource Management": 2, "BS Entrepreneurship": 2, "BS Management Accounting": 5, "BS Operations Management": 2 }, // Financial Planning Interest
+            12: { "BS Business Administration": 10, "BS Accountancy": 2, "BS Marketing Management": 5, "BS Financial Management": 2, "BS Human Resource Management": 5, "BS Entrepreneurship": 2, "BS Management Accounting": 2, "BS Operations Management": 10 }, // Organization/Time Management Skills
+            13: { "BS Business Administration": 10, "BS Accountancy": 2, "BS Marketing Management": 2, "BS Financial Management": 2, "BS Human Resource Management": 10, "BS Entrepreneurship": 5, "BS Management Accounting": 2, "BS Operations Management": 5 }, // Human Resources Interest
+            14: { "BS Business Administration": 2, "BS Accountancy": 10, "BS Marketing Management": 2, "BS Financial Management": 10, "BS Human Resource Management": 2, "BS Entrepreneurship": 2, "BS Management Accounting": 5, "BS Operations Management": 5 }, // Data Analysis Skills
+            15: { "BS Business Administration": 10, "BS Accountancy": 10, "BS Marketing Management": 5, "BS Financial Management": 2, "BS Human Resource Management": 2, "BS Entrepreneurship": 2, "BS Management Accounting": 5, "BS Operations Management": 2 }, // Business Law/Compliance Knowledge
+            16: { "BS Business Administration": 10, "BS Accountancy": 2, "BS Marketing Management": 2, "BS Financial Management": 2, "BS Human Resource Management": 5, "BS Entrepreneurship": 5, "BS Management Accounting": 2, "BS Operations Management": 10 }, // Operations Management Interest
         };
 
         // Education weight mapping from Education.py
-        const educationWeightMapping = {
-            1: { // Language/Communication Pedagogy
-                "Bachelor of Secondary Education (BSEd) major in English": 10,
-                "Bachelor of Elementary Education (BEEd)": 8,
-                "Bachelor of Early Childhood Education (BECEd)": 8,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 6,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 5,
-                "Bachelor of Secondary Education (BSEd) major in Science": 4,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 4,
-                "Bachelor of Physical Education (BPEd)": 3
-            },
-            2: { // Mathematics Pedagogy
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 10,
-                "Bachelor of Elementary Education (BEEd)": 8,
-                "Bachelor of Early Childhood Education (BECEd)": 7,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 6,
-                "Bachelor of Secondary Education (BSEd) major in Science": 5,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4,
-                "Bachelor of Secondary Education (BSEd) major in English": 4,
-                "Bachelor of Physical Education (BPEd)": 3
-            },
-            3: { // Science Pedagogy
-                "Bachelor of Secondary Education (BSEd) major in Science": 10,
-                "Bachelor of Elementary Education (BEEd)": 7,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 6,
-                "Bachelor of Early Childhood Education (BECEd)": 6,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 5,
-                "Bachelor of Secondary Education (BSEd) major in English": 4,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4,
-                "Bachelor of Physical Education (BPEd)": 3
-            },
-            4: { // Social Studies Pedagogy
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 10,
-                "Bachelor of Elementary Education (BEEd)": 7,
-                "Bachelor of Secondary Education (BSEd) major in English": 6,
-                "Bachelor of Early Childhood Education (BECEd)": 6,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 5,
-                "Bachelor of Secondary Education (BSEd) major in Science": 4,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 4,
-                "Bachelor of Physical Education (BPEd)": 3
-            },
-            5: { // Early Childhood Orientation
-                "Bachelor of Early Childhood Education (BECEd)": 10,
-                "Bachelor of Elementary Education (BEEd)": 9,
-                "Bachelor of Physical Education (BPEd)": 5,
-                "Bachelor of Secondary Education (BSEd) major in English": 5,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 4,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 4,
-                "Bachelor of Secondary Education (BSEd) major in Science": 4,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4
-            },
-            6: { // General Pedagogy & Assessment
-                "Bachelor of Elementary Education (BEEd)": 9,
-                "Bachelor of Early Childhood Education (BECEd)": 9,
-                "Bachelor of Secondary Education (BSEd) major in English": 8,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 8,
-                "Bachelor of Secondary Education (BSEd) major in Science": 8,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 8,
-                "Bachelor of Physical Education (BPEd)": 7,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
-            },
-            7: { // Physical Education & Coaching
-                "Bachelor of Physical Education (BPEd)": 10,
-                "Bachelor of Elementary Education (BEEd)": 6,
-                "Bachelor of Early Childhood Education (BECEd)": 6,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 5,
-                "Bachelor of Secondary Education (BSEd) major in English": 4,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 4,
-                "Bachelor of Secondary Education (BSEd) major in Science": 4,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4
-            },
-            8: { // TLE/Vocational Orientation
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 10,
-                "Bachelor of Elementary Education (BEEd)": 6,
-                "Bachelor of Early Childhood Education (BECEd)": 5,
-                "Bachelor of Physical Education (BPEd)": 5,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 5,
-                "Bachelor of Secondary Education (BSEd) major in Science": 5,
-                "Bachelor of Secondary Education (BSEd) major in English": 4,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 4
-            },
-            9: { // Public Speaking & Facilitation
-                "Bachelor of Secondary Education (BSEd) major in English": 9,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 9,
-                "Bachelor of Elementary Education (BEEd)": 8,
-                "Bachelor of Physical Education (BPEd)": 8,
-                "Bachelor of Early Childhood Education (BECEd)": 8,
-                "Bachelor of Secondary Education (BSEd) major in Science": 7,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
-            },
-            10: { // EdTech Integration
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 9,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 8,
-                "Bachelor of Secondary Education (BSEd) major in Science": 8,
-                "Bachelor of Secondary Education (BSEd) major in English": 7,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 7,
-                "Bachelor of Elementary Education (BEEd)": 7,
-                "Bachelor of Physical Education (BPEd)": 6,
-                "Bachelor of Early Childhood Education (BECEd)": 6
-            },
-            11: { // Learner Diversity & Inclusion
-                "Bachelor of Elementary Education (BEEd)": 9,
-                "Bachelor of Early Childhood Education (BECEd)": 9,
-                "Bachelor of Secondary Education (BSEd) major in English": 7,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
-                "Bachelor of Secondary Education (BSEd) major in Science": 7,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 7,
-                "Bachelor of Physical Education (BPEd)": 6,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 6
-            },
-            12: { // Assessment Literacy
-                "Bachelor of Elementary Education (BEEd)": 9,
-                "Bachelor of Secondary Education (BSEd) major in English": 8,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 8,
-                "Bachelor of Secondary Education (BSEd) major in Science": 8,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 8,
-                "Bachelor of Early Childhood Education (BECEd)": 8,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 7,
-                "Bachelor of Physical Education (BPEd)": 7
-            },
-            13: { // Instructional Design & Creativity
-                "Bachelor of Early Childhood Education (BECEd)": 9,
-                "Bachelor of Elementary Education (BEEd)": 9,
-                "Bachelor of Secondary Education (BSEd) major in English": 8,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 7,
-                "Bachelor of Secondary Education (BSEd) major in Science": 7,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
-                "Bachelor of Physical Education (BPEd)": 7,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
-            },
-            14: { // Advising & Community Engagement
-                "Bachelor of Elementary Education (BEEd)": 8,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 8,
-                "Bachelor of Secondary Education (BSEd) major in English": 8,
-                "Bachelor of Physical Education (BPEd)": 8,
-                "Bachelor of Early Childhood Education (BECEd)": 8,
-                "Bachelor of Secondary Education (BSEd) major in Science": 7,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
-            },
-            15: { // Action Research Orientation
-                "Bachelor of Secondary Education (BSEd) major in Science": 8,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 8,
-                "Bachelor of Secondary Education (BSEd) major in English": 7,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 7,
-                "Bachelor of Elementary Education (BEEd)": 7,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 7,
-                "Bachelor of Early Childhood Education (BECEd)": 6,
-                "Bachelor of Physical Education (BPEd)": 6
-            },
-            16: { // Pastoral Care & Mentorship
-                "Bachelor of Elementary Education (BEEd)": 9,
-                "Bachelor of Early Childhood Education (BECEd)": 9,
-                "Bachelor of Physical Education (BPEd)": 8,
-                "Bachelor of Secondary Education (BSEd) major in English": 8,
-                "Bachelor of Secondary Education (BSEd) major in Social Studies": 8,
-                "Bachelor of Secondary Education (BSEd) major in Mathematics": 7,
-                "Bachelor of Secondary Education (BSEd) major in Science": 7,
-                "Bachelor of Technology and Livelihood Education (BTLEd)": 7
-            }
+                const educationWeightMapping = {
+            401: { "Bachelor of Secondary Education (BSEd) major in English": 10, "Bachelor of Elementary Education (BEEd)": 2, "Bachelor of Early Childhood Education (BECEd)": 2, "Bachelor of Secondary Education (BSEd) major in Social Studies": 5, "Bachelor of Technology and Livelihood Education (BTLEd)": 2, "Bachelor of Secondary Education (BSEd) major in Science": 5, "Bachelor of Secondary Education (BSEd) major in Mathematics": 2, "Bachelor of Physical Education (BPEd)": 10 }, // Language/Communication Pedagogy
+            402: { "Bachelor of Secondary Education (BSEd) major in English": 2, "Bachelor of Elementary Education (BEEd)": 2, "Bachelor of Early Childhood Education (BECEd)": 2, "Bachelor of Secondary Education (BSEd) major in Social Studies": 10, "Bachelor of Technology and Livelihood Education (BTLEd)": 5, "Bachelor of Secondary Education (BSEd) major in Science": 2, "Bachelor of Secondary Education (BSEd) major in Mathematics": 10, "Bachelor of Physical Education (BPEd)": 5 }, // Mathematics Pedagogy
+            403: { "Bachelor of Secondary Education (BSEd) major in English": 2, "Bachelor of Elementary Education (BEEd)": 2, "Bachelor of Early Childhood Education (BECEd)": 5, "Bachelor of Secondary Education (BSEd) major in Social Studies": 2, "Bachelor of Technology and Livelihood Education (BTLEd)": 10, "Bachelor of Secondary Education (BSEd) major in Science": 10, "Bachelor of Secondary Education (BSEd) major in Mathematics": 5, "Bachelor of Physical Education (BPEd)": 2 }, // Science Pedagogy
+            404: { "Bachelor of Secondary Education (BSEd) major in English": 2, "Bachelor of Elementary Education (BEEd)": 2, "Bachelor of Early Childhood Education (BECEd)": 2, "Bachelor of Secondary Education (BSEd) major in Social Studies": 10, "Bachelor of Technology and Livelihood Education (BTLEd)": 5, "Bachelor of Secondary Education (BSEd) major in Science": 2, "Bachelor of Secondary Education (BSEd) major in Mathematics": 10, "Bachelor of Physical Education (BPEd)": 5 }, // Social Studies Pedagogy
+            405: { "Bachelor of Secondary Education (BSEd) major in English": 2, "Bachelor of Elementary Education (BEEd)": 5, "Bachelor of Early Childhood Education (BECEd)": 10, "Bachelor of Secondary Education (BSEd) major in Social Studies": 2, "Bachelor of Technology and Livelihood Education (BTLEd)": 2, "Bachelor of Secondary Education (BSEd) major in Science": 5, "Bachelor of Secondary Education (BSEd) major in Mathematics": 2, "Bachelor of Physical Education (BPEd)": 10 }, // Early Childhood Orientation
+            406: { "Bachelor of Secondary Education (BSEd) major in English": 2, "Bachelor of Elementary Education (BEEd)": 2, "Bachelor of Early Childhood Education (BECEd)": 2, "Bachelor of Secondary Education (BSEd) major in Social Studies": 10, "Bachelor of Technology and Livelihood Education (BTLEd)": 5, "Bachelor of Secondary Education (BSEd) major in Science": 5, "Bachelor of Secondary Education (BSEd) major in Mathematics": 2, "Bachelor of Physical Education (BPEd)": 10 }, // General Pedagogy & Assessment
+            407: { "Bachelor of Secondary Education (BSEd) major in English": 2, "Bachelor of Elementary Education (BEEd)": 2, "Bachelor of Early Childhood Education (BECEd)": 2, "Bachelor of Secondary Education (BSEd) major in Social Studies": 2, "Bachelor of Technology and Livelihood Education (BTLEd)": 10, "Bachelor of Secondary Education (BSEd) major in Science": 5, "Bachelor of Secondary Education (BSEd) major in Mathematics": 5, "Bachelor of Physical Education (BPEd)": 10 }, // Physical Education & Coaching
+            408: { "Bachelor of Secondary Education (BSEd) major in English": 2, "Bachelor of Elementary Education (BEEd)": 5, "Bachelor of Early Childhood Education (BECEd)": 2, "Bachelor of Secondary Education (BSEd) major in Social Studies": 2, "Bachelor of Technology and Livelihood Education (BTLEd)": 10, "Bachelor of Secondary Education (BSEd) major in Science": 10, "Bachelor of Secondary Education (BSEd) major in Mathematics": 5, "Bachelor of Physical Education (BPEd)": 2 }, // TLE/Vocational Orientation
+            409: { "Bachelor of Secondary Education (BSEd) major in English": 10, "Bachelor of Elementary Education (BEEd)": 5, "Bachelor of Early Childhood Education (BECEd)": 5, "Bachelor of Secondary Education (BSEd) major in Social Studies": 10, "Bachelor of Technology and Livelihood Education (BTLEd)": 2, "Bachelor of Secondary Education (BSEd) major in Science": 2, "Bachelor of Secondary Education (BSEd) major in Mathematics": 2, "Bachelor of Physical Education (BPEd)": 2 }, // Public Speaking & Facilitation
+            410: { "Bachelor of Secondary Education (BSEd) major in English": 5, "Bachelor of Elementary Education (BEEd)": 2, "Bachelor of Early Childhood Education (BECEd)": 2, "Bachelor of Secondary Education (BSEd) major in Social Studies": 2, "Bachelor of Technology and Livelihood Education (BTLEd)": 10, "Bachelor of Secondary Education (BSEd) major in Science": 10, "Bachelor of Secondary Education (BSEd) major in Mathematics": 5, "Bachelor of Physical Education (BPEd)": 2 }, // EdTech Integration
+            411: { "Bachelor of Secondary Education (BSEd) major in English": 2, "Bachelor of Elementary Education (BEEd)": 2, "Bachelor of Early Childhood Education (BECEd)": 10, "Bachelor of Secondary Education (BSEd) major in Social Studies": 2, "Bachelor of Technology and Livelihood Education (BTLEd)": 5, "Bachelor of Secondary Education (BSEd) major in Science": 2, "Bachelor of Secondary Education (BSEd) major in Mathematics": 10, "Bachelor of Physical Education (BPEd)": 5 }, // Learner Diversity & Inclusion
+            412: { "Bachelor of Secondary Education (BSEd) major in English": 10, "Bachelor of Elementary Education (BEEd)": 10, "Bachelor of Early Childhood Education (BECEd)": 5, "Bachelor of Secondary Education (BSEd) major in Social Studies": 2, "Bachelor of Technology and Livelihood Education (BTLEd)": 2, "Bachelor of Secondary Education (BSEd) major in Science": 2, "Bachelor of Secondary Education (BSEd) major in Mathematics": 2, "Bachelor of Physical Education (BPEd)": 5 }, // Assessment Literacy
+            413: { "Bachelor of Secondary Education (BSEd) major in English": 5, "Bachelor of Elementary Education (BEEd)": 10, "Bachelor of Early Childhood Education (BECEd)": 10, "Bachelor of Secondary Education (BSEd) major in Social Studies": 5, "Bachelor of Technology and Livelihood Education (BTLEd)": 2, "Bachelor of Secondary Education (BSEd) major in Science": 2, "Bachelor of Secondary Education (BSEd) major in Mathematics": 2, "Bachelor of Physical Education (BPEd)": 2 }, // Instructional Design & Creativity
+            414: { "Bachelor of Secondary Education (BSEd) major in English": 10, "Bachelor of Elementary Education (BEEd)": 10, "Bachelor of Early Childhood Education (BECEd)": 5, "Bachelor of Secondary Education (BSEd) major in Social Studies": 5, "Bachelor of Technology and Livelihood Education (BTLEd)": 2, "Bachelor of Secondary Education (BSEd) major in Science": 2, "Bachelor of Secondary Education (BSEd) major in Mathematics": 2, "Bachelor of Physical Education (BPEd)": 2 }, // Advising & Community Engagement
+            415: { "Bachelor of Secondary Education (BSEd) major in English": 5, "Bachelor of Elementary Education (BEEd)": 5, "Bachelor of Early Childhood Education (BECEd)": 2, "Bachelor of Secondary Education (BSEd) major in Social Studies": 2, "Bachelor of Technology and Livelihood Education (BTLEd)": 2, "Bachelor of Secondary Education (BSEd) major in Science": 10, "Bachelor of Secondary Education (BSEd) major in Mathematics": 10, "Bachelor of Physical Education (BPEd)": 2 }, // Action Research Orientation
+            416: { "Bachelor of Secondary Education (BSEd) major in English": 5, "Bachelor of Elementary Education (BEEd)": 10, "Bachelor of Early Childhood Education (BECEd)": 10, "Bachelor of Secondary Education (BSEd) major in Social Studies": 5, "Bachelor of Technology and Livelihood Education (BTLEd)": 2, "Bachelor of Secondary Education (BSEd) major in Science": 2, "Bachelor of Secondary Education (BSEd) major in Mathematics": 2, "Bachelor of Physical Education (BPEd)": 2 }, // Pastoral Care & Mentorship
         };
 
-        const healthcareWeightMapping = {
-            1: { // Patient Care & Bedside Skills
-                "BS Nursing": 10,
-                "BS Respiratory Therapy": 8,
-                "BS Physical Therapy": 7,
-                "BS Occupational Therapy": 7,
-                "BS Public Health": 6,
-                "BS Medical Technology": 5,
-                "BS Radiologic Technology": 5,
-                "BS Pharmacy": 4
-            },
-            2: { // Laboratory Diagnostics
-                "BS Medical Technology": 10,
-                "BS Public Health": 7,
-                "BS Pharmacy": 6,
-                "BS Radiologic Technology": 5,
-                "BS Nursing": 5,
-                "BS Respiratory Therapy": 4,
-                "BS Physical Therapy": 3,
-                "BS Occupational Therapy": 3
-            },
-            3: { // Pharmacology & Medication Management
-                "BS Pharmacy": 10,
-                "BS Nursing": 7,
-                "BS Public Health": 6,
-                "BS Medical Technology": 6,
-                "BS Respiratory Therapy": 5,
-                "BS Radiologic Technology": 4,
-                "BS Physical Therapy": 4,
-                "BS Occupational Therapy": 4
-            },
-            4: { // Anatomy & Rehabilitation
-                "BS Physical Therapy": 10,
-                "BS Occupational Therapy": 9,
-                "BS Nursing": 6,
-                "BS Respiratory Therapy": 5,
-                "BS Medical Technology": 4,
-                "BS Radiologic Technology": 4,
-                "BS Pharmacy": 4,
-                "BS Public Health": 4
-            },
-            5: { // Imaging & Radiologic Science
-                "BS Radiologic Technology": 10,
-                "BS Nursing": 6,
-                "BS Respiratory Therapy": 6,
-                "BS Medical Technology": 5,
-                "BS Public Health": 4,
-                "BS Pharmacy": 4,
-                "BS Physical Therapy": 3,
-                "BS Occupational Therapy": 3
-            },
-            6: { // Respiratory Care
-                "BS Respiratory Therapy": 10,
-                "BS Nursing": 8,
-                "BS Public Health": 5,
-                "BS Medical Technology": 5,
-                "BS Radiologic Technology": 5,
-                "BS Physical Therapy": 4,
-                "BS Occupational Therapy": 4,
-                "BS Pharmacy": 4
-            },
-            7: { // Public Health & Epidemiology
-                "BS Public Health": 10,
-                "BS Nursing": 8,
-                "BS Medical Technology": 7,
-                "BS Pharmacy": 6,
-                "BS Respiratory Therapy": 5,
-                "BS Radiologic Technology": 4,
-                "BS Physical Therapy": 4,
-                "BS Occupational Therapy": 4
-            },
-            8: { // Chemistry & Compounding
-                "BS Pharmacy": 10,
-                "BS Medical Technology": 8,
-                "BS Public Health": 6,
-                "BS Nursing": 5,
-                "BS Respiratory Therapy": 4,
-                "BS Radiologic Technology": 4,
-                "BS Physical Therapy": 3,
-                "BS Occupational Therapy": 3
-            },
-            9: { // Infection Control & QA
-                "BS Medical Technology": 9,
-                "BS Public Health": 8,
-                "BS Nursing": 7,
-                "BS Pharmacy": 6,
-                "BS Respiratory Therapy": 5,
-                "BS Radiologic Technology": 5,
-                "BS Physical Therapy": 3,
-                "BS Occupational Therapy": 3
-            },
-            10: { // Therapeutic Exercise
-                "BS Physical Therapy": 10,
-                "BS Occupational Therapy": 9,
-                "BS Nursing": 6,
-                "BS Respiratory Therapy": 4,
-                "BS Medical Technology": 3,
-                "BS Radiologic Technology": 3,
-                "BS Pharmacy": 3,
-                "BS Public Health": 4
-            },
-            11: { // Occupational Therapy & ADLs
-                "BS Occupational Therapy": 10,
-                "BS Physical Therapy": 8,
-                "BS Nursing": 7,
-                "BS Public Health": 5,
-                "BS Pharmacy": 4,
-                "BS Respiratory Therapy": 4,
-                "BS Radiologic Technology": 4,
-                "BS Medical Technology": 4
-            },
-            12: { // Emergency & Critical Care
-                "BS Nursing": 10,
-                "BS Respiratory Therapy": 8,
-                "BS Radiologic Technology": 6,
-                "BS Medical Technology": 6,
-                "BS Pharmacy": 5,
-                "BS Physical Therapy": 5,
-                "BS Occupational Therapy": 5,
-                "BS Public Health": 5
-            },
-            13: { // Communication & Patient Education
-                "BS Nursing": 9,
-                "BS Occupational Therapy": 9,
-                "BS Physical Therapy": 8,
-                "BS Public Health": 8,
-                "BS Pharmacy": 6,
-                "BS Respiratory Therapy": 6,
-                "BS Radiologic Technology": 6,
-                "BS Medical Technology": 6
-            },
-            14: { // Health Informatics & Documentation
-                "BS Nursing": 8,
-                "BS Public Health": 8,
-                "BS Medical Technology": 7,
-                "BS Pharmacy": 7,
-                "BS Respiratory Therapy": 6,
-                "BS Radiologic Technology": 6,
-                "BS Physical Therapy": 5,
-                "BS Occupational Therapy": 5
-            },
-            15: { // Research & Evidence-Based Practice
-                "BS Public Health": 9,
-                "BS Medical Technology": 8,
-                "BS Nursing": 7,
-                "BS Physical Therapy": 7,
-                "BS Occupational Therapy": 7,
-                "BS Pharmacy": 7,
-                "BS Respiratory Therapy": 6,
-                "BS Radiologic Technology": 6
-            },
-            16: { // Ethics, Regulation & Safety
-                "BS Pharmacy": 8,
-                "BS Radiologic Technology": 8,
-                "BS Medical Technology": 8,
-                "BS Nursing": 8,
-                "BS Respiratory Therapy": 7,
-                "BS Public Health": 7,
-                "BS Physical Therapy": 6,
-                "BS Occupational Therapy": 6
-            }
+                const healthcareWeightMapping = {
+            201: { "BS Nursing": 2, "BS Respiratory Therapy": 10, "BS Physical Therapy": 5, "BS Occupational Therapy": 5, "BS Public Health": 2, "BS Medical Technology": 2, "BS Radiologic Technology": 10, "BS Pharmacy": 2 }, // Patient Care & Bedside Skills
+            202: { "BS Nursing": 2, "BS Respiratory Therapy": 5, "BS Physical Therapy": 2, "BS Occupational Therapy": 5, "BS Public Health": 2, "BS Medical Technology": 2, "BS Radiologic Technology": 10, "BS Pharmacy": 10 }, // Laboratory Diagnostics
+            203: { "BS Nursing": 2, "BS Respiratory Therapy": 2, "BS Physical Therapy": 2, "BS Occupational Therapy": 5, "BS Public Health": 5, "BS Medical Technology": 2, "BS Radiologic Technology": 10, "BS Pharmacy": 10 }, // Pharmacology & Medication Management
+            204: { "BS Nursing": 2, "BS Respiratory Therapy": 5, "BS Physical Therapy": 10, "BS Occupational Therapy": 10, "BS Public Health": 2, "BS Medical Technology": 2, "BS Radiologic Technology": 5, "BS Pharmacy": 2 }, // Anatomy & Rehabilitation
+            205: { "BS Nursing": 2, "BS Respiratory Therapy": 5, "BS Physical Therapy": 2, "BS Occupational Therapy": 2, "BS Public Health": 2, "BS Medical Technology": 5, "BS Radiologic Technology": 10, "BS Pharmacy": 10 }, // Imaging & Radiologic Science
+            206: { "BS Nursing": 2, "BS Respiratory Therapy": 10, "BS Physical Therapy": 10, "BS Occupational Therapy": 5, "BS Public Health": 2, "BS Medical Technology": 2, "BS Radiologic Technology": 5, "BS Pharmacy": 2 }, // Respiratory Care
+            207: { "BS Nursing": 2, "BS Respiratory Therapy": 10, "BS Physical Therapy": 2, "BS Occupational Therapy": 2, "BS Public Health": 10, "BS Medical Technology": 5, "BS Radiologic Technology": 2, "BS Pharmacy": 5 }, // Public Health & Epidemiology
+            208: { "BS Nursing": 2, "BS Respiratory Therapy": 2, "BS Physical Therapy": 5, "BS Occupational Therapy": 2, "BS Public Health": 5, "BS Medical Technology": 10, "BS Radiologic Technology": 2, "BS Pharmacy": 10 }, // Chemistry & Compounding
+            209: { "BS Nursing": 5, "BS Respiratory Therapy": 2, "BS Physical Therapy": 2, "BS Occupational Therapy": 2, "BS Public Health": 10, "BS Medical Technology": 10, "BS Radiologic Technology": 2, "BS Pharmacy": 5 }, // Infection Control & QA
+            210: { "BS Nursing": 5, "BS Respiratory Therapy": 5, "BS Physical Therapy": 10, "BS Occupational Therapy": 10, "BS Public Health": 2, "BS Medical Technology": 2, "BS Radiologic Technology": 2, "BS Pharmacy": 2 }, // Therapeutic Exercise
+            211: { "BS Nursing": 5, "BS Respiratory Therapy": 2, "BS Physical Therapy": 10, "BS Occupational Therapy": 10, "BS Public Health": 5, "BS Medical Technology": 2, "BS Radiologic Technology": 2, "BS Pharmacy": 2 }, // Occupational Therapy & ADLs
+            212: { "BS Nursing": 10, "BS Respiratory Therapy": 10, "BS Physical Therapy": 2, "BS Occupational Therapy": 2, "BS Public Health": 2, "BS Medical Technology": 5, "BS Radiologic Technology": 5, "BS Pharmacy": 2 }, // Emergency & Critical Care
+            213: { "BS Nursing": 10, "BS Respiratory Therapy": 2, "BS Physical Therapy": 5, "BS Occupational Therapy": 10, "BS Public Health": 5, "BS Medical Technology": 2, "BS Radiologic Technology": 2, "BS Pharmacy": 2 }, // Communication & Patient Education
+            214: { "BS Nursing": 10, "BS Respiratory Therapy": 2, "BS Physical Therapy": 2, "BS Occupational Therapy": 2, "BS Public Health": 10, "BS Medical Technology": 5, "BS Radiologic Technology": 2, "BS Pharmacy": 5 }, // Health Informatics & Documentation
+            215: { "BS Nursing": 5, "BS Respiratory Therapy": 2, "BS Physical Therapy": 5, "BS Occupational Therapy": 2, "BS Public Health": 10, "BS Medical Technology": 10, "BS Radiologic Technology": 2, "BS Pharmacy": 2 }, // Research & Evidence-Based Practice
+            216: { "BS Nursing": 10, "BS Respiratory Therapy": 2, "BS Physical Therapy": 2, "BS Occupational Therapy": 2, "BS Public Health": 2, "BS Medical Technology": 10, "BS Radiologic Technology": 5, "BS Pharmacy": 5 }, // Ethics, Regulation & Safety
         };
 
-        const itWeightMapping = {
-            1: { // Programming Fundamentals
-                "BS Computer Science": 10,
-                "BS Information Technology": 9,
-                "BS Data Science": 8,
-                "BS Entertainment and Multimedia Computing": 7,
-                "BS Computer Engineering": 7,
-                "BS Cybersecurity": 6,
-                "BS Information Systems": 6,
-                "BS Network Administration": 6
-            },
-            2: { // Algorithms & Data Structures
-                "BS Computer Science": 10,
-                "BS Data Science": 9,
-                "BS Information Technology": 7,
-                "BS Computer Engineering": 7,
-                "BS Information Systems": 6,
-                "BS Entertainment and Multimedia Computing": 6,
-                "BS Cybersecurity": 6,
-                "BS Network Administration": 5
-            },
-            3: { // Mathematics for Computing
-                "BS Computer Science": 10,
-                "BS Data Science": 9,
-                "BS Computer Engineering": 7,
-                "BS Information Technology": 6,
-                "BS Information Systems": 6,
-                "BS Cybersecurity": 6,
-                "BS Entertainment and Multimedia Computing": 5,
-                "BS Network Administration": 5
-            },
-            4: { // Databases & SQL
-                "BS Information Systems": 10,
-                "BS Information Technology": 9,
-                "BS Data Science": 8,
-                "BS Computer Science": 7,
-                "BS Cybersecurity": 6,
-                "BS Network Administration": 6,
-                "BS Computer Engineering": 5,
-                "BS Entertainment and Multimedia Computing": 5
-            },
-            5: { // Web & Mobile Development
-                "BS Information Technology": 10,
-                "BS Information Systems": 8,
-                "BS Entertainment and Multimedia Computing": 8,
-                "BS Computer Science": 7,
-                "BS Cybersecurity": 6,
-                "BS Network Administration": 6,
-                "BS Computer Engineering": 5,
-                "BS Data Science": 5
-            },
-            6: { // Software Engineering
-                "BS Information Technology": 9,
-                "BS Information Systems": 9,
-                "BS Computer Science": 8,
-                "BS Entertainment and Multimedia Computing": 7,
-                "BS Cybersecurity": 7,
-                "BS Network Administration": 7,
-                "BS Computer Engineering": 6,
-                "BS Data Science": 6
-            },
-            7: { // Operating Systems & SysAdmin
-                "BS Network Administration": 9,
-                "BS Information Technology": 8,
-                "BS Cybersecurity": 8,
-                "BS Computer Engineering": 7,
-                "BS Computer Science": 7,
-                "BS Information Systems": 6,
-                "BS Entertainment and Multimedia Computing": 5,
-                "BS Data Science": 5
-            },
-            8: { // Computer Networks
-                "BS Network Administration": 10,
-                "BS Cybersecurity": 9,
-                "BS Information Technology": 8,
-                "BS Computer Engineering": 7,
-                "BS Computer Science": 6,
-                "BS Information Systems": 6,
-                "BS Entertainment and Multimedia Computing": 5,
-                "BS Data Science": 5
-            },
-            9: { // Cloud & DevOps
-                "BS Network Administration": 10,
-                "BS Information Technology": 9,
-                "BS Information Systems": 7,
-                "BS Cybersecurity": 7,
-                "BS Computer Science": 7,
-                "BS Data Science": 6,
-                "BS Computer Engineering": 6,
-                "BS Entertainment and Multimedia Computing": 5
-            },
-            10: { // Cybersecurity
-                "BS Cybersecurity": 10,
-                "BS Network Administration": 8,
-                "BS Information Technology": 7,
-                "BS Computer Science": 6,
-                "BS Information Systems": 6,
-                "BS Computer Engineering": 6,
-                "BS Data Science": 5,
-                "BS Entertainment and Multimedia Computing": 4
-            },
-            11: { // Data Analysis & Stats
-                "BS Data Science": 10,
-                "BS Information Systems": 8,
-                "BS Computer Science": 8,
-                "BS Information Technology": 7,
-                "BS Entertainment and Multimedia Computing": 6,
-                "BS Cybersecurity": 6,
-                "BS Network Administration": 5,
-                "BS Computer Engineering": 5
-            },
-            12: { // Machine Learning & AI
-                "BS Data Science": 10,
-                "BS Computer Science": 9,
-                "BS Information Technology": 7,
-                "BS Information Systems": 6,
-                "BS Entertainment and Multimedia Computing": 6,
-                "BS Cybersecurity": 6,
-                "BS Computer Engineering": 5,
-                "BS Network Administration": 4
-            },
-            13: { // Hardware & Embedded
-                "BS Computer Engineering": 10,
-                "BS Network Administration": 7,
-                "BS Cybersecurity": 6,
-                "BS Computer Science": 6,
-                "BS Information Technology": 5,
-                "BS Entertainment and Multimedia Computing": 5,
-                "BS Information Systems": 4,
-                "BS Data Science": 4
-            },
-            14: { // Graphics, Multimedia & Games
-                "BS Entertainment and Multimedia Computing": 10,
-                "BS Computer Science": 7,
-                "BS Information Technology": 7,
-                "BS Information Systems": 6,
-                "BS Cybersecurity": 5,
-                "BS Computer Engineering": 5,
-                "BS Data Science": 5,
-                "BS Network Administration": 4
-            },
-            15: { // UX/HCI & Business Analysis
-                "BS Information Systems": 10,
-                "BS Entertainment and Multimedia Computing": 8,
-                "BS Information Technology": 8,
-                "BS Computer Science": 6,
-                "BS Cybersecurity": 6,
-                "BS Network Administration": 5,
-                "BS Computer Engineering": 5,
-                "BS Data Science": 5
-            },
-            16: { // Teamwork & Project Management
-                "BS Information Systems": 9,
-                "BS Information Technology": 9,
-                "BS Computer Science": 8,
-                "BS Entertainment and Multimedia Computing": 8,
-                "BS Cybersecurity": 7,
-                "BS Network Administration": 7,
-                "BS Computer Engineering": 7,
-                "BS Data Science": 7
-            }
+                const itWeightMapping = {
+            101: { "BS Computer Science": 2, "BS Information Technology": 2, "BS Data Science": 5, "BS Entertainment and Multimedia Computing": 10, "BS Computer Engineering": 10, "BS Cybersecurity": 2, "BS Information Systems": 2, "BS Network Administration": 5 }, // Programming Fundamentals
+            102: { "BS Computer Science": 2, "BS Information Technology": 2, "BS Data Science": 10, "BS Entertainment and Multimedia Computing": 2, "BS Computer Engineering": 10, "BS Cybersecurity": 5, "BS Information Systems": 2, "BS Network Administration": 5 }, // Algorithms & Data Structures
+            103: { "BS Computer Science": 10, "BS Information Technology": 2, "BS Data Science": 10, "BS Entertainment and Multimedia Computing": 2, "BS Computer Engineering": 5, "BS Cybersecurity": 5, "BS Information Systems": 2, "BS Network Administration": 2 }, // Mathematics for Computing
+            104: { "BS Computer Science": 2, "BS Information Technology": 2, "BS Data Science": 5, "BS Entertainment and Multimedia Computing": 10, "BS Computer Engineering": 5, "BS Cybersecurity": 2, "BS Information Systems": 10, "BS Network Administration": 2 }, // Databases & SQL
+            105: { "BS Computer Science": 2, "BS Information Technology": 2, "BS Data Science": 5, "BS Entertainment and Multimedia Computing": 10, "BS Computer Engineering": 2, "BS Cybersecurity": 10, "BS Information Systems": 5, "BS Network Administration": 2 }, // Web & Mobile Development
+            106: { "BS Computer Science": 2, "BS Information Technology": 2, "BS Data Science": 2, "BS Entertainment and Multimedia Computing": 5, "BS Computer Engineering": 10, "BS Cybersecurity": 2, "BS Information Systems": 10, "BS Network Administration": 5 }, // Software Engineering
+            107: { "BS Computer Science": 2, "BS Information Technology": 10, "BS Data Science": 2, "BS Entertainment and Multimedia Computing": 2, "BS Computer Engineering": 5, "BS Cybersecurity": 10, "BS Information Systems": 2, "BS Network Administration": 5 }, // Operating Systems & SysAdmin
+            108: { "BS Computer Science": 2, "BS Information Technology": 2, "BS Data Science": 5, "BS Entertainment and Multimedia Computing": 2, "BS Computer Engineering": 5, "BS Cybersecurity": 10, "BS Information Systems": 2, "BS Network Administration": 10 }, // Computer Networks
+            109: { "BS Computer Science": 2, "BS Information Technology": 10, "BS Data Science": 2, "BS Entertainment and Multimedia Computing": 2, "BS Computer Engineering": 2, "BS Cybersecurity": 5, "BS Information Systems": 5, "BS Network Administration": 10 }, // Cloud & DevOps
+            110: { "BS Computer Science": 5, "BS Information Technology": 5, "BS Data Science": 2, "BS Entertainment and Multimedia Computing": 2, "BS Computer Engineering": 2, "BS Cybersecurity": 10, "BS Information Systems": 2, "BS Network Administration": 10 }, // Cybersecurity
+            111: { "BS Computer Science": 10, "BS Information Technology": 5, "BS Data Science": 10, "BS Entertainment and Multimedia Computing": 2, "BS Computer Engineering": 2, "BS Cybersecurity": 2, "BS Information Systems": 5, "BS Network Administration": 2 }, // Data Analysis & Stats
+            112: { "BS Computer Science": 10, "BS Information Technology": 5, "BS Data Science": 10, "BS Entertainment and Multimedia Computing": 5, "BS Computer Engineering": 2, "BS Cybersecurity": 2, "BS Information Systems": 2, "BS Network Administration": 2 }, // Machine Learning & AI
+            113: { "BS Computer Science": 5, "BS Information Technology": 2, "BS Data Science": 2, "BS Entertainment and Multimedia Computing": 2, "BS Computer Engineering": 10, "BS Cybersecurity": 5, "BS Information Systems": 2, "BS Network Administration": 10 }, // Hardware & Embedded
+            114: { "BS Computer Science": 10, "BS Information Technology": 5, "BS Data Science": 2, "BS Entertainment and Multimedia Computing": 10, "BS Computer Engineering": 2, "BS Cybersecurity": 2, "BS Information Systems": 5, "BS Network Administration": 2 }, // Graphics, Multimedia & Games
+            115: { "BS Computer Science": 5, "BS Information Technology": 10, "BS Data Science": 2, "BS Entertainment and Multimedia Computing": 5, "BS Computer Engineering": 2, "BS Cybersecurity": 2, "BS Information Systems": 10, "BS Network Administration": 2 }, // UX/HCI & Business Analysis
+            116: { "BS Computer Science": 5, "BS Information Technology": 10, "BS Data Science": 2, "BS Entertainment and Multimedia Computing": 5, "BS Computer Engineering": 2, "BS Cybersecurity": 2, "BS Information Systems": 10, "BS Network Administration": 2 }, // Teamwork & Project Management
         };
 
         function calculateBusinessCourseScores() {
@@ -2412,199 +1517,41 @@
             return courseScores;
         }
 
-        // Job scoring functions
-        function calculateBusinessJobScores() {
+        // Generic job scoring with normalization to prevent total-weight bias
+        function calculateWeightedJobScores(category, weightMapping) {
             const jobScores = {};
-            const businessJobs = jobRolesDatabase.business;
-
-            // Initialize scores
-            businessJobs.forEach(job => {
-                jobScores[job] = 0;
-            });
-
-            // Calculate scores based on job questionnaire structure
-            // Each job has 2 questions (16 total / 8 jobs = 2 per job)
-            for (let i = 0; i < businessJobs.length; i++) {
-                const job = businessJobs[i];
-                const question1Id = (i * 2) + 1;
-                const question2Id = (i * 2) + 2;
-
-                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
-                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
-
-                jobScores[job] = rating1 + rating2;
+            const jobs = jobRolesDatabase[category];
+            jobs.forEach(job => { jobScores[job] = 0; });
+            for (let questionId = 1; questionId <= 16; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && weightMapping[questionId]) {
+                    jobs.forEach(job => {
+                        jobScores[job] += userRating * (weightMapping[questionId][job] || 0);
+                    });
+                }
             }
-
+            // Normalize each job's score by its max possible (all 5s)
+            // This removes bias from unequal total weights across jobs
+            jobs.forEach(job => {
+                let maxPossible = 0;
+                for (let qId = 1; qId <= 16; qId++) {
+                    maxPossible += 5 * (weightMapping[qId][job] || 0);
+                }
+                if (maxPossible > 0) {
+                    jobScores[job] = (jobScores[job] / maxPossible) * 100;
+                }
+            });
             return jobScores;
         }
 
-        function calculateHealthcareJobScores() {
-            const jobScores = {};
-            const healthcareJobs = jobRolesDatabase.healthcare;
-
-            // Initialize scores
-            healthcareJobs.forEach(job => {
-                jobScores[job] = 0;
-            });
-
-            // Calculate scores
-            for (let i = 0; i < healthcareJobs.length; i++) {
-                const job = healthcareJobs[i];
-                const question1Id = (i * 2) + 1;
-                const question2Id = (i * 2) + 2;
-
-                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
-                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
-
-                jobScores[job] = rating1 + rating2;
-            }
-
-            return jobScores;
-        }
-
-        function calculateTechnologyJobScores() {
-            const jobScores = {};
-            const technologyJobs = jobRolesDatabase.technology;
-
-            // Initialize scores
-            technologyJobs.forEach(job => {
-                jobScores[job] = 0;
-            });
-
-            // Calculate scores
-            for (let i = 0; i < technologyJobs.length; i++) {
-                const job = technologyJobs[i];
-                const question1Id = (i * 2) + 1;
-                const question2Id = (i * 2) + 2;
-
-                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
-                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
-
-                jobScores[job] = rating1 + rating2;
-            }
-
-            return jobScores;
-        }
-
-        function calculateCreativeJobScores() {
-            const jobScores = {};
-            const creativeJobs = jobRolesDatabase.creative;
-
-            // Initialize scores
-            creativeJobs.forEach(job => {
-                jobScores[job] = 0;
-            });
-
-            // Calculate scores
-            for (let i = 0; i < creativeJobs.length; i++) {
-                const job = creativeJobs[i];
-                const question1Id = (i * 2) + 1;
-                const question2Id = (i * 2) + 2;
-
-                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
-                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
-
-                jobScores[job] = rating1 + rating2;
-            }
-
-            return jobScores;
-        }
-
-        function calculateEducationJobScores() {
-            const jobScores = {};
-            const educationJobs = jobRolesDatabase.education;
-
-            // Initialize scores
-            educationJobs.forEach(job => {
-                jobScores[job] = 0;
-            });
-
-            // Calculate scores
-            for (let i = 0; i < educationJobs.length; i++) {
-                const job = educationJobs[i];
-                const question1Id = (i * 2) + 1;
-                const question2Id = (i * 2) + 2;
-
-                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
-                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
-
-                jobScores[job] = rating1 + rating2;
-            }
-
-            return jobScores;
-        }
-
-        function calculateEngineeringJobScores() {
-            const jobScores = {};
-            const engineeringJobs = jobRolesDatabase.engineering;
-
-            // Initialize scores
-            engineeringJobs.forEach(job => {
-                jobScores[job] = 0;
-            });
-
-            // Calculate scores
-            for (let i = 0; i < engineeringJobs.length; i++) {
-                const job = engineeringJobs[i];
-                const question1Id = (i * 2) + 1;
-                const question2Id = (i * 2) + 2;
-
-                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
-                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
-
-                jobScores[job] = rating1 + rating2;
-            }
-
-            return jobScores;
-        }
-
-        function calculateLawJobScores() {
-            const jobScores = {};
-            const lawJobs = jobRolesDatabase.law;
-
-            // Initialize scores
-            lawJobs.forEach(job => {
-                jobScores[job] = 0;
-            });
-
-            // Calculate scores
-            for (let i = 0; i < lawJobs.length; i++) {
-                const job = lawJobs[i];
-                const question1Id = (i * 2) + 1;
-                const question2Id = (i * 2) + 2;
-
-                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
-                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
-
-                jobScores[job] = rating1 + rating2;
-            }
-
-            return jobScores;
-        }
-
-        function calculateTourismJobScores() {
-            const jobScores = {};
-            const tourismJobs = jobRolesDatabase.tourism;
-
-            // Initialize scores
-            tourismJobs.forEach(job => {
-                jobScores[job] = 0;
-            });
-
-            // Calculate scores
-            for (let i = 0; i < tourismJobs.length; i++) {
-                const job = tourismJobs[i];
-                const question1Id = (i * 2) + 1;
-                const question2Id = (i * 2) + 2;
-
-                const rating1 = parseInt(responses[`question_${question1Id}`]) || 0;
-                const rating2 = parseInt(responses[`question_${question2Id}`]) || 0;
-
-                jobScores[job] = rating1 + rating2;
-            }
-
-            return jobScores;
-        }
+        function calculateBusinessJobScores() { return calculateWeightedJobScores('business', businessJobWeightMapping); }
+        function calculateHealthcareJobScores() { return calculateWeightedJobScores('healthcare', healthcareJobWeightMapping); }
+        function calculateTechnologyJobScores() { return calculateWeightedJobScores('technology', technologyJobWeightMapping); }
+        function calculateCreativeJobScores() { return calculateWeightedJobScores('creative', creativeJobWeightMapping); }
+        function calculateEducationJobScores() { return calculateWeightedJobScores('education', educationJobWeightMapping); }
+        function calculateEngineeringJobScores() { return calculateWeightedJobScores('engineering', engineeringJobWeightMapping); }
+        function calculateLawJobScores() { return calculateWeightedJobScores('law', lawJobWeightMapping); }
+        function calculateTourismJobScores() { return calculateWeightedJobScores('tourism', tourismJobWeightMapping); }
 
         function calculateLiberalArtsCourseScores() {
             const courseScores = {};
@@ -2625,7 +1572,7 @@
             });
 
             // Calculate weighted scores
-            for (let questionId = 1; questionId <= 16; questionId++) {
+            for (let questionId = 301; questionId <= 316; questionId++) {
                 const userRating = parseInt(responses[`question_${questionId}`]) || 0;
                 if (userRating > 0 && liberalArtsWeightMapping[questionId]) {
                     liberalArtsCourses.forEach(course => {
@@ -2657,12 +1604,12 @@
             });
 
             // Calculate scores based on responses and weights
-            for (let questionId = 1; questionId <= 16; questionId++) {
-                const response = responses[questionId];
-                if (response && itWeightMapping[questionId]) {
+            for (let questionId = 101; questionId <= 116; questionId++) {
+                const userRating = parseInt(responses[`question_${questionId}`]) || 0;
+                if (userRating > 0 && itWeightMapping[questionId]) {
                     for (const course of itCourses) {
                         if (itWeightMapping[questionId][course]) {
-                            courseScores[course] += response * itWeightMapping[questionId][course];
+                            courseScores[course] += userRating * itWeightMapping[questionId][course];
                         }
                     }
                 }
@@ -2690,7 +1637,7 @@
             });
 
             // Calculate weighted scores
-            for (let questionId = 1; questionId <= 16; questionId++) {
+            for (let questionId = 501; questionId <= 516; questionId++) {
                 const userRating = parseInt(responses[`question_${questionId}`]) || 0;
                 if (userRating > 0 && engineeringWeightMapping[questionId]) {
                     engineeringCourses.forEach(course => {
@@ -2722,7 +1669,7 @@
             });
 
             // Calculate weighted scores
-            for (let questionId = 1; questionId <= 16; questionId++) {
+            for (let questionId = 401; questionId <= 416; questionId++) {
                 const userRating = parseInt(responses[`question_${questionId}`]) || 0;
                 if (userRating > 0 && educationWeightMapping[questionId]) {
                     educationCourses.forEach(course => {
@@ -2754,7 +1701,7 @@
             });
 
             // Calculate weighted scores
-            for (let questionId = 1; questionId <= 16; questionId++) {
+            for (let questionId = 201; questionId <= 216; questionId++) {
                 const userRating = parseInt(responses[`question_${questionId}`]) || 0;
                 if (userRating > 0 && healthcareWeightMapping[questionId]) {
                     healthcareCourses.forEach(course => {

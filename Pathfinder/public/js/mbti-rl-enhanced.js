@@ -21,13 +21,13 @@ class MBTIRLEnhanced {
             // Browser environment
             MBTITester = window.MBTITester;
         }
-        
+
         if (!MBTITester) {
             throw new Error('MBTITester class not found. Make sure mbti-tester.js is loaded.');
         }
-        
+
         this.baseTester = new MBTITester();
-        
+
         // Initialize RL agent
         let MBTIRLAgent;
         if (typeof require !== 'undefined') {
@@ -42,20 +42,20 @@ class MBTIRLEnhanced {
             // Browser environment
             MBTIRLAgent = window.MBTIRLAgent;
         }
-        
+
         if (!MBTIRLAgent) {
             throw new Error('MBTIRLAgent class not found. Make sure mbti-rl-agent.js is loaded.');
         }
-        
+
         this.rlAgent = new MBTIRLAgent();
-        
+
         // Configuration
         this.useRL = true; // Toggle for A/B testing
         this.trainingMode = false;
-        
+
         // Inject question finder into RL agent
         this.rlAgent.findQuestionById = (id) => this.findQuestionById(id);
-        
+
         // Session tracking
         this.currentSession = null;
         this.sessionHistory = [];
@@ -76,10 +76,10 @@ class MBTIRLEnhanced {
         };
 
         this.rlAgent.reset();
-        
+
         console.log('🚀 Starting RL-Enhanced MBTI Assessment');
         console.log('This adaptive test will ask 8-15 questions based on your responses.\n');
-        
+
         return this.currentSession.id;
     }
 
@@ -135,7 +135,7 @@ class MBTIRLEnhanced {
         // Store intermediate prediction for analysis
         const currentPrediction = this.rlAgent.getPredictedType();
         const currentConfidence = this.rlAgent.getAverageConfidence();
-        
+
         this.currentSession.rlPredictions.push({
             questionNumber: this.currentSession.questionsAsked.length,
             predictedType: currentPrediction,
@@ -190,7 +190,7 @@ class MBTIRLEnhanced {
             sessionId: this.currentSession.id,
             completedAt: new Date(),
             duration: new Date() - this.currentSession.startTime,
-            
+
             // Enhanced comprehensive analysis
             comprehensiveAnalysis: comprehensiveAnalysis,
             dimensionInsights: this.generateDimensionInsights(rlResult),
@@ -224,7 +224,7 @@ class MBTIRLEnhanced {
             overallConfidence: rlResult.averageConfidence,
             questionsAnalyzed: this.currentSession.questionsAsked.length,
             dataCompleteness: (this.currentSession.questionsAsked.length / 60) * 100,
-            
+
             // Dimension-specific analysis
             dimensions: {
                 EI: this.analyzeDimension('EI', rlResult),
@@ -232,7 +232,7 @@ class MBTIRLEnhanced {
                 TF: this.analyzeDimension('TF', rlResult),
                 JP: this.analyzeDimension('JP', rlResult)
             },
-            
+
             // Reliability indicators
             reliability: {
                 sufficientData: this.currentSession.questionsAsked.length >= 8,
@@ -252,7 +252,7 @@ class MBTIRLEnhanced {
         const score = rlResult.dimensionScores[dimension];
         const confidence = rlResult.confidence[dimension];
         const preference = rlResult.type[this.getDimensionIndex(dimension)];
-        
+
         // Count questions asked for this dimension
         const dimensionQuestions = this.currentSession.questionsAsked.filter(q => {
             const question = this.findQuestionById(q.id);
@@ -275,7 +275,7 @@ class MBTIRLEnhanced {
      */
     generateDimensionSpecificInsights(dimension, preference, score, confidence) {
         const insights = [];
-        
+
         // Confidence-based insights
         if (confidence > 0.8) {
             insights.push(`Strong ${preference} preference with high confidence`);
@@ -304,13 +304,13 @@ class MBTIRLEnhanced {
     generateAlternativeTypes(rlResult) {
         const alternatives = [];
         const currentType = rlResult.type;
-        
+
         // For each dimension with low confidence, generate alternative types
         Object.keys(rlResult.confidence).forEach(dimension => {
             if (rlResult.confidence[dimension] < 0.7) {
                 const alternativeType = this.flipDimension(currentType, dimension);
                 const alternativeConfidence = this.estimateAlternativeConfidence(dimension, rlResult);
-                
+
                 alternatives.push({
                     type: alternativeType,
                     reason: `Alternative if ${dimension} preference is different`,
@@ -328,11 +328,11 @@ class MBTIRLEnhanced {
      */
     generateImprovementSuggestions(rlResult) {
         const suggestions = [];
-        
+
         Object.keys(rlResult.confidence).forEach(dimension => {
             const confidence = rlResult.confidence[dimension];
             const preference = rlResult.type[this.getDimensionIndex(dimension)];
-            
+
             if (confidence < 0.6) {
                 suggestions.push({
                     dimension: dimension,
@@ -341,7 +341,7 @@ class MBTIRLEnhanced {
                     reason: 'Low confidence in this dimension'
                 });
             }
-            
+
             // Add specific suggestions based on preference
             suggestions.push(...this.getDimensionSpecificSuggestions(dimension, preference, confidence));
         });
@@ -355,7 +355,7 @@ class MBTIRLEnhanced {
     getDimensionSpecificSuggestions(dimension, preference, confidence) {
         const suggestions = [];
         const priority = confidence > 0.7 ? 'medium' : 'high';
-        
+
         const dimensionSuggestions = {
             'EI': {
                 'E': [
@@ -448,7 +448,7 @@ class MBTIRLEnhanced {
                 dimensionCounts[question.dimension]++;
             }
         });
-        
+
         const minCoverage = Math.min(...Object.values(dimensionCounts));
         return minCoverage >= 2; // At least 2 questions per dimension
     }
@@ -457,7 +457,7 @@ class MBTIRLEnhanced {
         // Simple consistency check based on response patterns
         const responses = this.currentSession.responses;
         if (responses.length < 4) return true; // Too few to assess
-        
+
         const variance = this.calculateResponseVariance(responses);
         return variance < 2.0; // Reasonable consistency threshold
     }
@@ -497,7 +497,7 @@ class MBTIRLEnhanced {
      */
     mapResponsesToTraditionalFormat() {
         const traditionalResponses = new Array(60).fill(3); // Default neutral responses
-        
+
         this.currentSession.responses.forEach(resp => {
             const questionIndex = resp.questionId - 1; // Convert to 0-based index
             if (questionIndex >= 0 && questionIndex < 60) {
@@ -521,33 +521,28 @@ class MBTIRLEnhanced {
     async runAdaptiveAssessment(syntheticUser) {
         // Start new session
         this.startAdaptiveAssessment();
-        
+
         let questionCount = 0;
-        const maxQuestions = 25; // Safety limit
-        
+        const maxQuestions = 60; // Require all 60 questions
+
         while (questionCount < maxQuestions) {
             const nextQuestionData = this.getNextQuestion();
-            
+
             if (!nextQuestionData || !nextQuestionData.question) {
                 // Assessment completed by RL agent
                 break;
             }
-            
+
             const question = nextQuestionData.question;
             const response = syntheticUser.answerQuestion(question.id);
-            
+
             this.processUserResponse(question.id, response);
             questionCount++;
-            
-            // Check if RL agent wants to stop
-            if (this.rlAgent.isConfident()) {
-                break;
-            }
         }
-        
+
         // Complete the assessment
         const result = this.completeAssessment();
-        
+
         return {
             finalType: result?.primary?.type || result?.rl?.type || 'UNKNOWN',
             questionsUsed: this.currentSession.questionsAsked.length,
@@ -588,12 +583,12 @@ class MBTIRLEnhanced {
             while (questionsAsked < 20 && !this.rlAgent.isConfident()) {
                 const state = this.rlAgent.getStateKey();
                 const nextQuestion = this.rlAgent.selectNextQuestion(this.baseTester.questions);
-                
+
                 if (!nextQuestion) break;
 
                 // Get synthetic response
                 const response = syntheticUser.answerQuestion(nextQuestion.id);
-                
+
                 // Process response
                 this.rlAgent.processResponse(nextQuestion.id, response, nextQuestion);
                 questionsAsked++;
@@ -783,11 +778,11 @@ class SyntheticUser {
         this.trueType = personalityType;
         this.consistency = 0.7 + Math.random() * 0.25; // 70-95% consistency
         this.responseStyle = Math.random(); // Individual variation
-        
+
         // Parse personality type
         this.traits = {
             E: personalityType[0] === 'E',
-            S: personalityType[1] === 'S', 
+            S: personalityType[1] === 'S',
             T: personalityType[2] === 'T',
             J: personalityType[3] === 'J'
         };
@@ -810,9 +805,9 @@ class SyntheticUser {
             // Browser environment
             questions = new MBTITester().questions;
         }
-        
+
         const question = questions.find(q => q.id === questionId);
-        
+
         if (!question) return 3; // Neutral if question not found
 
         let baseResponse = 3; // Start neutral
