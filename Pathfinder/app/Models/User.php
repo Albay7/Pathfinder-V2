@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use App\Mail\VerificationLinkMail;
+use App\Mail\PasswordResetMail;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -30,7 +31,20 @@ class User extends Authenticatable implements MustVerifyEmail
             ]
         );
 
-        Mail::to($this->email)->send(new VerificationLinkMail($verificationUrl, $this->name));
+        Mail::mailer('smtp')->to($this->email)->send(new VerificationLinkMail($verificationUrl, $this->name));
+    }
+
+    /**
+     * Send the password reset notification with a custom branded email.
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $resetUrl = url(route('password.reset', [
+            'token' => $token,
+            'email' => $this->email,
+        ], false));
+
+        Mail::mailer('smtp')->to($this->email)->send(new PasswordResetMail($resetUrl, $this->name));
     }
 
     /**

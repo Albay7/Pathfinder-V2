@@ -213,6 +213,34 @@ class PathfinderController extends Controller
         $missingSkills = session('skill_gap_missing_skills', []);
         $targetRole = session('skill_gap_role');
         $targetCategory = session('skill_gap_category');
+
+        // Database fallback for authenticated users when session is empty
+        if (empty($missingSkills) && Auth::check()) {
+            $latestSkillGap = UserProgress::where('user_id', Auth::id())
+                ->where('feature_type', 'skill_gap')
+                ->where('completed', true)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if ($latestSkillGap) {
+                $targetRole = $latestSkillGap->target_role;
+                $targetCategory = $latestSkillGap->target_category;
+                $analysisResult = $latestSkillGap->analysis_result;
+                $missingSkills = $analysisResult['missing_skill_names']
+                    ?? array_column($analysisResult['missing_skills'] ?? [], 'name')
+                    ?? [];
+
+                // Restore session so subsequent requests skip DB
+                if (!empty($missingSkills)) {
+                    session([
+                        'skill_gap_missing_skills' => $missingSkills,
+                        'skill_gap_role' => $targetRole,
+                        'skill_gap_category' => $targetCategory,
+                    ]);
+                }
+            }
+        }
+
         $youtubeRecommendations = [];
 
         // If we have missing skills from skill gap analysis, fetch YouTube playlists
@@ -227,36 +255,9 @@ class PathfinderController extends Controller
             );
         }
 
-        // RSS feed sources (live fetched and cached)
-        $rssSources = [
-            'technical' => [
-                'Software Development' => [
-                    ['title' => 'CSS-Tricks', 'url' => 'https://css-tricks.com/feed/'],
-                    ['title' => 'Dev.to', 'url' => 'https://dev.to/feed'],
-                    ['title' => 'Smashing Magazine', 'url' => 'https://www.smashingmagazine.com/feed/']
-                ],
-                'Data Science' => [
-                    ['title' => 'Towards Data Science', 'url' => 'https://towardsdatascience.com/feed'],
-                    ['title' => 'KDnuggets', 'url' => 'https://www.kdnuggets.com/feed'],
-                    ['title' => 'Analytics Vidhya', 'url' => 'https://medium.com/feed/analytics-vidhya']
-                ],
-                'UX/UI Design' => [
-                    ['title' => 'UX Collective', 'url' => 'https://uxdesign.cc/feed'],
-                    ['title' => 'UX Movement', 'url' => 'https://uxmovement.com/feed/'],
-                    ['title' => 'Nielsen Norman Group', 'url' => 'https://www.nngroup.com/feed/']
-                ]
-            ],
-            'soft_skills' => [
-                'Soft Skills' => [
-                    ['title' => 'Harvard Business Review', 'url' => 'https://hbr.org/feed'],
-                    ['title' => 'Mind Tools', 'url' => 'https://www.mindtools.com/blog/feed/'],
-                    ['title' => 'Fast Company', 'url' => 'https://www.fastcompany.com/feed']
-                ]
-            ]
-        ];
-
-        $rssService = app(\App\Services\RssFeedService::class);
-        $rssFeeds = $rssService->fetchFeedGroups($rssSources, 3);
+        // Fetch personalized articles from NewsAPI
+        $newsService = app(\App\Services\NewsApiService::class);
+        $articles = $newsService->fetchArticlesForRole($targetRole, 9);
 
         // Learning platforms
         $platforms = [
@@ -267,8 +268,7 @@ class PathfinderController extends Controller
         ];
 
         return view('pathfinder.external-resources', [
-            'rssFeeds' => $rssFeeds,
-            'rssSources' => $rssSources,
+            'articles' => $articles,
             'platforms' => $platforms,
             'youtubeRecommendations' => $youtubeRecommendations,
             'targetRole' => $targetRole,

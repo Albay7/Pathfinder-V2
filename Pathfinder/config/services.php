@@ -39,4 +39,9 @@ return [
         'api_key' => env('YOUTUBE_API_KEY'),
     ],
 
+    'newsapi' => [
+        'api_key' => env('NEWS_API_KEY'),
+        'base_url' => 'https://newsapi.org/v2',
+    ],
+
 ];

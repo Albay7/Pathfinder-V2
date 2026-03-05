@@ -27,3 +27,12 @@ Thumbs.db
 npm-debug.log
 yarn-error.log
 tmpclaude-*-cwd
+
+# Temp/utility files
+.kombai/
+Smtp/
+Pathfinder/test-mail.php
+apply-balanced-weights.js
+generate-balanced-course-weights.js
+verify-course-weights.js
+verify-weights.js

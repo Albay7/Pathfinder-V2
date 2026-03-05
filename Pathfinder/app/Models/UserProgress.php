@@ -15,6 +15,7 @@ class UserProgress extends Model
         'recommendation',
         'current_role',
         'target_role',
+        'target_category',
         'current_skills',
         'analysis_result',
         'match_percentage',

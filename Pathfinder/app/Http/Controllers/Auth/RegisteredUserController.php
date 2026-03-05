@@ -69,8 +69,8 @@ class RegisteredUserController extends Controller
             ['token' => $token]
         );
 
-        // Send verification email
-        Mail::to($request->email)->send(new VerificationLinkMail($verificationUrl, $data['name']));
+        // Send verification email via SMTP
+        Mail::mailer('smtp')->to($request->email)->send(new VerificationLinkMail($verificationUrl, $data['name']));
 
         return response()->json([
             'message' => 'Please check your email for the verification link.',
@@ -165,7 +165,7 @@ class RegisteredUserController extends Controller
             ['token' => $token]
         );
 
-        Mail::to($data['email'])->send(new VerificationLinkMail($verificationUrl, $data['name']));
+        Mail::mailer('smtp')->to($data['email'])->send(new VerificationLinkMail($verificationUrl, $data['name']));
 
         return response()->json(['message' => 'A new verification link has been sent to your email.']);
     }
