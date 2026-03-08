@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -27,8 +28,10 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['job_category', 'skill_key']);
-            $table->unique(['skill_key', 'url']);
         });
+
+        // Use prefix length for url to avoid MySQL key length limit
+        DB::statement('ALTER TABLE skill_resources ADD UNIQUE skill_resources_skill_key_url_unique (skill_key, url(191))');
     }
 
     /**
