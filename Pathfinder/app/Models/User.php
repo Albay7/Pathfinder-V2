@@ -228,6 +228,30 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the user's resource tracking records.
+     */
+    public function resourceTracking(): HasMany
+    {
+        return $this->hasMany(UserResourceTracking::class);
+    }
+
+    /**
+     * Get saved resources count.
+     */
+    public function getSavedResourcesCount()
+    {
+        return $this->resourceTracking()->saved()->count();
+    }
+
+    /**
+     * Get completed resources count.
+     */
+    public function getCompletedResourcesCount()
+    {
+        return $this->resourceTracking()->completed()->count();
+    }
+
+    /**
      * Get the user's tutorial progress records.
      */
     public function tutorialProgress(): HasMany

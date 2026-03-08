@@ -159,7 +159,7 @@
 {{-- ═══════════════════════════════════════════ --}}
 {{-- SECTION 3 · LEARNING SNAPSHOT              --}}
 {{-- ═══════════════════════════════════════════ --}}
-<div id="snapshot" class="py-10" style="background-color: var(--stone-100);">
+<div id="snapshot" class="py-10 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
 
@@ -234,8 +234,8 @@
         {{-- Section header --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div class="flex items-start gap-3">
-                <div class="lr-section-icon" style="background-color: #fee2e2;">
-                    <svg class="h-5 w-5" style="color: #dc2626;" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <div class="lr-section-icon" style="background-color: #ccfbf1;">
+                    <svg class="h-5 w-5" style="color: #0d9488;" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 </div>
                 <div>
                     <h2 class="text-xl font-semibold text-gray-900">YouTube Playlists by Skill</h2>
@@ -252,12 +252,12 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             @foreach($youtubeRecommendations as $group)
             <div class="lr-yt-card">
-                {{-- Red accent bar --}}
-                <div class="h-1.5" style="background: linear-gradient(to right, #dc2626, #ef4444);"></div>
+                {{-- Teal accent bar --}}
+                <div class="h-1.5" style="background: linear-gradient(to right, #0d9488, #5eead4);"></div>
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-base font-semibold text-gray-900">{{ $group['skill'] }}</h3>
-                        <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background-color: #fee2e2; color: #dc2626;">
+                        <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background-color: #ccfbf1; color: #0d9488;">
                             {{ count($group['items']) }} {{ count($group['items']) === 1 ? 'Playlist' : 'Playlists' }}
                         </span>
                     </div>
@@ -265,8 +265,8 @@
                         @foreach($group['items'] as $item)
                         <div class="flex items-start gap-3 p-3 rounded-xl" style="background-color: #fafafa; border: 1px solid #f3f4f6;">
                             {{-- Play icon --}}
-                            <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5" style="background-color: #fee2e2;">
-                                <svg class="h-4 w-4" style="color: #dc2626;" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5" style="background-color: #ccfbf1;">
+                                <svg class="h-4 w-4" style="color: #0d9488;" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <a href="{{ $item['url'] }}" target="_blank" class="font-medium text-gray-900 hover:underline text-sm leading-snug block" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $item['label'] }}</a>
@@ -288,6 +288,22 @@
                                     @endif
                                 </div>
                             </div>
+                            @auth
+                            <button class="lr-save-btn flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+                                style="background: #f3f4f6; border: 1px solid #e5e7eb;"
+                                data-url="{{ $item['url'] }}"
+                                data-title="{{ $item['label'] }}"
+                                data-type="youtube_playlist"
+                                data-skill="{{ $group['skill'] }}"
+                                data-source="{{ $item['channel'] ?? '' }}"
+                                data-description="{{ Str::limit($item['description'] ?? '', 200) }}"
+                                data-metadata='@json(["videoCount" => $item["videoCount"] ?? null])'
+                                title="Save to My Learning Journey"
+                                onclick="toggleSaveResource(event, this)">
+                                <svg class="h-4 w-4 text-gray-400 lr-save-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                                <svg class="h-4 w-4 lr-saved-icon hidden" style="color: var(--sea-500);" fill="currentColor" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                            </button>
+                            @endauth
                         </div>
                         @endforeach
                     </div>
@@ -299,8 +315,8 @@
         @else
         {{-- Empty state --}}
         <div class="rounded-2xl py-14 px-8 text-center" style="border: 2px dashed #e5e7eb;">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: #fee2e2;">
-                <svg class="h-7 w-7" style="color: #dc2626;" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: #ccfbf1;">
+                <svg class="h-7 w-7" style="color: #0d9488;" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">No playlists yet</h3>
             <p class="text-sm text-gray-500 mb-6 max-w-sm mx-auto">Run a skill gap analysis so we can generate personalized YouTube playlists matched to your missing skills.</p>
@@ -345,29 +361,47 @@
         @if(!empty($articles))
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($articles as $article)
-                <a href="{{ $article['link'] ?? '#' }}" target="_blank" class="lr-article-card group block">
+                <div class="lr-article-card group">
                     {{-- Accent bar --}}
                     <div class="h-1" style="background: linear-gradient(to right, var(--sea-500), var(--sea-300));"></div>
                     <div class="p-5">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="lr-source-pill" style="background: var(--sea-100); color: var(--sea-500); border-color: var(--sea-300);">
-                                <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
-                                {{ $article['source'] ?? 'Article' }}
-                            </span>
-                            @if(!empty($article['date']))
-                            <span class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($article['date'])->diffForHumans() }}</span>
-                            @endif
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="lr-source-pill" style="background: var(--sea-100); color: var(--sea-500); border-color: var(--sea-300);">
+                                    <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                                    {{ $article['source'] ?? 'Article' }}
+                                </span>
+                                @if(!empty($article['date']))
+                                <span class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($article['date'])->diffForHumans() }}</span>
+                                @endif
+                            </div>
+                            @auth
+                            <button class="lr-save-btn flex-shrink-0 w-7 h-7 rounded-md flex items-center justify-center transition-colors"
+                                style="background: #f3f4f6; border: 1px solid #e5e7eb;"
+                                data-url="{{ $article['link'] ?? '' }}"
+                                data-title="{{ $article['title'] ?? 'Untitled' }}"
+                                data-type="article"
+                                data-source="{{ $article['source'] ?? '' }}"
+                                data-description="{{ Str::limit(strip_tags($article['description'] ?? ''), 200) }}"
+                                title="Save to My Learning Journey"
+                                onclick="toggleSaveResource(event, this)">
+                                <svg class="h-3.5 w-3.5 text-gray-400 lr-save-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                                <svg class="h-3.5 w-3.5 lr-saved-icon hidden" style="color: var(--sea-500);" fill="currentColor" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                            </button>
+                            @endauth
                         </div>
-                        <h3 class="text-sm font-semibold text-gray-900 mb-2 leading-snug transition-colors" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $article['title'] ?? 'Untitled' }}</h3>
+                        <a href="{{ $article['link'] ?? '#' }}" target="_blank" class="block">
+                            <h3 class="text-sm font-semibold text-gray-900 mb-2 leading-snug transition-colors group-hover:text-[var(--sea-500)]" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $article['title'] ?? 'Untitled' }}</h3>
+                        </a>
                         @if(!empty($article['description']))
                         <p class="text-xs text-gray-500 leading-relaxed mb-3" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">{{ strip_tags($article['description']) }}</p>
                         @endif
-                        <div class="flex items-center gap-1 mt-auto text-xs font-medium" style="color: var(--sea-500);">
+                        <a href="{{ $article['link'] ?? '#' }}" target="_blank" class="flex items-center gap-1 mt-auto text-xs font-medium" style="color: var(--sea-500);">
                             Read article
                             <svg class="h-3 w-3 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                        </div>
+                        </a>
                     </div>
-                </a>
+                </div>
                 @endforeach
             </div>
 
@@ -387,7 +421,7 @@
 {{-- ═══════════════════════════════════════════ --}}
 {{-- SECTION 6 · JOB SEARCH PLATFORMS           --}}
 {{-- ═══════════════════════════════════════════ --}}
-<div id="jobs" class="py-12" style="background-color: var(--stone-100);">
+<div id="jobs" class="py-12 bg-white" style="border-top: 1px solid #e5e7eb;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
@@ -511,5 +545,104 @@
     </div>
 </div>
 @endif
+
+{{-- ═══════════════════════════════════════════ --}}
+{{-- SAVE BUTTON STYLES + JAVASCRIPT            --}}
+{{-- ═══════════════════════════════════════════ --}}
+@auth
+<style>
+    .lr-save-btn:hover { background: var(--sea-100) !important; border-color: var(--sea-300) !important; }
+    .lr-save-btn.saved { background: var(--sea-100) !important; border-color: var(--sea-300) !important; }
+    .lr-save-btn.saved .lr-save-icon { display: none; }
+    .lr-save-btn.saved .lr-saved-icon { display: block; }
+</style>
+<script>
+    const csrfToken = '{{ csrf_token() }}';
+
+    // Check which resources are already saved on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.lr-save-btn');
+        if (buttons.length === 0) return;
+
+        const urls = Array.from(buttons).map(btn => btn.dataset.url).filter(Boolean);
+        if (urls.length === 0) return;
+
+        const params = new URLSearchParams();
+        urls.forEach(u => params.append('urls[]', u));
+
+        fetch('/resources/check?' + params.toString(), {
+            headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.saved) {
+                buttons.forEach(btn => {
+                    if (data.saved[btn.dataset.url]) {
+                        btn.classList.add('saved');
+                    }
+                });
+            }
+        })
+        .catch(() => {});
+    });
+
+    function toggleSaveResource(event, btn) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const isSaved = btn.classList.contains('saved');
+        const url = btn.dataset.url;
+
+        if (isSaved) {
+            // Unsave
+            fetch('/resources/unsave', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify({ url: url }),
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    btn.classList.remove('saved');
+                }
+            })
+            .catch(() => {});
+        } else {
+            // Save
+            const payload = {
+                url: url,
+                title: btn.dataset.title,
+                resource_type: btn.dataset.type,
+                skill: btn.dataset.skill || null,
+                source: btn.dataset.source || null,
+                description: btn.dataset.description || null,
+                thumbnail_url: btn.dataset.thumbnail || null,
+                metadata: btn.dataset.metadata ? JSON.parse(btn.dataset.metadata) : null,
+            };
+
+            fetch('/resources/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    btn.classList.add('saved');
+                }
+            })
+            .catch(() => {});
+        }
+    }
+</script>
+@endauth
 
 @endsection

@@ -84,6 +84,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/remove', [TutorialController::class, 'remove'])->name('remove');
         Route::get('/recommendations', [TutorialController::class, 'getRecommendations'])->name('recommendations');
     });
+
+    // Resource tracking routes (External Resources <-> Learning Journey)
+    Route::prefix('resources')->name('resources.')->group(function () {
+        Route::post('/save', [TutorialController::class, 'saveResource'])->name('save');
+        Route::post('/unsave', [TutorialController::class, 'unsaveResource'])->name('unsave');
+        Route::post('/start', [TutorialController::class, 'startResource'])->name('start');
+        Route::post('/complete', [TutorialController::class, 'completeResource'])->name('complete');
+        Route::get('/check', [TutorialController::class, 'checkSavedResources'])->name('check');
+    });
 });
 
 require __DIR__.'/auth.php';
