@@ -53,7 +53,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libicu-dev \
-    procps
+    procps \
+    supervisor
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -69,11 +70,13 @@ COPY Pathfinder/ .
 COPY --from=vendor /app/vendor ./vendor
 
 # Copy built assets from the frontend image
-# Note: we copy the whole public directory since it contains built assets
 COPY --from=frontend /app/public ./public
 
 # Copy Nginx configuration
 COPY .docker/nginx.conf /etc/nginx/sites-available/default
+
+# Copy supervisor configuration
+COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy and setup entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
@@ -83,7 +86,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 80 (Railway will handle the mapping)
+# Expose port 80
 EXPOSE 80
 
 # Use entrypoint script

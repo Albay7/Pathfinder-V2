@@ -17,7 +17,6 @@ fi
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Start PHP-FPM and Nginx
-echo "Starting Nginx and PHP-FPM..."
-service nginx start
-php-fpm
+# Start Supervisord to manage PHP-FPM and Nginx
+echo "Starting Supervisord..."
+/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
