@@ -82,12 +82,13 @@ COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Set permissions for storage and bootstrap/cache
+RUN mkdir -p storage/framework/{sessions,views,cache} bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 storage bootstrap/cache
 
-# Expose port 80
-EXPOSE 80
+# Expose port (will be dynamic at runtime)
+EXPOSE 8080
 
 # Use entrypoint script
 ENTRYPOINT ["docker-entrypoint.sh"]
