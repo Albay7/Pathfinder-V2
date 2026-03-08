@@ -66,6 +66,11 @@ WORKDIR /var/www/html
 # Copy application code from Pathfinder subdirectory
 COPY Pathfinder/ .
 
+# Copy data folders from the root
+COPY Courses/ ./Courses/
+COPY Datasets/ ./Datasets/
+COPY Jobs/ ./Jobs/
+
 # Copy vendor directory from the vendor image
 COPY --from=vendor /app/vendor ./vendor
 
@@ -74,6 +79,7 @@ COPY --from=frontend /app/public ./public
 
 # Copy Nginx configuration
 COPY .docker/nginx.conf /etc/nginx/sites-available/default
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Copy supervisor configuration
 COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

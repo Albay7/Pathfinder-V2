@@ -7,7 +7,8 @@ storage/framework/sessions/*
 storage/framework/views/*
 storage/logs/*
 .env
-Dockerfile
-railway.json
-.docker
-docker-entrypoint.sh
+# Keep these as they are needed for the build context
+# Dockerfile
+# railway.json
+# .docker
+# docker-entrypoint.sh
