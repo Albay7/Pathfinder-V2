@@ -28,36 +28,9 @@ EOF
 
 a2ensite 000-default > /dev/null 2>&1 || true
 
-# Always create .env from Railway-injected environment variables
-echo "Creating .env from environment variables..."
-cat > /var/www/html/.env <<ENVFILE
-APP_NAME="${APP_NAME}"
-APP_ENV="${APP_ENV}"
-APP_KEY="${APP_KEY}"
-APP_DEBUG="${APP_DEBUG}"
-APP_URL="${APP_URL}"
-DB_CONNECTION="${DB_CONNECTION}"
-DB_HOST="${DB_HOST}"
-DB_PORT="${DB_PORT}"
-DB_DATABASE="${DB_DATABASE}"
-DB_USERNAME="${DB_USERNAME}"
-DB_PASSWORD="${DB_PASSWORD}"
-SESSION_DRIVER="${SESSION_DRIVER}"
-CACHE_STORE="${CACHE_STORE}"
-QUEUE_CONNECTION="${QUEUE_CONNECTION}"
-LOG_CHANNEL="${LOG_CHANNEL}"
-LOG_LEVEL="${LOG_LEVEL}"
-MAIL_MAILER="${MAIL_MAILER}"
-MAIL_HOST="${MAIL_HOST}"
-MAIL_PORT="${MAIL_PORT}"
-MAIL_USERNAME="${MAIL_USERNAME}"
-MAIL_PASSWORD="${MAIL_PASSWORD}"
-MAIL_FROM_ADDRESS="${MAIL_FROM_ADDRESS}"
-MAIL_FROM_NAME="${MAIL_FROM_NAME}"
-YOUTUBE_API_KEY="${YOUTUBE_API_KEY}"
-NEWS_API_KEY="${NEWS_API_KEY}"
-ENVFILE
-chown www-data:www-data /var/www/html/.env
+# Remove any .env file that may have been baked into the image
+# Railway injects env vars directly into the process - no .env file needed
+rm -f /var/www/html/.env
 
 # Clear caches
 php artisan config:clear || true
