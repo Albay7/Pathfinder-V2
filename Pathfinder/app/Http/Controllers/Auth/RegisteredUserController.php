@@ -78,6 +78,7 @@ class RegisteredUserController extends Controller
             Cache::forget("pending_email_{$request->email}");
             return response()->json([
                 'message' => 'Unable to send verification email. Please try again later.',
+                'debug_error' => $e->getMessage(),
             ], 503);
         }
 
