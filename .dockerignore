@@ -1,14 +1,3 @@
 node_modules
 vendor
 .git
-.github
-storage/framework/cache/data/*
-storage/framework/sessions/*
-storage/framework/views/*
-storage/logs/*
-.env
-# Keep these as they are needed for the build context
-# Dockerfile
-# railway.json
-# .docker
-# docker-entrypoint.sh
