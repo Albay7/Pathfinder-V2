@@ -52,6 +52,7 @@ done
 
 # Debug: show mail env vars at startup
 echo "MAIL_MAILER=${MAIL_MAILER:-not set}"
+echo "MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS:-not set}"
 echo "RESEND_API_KEY=${RESEND_API_KEY:+SET}"
 
 # NOTE: config:cache is intentionally skipped so Railway env vars are always read fresh
