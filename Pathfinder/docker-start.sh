@@ -50,8 +50,16 @@ for i in 1 2 3 4 5; do
     fi
 done
 
+# Debug: show mail env vars before caching
+echo "MAIL_MAILER=${MAIL_MAILER:-not set}"
+echo "RESEND_API_KEY=${RESEND_API_KEY:+SET}"
+
 # Cache config for performance
 php artisan config:cache || true
+
+# Verify cached config
+php artisan tinker --execute="echo 'Cached mailer: ' . config('mail.default');" 2>/dev/null || true
+
 php artisan route:cache || true
 php artisan view:cache || true
 
