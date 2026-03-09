@@ -1,3 +1,7 @@
 node_modules
 vendor
 .git
+**/.env
+**/.env.local
+**/.env.backup
+**/.env.temp
