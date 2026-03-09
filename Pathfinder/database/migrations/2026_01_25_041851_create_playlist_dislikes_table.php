@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -21,8 +22,10 @@ return new class extends Migration
 
             // Index for faster lookups
             $table->index(['user_id', 'skill']);
-            $table->index('playlist_url');
         });
+
+        // Use prefix length for text column index
+        DB::statement('ALTER TABLE playlist_dislikes ADD INDEX playlist_dislikes_playlist_url_index (playlist_url(191))');
     }
 
     /**
