@@ -23,13 +23,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application code from Pathfinder subdirectory (build context is repo root)
-COPY Pathfinder/ /var/www/html/
-
-# Copy data folders from the root
-COPY Courses/ /var/www/html/Courses/
-COPY Datasets/ /var/www/html/Datasets/
-COPY Jobs/ /var/www/html/Jobs/
+# Copy application code (build context is Pathfinder/ directory)
+COPY . /var/www/html/
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
@@ -55,7 +50,7 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 EXPOSE 8080
 
-# Move startup script (already copied via COPY Pathfinder/ above)
+# Setup startup script
 RUN cp /var/www/html/docker-start.sh /start.sh && chmod +x /start.sh
 
 CMD ["/start.sh"]
