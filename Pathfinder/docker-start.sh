@@ -55,6 +55,13 @@ php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
+# Fix Apache MPM conflict at runtime (build cache may skip this)
+rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.*
+if [ ! -f /etc/apache2/mods-enabled/mpm_prefork.load ]; then
+    ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf
+    ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load
+fi
+
 # Start Apache
 echo "Starting Apache in foreground on port $PORT..."
 apache2-foreground
