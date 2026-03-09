@@ -28,6 +28,29 @@ Route::get('/health', function () {
     }
 });
 
+// TEMPORARY: Debug mail config - REMOVE AFTER FIXING
+Route::get('/debug-mail', function () {
+    $config = [
+        'mailer' => config('mail.default'),
+        'resend_key' => config('services.resend.key') ? 'SET (' . substr(config('services.resend.key'), 0, 8) . '...)' : 'NOT SET',
+        'from' => config('mail.from.address'),
+        'from_name' => config('mail.from.name'),
+    ];
+
+    try {
+        \Illuminate\Support\Facades\Mail::to('chase.exia@gmail.com')->send(
+            new \App\Mail\VerificationLinkMail('https://example.com/test', 'Test User')
+        );
+        $config['email_send'] = 'SUCCESS';
+    } catch (\Exception $e) {
+        $config['email_send'] = 'FAILED';
+        $config['error'] = $e->getMessage();
+        $config['error_class'] = get_class($e);
+    }
+
+    return response()->json($config);
+});
+
 // Redirect root to Pathfinder
 Route::get('/', [PathfinderController::class, 'index'])->name('pathfinder.index');
 
