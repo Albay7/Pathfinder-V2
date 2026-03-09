@@ -14,7 +14,7 @@ mkdir -p storage/framework/{sessions,views,cache} bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-# Clear caches (if Laravel exists)
+# Laravel setup (if artisan exists)
 if [ -f "artisan" ]; then
     echo "Clearing Laravel caches..."
     php artisan config:clear || true
@@ -22,11 +22,14 @@ if [ -f "artisan" ]; then
     php artisan route:clear || true
     php artisan view:clear || true
 
-    # Run migrations if enabled
-    if [ "$RUN_MIGRATIONS" = "true" ]; then
-        echo "Running migrations with fresh database and seeding..."
-        php artisan migrate:fresh --seed --force || echo "Migrations failed, continuing..."
-    fi
+    # Run migrations (safe, non-destructive)
+    echo "Running database migrations..."
+    php artisan migrate --force || echo "Migrations failed, continuing..."
+
+    # Cache config and routes for performance
+    php artisan config:cache || true
+    php artisan route:cache || true
+    php artisan view:cache || true
 fi
 
 # Ensure PHP-FPM config allows listening on 9000
