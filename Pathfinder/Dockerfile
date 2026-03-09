@@ -8,11 +8,13 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
+    libicu-dev \
     zip \
     unzip \
     nodejs \
     npm \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Get latest Composer
@@ -21,8 +23,13 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy existing application directory contents
-COPY . /var/www/html
+# Copy application code from Pathfinder subdirectory (build context is repo root)
+COPY Pathfinder/ /var/www/html/
+
+# Copy data folders from the root
+COPY Courses/ /var/www/html/Courses/
+COPY Datasets/ /var/www/html/Datasets/
+COPY Jobs/ /var/www/html/Jobs/
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
@@ -48,8 +55,8 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 EXPOSE 8080
 
-# Create the startup script as a proper file
-COPY docker-start.sh /start.sh
+# Copy the startup script
+COPY Pathfinder/docker-start.sh /start.sh
 RUN chmod +x /start.sh
 
 CMD ["/start.sh"]
