@@ -37,9 +37,11 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Fix Apache MPM conflict: disable mpm_event, keep mpm_prefork (required by mod_php)
-RUN a2dismod mpm_event 2>/dev/null || true \
-    && a2enmod mpm_prefork \
+# Fix Apache MPM conflict: force-remove mpm_event/mpm_worker, keep only mpm_prefork
+RUN rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.* \
+    && ls /etc/apache2/mods-enabled/mpm_prefork.* 2>/dev/null \
+    || (ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
+        && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load) \
     && a2enmod rewrite
 
 # Remove default Listen 80 so we only listen on $PORT
