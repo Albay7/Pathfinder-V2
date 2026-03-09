@@ -175,7 +175,7 @@ class RegisteredUserController extends Controller
         );
 
         try {
-            Mail::mailer('resend')->to($data['email'])->send(new VerificationLinkMail($verificationUrl, $data['name']));
+            Mail::to($data['email'])->send(new VerificationLinkMail($verificationUrl, $data['name']));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Failed to resend verification email: ' . $e->getMessage());
             return response()->json(['message' => 'Unable to send verification email. Please try again later.'], 503);

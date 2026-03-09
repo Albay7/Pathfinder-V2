@@ -111,7 +111,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'onboarding@resend.dev'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply@careerrecommendation.me'),
         'name' => env('MAIL_FROM_NAME', 'Pathfinder'),
     ],
 
