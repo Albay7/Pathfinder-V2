@@ -11,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -56,7 +55,7 @@ class RegisteredUserController extends Controller
         $data = [
             'name' => $request->first_name . ' ' . $request->last_name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
         ];
 
         Cache::put("pending_registration_{$token}", $data, now()->addMinutes(60));
@@ -69,8 +68,18 @@ class RegisteredUserController extends Controller
             ['token' => $token]
         );
 
-        // Send verification email via SMTP
-        Mail::mailer('smtp')->to($request->email)->send(new VerificationLinkMail($verificationUrl, $data['name']));
+        // Send verification email
+        try {
+            Mail::to($request->email)->send(new VerificationLinkMail($verificationUrl, $data['name']));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send verification email: ' . $e->getMessage());
+            // Clean up cache since user can't verify without the email
+            Cache::forget("pending_registration_{$token}");
+            Cache::forget("pending_email_{$request->email}");
+            return response()->json([
+                'message' => 'Unable to send verification email. Please try again later.',
+            ], 503);
+        }
 
         return response()->json([
             'message' => 'Please check your email for the verification link.',
@@ -165,7 +174,12 @@ class RegisteredUserController extends Controller
             ['token' => $token]
         );
 
-        Mail::mailer('smtp')->to($data['email'])->send(new VerificationLinkMail($verificationUrl, $data['name']));
+        try {
+            Mail::to($data['email'])->send(new VerificationLinkMail($verificationUrl, $data['name']));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to resend verification email: ' . $e->getMessage());
+            return response()->json(['message' => 'Unable to send verification email. Please try again later.'], 503);
+        }
 
         return response()->json(['message' => 'A new verification link has been sent to your email.']);
     }

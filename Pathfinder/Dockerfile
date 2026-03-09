@@ -41,7 +41,7 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.* \
     && ls /etc/apache2/mods-enabled/mpm_prefork.* 2>/dev/null \
     || (ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
-        && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load) \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load) \
     && a2enmod rewrite
 
 # Remove default Listen 80 so we only listen on $PORT
