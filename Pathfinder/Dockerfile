@@ -55,8 +55,7 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 EXPOSE 8080
 
-# Copy the startup script
-COPY Pathfinder/docker-start.sh /start.sh
-RUN chmod +x /start.sh
+# Move startup script (already copied via COPY Pathfinder/ above)
+RUN cp /var/www/html/docker-start.sh /start.sh && chmod +x /start.sh
 
 CMD ["/start.sh"]
