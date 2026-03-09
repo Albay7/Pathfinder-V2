@@ -31,7 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ]
         );
 
-        Mail::mailer('resend')->to($this->email)->send(new VerificationLinkMail($verificationUrl, $this->name));
+        Mail::to($this->email)->send(new VerificationLinkMail($verificationUrl, $this->name));
     }
 
     /**
@@ -44,7 +44,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email' => $this->email,
         ], false));
 
-        Mail::mailer('resend')->to($this->email)->send(new PasswordResetMail($resetUrl, $this->name));
+        Mail::to($this->email)->send(new PasswordResetMail($resetUrl, $this->name));
     }
 
     /**

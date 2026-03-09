@@ -1,7 +1,7 @@
 # Use PHP 8.2 with Apache
 FROM php:8.2-apache
 
-# Cache bust: 2026-03-09-v4
+# Cache bust: 2026-03-09-v5
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
