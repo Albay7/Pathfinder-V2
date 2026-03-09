@@ -38,7 +38,7 @@ Route::get('/debug-mail', function () {
     ];
 
     try {
-        \Illuminate\Support\Facades\Mail::to('chase.exia@gmail.com')->send(
+        \Illuminate\Support\Facades\Mail::mailer('resend')->to('chase.exia@gmail.com')->send(
             new \App\Mail\VerificationLinkMail('https://example.com/test', 'Test User')
         );
         $config['email_send'] = 'SUCCESS';
