@@ -24,8 +24,8 @@ if [ -f "artisan" ]; then
 
     # Run migrations if enabled
     if [ "$RUN_MIGRATIONS" = "true" ]; then
-        echo "Running migrations..."
-        php artisan migrate --force || echo "Migrations failed, continuing..."
+        echo "Running migrations with fresh database and seeding..."
+        php artisan migrate:fresh --seed --force || echo "Migrations failed, continuing..."
     fi
 fi
 

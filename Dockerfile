@@ -63,9 +63,6 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 # Set working directory
 WORKDIR /var/www/html
 
-# Add a debug step to see what's in the build context
-RUN ls -la
-
 # Copy application code from Pathfinder subdirectory
 COPY Pathfinder/ .
 
