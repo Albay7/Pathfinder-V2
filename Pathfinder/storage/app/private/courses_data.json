@@ -1,0 +1,2637 @@
+{
+    "BS Accountancy": {
+        "tagline": "The definitive language of global business and financial stewardship.",
+        "description": "A rigorous and high-stakes program designed to produce ethical leaders in the financial world. It transcends simple bookkeeping, training students in the complex arts of financial reporting, international auditing standards, and multi-layered taxation laws. The curriculum is meticulously aligned with the Philippine CPA licensure exam requirements, requiring extreme dedication and precision. Graduates are prepared to serve as guardians of financial integrity, providing the critical data that allows global markets and corporations to function with transparency and trust.",
+        "short_description": "Focuses on financial reporting, auditing, and taxation.",
+        "curriculum_highlights": [
+            "Advanced Financial Accounting & Reporting",
+            "Auditing & Assurance Principles (Theory & Practice)",
+            "Philippine & International Taxation Laws",
+            "Management Advisory Services",
+            "Strategic Business Leadership",
+            "Accounting Information Systems",
+            "Business Laws & Regulations",
+            "Ethical Standards in Accountancy"
+        ],
+        "skills_gained": [
+            "Financial Statement Preparation & Analysis",
+            "Rigorous Internal & External Auditing",
+            "Strategic Tax Planning & Compliance",
+            "Corporate Financial Controllership",
+            "Ethical Decision-Making in Finance",
+            "Advanced Statistical Data Analysis",
+            "Risk Assessment & Management",
+            "Quantitative Decision Engineering"
+        ],
+        "career_opportunities": [
+            "Certified Public Accountant (CPA)",
+            "Auditor",
+            "Tax Consultant",
+            "Chief Financial Officer"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b140,000 - \u20b190,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "ESTJ",
+            "INTJ",
+            "ISFJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "Top performing school in CPA boards."
+            },
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Consistently high passing rates and quality accountancy education."
+            }
+        ]
+    },
+    "BS Business Administration": {
+        "tagline": "Cultivating versatile leadership for the complex global economy.",
+        "description": "A comprehensive management degree that provides a deep understanding of how modern organizations operate from the ground up. Students explore the synergy between human behavior, operational efficiency, and long-term strategic planning. The program is designed to create 'generalist leaders' who have the macro-perspective needed to navigate diverse industries, lead cross-functional teams, and solve the multi-dimensional challenges of a shifting economic landscape. It emphasizes foundational leadership, corporate social responsibility, and the agility to adapt to global market trends.",
+        "short_description": "Covers organizational management and business operations.",
+        "curriculum_highlights": [
+            "Organization and Management Theory",
+            "Human Behavior in Organizations",
+            "Strategic Management & Planning",
+            "Business Economics & Market Analysis",
+            "Operations Management Principles",
+            "Corporate Social Responsibility & Ethics",
+            "International Business & Globalization",
+            "Business Policy & Decision Case Studies"
+        ],
+        "skills_gained": [
+            "Strategic Leadership & Team Building",
+            "Cross-Functional Operational Management",
+            "Business Case Analysis & Solving",
+            "Economic Trend Forecasting",
+            "Organizational Change Leadership",
+            "Effective Corporate Communication",
+            "Project Management Fundamentals",
+            "Ethical Resource Allocation"
+        ],
+        "career_opportunities": [
+            "Office Manager",
+            "Business Development Officer",
+            "Operations Associate",
+            "Entrepreneur"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b175,000 \/ Sem",
+        "mbti_alignment": [
+            "ESTJ",
+            "ENTJ",
+            "ESTP",
+            "ESFJ"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Renowned for its College of Business."
+            },
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Excellent management and entrepreneurship programs."
+            }
+        ]
+    },
+    "BS Marketing Management": {
+        "tagline": "Mastering the psychology of branding and the science of consumer influence.",
+        "description": "A dynamic program that explores the evolving relationship between brands and people. It combines psychological insights with data-driven strategies to teach students how to create, communicate, and deliver value to target markets. From digital storytelling and social media viral marketing to high-level brand management and global market research, the curriculum is designed to create creative innovators who can drive business growth through compelling narratives and precisely targeted campaigns in both digital and physical marketplaces.",
+        "short_description": "Focuses on market research, branding, and sales strategies.",
+        "curriculum_highlights": [
+            "Consumer Behavior & Psychological Insights",
+            "Digital Marketing & Social Media Strategy",
+            "Professional Salesmanship & Persuasion",
+            "Integrated Marketing Communications",
+            "Retail Management & Merchandising",
+            "Market Research & Consumer Data",
+            "Global Marketing & Export Strategy",
+            "Branding and Creative Narrative Design"
+        ],
+        "skills_gained": [
+            "Comprehensive Brand Strategy Design",
+            "Advanced Consumer Trend Analysis",
+            "Digital Content Strategy & Analytics",
+            "Public Relations & Media Management",
+            "Persuasive Communication & Pitching",
+            "Data-Driven Market Research",
+            "Creative Storytelling for Business",
+            "Competitive Landscape Mapping"
+        ],
+        "career_opportunities": [
+            "Marketing Manager",
+            "Social Media Strategist",
+            "Brand Coordinator",
+            "Market Researcher"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b175,000 \/ Sem",
+        "mbti_alignment": [
+            "ENFP",
+            "ENTP",
+            "ESFP",
+            "ENTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Top-tier marketing curriculum and industry links."
+            },
+            {
+                "name": "University of San Carlos",
+                "location": "Cebu",
+                "description": "Strong business and marketing programs in the South."
+            }
+        ]
+    },
+    "BS Financial Management": {
+        "tagline": "Architecting wealth and strategic investment in global capital markets.",
+        "description": "This program focuses on the sophisticated management of capital, exploring the intricacies of financial markets, investment portfolios, and corporate wealth maximization. Students learn to navigate high-frequency trading, equity analysis, and risk management within the context of global financial institutions. The curriculum bridge's economic theory with practical financial engineering, preparing graduates to manage the lifeblood of organizations and help individuals and corporations achieve long-term financial security through expert planning and predictive analysis.",
+        "short_description": "Focuses on capital markets, investment, and fund management.",
+        "curriculum_highlights": [
+            "Investment Analysis & Portfolio Management",
+            "Capital Markets & Financial Institutions",
+            "Corporate Financial Planning & Control",
+            "Banking and Financial Risk Management",
+            "Derivatives & Financial Engineering",
+            "International Finance & Exchange Markets",
+            "Financial Modeling & Forecasting",
+            "Public Finance and Social Policy"
+        ],
+        "skills_gained": [
+            "Quantitative Financial Risk Assessment",
+            "Asset Allocation & Investment Strategy",
+            "Advanced Spreadsheet Modeling",
+            "Equity & Valuation Analytics",
+            "Economic Forecasting Mastery",
+            "Treasury & Liquidity Management",
+            "Regulatory Compliance Proficiency",
+            "Macro-Economic Analysis"
+        ],
+        "career_opportunities": [
+            "Financial Analyst",
+            "Investment Banker",
+            "Credit Analyst",
+            "Treasury Controller"
+        ],
+        "duration": "4 Years",
+        "difficulty": "High",
+        "tuition": "\u20b135,000 - \u20b180,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ISTJ",
+            "ENTJ",
+            "ESTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Philippines",
+                "location": "Various",
+                "description": "Prestigious economics and finance tracks."
+            },
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Superior financial management curriculum."
+            }
+        ]
+    },
+    "BS Entrepreneurship": {
+        "tagline": "Incubating innovation and scaling the ventures of tomorrow.",
+        "description": "A specialized laboratory for business creators and innovators. This program guides students from the initial spark of an idea through the rigorous process of feasibility, business planning, and market entry. It emphasizes the 'entrepreneurial mindset'\u2014resilience, agility, and the ability to spot opportunities where others see obstacles. Students don't just study business; they build them, legalizing their own startups as part of their graduation requirements, and learning how to lead in an era of rapid disruption and digital transformation.",
+        "short_description": "Focuses on startup creation and business innovation.",
+        "curriculum_highlights": [
+            "Venture Creation & Feasibility Studies",
+            "Innovation Management & Design Thinking",
+            "Startup Financing & Venture Capital",
+            "Social Entrepreneurship & Sustainability",
+            "Small Business Management Strategies",
+            "e-Commerce Business Models",
+            "Supply Chain for Small Ventures",
+            "Business Plan Implementation Lab"
+        ],
+        "skills_gained": [
+            "Business Concept Ideation",
+            "Robust Business Plan Development",
+            "Pitching to Investors & Stakeholders",
+            "Resourceful Problem Solving",
+            "Strategic Networking & Negotiation",
+            "Lean Startup Methodologies",
+            "Bootstrap Financial Management",
+            "Market Opportunity Identification"
+        ],
+        "career_opportunities": [
+            "Business Owner",
+            "Innovation Consultant",
+            "Startup Founder",
+            "Venture Capital Associate"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b170,000 \/ Sem",
+        "mbti_alignment": [
+            "ENTP",
+            "ENFP",
+            "ENTJ",
+            "ESTP"
+        ],
+        "top_universities": [
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Strong focus on social and sustainable entrepreneurship."
+            },
+            {
+                "name": "De La Salle-College of Saint Benilde",
+                "location": "Manila",
+                "description": "Industry-leading program for creative startups."
+            }
+        ]
+    },
+    "BS Human Resource Management": {
+        "tagline": "Optimizing the human dimension of organizational excellence.",
+        "description": "Focuses on the most critical asset of any organization: its people. This program explores the entire employee lifecycle, from strategic recruitment and training to performance management and labor relations. Students study organizational psychology, compensation design, and the evolving laws that govern the workplace. The goal is to build compassionate yet strategic leaders who can foster a productive culture, resolve internal conflicts, and align individual talent with the broader mission of the enterprise in a diverse and globalized work environment.",
+        "short_description": "Focuses on recruitment, employee relations, and training.",
+        "curriculum_highlights": [
+            "Strategic Recruitment & Talent Sourcing",
+            "Training and Development Methodologies",
+            "Performance Management Systems",
+            "Compensation and Benefits Design",
+            "Philippine Labor Laws & Relations",
+            "Organizational Development & Culture",
+            "HR Analytics & Talent Data",
+            "Occupational Health and Safety"
+        ],
+        "skills_gained": [
+            "Advanced Conflict Resolution",
+            "Succession Planning & Talent Management",
+            "Effective Interviewing & Assessment",
+            "Culture Building & Employee Engagement",
+            "Legal Compliance & Policy Drafting",
+            "HR Data Interpretation",
+            "Coaching & Mentoring Techniques",
+            "Ethics and Inclusivity Advocacy"
+        ],
+        "career_opportunities": [
+            "HR Manager",
+            "Recruiter",
+            "Training Specialist",
+            "Employee Relations Officer"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b165,000 \/ Sem",
+        "mbti_alignment": [
+            "ESFJ",
+            "ENFJ",
+            "ISFJ",
+            "INFJ"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Center of Excellence in HR education."
+            },
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Well-rounded program with strong industry partnerships."
+            }
+        ]
+    },
+    "BS Operations Management": {
+        "tagline": "Engineering efficiency and quality in the global supply chain.",
+        "description": "Concentrates on the 'how' of business\u2014ensuring that products and services are delivered with maximum efficiency and minimum waste. Students dive into the science of supply chain logistics, production planning, and total quality management. By mastering the coordination of people, materials, and processes, graduates become the backbone of manufacturing and service industries, ensuring that every step of the operation adds value and contributes to the bottom line while maintaining high levels of customer satisfaction and safety.",
+        "short_description": "Focuses on supply chain, production, and quality control.",
+        "curriculum_highlights": [
+            "Supply Chain Management & Logistics",
+            "Total Quality Management (TQM) \/ Six Sigma",
+            "Inventory & Warehouse Management",
+            "Production Planning & Control",
+            "Project Management for Operations",
+            "Facilities Planning & Design",
+            "Industrial Process Optimization",
+            "Sustainability in Global Operations"
+        ],
+        "skills_gained": [
+            "Process Streamlining & Waste Reduction",
+            "Logistics & Transport Optimization",
+            "Quality Assurance Auditing",
+            "Efficiency Metrics & KPI Design",
+            "Workflow Reconstruction",
+            "Strategic Inventory Planning",
+            "Operations Research & Data Modeling",
+            "Risk Mitigation in Supply Chains"
+        ],
+        "career_opportunities": [
+            "Operations Manager",
+            "Supply Chain Analyst",
+            "Logistics Coordinator",
+            "Quality Control Specialist"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b170,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "ESTJ",
+            "INTJ",
+            "ISTP"
+        ],
+        "top_universities": [
+            {
+                "name": "Mapua University",
+                "location": "Manila",
+                "description": "Strong focus on industrial operations and engineering."
+            },
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Excellent management and logistics tracks."
+            }
+        ]
+    },
+    "BS Management Accounting": {
+        "tagline": "Providing the strategic data that powers internal business decisions.",
+        "description": "A specialized field that blends accounting concepts with management consulting. Unlike traditional accounting which looks backward for external reporting, Management Accounting looks forward to help organization's leaders make better internal decisions. Students learn to analyze costs, forecast performance, and provide the data needed for strategic pricing, investment, and growth. It's about being a strategic partner to management, turning numbers into insights that prevent waste and drive long-term organizational success.",
+        "short_description": "Focuses on internal reporting and decision-making support.",
+        "curriculum_highlights": [
+            "Cost Accounting and Management",
+            "Strategic Financial Management",
+            "Management Advisory & Consultancy",
+            "Controllership and Internal Audit",
+            "Quantitative Methods for Business Decisions",
+            "Operational & Strategic Budgeting",
+            "Performance Measurement Systems",
+            "Internal Control & Risk Management"
+        ],
+        "skills_gained": [
+            "Internal Data Interpretation",
+            "Cost-Volume-Profit Analysis",
+            "Budget Planning & Variance Analysis",
+            "Pricing Strategy Design",
+            "Decision Support for Management",
+            "Operational Performance Auditing",
+            "Strategic Data Forecasting",
+            "Profitability Optimization"
+        ],
+        "career_opportunities": [
+            "Management Accountant",
+            "Internal Auditor",
+            "Budget Analyst",
+            "Financial Controller"
+        ],
+        "duration": "4 Years",
+        "difficulty": "High",
+        "tuition": "\u20b135,000 - \u20b180,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "INTJ",
+            "ESTJ",
+            "ISFJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Long history of producing board passers and top accountants."
+            },
+            {
+                "name": "San Beda University",
+                "location": "Manila",
+                "description": "Excellent reputation in business and accountancy."
+            }
+        ]
+    },
+    "BS International Relations": {
+        "tagline": "Decoding power, diplomacy, and politics on the world stage.",
+        "description": "A sophisticated exploration of the relationships between nations, international organizations, and global non-state actors. Students study the complexities of foreign policy, diplomatic practice, and the international legal frameworks that govern global security and trade. The program encourages critical thinking about global issues like human rights, environmental crises, and conflict resolution. Graduates are prepared to navigate the nuanced world of embassies, NGOs, and multinational corporations, acting as bridges between diverse cultures and political systems.",
+        "short_description": "Focuses on diplomacy, global politics, and international trade.",
+        "curriculum_highlights": [
+            "Consular and Diplomatic Practice",
+            "Public and Private International Law",
+            "Geopolitical & Strategic Studies",
+            "Global Political Economy",
+            "Conflict Transformation & Resolution",
+            "Human Rights and International Policy",
+            "Global Governance & International Orgs",
+            "Foreign Language Studies (Linguistics Specialty)"
+        ],
+        "skills_gained": [
+            "High-Level Diplomatic Negotiation",
+            "Cross-Cultural Conflict Mediation",
+            "Geopolitical Risk Assessment",
+            "International Policy Analysis",
+            "Strategic Communication & Protocol",
+            "Global Market Trend Analysis",
+            "Intelligence Gathering & Reporting",
+            "Multi-Lingual Professionalism"
+        ],
+        "career_opportunities": [
+            "Diplomat",
+            "Foreign Service Officer",
+            "Policy Researcher",
+            "International NGO Worker"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b135,000 - \u20b190,000 \/ Sem",
+        "mbti_alignment": [
+            "ENFJ",
+            "INFJ",
+            "ENTJ",
+            "INTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle-College of Saint Benilde",
+                "location": "Manila",
+                "description": "Premier institution for Consular and Diplomatic Affairs."
+            },
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Excellent global politics and development programs."
+            }
+        ]
+    },
+    "BS Civil Engineering": {
+        "tagline": "Designing and building the resilient infrastructure of modern society.",
+        "description": "A foundation-level engineering discipline focused on the design, construction, and sustainable maintenance of the built environment. Students master the principles of structural integrity, fluid mechanics, and geotechnical stability to create everything from towering skyscrapers and intricate bridge systems to critical water supply networks and transportation hubs. The program emphasizes public safety, environmental stewardship, and the technical precision required to transform blueprints into long-lasting physical realities that shape the skyline and the society.",
+        "short_description": "Structural design, construction, and environmental infrastructure.",
+        "curriculum_highlights": [
+            "Advanced Structural Theory & Design",
+            "Geotechnical Engineering & Soil Mechanics",
+            "Hydrology and Water Resources Engineering",
+            "Construction Project Management & Safety",
+            "Transportation Engineering & Urban Planning",
+            "Reinforced Concrete and Steel Design",
+            "Quantity Surveying & Cost Estimation",
+            "Environmental Engineering for Infrastructure"
+        ],
+        "skills_gained": [
+            "Precision Structural Design & Analysis",
+            "Construction Site Supervision & Safety",
+            "Technical Drafting & CAD\/BIM Proficiency",
+            "Complex Mathematical Problem Solving",
+            "Material Testing & Quality Control",
+            "Geographical Spatial Analysis",
+            "Infrastructure Lifecycle Planning",
+            "Environmental Impact Assessment"
+        ],
+        "career_opportunities": [
+            "Civil Engineer",
+            "Structural Engineer",
+            "Project Manager",
+            "Urban Planner"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b140,000 - \u20b195,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "INTJ",
+            "ESTJ",
+            "ISTP"
+        ],
+        "top_universities": [
+            {
+                "name": "Mapua University",
+                "location": "Manila",
+                "description": "The benchmark for engineering in the Philippines."
+            },
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "Consistently produces top board passers."
+            }
+        ]
+    },
+    "BS Electrical Engineering": {
+        "tagline": "Powering the global future through innovative energy and system design.",
+        "description": "Deals with the vast study and application of electricity, electronics, and electromagnetism. Students explore the architecture of massive power grids, the design of efficient energy conversion systems, and the implementation of smart technology in industrial automation. The curriculum bridges the gap between raw power and micro-circuitry, preparing graduates to manage national electrical infrastructures, design sustainable energy solutions like solar and wind farms, and innovate in the world of high-voltage systems and electrical safety.",
+        "short_description": "Power systems, electronics, and electrical infrastructure.",
+        "curriculum_highlights": [
+            "Power System Analysis & Design",
+            "Electrical Machines & Transformers",
+            "Industrial Control & Automation Systems",
+            "Energy Conversion & Renewable Resources",
+            "Electrical Systems Design for Buildings",
+            "Power Plant Engineering & Operations",
+            "Microcontroller Applications in Power",
+            "Electrical Safety & National Standards"
+        ],
+        "skills_gained": [
+            "Power Grid Distribution & Design",
+            "Electrical Circuit Theory & Simulation",
+            "Programmable Logic Controller (PLC) Mastery",
+            "Renewable Energy System Integration",
+            "Technical Fault Analysis & Correction",
+            "Systems Design Documentation",
+            "Industrial Automation Engineering",
+            "Quantitative Energy Audit Analysis"
+        ],
+        "career_opportunities": [
+            "Electrical Engineer",
+            "Power Plant Manager",
+            "Automation Engineer",
+            "Consultant"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b140,000 - \u20b195,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ISTJ",
+            "INTP",
+            "ENTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "High-tech lab facilities and industry exposure."
+            },
+            {
+                "name": "Batangas State University",
+                "location": "Batangas City",
+                "description": "The National Engineering University of the PH."
+            }
+        ]
+    },
+    "BS Mechanical Engineering": {
+        "tagline": "Engineering the mechanics of motion and the thermodynamics of energy.",
+        "description": "A powerhouse of engineering that focuses on the design, manufacture, and maintenance of machines and thermodynamic systems. Students dive deep into the world of engines, heating and cooling systems, and robotics. The program emphasizes the transformation of energy into motion, requiring a mastery of fluid dynamics, material science, and heat transfer. Graduates are prepared to lead in manufacturing plants, automotive design firms, and energy research centers, ensuring that the machines that drive our world are efficient, safe, and innovative.",
+        "short_description": "Machine design, heat transfer, and mechanical systems.",
+        "curriculum_highlights": [
+            "Advanced Thermodynamics & Heat Transfer",
+            "Machine Design & Mechanical Components",
+            "Fluid Mechanics & Hydraulic Machinery",
+            "Refrigeration & Air Conditioning Systems",
+            "Robotics and Mechatronics Systems",
+            "Combustion Engines & Power Plants",
+            "Materials Science and Engineering",
+            "Computer-Aided Engineering (CAE\/FEM)"
+        ],
+        "skills_gained": [
+            "Sophisticated Machine Part Design",
+            "Thermodynamic System Analysis",
+            "Mechanical Prototype Development",
+            "Manufacturing Process Optimization",
+            "Robotic System Integration",
+            "Finite Element Analysis (FEA)",
+            "Precision Measurement & Machining",
+            "Energy Systems Troubleshooting"
+        ],
+        "career_opportunities": [
+            "Mechanical Engineer",
+            "Plant Engineer",
+            "Automotive Designer",
+            "Robotics Engineer"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b140,000 - \u20b195,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTP",
+            "INTJ",
+            "ISTJ",
+            "ESTP"
+        ],
+        "top_universities": [
+            {
+                "name": "Mapua University",
+                "location": "Manila",
+                "description": "Extensive research and high performing graduates."
+            },
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "Strong focus on energy and manufacturing."
+            }
+        ]
+    },
+    "BS Chemical Engineering": {
+        "tagline": "Innovating molecular processes for high-impact global solutions.",
+        "description": "A multidisciplinary engineering field that applies the principles of chemistry, physics, and biology together with mathematics to transform raw materials into useful products. Students learn to design large-scale chemical processes for industries like pharmaceuticals, food production, and renewable fuel. The program is notorious for its rigor, focusing on 'Unit Operations' and reaction kinetics. Graduates are the architects of the molecular world, ensuring that chemical production is efficient, environmentally sustainable, and safe for consumers worldwide.",
+        "short_description": "Process engineering, raw material conversion, and chemistry.",
+        "curriculum_highlights": [
+            "Unit Operations in Chemical Processes",
+            "Chemical Reaction Engineering & Kinetics",
+            "Thermodynamics for Chemical Systems",
+            "Process Control & Safety Protocols",
+            "Biochemical Engineering Principles",
+            "Environmental Management for Chemicals",
+            "Plant Design and Economics",
+            "Separation Processes & Distillation"
+        ],
+        "skills_gained": [
+            "Large-Scale Process Design & Scaling",
+            "Molecular Property Analysis",
+            "Safety Compliance & Risk Mitigation",
+            "R&D Laboratory Methodologies",
+            "Environmental Management Strategy",
+            "Process Simulation (ASPEN\/HYSYS)",
+            "Quantitative Chemical Analysis",
+            "Resource Efficiency Engineering"
+        ],
+        "career_opportunities": [
+            "Chemical Engineer",
+            "Process Engineer",
+            "R&D Scientist",
+            "Production Manager"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "Extreme",
+        "tuition": "\u20b140,000 - \u20b195,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "INTP",
+            "ISTJ",
+            "ENTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "Consistently rank 1st in the board exams."
+            },
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Excellent chemical research facilities."
+            }
+        ]
+    },
+    "BS Industrial Engineering": {
+        "tagline": "Optimizing complex systems through data-driven efficiency and design.",
+        "description": "Often called 'The Management Engineering,' this field focuses on the optimization of complex processes, systems, and organizations. Students learn to eliminate waste of time, money, and materials to improve productivity and quality. The curriculum blends engineering principles with business management, social science, and ergonomics. Graduates are experts in systems thinking, preparing them to lead digital transformations, optimize global supply chains, and design work environments that maximize human potential and organizational output.",
+        "short_description": "System optimization, human factors, and process efficiency.",
+        "curriculum_highlights": [
+            "Operations Research & Optimization",
+            "Ergonomics & Human Factors Engineering",
+            "Facilities Planning & Warehouse Design",
+            "Systems Engineering & Management",
+            "Statistical Quality Control (Six Sigma)",
+            "Supply Chain Logistics & Strategy",
+            "Production Systems Analysis",
+            "Financial & Cost Management for Engineers"
+        ],
+        "skills_gained": [
+            "System Workflow Optimization",
+            "Statistical Data Interpretation",
+            "Ergonomic Workplace Design",
+            "Lean Manufacturing Leadership",
+            "Project & Resources Management",
+            "Supply Chain Performance Analytics",
+            "Value Stream Mapping",
+            "Collaborative System Integration"
+        ],
+        "career_opportunities": [
+            "Industrial Engineer",
+            "Operations Analyst",
+            "Supply Chain Consultant",
+            "Ergonomics Consultant"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "High",
+        "tuition": "\u20b140,000 - \u20b190,000 \/ Sem",
+        "mbti_alignment": [
+            "ENTJ",
+            "INTJ",
+            "ESTJ",
+            "ISTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Superior industrial and systems engineering program."
+            },
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "Strong industry ties and research focus."
+            }
+        ]
+    },
+    "BS Computer Engineering": {
+        "tagline": "Bridging the hardware-software divide for the next generation of tech.",
+        "description": "Combines the best of Electrical Engineering and Computer Science to focus on the design and development of computer hardware and integrated systems. Students learn to build everything from microprocessors and embedded systems to supercomputers and IoT devices. The program emphasizes 'hardware-software co-design,' preparing graduates to build the physical brains behind modern technology, master microcontroller programming, and ensure that software runs with maximum performance on its underlying hardware architecture.",
+        "short_description": "Embedded systems, hardware-software integration, and robotics.",
+        "curriculum_highlights": [
+            "Microprocessor Systems and Design",
+            "Embedded Systems Architecture",
+            "Computer Architecture & Organization",
+            "Hardware Description Languages (VHDL\/Verilog)",
+            "Operating Systems & Real-time Systems",
+            "Data Communications & Networking",
+            "Digital Signal Processing (DSP)",
+            "Robotics & Control Engineering"
+        ],
+        "skills_gained": [
+            "Advanced Digital Logic Design",
+            "Embedded C\/C++ Programming",
+            "Hardware Prototype Development",
+            "Firmware Engineering & Debugging",
+            "System-on-Chip (SoC) Integration",
+            "Computer Network Architecture",
+            "Hardware Verification & Testing",
+            "IoT System Development"
+        ],
+        "career_opportunities": [
+            "Embedded Systems Engineer",
+            "Hardware Engineer",
+            "Software Developer",
+            "Network Architect"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b140,000 - \u20b195,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "INTP",
+            "ISTJ",
+            "ISTP"
+        ],
+        "top_universities": [
+            {
+                "name": "Mapua University",
+                "location": "Manila",
+                "description": "Advanced tech labs and hardware engineering focus."
+            },
+            {
+                "name": "University of San Carlos",
+                "location": "Cebu",
+                "description": "Top school for computer engineering in the Visayas."
+            }
+        ]
+    },
+    "BS Electronics Engineering": {
+        "tagline": "Engineering the signals and communication systems of the digital age.",
+        "description": "Focuses on the science of electronic devices, circuits, and the communication networks they power. Students dive into the world of signal processing, wireless communication, and semiconductor technology. The program prepares graduates to design sophisticated telecommunication systems, develop high-frequency circuits, and innovate in the field of consumer electronics and automated control systems. It is the core of our connected world, providing the expertise to transfer information across borders through satellite, fiber, and global cellular networks.",
+        "short_description": "PCB design, signal processing, and communication networks.",
+        "curriculum_highlights": [
+            "Advanced Signal Processing & Theory",
+            "Wireless & Satellite Communication Systems",
+            "Electronic Circuit Analysis & Design",
+            "Control Systems & Feedback Mechanisms",
+            "Microelectronic Circuits & Devices",
+            "Fiber Optics & Communication Networks",
+            "Electromagnetic Wave Theory",
+            "Industrial Electronics & Robotics"
+        ],
+        "skills_gained": [
+            "Sophisticated PCB Layout & Design",
+            "Communication Network Engineering",
+            "RF and Wireless System Design",
+            "Signal Interpretation & Filtering",
+            "Automation Control Systems",
+            "Electronic Device Troubleshooting",
+            "Technical Research & Analysis",
+            "Microchip Architecture Analysis"
+        ],
+        "career_opportunities": [
+            "Electronics Engineer",
+            "Telecom Engineer",
+            "Network Specialist",
+            "Automation Designer"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b140,000 - \u20b195,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "INTP",
+            "ISTJ",
+            "ISTP"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "High quality electronics program with research output."
+            },
+            {
+                "name": "Mapua University",
+                "location": "Manila",
+                "description": "Rigorous curriculum focused on industry readiness."
+            }
+        ]
+    },
+    "BS Geodetic Engineering": {
+        "tagline": "Mapping the physical world with satellite-precision and geomatics.",
+        "description": "A high-tech discipline focused on the precise measurement and mapping of the Earth's surface. Students master advanced technology such as Global Positioning Systems (GPS), Remote Sensing, and Geographic Information Systems (GIS) to create accurate maps for land development, environmental monitoring, and national security. The program combines outdoor fieldwork with complex data processing, preparing graduates to manage land administration, analyze spatial data for urban planning, and track changes in our physical planet with mathematical certainty.",
+        "short_description": "Surveying, mapping, and land information systems.",
+        "curriculum_highlights": [
+            "Advanced Land Surveying & Geodesy",
+            "Remote Sensing & Satellite Imagery",
+            "Geographic Information Systems (GIS)",
+            "Photogrammetry & Image Interpretation",
+            "Hydrographic & Mining Surveying",
+            "Laws on Land and Property Rights",
+            "Global Navigation Satellite Systems (GNSS)",
+            "Geographical Data Modeling"
+        ],
+        "skills_gained": [
+            "Precision Spatial Data Analysis",
+            "Advanced GIS Professionalism",
+            "Remote Sensing Data Interpretation",
+            "Field Surveying & GPS Navigation",
+            "Cadastral & Land Mapping Mastery",
+            "Geographical Statistical Modeling",
+            "High-Accuracy Technical Drafting",
+            "Environmental Spatial Monitoring"
+        ],
+        "career_opportunities": [
+            "Geodetic Engineer",
+            "GIS Specialist",
+            "Land Surveyor",
+            "Cartographer"
+        ],
+        "duration": "4-5 Years",
+        "difficulty": "High",
+        "tuition": "\u20b135,000 - \u20b180,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "ISTP",
+            "INTJ",
+            "ESTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "The top center for geodetic education in the PH."
+            },
+            {
+                "name": "Visayas State University",
+                "location": "Leyte",
+                "description": "Strong survey and land management track."
+            }
+        ]
+    },
+    "BS Computer Science": {
+        "tagline": "Architecting the logic of the future through computational theory and AI.",
+        "description": "A deep-dive into the mathematical and theoretical foundations of computing. This program challenges students to design efficient algorithms, master complex data structures, and explore the cutting edge of Artificial Intelligence and Machine Learning. Beyond simple coding, it focuses on solving abstract problems that bridge the gap between human needs and machine execution, preparing graduates to lead innovation in tech research, systems architecture, and high-level software engineering.",
+        "short_description": "Theory of computation, software development, and AI.",
+        "curriculum_highlights": [
+            "Advanced Algorithms & Complexity Theory",
+            "Artificial Intelligence & Machine Learning",
+            "Discrete Mathematical Structures",
+            "Operating Systems Design & Internals",
+            "Compiler Construction & Programming Languages",
+            "Computer Architecture & Organization",
+            "Theory of Computation",
+            "Software Engineering Methodologies"
+        ],
+        "skills_gained": [
+            "Advanced Algorithmic Problem Solving",
+            "Software Architecture & Design Patterns",
+            "Mathematical Modeling & Simulations",
+            "AI\/ML Model Training & Deployment",
+            "Low-level Systems Programming",
+            "Quantitative Analysis & Logic",
+            "Big Data Analytics",
+            "Cybersecurity Fundamentals"
+        ],
+        "career_opportunities": [
+            "Software Architect",
+            "AI Engineer",
+            "Data Scientist",
+            "Research Scientist"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b140,000 - \u20b190,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "INTP",
+            "INFJ",
+            "ENTP"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Pioneer and Center of Excellence in Computer Science."
+            },
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "Intensive research and theory-driven curriculum."
+            }
+        ]
+    },
+    "BS Information Technology": {
+        "tagline": "Empowering organizations through seamless digital infrastructure and solutions.",
+        "description": "This program focuses on the practical application of technology to solve business and organizational challenges. Students learn to build scalable web applications, manage complex network infrastructures, and ensure data integrity through robust database systems. The curriculum emphasizes the integration of hardware and software components to create efficient digital ecosystems, preparing students for dynamic roles in systems administration, digital transformation, and professional IT services.",
+        "short_description": "Web development, system admin, and IT infrastructure.",
+        "curriculum_highlights": [
+            "Web Application Development (Full-Stack)",
+            "Network Administration & Infrastructure",
+            "Database Management Systems (SQL & NoSQL)",
+            "System Integration & Architecture",
+            "Information Assurance & Security",
+            "Mobile Application Development",
+            "Cloud Computing & Virtualization",
+            "Human-Computer Interaction (HCI)"
+        ],
+        "skills_gained": [
+            "Enterprise System Deployment",
+            "Web & Mobile Development Mastery",
+            "Network Infrastructure Troubleshooting",
+            "Cloud Service Management (AWS\/Azure)",
+            "Database Design & Optimization",
+            "Technical Support & Consulting",
+            "IT Project Management",
+            "UX\/UI Design Principles"
+        ],
+        "career_opportunities": [
+            "System Administrator",
+            "Full-Stack Developer",
+            "Web Designer",
+            "IT Support Engineer"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b135,000 - \u20b185,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "ENTJ",
+            "ESTP",
+            "ISTP"
+        ],
+        "top_universities": [
+            {
+                "name": "Polytechnic University of the Philippines",
+                "location": "Manila",
+                "description": "Highly employable graduates and solid IT program."
+            },
+            {
+                "name": "iACADEMY",
+                "location": "Makati City",
+                "description": "Industry-aligned IT and tech education in the CBD."
+            }
+        ]
+    },
+    "BS Information Systems": {
+        "tagline": "Bridging the strategy of business with the power of modern technology.",
+        "description": "A multidisciplinary program that sits at the intersection of business management and information technology. It trains students to analyze business requirements and design technical systems that optimize organizational performance. Graduates become experts in explaining how technology can achieve business goals, managing IT projects from a strategic perspective, and leveraging data analytics to drive corporate decision-making and digital innovation.",
+        "short_description": "Aligning business strategy with digital solutions.",
+        "curriculum_highlights": [
+            "Business Process Modeling & Analysis",
+            "Enterprise Resource Planning (ERP)",
+            "IT Project & Portfolio Management",
+            "Data Analytics for Business Intelligence",
+            "Financial Management Systems",
+            "e-Business & Digital Strategy",
+            "IS Strategy, Management, & Acquisition",
+            "Corporate IT Governance"
+        ],
+        "skills_gained": [
+            "Business Requirement Analysis",
+            "Strategic IT Planning",
+            "Data-Driven Decision Making",
+            "Project Management (Agile\/Scrum)",
+            "Change Management Leadership",
+            "ERP Implementation & Customization",
+            "Financial Data Interpretation",
+            "Corporate Communication & Liaison"
+        ],
+        "career_opportunities": [
+            "Business Analyst",
+            "IT Project Manager",
+            "Systems Consultant",
+            "ERP Specialist"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b135,000 - \u20b180,000 \/ Sem",
+        "mbti_alignment": [
+            "ENTJ",
+            "ESTJ",
+            "INTJ",
+            "ISFJ"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Comprehensive IT and business synergy program."
+            },
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Strong IS track with excellent corporate ties."
+            }
+        ]
+    },
+    "BS Data Science": {
+        "tagline": "Transforming massive data into actionable intelligence and foresight.",
+        "description": "A high-intensity program combining advanced statistics, mathematics, and programming to extract deep insights from complex datasets. Students master the art of predictive modeling, data visualization, and large-scale data engineering. The course prepares students to be 'data storytellers' who can identify trends, forecast future outcomes, and provide the evidence-based logic needed for strategic breakthroughs in industries ranging from finance and healthcare to social media and government.",
+        "short_description": "Big data analysis, machine learning, and visualization.",
+        "curriculum_highlights": [
+            "Applied Statistics & Probability",
+            "Big Data Engineering (Hadoop\/Spark)",
+            "Machine Learning & Neural Networks",
+            "Data Visualization & Communication",
+            "Predictive Modeling & Forecasting",
+            "Python\/R for Data Analysis",
+            "Database Systems for Analytics",
+            "Data Ethics & Information Privacy"
+        ],
+        "skills_gained": [
+            "Statistical Inference & Modeling",
+            "Machine Learning Algorithm Implementation",
+            "Large-Scale Data Processing",
+            "Data Visualization (Tableau\/PowerBI)",
+            "Advanced Programming in Python\/R",
+            "Hypothesis Testing & Experimentation",
+            "Predictive Analytics Strategy",
+            "Deep Learning & AI Development"
+        ],
+        "career_opportunities": [
+            "Data Scientist",
+            "Machine Learning Engineer",
+            "BI Analyst",
+            "Data Architect"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b145,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "INTP",
+            "ISTJ",
+            "ENTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Elite program focused on data strategy and research."
+            },
+            {
+                "name": "Mapua University",
+                "location": "Manila",
+                "description": "Practical and intensive data science and AI track."
+            }
+        ]
+    },
+    "BS Cybersecurity": {
+        "tagline": "Defending critical information systems against global digital threats.",
+        "description": "Focuses on the protection of data, networks, and systems from malicious attacks and physical compromises. Students engage in hands-on threat hunting, ethical hacking, and digital forensics to understand the mind of an adversary. The program covers everything from cryptographic protocols to national security policy, ensuring that graduates are ready to build resilient defenses and lead emergency response efforts in an increasingly interconnected and vulnerable digital world.",
+        "short_description": "Network defense, digital forensics, and threat hunting.",
+        "curriculum_highlights": [
+            "Ethical Hacking & Penetration Testing",
+            "Digital Forensics & Incident Response",
+            "Applied Cryptography",
+            "Network Security Protocols",
+            "Information Security Governance",
+            "Operating System Hardening",
+            "Cloud Security Architecture",
+            "Malware Analysis & Reverse Engineering"
+        ],
+        "skills_gained": [
+            "Vulnerability Assessment & Mitigation",
+            "Threat Intelligence & Hunting",
+            "Digital Evidence Recovery",
+            "Security Auditing & Compliance",
+            "Disaster Recovery Planning",
+            "Network Defense Engineering",
+            "Cryptographic Implementation",
+            "Risk Management & Policy Design"
+        ],
+        "career_opportunities": [
+            "Information Security Officer",
+            "Penetration Tester",
+            "Security Analyst",
+            "Forensics Investigator"
+        ],
+        "duration": "4 Years",
+        "difficulty": "High",
+        "tuition": "\u20b140,000 - \u20b195,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ISTJ",
+            "ISTP",
+            "ENTP"
+        ],
+        "top_universities": [
+            {
+                "name": "FEU Institute of Technology",
+                "location": "Manila",
+                "description": "Excellent labs for cybersecurity and defensive IT."
+            },
+            {
+                "name": "Holy Angel University",
+                "location": "Pampanga",
+                "description": "Certified center for cybersecurity excellence."
+            }
+        ]
+    },
+    "BS Network Administration": {
+        "tagline": "Engineering the high-speed connectivity of modern enterprises.",
+        "description": "Specialized focus on the design, implementation, and management of robust enterprise-grade networks. Students learn to configure sophisticated routing and switching systems, manage cloud-hybrid server environments, and ensure 24\/7 connectivity for organizations. The curriculum prepares graduates for industry-standard certifications while providing deep knowledge in network security, server automation, and virtualization technology.",
+        "short_description": "Server management, network configuration, and cloud admin.",
+        "curriculum_highlights": [
+            "Advanced Routing & Switching (Cisco)",
+            "Server Administration (Windows\/Linux)",
+            "Cloud Infrastructure Management",
+            "Network Security & VPNs",
+            "System Automation & Scripting",
+            "Storage Area Networks (SAN)",
+            "Virtualization & Hypervisors",
+            "Wireless Network Technologies"
+        ],
+        "skills_gained": [
+            "Enterprise Network Configuration",
+            "Server Management & Hardening",
+            "Cloud Resource Allocation",
+            "Infrastructure Monitoring",
+            "Network Troubleshooting Mastery",
+            "Shell Scripting & Automation",
+            "Disaster Recovery Systems",
+            "IP Address Management (IPAM)"
+        ],
+        "career_opportunities": [
+            "Network Engineer",
+            "Cloud Solutions Architect",
+            "NOC Technician",
+            "System Administrator"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b135,000 - \u20b180,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "ISTP",
+            "ESTJ",
+            "ENTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "AMA University",
+                "location": "Various",
+                "description": "Strong focus on computer networking and industry certs."
+            },
+            {
+                "name": "STI College",
+                "location": "Various",
+                "description": "Practical and job-ready networking curriculum."
+            }
+        ]
+    },
+    "BS Entertainment and Multimedia Computing": {
+        "tagline": "Where high-performance code meets creative digital artistry.",
+        "description": "A unique fusion of computer science and media arts, focusing on the development of interactive video games, virtual reality experiences, and digital special effects. Students master game engines like Unity and Unreal, learn 3D modeling and animation, and dive into the mathematics of computer graphics. The program prepares graduates for the multi-billion dollar entertainment industry as technical artists, game programmers, and immersive media developers.",
+        "short_description": "Game development, digital art, and interactive media tech.",
+        "curriculum_highlights": [
+            "Game Engine Development & Architecture",
+            "3D Modeling, Texturing & Animation",
+            "Digital Narrative & Game Design",
+            "Computer Graphics & Shaders",
+            "Interactive Media & VR\/AR",
+            "AI for Games & Non-Player Characters",
+            "Audio Engineering for Games",
+            "Multiplayer Game Programming"
+        ],
+        "skills_gained": [
+            "C++ and C# for Game Development",
+            "3D Asset Pipeline Management",
+            "Game Mechanics & Level Design",
+            "Real-time Computer Graphics",
+            "Immersive Experience Design",
+            "Technical Art & Visual Effects",
+            "Project Management for Media",
+            "User Experience for Games"
+        ],
+        "career_opportunities": [
+            "Game Developer",
+            "Unity\/Unreal Specialist",
+            "Technical Artist",
+            "Multimedia Producer"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b135,000 - \u20b190,000 \/ Sem",
+        "mbti_alignment": [
+            "ENFP",
+            "INFP",
+            "ISFP",
+            "ENTP"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle-College of Saint Benilde",
+                "location": "Manila",
+                "description": "The leading art and digital media design academy."
+            },
+            {
+                "name": "iACADEMY",
+                "location": "Makati City",
+                "description": "Industry-leading game development and animation program."
+            }
+        ]
+    },
+    "BS Nursing": {
+        "tagline": "The art and science of compassionate, evidence-based clinical care.",
+        "description": "A high-demand program that integrates medical science with the humanity of patient care. Students are trained in the rigorous assessment, planning, and implementation of nursing interventions across various clinical settings\u2014from intensive care units and emergency rooms to community health clinics. The curriculum emphasizes clinical precision, pharmacology, and patient advocacy, preparing graduates to be the primary protectors of health and the coordinators of complex medical treatments in a global healthcare environment.",
+        "short_description": "Clinical patient care, healthcare admin, and patient advocacy.",
+        "curriculum_highlights": [
+            "Clinical Anatomy & Pathophysiology",
+            "Advanced Pharmacology for Nurses",
+            "Maternal, Newborn & Child Health Nursing",
+            "Medical-Surgical Nursing Competencies",
+            "Community Health & Population Nursing",
+            "Psychiatric and Mental Health Nursing",
+            "Nursing Research and Evidence-Based Practice",
+            "Leadership and Management in Nursing"
+        ],
+        "skills_gained": [
+            "Comprehensive Patient Assessment",
+            "Clinical Decision-Making & Logic",
+            "Advanced Emergency & First Aid",
+            "Complex Wound Care & Administration",
+            "Patient & Family Health Education",
+            "Multi-Disciplinary Care Coordination",
+            "Ethical Advocacy & Cultural Competence",
+            "Clinical Documentation & Reporting"
+        ],
+        "career_opportunities": [
+            "Registered Nurse",
+            "Clinical Manager",
+            "Public Health Nurse",
+            "Occupational Health Nurse"
+        ],
+        "duration": "4 Years",
+        "difficulty": "High",
+        "tuition": "\u20b145,000 - \u20b1110,000 \/ Sem",
+        "mbti_alignment": [
+            "ESFJ",
+            "ISFJ",
+            "ENFJ",
+            "ENFP"
+        ],
+        "top_universities": [
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Renowned for its College of Nursing and board passing rates."
+            },
+            {
+                "name": "Saint Louis University",
+                "location": "Baguio City",
+                "description": "Top performing nursing school in the North."
+            }
+        ]
+    },
+    "BS Medical Technology": {
+        "tagline": "The scientific backbone of medical diagnosis and laboratory precision.",
+        "description": "A sophisticated laboratory science degree focused on the analysis of blood, tissues, and other samples to provide the data that saves lives. Students master the use of advanced diagnostic technology, from automated chemical analyzers to complex molecular testing. Often called Clinical Laboratory Science, this program bridges biology and chemistry to detect diseases, monitor treatment effectiveness, and ensure the safety of blood transfusions. Graduates are the silent detectives of medicine, providing the evidence needed for every accurate medical diagnosis.",
+        "short_description": "Clinical labs, blood testing, and disease diagnostics.",
+        "curriculum_highlights": [
+            "Advanced Clinical Chemistry",
+            "Hematology and Coagulation Studies",
+            "Diagnostic Microbiology & Virology",
+            "Immunology and Serology Techniques",
+            "Histopathology & Cytologic Techniques",
+            "Blood Banking and Immunohematology",
+            "Clinical Parasitology & Mycology",
+            "Laboratory Management & Quality Control"
+        ],
+        "skills_gained": [
+            "Precision Laboratory Instrumentation",
+            "Complex Biological Sample Analysis",
+            "Quality Assurance & Calibration",
+            "Molecular Diagnostic Procedures",
+            "Biological Hazard Management",
+            "Data Interpretation for Pathology",
+            "Microscopic Anatomy Identification",
+            "High-Stakes Technical Accuracy"
+        ],
+        "career_opportunities": [
+            "Medical Technologist",
+            "Lab Supervisor",
+            "Clinical Researcher",
+            "Healthcare Admin"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Very High",
+        "tuition": "\u20b140,000 - \u20b195,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "INTJ",
+            "ISFJ",
+            "ISTP"
+        ],
+        "top_universities": [
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "The gold standard for medical technology in the PH."
+            },
+            {
+                "name": "Far Eastern University - NRMF",
+                "location": "Quezon City",
+                "description": "Strong clinical laboratory and medical research focus."
+            }
+        ]
+    },
+    "BS Pharmacy": {
+        "tagline": "Masters of medicine and the science of therapeutic wellness.",
+        "description": "Focuses on the entire lifecycle of medication, from discovery and formulation to distribution and patient counseling. Students study the chemical properties of drugs, how they interact with the human body (pharmacology), and the legal frameworks of dispensing. This program is designed to create health professionals who ensure the safe and effective use of medicine, providing critical checks in the healthcare system and innovating in both community pharmacy and pharmaceutical research laboratories to solve global health crises.",
+        "short_description": "Drug formulation, distribution, and clinical pharmacy.",
+        "curriculum_highlights": [
+            "Pharmacology and Therapeutics",
+            "Pharmaceutical Chemistry & Analysis",
+            "Pharmaceutics & Medication Formulation",
+            "Clinical Pharmacy & Patient Care",
+            "Pharmacy Administration & Management",
+            "Drug Development and Regulatory Affairs",
+            "Hospital & Community Pharmacy Practice",
+            "Pharmacognosy & Natural Products"
+        ],
+        "skills_gained": [
+            "Therapeutic Drug Monitoring",
+            "Precise Medication Compounding",
+            "Advanced Patient Medication Counseling",
+            "Drug Interaction & Contraindication Discovery",
+            "Regulatory Compliance Proficiency",
+            "Scientific Health Research & Analysis",
+            "Pharmaceutical Inventory Management",
+            "Clinical Health Risk Assessment"
+        ],
+        "career_opportunities": [
+            "Pharmacist",
+            "Regulatory Affairs Officer",
+            "Drug Safety Specialist",
+            "Clinical Pharmacist"
+        ],
+        "duration": "4 Years",
+        "difficulty": "High",
+        "tuition": "\u20b140,000 - \u20b190,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "ISFJ",
+            "INTJ",
+            "ESTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Oldest and world-class pharmacy education."
+            },
+            {
+                "name": "University of the Philippines Manila",
+                "location": "Manila",
+                "description": "Prestigious program with focus on pharmaceutical research."
+            }
+        ]
+    },
+    "BS Physical Therapy": {
+        "tagline": "Restoring movement and reclaiming life through rehabilitative excellence.",
+        "description": "A specialized 5-year program focused on the science of human movement and the art of physical rehabilitation. Students become experts in anatomy, kinesiology, and exercise physiology to help patients recover from injuries, strokes, or disabilities. The program combines intensive clinical training with the study of therapeutic techniques like manual therapy, electrical stimulation, and adaptive exercise. Graduates are architects of recovery, empowering patients to manage pain, regain independence, and improve their long-term quality of life.",
+        "short_description": "Rehabilitative exercise, therapeutic massage, and pain management.",
+        "curriculum_highlights": [
+            "Clinical Human Anatomy & Kinesiology",
+            "Exercise Physiology & Therapeutic Exercise",
+            "Orthotics, Prosthetics & Assistive Tech",
+            "Medical Conditions in Physical Therapy",
+            "Neurological & Pediatric Rehabilitation",
+            "Manual Therapy & Soft Tissue Mobilization",
+            "Sports Medicine & Injury Prevention",
+            "PT Management and Clinical Practice"
+        ],
+        "skills_gained": [
+            "Functional Movement Assessment",
+            "Custom Rehabilitation Plan Design",
+            "Advanced Pain Management Techniques",
+            "Neuromuscular Re-education",
+            "Patient Motivation & Empathy",
+            "Gait and Postural Analysis",
+            "Manual Therapy Implementation",
+            "Orthopedic Evaluation Mastery"
+        ],
+        "career_opportunities": [
+            "Physical Therapist",
+            "Sports Rehab Specialist",
+            "Clinic Owner",
+            "Senior Care Wellness"
+        ],
+        "duration": "5 Years",
+        "difficulty": "High",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "ENFP",
+            "ISFJ",
+            "ENFJ",
+            "ESFP"
+        ],
+        "top_universities": [
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Consistently top-performing school in PT boards."
+            },
+            {
+                "name": "University of the Philippines Manila",
+                "location": "Manila",
+                "description": "Leadership in community-based rehabilitation."
+            }
+        ]
+    },
+    "BS Occupational Therapy": {
+        "tagline": "Enabling independence through the science of meaningful activity.",
+        "description": "Focuses on helping people across their lifespan participate in the things they want and need to do through the therapeutic use of everyday activities (occupations). Students learn to design adaptive environments and strategies for children with disabilities, adults recovering from injury, and seniors experiencing cognitive change. This holistic program combines psychology with rehabilitative science, preparing graduates to be problem-solvers who help individuals regain the skills needed for work, self-care, and meaningful social engagement.",
+        "short_description": "Activities of daily living, mental health rehab, and pediatric care.",
+        "curriculum_highlights": [
+            "Human Development & Performance",
+            "Psychosocial Context in OT",
+            "OT for Pediatrics & Development",
+            "OT for Geriatric & Aging Populations",
+            "Adaptive Technology & Ergonomics",
+            "Mental Health & Psychiatric Rehab",
+            "Functional Anatomy & Neuropsychology",
+            "Splinting and Orthotic Management"
+        ],
+        "skills_gained": [
+            "Activities of Daily Living (ADL) Assessment",
+            "Environmental Modification & Design",
+            "Pediatric Developmental Strategy",
+            "Mental Health Crisis Support",
+            "Adaptive Device Customization",
+            "Cognitive Rehabilitation Planning",
+            "Functional Capacity Evaluation",
+            "Holistic Care Coordination"
+        ],
+        "career_opportunities": [
+            "Occupational Therapist",
+            "Special Education Consultant",
+            "Rehab Coordinator",
+            "Ergonomics Consultant"
+        ],
+        "duration": "5 Years",
+        "difficulty": "High",
+        "tuition": "\u20b145,000 - \u20b1105,000 \/ Sem",
+        "mbti_alignment": [
+            "ENFJ",
+            "INFJ",
+            "ENFP",
+            "ISFP"
+        ],
+        "top_universities": [
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Strong clinical and theoretical OT framework."
+            },
+            {
+                "name": "University of Perpetual Help",
+                "location": "Las Pi\u00f1as",
+                "description": "Highly recognized program for healthcare and rehabilitation."
+            }
+        ]
+    },
+    "BS Radiologic Technology": {
+        "tagline": "Pioneering medical imaging for precision diagnostics and safety.",
+        "description": "Trains students in the sophisticated use of radiation and imaging technology to visualize the internal structures of the human body. Students master the operation of X-ray, Computed Tomography (CT), Magnetic Resonance Imaging (MRI), and Ultrasound machines. The program places a heavy emphasis on radiation physics and safety protocols, ensuring that imaging is performed with the highest diagnostic quality and minimal risk to the patient. Graduates are critical partners to physicians, providing the visual evidence needed for life-saving interventions.",
+        "short_description": "Medical imaging, radiation safety, and diagnostic tech.",
+        "curriculum_highlights": [
+            "Radiation Physics & Equipment",
+            "Advanced Radiographic Imaging Procedures",
+            "Magnetic Resonance Imaging (MRI) Theory",
+            "Computed Tomography (CT) Principles",
+            "Radiologic Pathology & Anatomy",
+            "Radiation Protection & Safety",
+            "Specialized Imaging (Ultrasound\/Mammography)",
+            "Radiographic Positioning & Technique"
+        ],
+        "skills_gained": [
+            "Technical Imaging System Operation",
+            "Radiation Safety & Dosimetry",
+            "Patient Positioning for Diagnostics",
+            "Medical Image Quality Assessment",
+            "Emergency Care in Radiology",
+            "Sophisticated Troubleshooting of Tech",
+            "Anatomical Structure Visualization",
+            "Radiation Compliance Auditing"
+        ],
+        "career_opportunities": [
+            "Radiologic Technologist",
+            "MRI Specialist",
+            "CT Scan Technician",
+            "Lead Imaging Specialist"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b135,000 - \u20b180,000 \/ Sem",
+        "mbti_alignment": [
+            "ISTJ",
+            "ISTP",
+            "ISFJ",
+            "ESTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "Saint Louis University",
+                "location": "Baguio City",
+                "description": "Excellent performance in RadTech board exams."
+            },
+            {
+                "name": "De La Salle Medical and Health Sciences Institute",
+                "location": "Dasmari\u00f1as",
+                "description": "Top-notch imaging facilities and medical training."
+            }
+        ]
+    },
+    "BS Respiratory Therapy": {
+        "tagline": "Breathing life into cardiopulmonary care and critical emergency response.",
+        "description": "A specialized healthcare degree focused on the assessment and treatment of patients with respiratory and cardiopulmonary conditions like asthma, COPD, and pneumonia. Students are trained to operate life-support systems (ventilators), manage artificial airways, and perform pulmonary function tests. The curriculum prepares graduates to be frontline responders in critical care units and emergency rooms, working alongside doctors to ensure that every patient can breathe and that their vital lung functions are supported through expert clinical intervention.",
+        "short_description": "Lung function, ventilator support, and oxygen therapy.",
+        "curriculum_highlights": [
+            "Cardiopulmonary Pathophysiology",
+            "Mechanical Ventilation & Life Support",
+            "Critical Care Medicine Principles",
+            "Respiratory Pharmacology",
+            "Pulmonary Function Testing (PFT)",
+            "Airway Management & Intubation",
+            "Neonatal & Pediatric Respiratory Care",
+            "Chest Physiotherapy & Rehab"
+        ],
+        "skills_gained": [
+            "Ventilator Management & Setting",
+            "Emergency Airway Support",
+            "Arterial Blood Gas Analysis",
+            "Critical Care Patient Monitoring",
+            "Pulmonary Diagnostic Testing",
+            "Life Support System Troubleshooting",
+            "Patient & Family Respiratory Education",
+            "Clinical Problem Solving under Pressure"
+        ],
+        "career_opportunities": [
+            "Respiratory Therapist",
+            "Critical Care Specialist",
+            "Home Health Provider",
+            "Pulmonary Lab Manager"
+        ],
+        "duration": "4 Years",
+        "difficulty": "High",
+        "tuition": "\u20b135,000 - \u20b180,000 \/ Sem",
+        "mbti_alignment": [
+            "ISFJ",
+            "ISTJ",
+            "ENFJ",
+            "ISTP"
+        ],
+        "top_universities": [
+            {
+                "name": "San Pedro College",
+                "location": "Davao City",
+                "description": "Excellent regional hub for respiratory therapy excellence."
+            },
+            {
+                "name": "De La Salle Medical and Health Sciences Institute",
+                "location": "Dasmari\u00f1as",
+                "description": "Strong focus on critical care and clinical practice."
+            }
+        ]
+    },
+    "BS Public Health": {
+        "tagline": "Protecting societies and advancing global population health.",
+        "description": "A multidisciplinary degree focused on the prevention of disease and the promotion of health at the community and national levels. Students study epidemiology to track disease outbreaks, environmental health to identify physical hazards, and health policy to design effective social interventions. The program merges science with social advocacy, preparing graduates to manage large-scale health programs, conduct critical research, and lead the charge in solving issues like pandemics, malnutrition, and healthcare inequality for entire populations.",
+        "short_description": "Community health, epidemiology, and disease prevention.",
+        "curriculum_highlights": [
+            "Principles of Epidemiology",
+            "Public Health Nutrition & Food Safety",
+            "Environmental & Occupational Health",
+            "Biostatistics and Data Research",
+            "Health Policy and Administration",
+            "Social and Behavioral Health",
+            "Global Health and Pandemics",
+            "Health Communication & Education"
+        ],
+        "skills_gained": [
+            "Community Health Assessment",
+            "Outbreak Investigation & Tracking",
+            "Public Health Program Planning",
+            "Policy Analysis & Advocacy",
+            "Biostatistical Data Analysis",
+            "Health Campaign Design",
+            "Sanitation & Safety Auditing",
+            "Stakeholder Management in Health"
+        ],
+        "career_opportunities": [
+            "Health Officer",
+            "Epidemiologist",
+            "Public Health Program Coordinator",
+            "Healthcare Policy Analyst"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b175,000 \/ Sem",
+        "mbti_alignment": [
+            "ENFJ",
+            "INFJ",
+            "ENTJ",
+            "ISFJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Philippines Manila",
+                "location": "Manila",
+                "description": "The country's premier institution for public health training."
+            },
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Strong interdisciplinary focus on global health strategy."
+            }
+        ]
+    },
+    "BS Psychology": {
+        "tagline": "Mapping the biological and neurological foundations of human behavior.",
+        "description": "A science-focused exploration of the human mind and behavior, with a heavy emphasis on neurobiology, research methodology, and clinical assessment. This program investigates how our brain chemistry, genetics, and environment interact to shape our personality, emotions, and mental health. Students are trained to use the scientific method to observe and interpret behavior, preparing them for careers in clinical research, psychometrics, and organizational development, as well as serving as a premier foundation for medical school or advanced graduate studies.",
+        "short_description": "Scientific study of behavior, neurobiology, and clinical practice.",
+        "curriculum_highlights": [
+            "Biopsychology & Neuroanatomy",
+            "Advanced Research Methods & Statistics",
+            "Psychological Assessment & Psychometrics",
+            "Abnormal Psychology & Clinical Theory",
+            "Experimental Psychology & Lab",
+            "Cognitive and Affective Science",
+            "Physiological Psychology",
+            "Introduction to Clinical Psych"
+        ],
+        "skills_gained": [
+            "Scientific Behavioral Research",
+            "Psychological Test Administration",
+            "Advanced Statistical Data Analysis",
+            "Critical Logical Deduction",
+            "Observational & Interviewing Skills",
+            "Case Conceptualization & Analysis",
+            "Ethical Scientific Practice",
+            "Quantitative Data Interpretation"
+        ],
+        "career_opportunities": [
+            "Psychometrician",
+            "Human Resource Manager",
+            "Research Assistant",
+            "Guidance Associate"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b135,000 - \u20b185,000 \/ Sem",
+        "mbti_alignment": [
+            "INFJ",
+            "ENFJ",
+            "ISFJ",
+            "INFP"
+        ],
+        "top_universities": [
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Renowned for its clinical and developmental psychology."
+            },
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Produces top board passers and quality psych graduates."
+            }
+        ]
+    },
+    "BA Communication": {
+        "tagline": "Architecting the narratives of a digital and globally connected society.",
+        "description": "A dynamic program that explores the evolving art of storytelling in the age of rapid media disruption. Students are trained to excel across multiple platforms\u2014from traditional broadcast journalism and filmmaking to immersive digital content strategy and high-level public relations. The curriculum emphasizes media literacy, critical research, and the ethical responsibility of communication, preparing graduates to shape public opinion, manage brand narratives, and lead influential media organizations on the world stage.",
+        "short_description": "Broadcasting, journalism, public relations, and digital content.",
+        "curriculum_highlights": [
+            "Media Production & Digital Storytelling",
+            "Investigative Journalism & News Writing",
+            "Public Relations & Crisis Management",
+            "Integrated Marketing Communications",
+            "Digital Content Strategy & Analytics",
+            "Communication Research & Theory",
+            "Broadcast Arts & Performance",
+            "Media Ethics and Information Law"
+        ],
+        "skills_gained": [
+            "Advanced Multimedia Production",
+            "Strategic Narrative Design",
+            "Public Speaking & Media Relations",
+            "Critical Media Literacy Analysis",
+            "Professional Video & Sound Editing",
+            "Creative Content Direction",
+            "Communication Audit & Strategy",
+            "Ethical Journalistic Inquiry"
+        ],
+        "career_opportunities": [
+            "Journalist",
+            "Content Creator",
+            "Public Relations Specialist",
+            "Communication Strategist"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b190,000 \/ Sem",
+        "mbti_alignment": [
+            "ENFJ",
+            "ENFP",
+            "ENTP",
+            "INFJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "Home to the premier College of Mass Communication."
+            },
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Superior arts and media-centric curriculum."
+            }
+        ]
+    },
+    "BA Psychology": {
+        "tagline": "Investigating the depths of the human experience and social interaction.",
+        "description": "A humanities-centered approach to the study of the mind, focusing on the social, developmental, and cultural factors that shape human behavior. This program emphasizes empathy, counseling techniques, and the understanding of collective human experiences. Students explore the complexities of human relationships, social dynamics, and mental health interventions, preparing them to serve as compassionate bridges in counseling centers, human resource departments, and community development organizations.",
+        "short_description": "Counseling, human social behavior, and organizational psychology.",
+        "curriculum_highlights": [
+            "Developmental Psychology Across Lifespan",
+            "Social Psychology & Group Dynamics",
+            "Abnormal Psychology & Mental Health",
+            "Psychological Assessment & Testing",
+            "Introduction to Counseling & Therapy",
+            "Educational Psychology Principles",
+            "Human Behavior in Organizations",
+            "Theories of Personality and Mind"
+        ],
+        "skills_gained": [
+            "Empathetic Active Listening",
+            "Conflict Mediation & Resolution",
+            "Interpersonal Behavioral Analysis",
+            "Psychological Test Administration",
+            "Case Management & Documentation",
+            "Organizational Culture Analysis",
+            "Collaborative Team Leadership",
+            "Critical Social Thinking"
+        ],
+        "career_opportunities": [
+            "Psychometrician",
+            "HR Specialist",
+            "Guidance Associate",
+            "Social Worker Associate"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b180,000 \/ Sem",
+        "mbti_alignment": [
+            "INFJ",
+            "ENFJ",
+            "INFP",
+            "ENFP"
+        ],
+        "top_universities": [
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Excellent and well-rounded psychology department."
+            },
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "Strong focus on social and community psychology."
+            }
+        ]
+    },
+    "BA Political Science": {
+        "tagline": "Analyzing power structures and shaping the future of global governance.",
+        "description": "A deep-dive into the history, theory, and practice of governments and the people who lead them. Students explore the mechanics of policy-making, the complexities of international law, and the sociological factors that drive political behavior. The program encourages critical analysis of power structures, preparing graduates for influential roles in public service, legislative office, and global diplomacy, as well as serving as a premiere foundation for a career in law and judicial systems.",
+        "short_description": "Governance, policy making, and political theory.",
+        "curriculum_highlights": [
+            "Comparative Politics & Systems",
+            "Political Theory and Modern Thought",
+            "International Law & Diplomatic Policy",
+            "Public Policy Analysis & Design",
+            "Constitutional Law & Governance",
+            "Global Political Economy",
+            "Foreign Policy of World Powers",
+            "Political Research & Data Analysis"
+        ],
+        "skills_gained": [
+            "Critical Logical Deduction",
+            "Advanced Public Policy Drafting",
+            "High-Level Diplomatic Negotiation",
+            "Systemic Power Structure Analysis",
+            "Legislative Research & Reporting",
+            "Public Speaking & Political Strategy",
+            "Ethical Leadership in Governance",
+            "Macro-Level Trend Forecasting"
+        ],
+        "career_opportunities": [
+            "Policy Analyst",
+            "Legal Secretary",
+            "Government Official",
+            "Diplomat"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b185,000 \/ Sem",
+        "mbti_alignment": [
+            "ENTJ",
+            "INTJ",
+            "ENFJ",
+            "ENTP"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "The national hub for political science and public service training."
+            },
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Strong focus on ethics and public leadership."
+            }
+        ]
+    },
+    "BA Legal Management": {
+        "tagline": "The intersection of legal precision and efficient corporate administration.",
+        "description": "A sophisticated pre-law program that uniquely bridges the world of business management with the complexities of the Philippine legal system. Students are trained in the language of law\u2014contracts, constitutional rights, and corporate regulations\u2014while mastering the administrative skills needed to run a professional legal or corporate office. This curriculum is designed to produce 'legal generalists' who have the logical rigor to excel in law school and the business acumen to serve as invaluable corporate legal advisors.",
+        "short_description": "Pre-law studies, business law, and contracts.",
+        "curriculum_highlights": [
+            "Constitutional Law & Civil Rights",
+            "Contracts, Obligations & Tort Law",
+            "Corporate & Business Regulations",
+            "Legal Research & Professional Writing",
+            "Rules of Procedure and Court Protocol",
+            "Human Resource & Labor Law",
+            "Financial Management for Legal Offices",
+            "Alternative Dispute Resolution (ADR)"
+        ],
+        "skills_gained": [
+            "Rigorous Logical Legal Analysis",
+            "Contract Review & Interpretation",
+            "Sophisticated Legal Documentation",
+            "Corporate Compliance Auditing",
+            "Administrative Project Oversight",
+            "Argument Construction & Debate",
+            "Evidence Research & Verification",
+            "Institutional Process Management"
+        ],
+        "career_opportunities": [
+            "Legal Assistant",
+            "Corporate Secretary",
+            "Paralegal",
+            "Law School Student"
+        ],
+        "duration": "4 Years",
+        "difficulty": "High",
+        "tuition": "\u20b135,000 - \u20b190,000 \/ Sem",
+        "mbti_alignment": [
+            "ENTJ",
+            "ISTJ",
+            "INTJ",
+            "ESTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "The most recognized pre-law program for legal management."
+            },
+            {
+                "name": "De La Salle University",
+                "location": "Manila",
+                "description": "Excellent bridging of law and business management."
+            }
+        ]
+    },
+    "BS Criminology": {
+        "tagline": "Upholding justice and protecting society through forensic precision.",
+        "description": "A high-intensity program focused on the study of crime, the minds of criminals, and the systems of justice that maintain social order. Students undergo rigorous physical and mental training, mastering forensic science, ballistics, and criminal investigation techniques. The curriculum covers everything from police photography and cybercrime detection to the rehabilitation of offenders, preparing graduates to serve with integrity in law enforcement agencies, private security sectors, and the national correctional system.",
+        "short_description": "Law enforcement, forensics, and criminal investigations.",
+        "curriculum_highlights": [
+            "Criminal Procedure and Evidence",
+            "Forensic Ballistics & Investigations",
+            "Dactyloscopy (Fingerprint Science)",
+            "Correctional Administration & Rehab",
+            "Police Photography & Surveillance",
+            "Criminological Research & Theory",
+            "Human Rights in Law Enforcement",
+            "Crisis Management & First Response"
+        ],
+        "skills_gained": [
+            "Forensic Evidence Collection",
+            "Detective Investigative Logic",
+            "Advanced Physical Fitness & Defense",
+            "Criminal Psychological Profiling",
+            "Institutional Security Management",
+            "Law Interpretation & Enforcement",
+            "Digital Crime Detection (Cyber-Forensics)",
+            "Emergency Scene Coordination"
+        ],
+        "career_opportunities": [
+            "Police Officer",
+            "Criminologist",
+            "NBI Agent",
+            "Security Manager"
+        ],
+        "duration": "4 Years",
+        "difficulty": "High",
+        "tuition": "\u20b125,000 - \u20b160,000 \/ Sem",
+        "mbti_alignment": [
+            "ESTJ",
+            "ISTJ",
+            "ESTP",
+            "ISTP"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Cordilleras",
+                "location": "Baguio City",
+                "description": "Consistently rank 1st nationally in Criminology."
+            },
+            {
+                "name": "Philippine College of Criminology",
+                "location": "Manila",
+                "description": "Pioneer in the field of criminology education in the country."
+            }
+        ]
+    },
+    "Bachelor of Elementary Education (BEEd)": {
+        "tagline": "Laying the foundations for lifelong learning and character development.",
+        "description": "A foundational program designed to prepare educators for the critical first years of a child's formal education (Grades 1-6). It focuses on the psychological, social, and cognitive development of young learners, blending pedagogical theory with practical classroom management. Students master the art of teaching across multiple subjects, learning how to create inclusive and engaging environments that foster curiosity, literacy, and the core values needed for success in later life and secondary education.",
+        "short_description": "Prepares teachers for elementary schools with a focus on child development.",
+        "curriculum_highlights": [
+            "Child and Adolescent Development",
+            "Teaching for Special & Inclusive Education",
+            "Content & Pedagogy in Mother Tongue",
+            "Educational Technology & Digital Literacy",
+            "Assessment in Learning Fundamentals",
+            "Classroom Management & Social Environment",
+            "Student Teaching & Internship Practice",
+            "Health & Physical Education for Children"
+        ],
+        "skills_gained": [
+            "Child-Centric Lesson Planning",
+            "Differentiated Instruction Strategies",
+            "Behavioral & Classroom Management",
+            "Educational Media Creation",
+            "Early Literacy & Numeracy Instruction",
+            "Academic Performance Evaluation",
+            "Parent-Teacher Collaboration",
+            "Instructional Design for Diverse Learners"
+        ],
+        "career_opportunities": [
+            "Elementary Teacher",
+            "Tutor",
+            "Curriculum Developer",
+            "School Administrator"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b125,000 - \u20b165,000 \/ Sem",
+        "mbti_alignment": [
+            "ESFJ",
+            "ISFJ",
+            "ENFJ",
+            "ESFP"
+        ],
+        "top_universities": [
+            {
+                "name": "Philippine Normal University",
+                "location": "Manila",
+                "description": "The designated National Center for Teacher Education."
+            },
+            {
+                "name": "University of Santo Tomas",
+                "location": "Manila",
+                "description": "Produces top LET board passers consistently."
+            }
+        ]
+    },
+    "Bachelor of Secondary Education (BSEd) major in English": {
+        "tagline": "Inspiring critical thinking and linguistic mastery in the next generation.",
+        "description": "A specialized degree for aspiring high school educators, focusing on the sophisticated mastery of English language and global literature. The program prepares teachers to navigate the complex world of secondary education, focusing on instructional leadership, linguistic theory, and the development of high-level communication skills. Graduates are trained not only to teach grammar but to ignite a passion for storytelling, analytical writing, and the critical interpretation of texts in a globalized society.",
+        "short_description": "English language teaching and literature education.",
+        "curriculum_highlights": [
+            "Linguistics and Language Acquisition",
+            "Philippine and World Literature Studies",
+            "Language Teaching Methodologies",
+            "Technical and Creative Writing for Educators",
+            "Literary Criticism and Analysis",
+            "Speech and Oral Communication Arts",
+            "Curriculum Development for Secondary Educ",
+            "Psychology of the Adolescent Learner"
+        ],
+        "skills_gained": [
+            "Advanced Public Speaking & Facilitation",
+            "Instructional Leadership & Mentoring",
+            "Curriculum Alignment & Mapping",
+            "Academic & Creative Writing Feedback",
+            "Language Proficiency Assessment",
+            "Classroom Technology Integration",
+            "Adolescent Behavioral Mediation",
+            "Critical Textual Analysis & Teaching"
+        ],
+        "career_opportunities": [
+            "High School English Teacher",
+            "ESL Teacher",
+            "Curriculum Writer",
+            "Literacy Coach"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b125,000 - \u20b165,000 \/ Sem",
+        "mbti_alignment": [
+            "ENFJ",
+            "INFJ",
+            "ENFP",
+            "ISFJ"
+        ],
+        "top_universities": [
+            {
+                "name": "Philippine Normal University",
+                "location": "Manila",
+                "description": "Premier institution for secondary teacher education."
+            },
+            {
+                "name": "Ateneo de Manila University",
+                "location": "Quezon City",
+                "description": "Superior education tracks with social dimension."
+            }
+        ]
+    },
+    "Bachelor of Physical Education (BPEd)": {
+        "tagline": "Cultivating athletic excellence and the lifelong habits of health.",
+        "description": "A dynamic program that focuses on human movement, kinesiology, and the holistic development of physical health. It prepares educators to lead sports programs, coach athletic teams, and teach the foundations of fitness and wellness. Students master the science behind exercise, sports officiating, and the coordination of large-scale athletic events. The goal is to build educators who can inspire students to lead active, healthy lifestyles and foster a culture of teamwork, discipline, and physical resilience.",
+        "short_description": "Focuses on human movement, sports management, and physical health as an educator.",
+        "curriculum_highlights": [
+            "Human Anatomy and Kinesiology",
+            "Principles of Sports Officiating",
+            "Fitness Assessment and Monitoring",
+            "Rhythmic Activities & Dance Teaching",
+            "Swimming and Aquatics Instruction",
+            "Sports Management & Event Organization",
+            "Exercise Physiology and Nutrition",
+            "First Aid and Sports Injury Management"
+        ],
+        "skills_gained": [
+            "Athletic Coaching & Team Leadership",
+            "Fitness Program Design & Assessment",
+            "Sports Event Management & Protocol",
+            "First Aid & Emergency Response",
+            "Physical Movement Correction",
+            "Sports Skills Pedagogy & Training",
+            "Health & Wellness Advocacy",
+            "Refereeing & Officiating Mastery"
+        ],
+        "career_opportunities": [
+            "PE Teacher",
+            "Sports Coach",
+            "Fitness Instructor",
+            "Athletic Director"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b130,000 - \u20b165,000 \/ Sem",
+        "mbti_alignment": [
+            "ESTP",
+            "ESFP",
+            "ENFJ",
+            "ESTJ"
+        ],
+        "top_universities": [
+            {
+                "name": "University of the Philippines Diliman",
+                "location": "Quezon City",
+                "description": "College of Human Kinetics is a premier sports science hub."
+            },
+            {
+                "name": "National University",
+                "location": "Manila",
+                "description": "Renowned for robust athletic and sports programs."
+            }
+        ]
+    },
+    "BA Development Studies": {
+        "tagline": "Innovating solutions for sustainable social and economic progress.",
+        "description": "A multidisciplinary degree focused on the complex challenges facing developing nations. Students analyze the root causes of poverty, inequality, and environmental crisis, using a blend of economics, sociology, and political science to design sustainable solutions. The program prepares graduates to work in NGOs, international development agencies, and government social programs, empowering them to lead community-based projects and advocate for policies that create a more equitable and resilient global society.",
+        "short_description": "Specialized training for careers in BA Development Studies.",
+        "curriculum_highlights": [
+            "Global Economics & Social Progress",
+            "Sustainable Development Goals (SDGs)",
+            "Community Organizing & Leadership",
+            "Project Planning & Impact Assessment",
+            "Social Policy and National Planning",
+            "Environmental Ethics & Conservation",
+            "Health & Education Policy in Dev.",
+            "Development Research & Data Analysis"
+        ],
+        "skills_gained": [
+            "Social Program Design & Management",
+            "Sustainability Impact Assessment",
+            "Advocacy & Community Engagement",
+            "Grant Writing & Resource Sourcing",
+            "Quantitative Social Data Analysis",
+            "Conflict Resolution in Communities",
+            "Policy Recommendation Drafting",
+            "Cultural Sensitivity & Mediation"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BA History": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in BA History.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BA International Studies": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in BA International Studies.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BA Public Administration": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in BA Public Administration.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BA Sociology": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in BA Sociology.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Cruise Ship Management": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Cruise Ship Management.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Culinary Arts Management": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Culinary Arts Management.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Customs Administration": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Customs Administration.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Event Management": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Event Management.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Food Service Management": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Food Service Management.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Forensic Science": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Forensic Science.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Hotel and Restaurant Management": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Hotel and Restaurant Management.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS International Hospitality Management": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in International Hospitality Management.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Tourism Management": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Tourism Management.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    },
+    "BS Travel Management": {
+        "tagline": "Unlock your potential in this specialized field.",
+        "description": "This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.",
+        "short_description": "Specialized training for careers in Travel Management.",
+        "curriculum_highlights": [
+            "Core Principles",
+            "Industry Best Practices",
+            "Practical Applications",
+            "Capstone Research"
+        ],
+        "skills_gained": [
+            "Critical Thinking",
+            "Technical Proficiency",
+            "Communication",
+            "Collaborative Problem Solving"
+        ],
+        "career_opportunities": [
+            "Industry Specialist",
+            "Professional Consultant",
+            "Researcher",
+            "Technical Lead"
+        ],
+        "duration": "4 Years",
+        "difficulty": "Moderate",
+        "tuition": "\u20b140,000 - \u20b1100,000 \/ Sem",
+        "mbti_alignment": [
+            "INTJ",
+            "ENFJ",
+            "ISTJ",
+            "ENTP"
+        ],
+        "top_universities": []
+    }
+}

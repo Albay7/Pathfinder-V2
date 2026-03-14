@@ -22,10 +22,58 @@ class PathfinderController extends Controller
         return view('pathfinder.career-guidance');
     }
 
-    public function questionnaire(Request $request)
+    public function questionnaire(Request $request, $type = 'course')
     {
-        $type = $request->get('type', 'course'); // course or job
+        if (Auth::check()) {
+            $hasProgress = UserProgress::where('user_id', Auth::id())
+                ->where('feature_type', 'career_guidance')
+                ->where('assessment_type', $type)
+                ->where('completed', true)
+                ->exists();
+
+            if ($hasProgress) {
+                return redirect()->route('pathfinder.questionnaire.results', ['type' => $type]);
+            }
+        }
+
         return view('pathfinder.questionnaire', compact('type'));
+    }
+
+    public function showRecommendation(Request $request, $type)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('pathfinder.questionnaire', ['type' => $type]);
+        }
+
+        $progress = UserProgress::where('user_id', Auth::id())
+            ->where('feature_type', 'career_guidance')
+            ->where('assessment_type', $type)
+            ->where('completed', true)
+            ->latest()
+            ->first();
+
+        if (!$progress) {
+            return redirect()->route('pathfinder.questionnaire', ['type' => $type]);
+        }
+
+        $recommendation = $progress->recommendation;
+        $selectedCategory = $progress->selected_category;
+        $allResponses = $progress->calculated_scores;
+
+        return view('pathfinder.recommendation', compact('recommendation', 'type', 'selectedCategory', 'allResponses'));
+    }
+
+    public function retakeQuestionnaire(Request $request, $type)
+    {
+        if (Auth::check()) {
+            UserProgress::where('user_id', Auth::id())
+                ->where('feature_type', 'career_guidance')
+                ->where('assessment_type', $type)
+                ->delete();
+        }
+
+        return redirect()->route('pathfinder.questionnaire', ['type' => $type])
+            ->with('info', 'Starting a fresh assessment. Good luck!');
     }
 
     public function processQuestionnaire(Request $request)
@@ -155,21 +203,969 @@ class PathfinderController extends Controller
     // Career Details Page
     public function careerDetails(Request $request, $career)
     {
-        // Decode the URL-encoded career name
         $career = urldecode($career);
+        $careerDetails = self::getCareerData($career);
 
-        // Mock career details data - in a real app, this would come from a database
-        $careerDetails = [
-            'title' => $career,
-            'description' => "This is a detailed description of the {$career} role, including responsibilities, required skills, and career outlook.",
-            'skills_required' => ['Skill 1', 'Skill 2', 'Skill 3', 'Skill 4', 'Skill 5'],
-            'education_requirements' => 'Bachelor\'s degree in related field',
-            'salary_range' => '$50,000 - $100,000',
-            'job_outlook' => 'Growing faster than average',
-            'related_careers' => ['Related Career 1', 'Related Career 2', 'Related Career 3']
+        $userMbtiType   = null;
+        $mbtiCompatDesc = null;
+        $mbtiIsMatch    = false;
+        $skillGapResult = null;
+        $userCourse     = null;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $userMbtiType = $user->mbti_type;
+
+            if ($userMbtiType) {
+                $compatMap      = $this->getMbtiCareerCompatibility();
+                $mbtiIsMatch    = isset($compatMap[$career][$userMbtiType]);
+                $mbtiCompatDesc = $compatMap[$career][$userMbtiType]
+                    ?? "Your {$userMbtiType} personality brings unique strengths that can be applied in this role.";
+            }
+
+            $skillGapResult = UserProgress::where('user_id', Auth::id())
+                ->where('feature_type', 'skill_gap')
+                ->where('target_role', $career)
+                ->where('completed', true)
+                ->latest()->first();
+
+            $courseProgress = UserProgress::where('user_id', Auth::id())
+                ->where('feature_type', 'career_guidance')
+                ->where('assessment_type', 'course')
+                ->where('completed', true)
+                ->latest()->first();
+
+            if ($courseProgress) {
+                $userCourse = $courseProgress->recommendation;
+            }
+        }
+
+        return view('pathfinder.career-details', compact(
+            'careerDetails', 'userMbtiType', 'mbtiCompatDesc',
+            'mbtiIsMatch', 'skillGapResult', 'userCourse'
+        ));
+    }
+
+    public function courseDetails(Request $request, $course)
+    {
+        $courseName = urldecode($course);
+        $courseDetails = self::getCourseData($courseName);
+
+        $userMbtiType   = null;
+        $mbtiIsMatch    = false;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $userMbtiType = $user->mbti_type;
+
+            if ($userMbtiType) {
+                // Check if the user's MBTI is in the course's alignment array
+                $alignmentArray = $courseDetails['mbti_alignment'] ?? [];
+                if (in_array($userMbtiType, $alignmentArray)) {
+                    $mbtiIsMatch = true;
+                }
+            }
+        }
+
+        return view('pathfinder.course-details', compact(
+            'courseDetails', 'userMbtiType', 'mbtiIsMatch'
+        ));
+    }
+
+    public static function getCareerData($career)
+    {
+        $careers = [
+            'Software Developer' => [
+                'title' => 'Software Developer',
+                'tagline' => 'Build the digital infrastructure of tomorrow.',
+                'description' => 'Software Developers design, code, and test software applications. They apply engineering principles to software creation, solving complex problems and building systems that power modern businesses.',
+                'short_description' => 'Design, build, and maintain the applications and systems that run on computers and mobile devices.',
+                'responsibilities' => [
+                    'Design, write, and maintain clean, scalable code using modern programming languages and best practices.',
+                    'Collaborate with cross-functional teams to test, deploy, and monitor applications in production environments.',
+                    'Continuously revise, update, refactor, and debug existing codebases to improve performance and security.',
+                    'Architect and implement improvements to existing software interfaces and underlying systems to enhance user experience.',
+                ],
+                'skills_required' => ['Programming', 'Problem Solving', 'Algorithm Design', 'Version Control', 'Agile Methodologies'],
+                'certifications_required' => ['AWS Certified Developer', 'Scrum Master (CSM)', 'Oracle Certified Professional'],
+                'education_requirements' => 'Bachelor\'s Degree in Computer Science, IT, or equivalent experience.',
+                'salary_range' => '₱300k - ₱900k / year',
+                'job_outlook' => 'Very High Growth',
+                'related_careers' => ['Web Developer', 'Computer Engineer', 'Systems Administrator', 'Data Analyst'],
+                'recommended_courses' => [
+                    ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#'],
+                    ['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'],
+                    ['title' => 'Bachelor of Science in Computer Engineering', 'platform' => 'Degree Program', 'url' => '#']
+                ]
+            ],
+            'Data Analyst' => [
+                'title' => 'Data Analyst',
+                'tagline' => 'Transform numbers into strategic business insights.',
+                'description' => 'Data Analysts gather, clean, and analyze datasets to help organizations make better business decisions. They use statistical tools to interpret data and create visual reports.',
+                'short_description' => 'Collect, clean, and interpret complex datasets to help organizations make strategic business decisions.',
+                'responsibilities' => [
+                    'Collect, clean, and preprocess large datasets from diverse sources to ensure data integrity and usability.',
+                    'Identify complex trends, correlations, and actionable patterns hidden within raw business data.',
+                    'Design and maintain interactive dashboards and comprehensive data visualizations for ongoing monitoring.',
+                    'Translate technical findings into clear, strategic presentations for stakeholders and management teams.',
+                ],
+                'skills_required' => ['SQL', 'Python/R', 'Data Visualization', 'Statistics', 'Critical Thinking'],
+                'certifications_required' => ['Google Data Analytics Certificate', 'Microsoft Certified: Power BI Data Analyst', 'CAP'],
+                'education_requirements' => 'Bachelor\'s in Math, Statistics, Computer Science, or Economics.',
+                'salary_range' => '₱350k - ₱850k / year',
+                'job_outlook' => 'High Demand',
+                'related_careers' => ['Data Scientist', 'Financial Analyst', 'Market Research Analyst'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Statistics', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Mathematics', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Cybersecurity Analyst' => [
+                'title' => 'Cybersecurity Analyst',
+                'tagline' => 'Defend digital boundaries against modern threats.',
+                'description' => 'Cybersecurity Analysts protect an organization\'s computer networks and systems. They monitor for security breaches and investigate violations when they occur.',
+                'responsibilities' => [
+                    'Continuously monitor network traffic and system logs to detect anomalies and potential security incidents.',
+                    'Conduct thorough investigations into security breaches and implement rapid incident response protocols.',
+                    'Install, configure, and operate advanced security software, firewalls, and data encryption programs.',
+                    'Perform regular vulnerability assessments and penetration testing to preemptively secure infrastructure.',
+                ],
+                'skills_required' => ['Network Security', 'Threat Analysis', 'Linux', 'Ethical Hacking', 'Attention to Detail'],
+                'certifications_required' => ['CISSP', 'CompTIA Security+', 'Certified Ethical Hacker (CEH)'],
+                'education_requirements' => 'Bachelor\'s in Cybersecurity, IT, or related certifications (e.g., Security+, CISSP).',
+                'salary_range' => '₱400k - ₱1.2M / year',
+                'job_outlook' => 'Very High Demand',
+                'related_careers' => ['Systems Administrator', 'Network Administrator'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Financial Analyst' => [
+                'title' => 'Financial Analyst',
+                'tagline' => 'Guide business decisions through financial modeling and market trends.',
+                'description' => 'Financial Analysts examine financial data to guide business decisions. They analyze macroeconomic trends and assess the financial health of companies.',
+                'short_description' => 'Guide investment decisions for businesses and individuals by evaluating financial data and economic trends.',
+                'responsibilities' => [
+                    'Analyze complex financial data, market trends, and macroeconomic indicators to guide corporate strategy.',
+                    'Develop robust financial models to simulate business scenarios and support major investment decisions.',
+                    'Prepare detailed financial reports, revenue forecasts, and budget variance analyses for executive review.',
+                    'Recommend optimal investment strategies and portfolio allocations to maximize returns and mitigate risk.',
+                ],
+                'skills_required' => ['Financial Modeling', 'Excel', 'Accounting', 'Analytical Skills', 'Data Analysis'],
+                'certifications_required' => ['Chartered Financial Analyst (CFA)', 'Certified Public Accountant (CPA)', 'Certified Financial Planner (CFP)'],
+                'education_requirements' => 'Bachelor\'s in Finance, Accounting, Economics, or Business.',
+                'salary_range' => '₱300k - ₱800k / year',
+                'job_outlook' => 'Stable Growth',
+                'related_careers' => ['Data Analyst', 'Accountant', 'Investment Banker'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Accountancy', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Database Administrator' => [
+                'title' => 'Database Administrator',
+                'tagline' => 'Organize, secure, and manage the world\'s data.',
+                'description' => 'Database Administrators (DBAs) use specialized software to store and organize data. They ensure that data is available to users and secure from unauthorized access.',
+                'responsibilities' => [
+                    'Design, build, and optimize complex database architectures to ensure fast, reliable data retrieval.',
+                    'Implement rigorous data security protocols and manage automated backup systems to guarantee data integrity.',
+                    'Proactively troubleshoot database errors, resolve performance bottlenecks, and monitor server health.',
+                    'Manage user access levels, permissions, and authentication to prevent unauthorized data exposure.',
+                ],
+                'skills_required' => ['SQL', 'Oracle/MySQL', 'Database Tuning', 'System Administration'],
+                'certifications_required' => ['Oracle Database Administrator Certified Professional', 'Microsoft Certified: Azure DB Administrator'],
+                'education_requirements' => 'Bachelor\'s in Computer Science or IT.',
+                'salary_range' => '₱350k - ₱900k / year',
+                'job_outlook' => 'Steady Demand',
+                'related_careers' => ['Data Analyst', 'Systems Administrator', 'Software Developer'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Systems Administrator' => [
+                'title' => 'Systems Administrator',
+                'tagline' => 'Ensure the reliable operation of critical IT infrastructure.',
+                'description' => 'Systems Administrators are responsible for the upkeep, configuration, and reliable operation of computer systems, especially multi-user computers such as servers.',
+                'short_description' => 'Maintain, configure, and ensure the reliable operation of computer systems and corporate servers.',
+                'responsibilities' => [
+                    'Install, configure, and manage both hardware and software systems across on-premise and cloud environments.',
+                    'Maintain the health of network facilities in individual machines, ensuring maximum uptime and connectivity.',
+                    'Regularly audit system logs, apply critical security patches, and perform routine maintenance tasks.',
+                    'Provide tier-2 and tier-3 technical support to internal staff, resolving complex infrastructure issues.',
+                ],
+                'skills_required' => ['Linux/Windows ServerOps', 'Scripting', 'Networking', 'Troubleshooting'],
+                'certifications_required' => ['CompTIA Server+', 'Red Hat Certified System Administrator (RHCSA)', 'CCNA'],
+                'education_requirements' => 'Bachelor\'s in IT, Computer Engineering, or related field.',
+                'salary_range' => '₱300k - ₱800k / year',
+                'job_outlook' => 'Consistent Demand',
+                'related_careers' => ['Network Administrator', 'IT Support Specialist', 'Cybersecurity Analyst'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Engineering', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Network Administrator' => [
+                'title' => 'Network Administrator',
+                'tagline' => 'Keep organizations connected with robust network infrastructure.',
+                'description' => 'Network Administrators organize, install, and support an organization\'s computer systems, including local area networks (LANs), wide area networks (WANs), and intranets.',
+                'responsibilities' => [
+                    'Design, deploy, and maintain robust local area (LAN) and wide area (WAN) network infrastructures.',
+                    'Proactively monitor network performance, bandwidth usage, and latency to ensure optimal operations.',
+                    'Configure and secure core networking equipment including enterprize routers, switches, and load balancers.',
+                    'Implement and enforce strict network security protocols, firewalls, and VPN access policies.',
+                ],
+                'skills_required' => ['Routing & Switching', 'Firewall Administration', 'Cisco/Juniper', 'Troubleshooting'],
+                'certifications_required' => ['Cisco Certified Network Associate (CCNA)', 'CompTIA Network+', 'JNCIA'],
+                'education_requirements' => 'Bachelor\'s in IT or related certifications (e.g., CCNA).',
+                'salary_range' => '₱280k - ₱850k / year',
+                'job_outlook' => 'Strong Demand',
+                'related_careers' => ['Systems Administrator', 'Cybersecurity Analyst'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Engineering', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Web Developer' => [
+                'title' => 'Web Developer',
+                'tagline' => 'Bring visual concepts to life on the web.',
+                'description' => 'Web Developers create and maintain websites. They are responsible for the site\'s technical aspects, such as its performance and capacity.',
+                'responsibilities' => [
+                    'Write well-designed, highly testable, and efficient code using HTML, CSS, JavaScript, and modern frameworks.',
+                    'Create responsive website layouts and interactive user interfaces that function seamlessly across all devices.',
+                    'Integrate frontend designs with robust back-end services, APIs, and complex database architectures.',
+                    'Collaborate closely with UI/UX designers and stakeholders to gather and refine technical specifications.',
+                ],
+                'skills_required' => ['HTML/CSS', 'JavaScript', 'React/Vue', 'Responsive Design'],
+                'certifications_required' => ['AWS Certified Developer', 'Zend Certified PHP Engineer', 'Google Developers Certification'],
+                'education_requirements' => 'Bachelor\'s in Computer Science, or relevant coding bootcamp experience.',
+                'salary_range' => '₱250k - ₱750k / year',
+                'job_outlook' => 'High Demand',
+                'related_careers' => ['Software Developer', 'UX/UI Designer'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'IT Support Specialist' => [
+                'title' => 'IT Support Specialist',
+                'tagline' => 'The essential front line of technical problem-solving.',
+                'description' => 'IT Support Specialists provide help and advice to computer users and organizations. They offer technical assistance directly to users.',
+                'short_description' => 'Diagnose and rapidly resolve technical hardware and software issues to keep employees working efficiently.',
+                'responsibilities' => [
+                    'Diagnose, troubleshoot, and resolve a wide variety of complex hardware and software technical issues.',
+                    'Effectively triage, prioritize, and resolve help desk tickets within established service level agreements.',
+                    'Set up, configure, and deploy computers, mobile devices, and peripherals for new and existing employees.',
+                    'Document technical knowledge, formulate FAQs, and maintain an internal knowledge base for end-users.',
+                ],
+                'skills_required' => ['Customer Service', 'Windows/macOS Support', 'Hardware Troubleshooting', 'Patience'],
+                'certifications_required' => ['CompTIA A+', 'Google IT Support Professional Certificate', 'Microsoft 365 Certified'],
+                'education_requirements' => 'Associate\'s or Bachelor\'s Degree in IT, or relevant certifications (e.g., CompTIA A+).',
+                'salary_range' => '₱200k - ₱450k / year',
+                'job_outlook' => 'High Turnover / High Demand',
+                'related_careers' => ['Systems Administrator', 'Network Administrator'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Staff Nurse' => [
+                'title' => 'Staff Nurse',
+                'tagline' => 'Provide compassionate, frontline medical care.',
+                'description' => 'Staff Nurses provide care to patients, coordinate with doctors, administer medications, and ensure patient comfort and recovery.',
+                'short_description' => 'Provide direct medical care, monitor patient recovery, and assist doctors in critical medical procedures.',
+                'responsibilities' => [
+                    'Comprehensively assess patient conditions, take vital signs, and compile accurate medical histories.',
+                    'Safely administer medications, perform prescribed treatments, and assist physicians during medical procedures.',
+                    'Continuously monitor patient progress, document recovery milestones, and adjust care plans as necessary.',
+                    'Educate patients and their families regarding medical conditions, post-discharge care, and wellness strategies.',
+                ],
+                'skills_required' => ['Clinical Knowledge', 'Patient Care', 'Empathy', 'Communication', 'Attention to Detail'],
+                'certifications_required' => ['Philippine Nursing Licensure Examination (PNLE)', 'Basic Life Support (BLS)', 'Advance Cardiac Life Support (ACLS)'],
+                'education_requirements' => 'Bachelor of Science in Nursing (BSN) and passing the licensure exam.',
+                'salary_range' => '₱300k - ₱600k / year',
+                'job_outlook' => 'Very High Demand (Local & Abroad)',
+                'related_careers' => ['Physical Therapist', 'Occupational Therapist'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Nursing', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Human Resources Specialist' => [
+                'title' => 'Human Resources Specialist',
+                'tagline' => 'Build and support a thriving workforce.',
+                'description' => 'HR Specialists recruit, screen, interview, and place workers. They often handle employee relations, compensation, and training.',
+                'short_description' => 'Recruit top talent, administer employee benefits, and foster a positive, supportive company culture.',
+                'responsibilities' => [
+                    'Manage the full-cycle recruitment process, from sourcing and interviewing candidates to onboarding new hires.',
+                    'Administer employee compensation packages, health benefits, and coordinate regular performance evaluations.',
+                    'Mediate complex workplace conflicts, address employee grievances, and foster a positive organizational culture.',
+                    'Ensure company policies remain strictly compliant with local and national labor laws and employment regulations.',
+                ],
+                'skills_required' => ['Interpersonal Skills', 'Conflict Resolution', 'Employment Law', 'Communication'],
+                'certifications_required' => ['Certified Human Resources Professional (CHRP)', 'SHRM Certified Professional'],
+                'education_requirements' => 'Bachelor\'s in Human Resources, Business, or Psychology.',
+                'salary_range' => '₱250k - ₱550k / year',
+                'job_outlook' => 'Stable',
+                'related_careers' => ['Administrative Officer', 'Operations Manager'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Psychology', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Educational Coordinator' => [
+                'title' => 'Educational Coordinator',
+                'tagline' => 'Design engaging and effective learning experiences.',
+                'description' => 'Educational Coordinators develop instructional material, coordinate educational content, and incorporate current technology into specialized fields.',
+                'short_description' => 'Design engaging school curricula and provide critical training for instructional staff and teachers.',
+                'responsibilities' => [
+                    'Develop comprehensive educational programs, training materials, and curricula tailored to specific learning goals.',
+                    'Rigorously evaluate program effectiveness through assessments, surveys, and qualitative feedback metrics.',
+                    'Organize and conduct workshops to train educators, administrators, and staff on new teaching methodologies.',
+                    'Oversee the successful implementation of new curricula across diverse classrooms and educational settings.',
+                ],
+                'skills_required' => ['Curriculum Design', 'Leadership', 'Communication', 'Instructional Strategy'],
+                'certifications_required' => ['Licensure Examination for Teachers (LET)', 'Educational Leadership & Administration Certificate'],
+                'education_requirements' => 'Master\'s Degree in Education or Educational Leadership.',
+                'salary_range' => '₱250k - ₱550k / year',
+                'job_outlook' => 'Moderate',
+                'related_careers' => ['Curriculum Developer', 'Elementary School Teacher'],
+                'recommended_courses' => [['title' => 'Bachelor of Elementary Education', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Secondary Education', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Content Writer' => [
+                'title' => 'Content Writer',
+                'tagline' => 'Craft compelling narratives that engage and inform.',
+                'description' => 'Content Writers produce engaging and relevant written content for websites, blogs, articles, and marketing materials.',
+                'short_description' => 'Craft compelling, well-researched written content for blogs, marketing materials, and digital platforms.',
+                'responsibilities' => [
+                    'Conduct in-depth research on industry-related topics to produce accurate, engaging, and authoritative content.',
+                    'Draft, edit, and proofread high-quality copy for blogs, websites, social media, and marketing collateral.',
+                    'Optimize all digital content using SEO best practices to maximize web traffic and search engine rankings.',
+                    'Collaborate closely with marketing and design teams to ensure content aligns with overarching brand strategies.',
+                ],
+                'skills_required' => ['Writing/Editing', 'SEO Basics', 'Creativity', 'Research Skills', 'Time Management'],
+                'certifications_required' => ['HubSpot Content Marketing Certification', 'Google Digital Garage Certificate', 'SEO Certification'],
+                'education_requirements' => 'Bachelor\'s in English, Journalism, Communications, or Marketing.',
+                'salary_range' => '₱240k - ₱600k / year',
+                'job_outlook' => 'Fast Growing (Freelance/BPO)',
+                'related_careers' => ['Communications Specialist', 'Public Relations Officer'],
+                'recommended_courses' => [['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Journalism', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Social Worker' => [
+                'title' => 'Social Worker',
+                'tagline' => 'Advocate for vulnerable individuals and communities.',
+                'description' => 'Social Workers help people solve and cope with problems in their everyday lives. Clinical social workers also diagnose and treat mental, behavioral, and emotional issues.',
+                'short_description' => 'Advocate for vulnerable individuals, connect them with vital resources, and provide crisis intervention strategies.',
+                'responsibilities' => [
+                    'Actively identify and connect with individuals and communities who are vulnerable or in urgent need of assistance.',
+                    'Conduct thorough assessments of clients\' emotional needs, living situations, and available support networks.',
+                    'Develop and implement holistic intervention plans tailored to improve clients\' overall well-being and safety.',
+                    'Provide direct crisis intervention and respond rapidly to emergency situations involving abuse or mental health.',
+                ],
+                'skills_required' => ['Empathy', 'Active Listening', 'Crisis Intervention', 'Advocacy'],
+                'certifications_required' => ['Licensure Exam for Social Workers', 'Certified Clinical Social Worker'],
+                'education_requirements' => 'Bachelor\'s or Master\'s Degree in Social Work (BSW/MSW) and licensure.',
+                'salary_range' => '₱200k - ₱400k / year',
+                'job_outlook' => 'Steady Demand',
+                'related_careers' => ['Occupational Therapist', 'Human Resources Specialist'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Social Work', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Psychology', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Compliance Officer' => [
+                'title' => 'Compliance Officer',
+                'tagline' => 'Ensure ethical practices and adherence to regulations.',
+                'description' => 'Compliance Officers examine, evaluate, and investigate eligibility for or conformity with laws and regulations governing contract compliance of licenses.',
+                'short_description' => 'Audit internal operations to ensure strict company adherence to complex legal and regulatory standards.',
+                'responsibilities' => [
+                    'Meticulously review corporate operations to ensure they meet all legal standards and industry regulations.',
+                    'Plan and execute regular compliance audits, risk assessments, and internal investigations across all departments.',
+                    'Develop, update, and actively enforce internal policies that safeguard organizational ethics and data privacy.',
+                    'Conduct training sessions to educate employees on regulatory changes and the importance of compliance adherence.',
+                ],
+                'skills_required' => ['Regulatory Knowledge', 'Attention to Detail', 'Analytical Thinking', 'Integrity'],
+                'certifications_required' => ['Certified Compliance & Ethics Professional (CCEP)', 'Certified Regulatory Compliance Manager (CRCM)'],
+                'education_requirements' => 'Bachelor\'s Degree in Business, Finance, or Law.',
+                'salary_range' => '₱350k - ₱900k / year',
+                'job_outlook' => 'High Demand',
+                'related_careers' => ['Financial Analyst', 'Administrative Officer'],
+                'recommended_courses' => [['title' => 'Bachelor of Laws (LLB)', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Administrative Officer' => [
+                'title' => 'Administrative Officer',
+                'tagline' => 'The backbone of smooth organizational operations.',
+                'description' => 'Administrative Officers provide administrative and clerical support to departments or management, ensuring smooth day-to-day operations.',
+                'short_description' => 'Manage daily office operations, execute scheduling, and maintain complex organizational records.',
+                'responsibilities' => [
+                    'Expertly handle office scheduling, executive calendars, and direct communications to ensure fluid operations.',
+                    'Organize and securely maintain complex electronic datasets, physical files, and confidential corporate records.',
+                    'Draft comprehensive reports, prepare compelling presentations, and record detailed minutes during key meetings.',
+                    'Coordinate multifaceted office activities, manage essential vendor relationships, and oversee facility maintenance.',
+                ],
+                'skills_required' => ['Organization', 'Communication', 'Office Software Proficiency', 'Time Management'],
+                'certifications_required' => ['Certified Administrative Professional (CAP)', 'Civil Service Eligibility (Professional)'],
+                'education_requirements' => 'Bachelor\'s Degree in Business Administration or related field.',
+                'salary_range' => '₱200k - ₱450k / year',
+                'job_outlook' => 'Stable',
+                'related_careers' => ['Human Resources Specialist', 'Operations Manager'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Operations Manager' => [
+                'title' => 'Operations Manager',
+                'tagline' => 'Optimize processes to maximize efficiency and output.',
+                'description' => 'Operations Managers formulate strategy, improve performance, procure material and resources, and secure compliance. They mentor teams and find ways to increase quality of customer service and implement best practices.',
+                'short_description' => 'Optimize daily business procedures to maximize efficiency, cut costs, and increase company output.',
+                'responsibilities' => [
+                    'Oversee and optimize daily operational activities to ensure maximum efficiency and high organizational output.',
+                    'Formulate, iterate, and strictly enforce operational policies, quality control standards, and best practices.',
+                    'Manage end-to-end supply chains, negotiate with key vendors, and ensure seamless inventory logistics.',
+                    'Continuously monitor financial data, analyze operational metrics, and optimize departmental budgets.',
+                ],
+                'skills_required' => ['Leadership', 'Strategic Planning', 'Process Optimization', 'Financial Acumen'],
+                'certifications_required' => ['Project Management Professional (PMP)', 'Six Sigma Green Belt', 'Certified Supply Chain Professional'],
+                'education_requirements' => 'Bachelor\'s or Master\'s Degree in Business Administration or Operations Management.',
+                'salary_range' => '₱500k - ₱1.5M / year',
+                'job_outlook' => 'Very Strong Demand',
+                'related_careers' => ['Business Development Manager', 'Administrative Officer'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Business Development Manager' => [
+                'title' => 'Business Development Manager',
+                'tagline' => 'Drive growth, forge partnerships, and expand markets.',
+                'description' => 'Business Development Managers identify new corporate sales and partnership opportunities, pitching products/services and maintaining mutually beneficial relationships.',
+                'short_description' => 'Identify lucrative new market opportunities and aggressively negotiate high-value corporate partnerships.',
+                'responsibilities' => [
+                    'Proactively research and identify potential new geographic markets, enterprise clients, and strategic partnerships.',
+                    'Expertly negotiate terms, close high-value business deals, and facilitate complex contract agreements.',
+                    'Collaborate extensively with marketing and product teams to perfectly align offerings with shifting market demands.',
+                    'Develop and execute long-term strategic business plans focused on sustainable growth and revenue generation.',
+                ],
+                'skills_required' => ['Negotiation', 'Sales Strategy', 'Networking', 'Communication', 'Market Research'],
+                'certifications_required' => ['Certified Business Development Professional', 'Salesforce Certified Administrator'],
+                'education_requirements' => 'Bachelor\'s Degree in Business Administration, Marketing, or Finance.',
+                'salary_range' => '₱450k - ₱1.2M / year',
+                'job_outlook' => 'High Growth',
+                'related_careers' => ['Operations Manager', 'Sales Representative'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Marketing Coordinator' => [
+                'title' => 'Marketing Coordinator',
+                'tagline' => 'Execute creative campaigns that capture audience attention.',
+                'description' => 'Marketing Coordinators organize marketing campaigns, create promotional materials, and analyze target audience engagement to boost a brand\'s presence.',
+                'responsibilities' => [
+                    'Brainstorm, develop, and meticulously execute multi-channel marketing campaigns tailored to target audiences.',
+                    'Continuously analyze campaign performance metrics and adjust active strategies to maximize return on investment.',
+                    'Coordinate seamlessly with diverse sales and creative teams to produce highly effective promotional materials.',
+                    'Manage corporate social media channels, foster community engagement, and monitor brand reputation online.',
+                ],
+                'skills_required' => ['Digital Marketing', 'Copywriting', 'Analytics', 'Creativity'],
+                'certifications_required' => ['Google Analytics Individual Qualification', 'Facebook Blueprint Certification', 'HubSpot Certification'],
+                'education_requirements' => 'Bachelor\'s Degree in Marketing, Communications, or Business.',
+                'salary_range' => '₱250k - ₱650k / year',
+                'job_outlook' => 'Rapidly Growing',
+                'related_careers' => ['Public Relations Officer', 'Market Research Analyst'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Sales Representative' => [
+                'title' => 'Sales Representative',
+                'tagline' => 'Connect customers with solutions that meet their needs.',
+                'description' => 'Sales Representatives sell retail products, goods, and services to customers. They work with customers to find what they want, create solutions, and ensure a smooth sales process.',
+                'short_description' => 'Pitch products directly to clients, negotiate contracts, and consistently close high-value business deals.',
+                'responsibilities' => [
+                    'Proactively prospect, identify, and consistently initiate contact with qualified leads and potential new clients.',
+                    'Deliver highly persuasive product demonstrations and tailor value propositions to meet specific customer pain points.',
+                    'Skillfully negotiate contract terms, overcome buyer objections, and successfully close lucrative sales deals.',
+                    'Maintain deep, long-lasting client relationships to drive recurring revenue and generate referral business.',
+                ],
+                'skills_required' => ['Persuasion', 'Active Listening', 'Resilience', 'Communication'],
+                'certifications_required' => ['Certified Sales Professional (CSP)', 'HubSpot Sales Software Certification'],
+                'education_requirements' => 'High School Diploma to Bachelor\'s Degree, depending on the industry.',
+                'salary_range' => '₱200k - ₱500k / year + commission',
+                'job_outlook' => 'High Demand',
+                'related_careers' => ['Customer Service Representative', 'Business Development Manager'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Customer Service Representative' => [
+                'title' => 'Customer Service Representative',
+                'tagline' => 'Provide support, solve problems, and delight customers.',
+                'description' => 'Customer Service Representatives interact with customers to handle complaints, process orders, and provide information about an organization’s products and services.',
+                'short_description' => 'Interact directly with customers to resolve complaints, answer inquiries, and ensure total satisfaction.',
+                'responsibilities' => [
+                    'Swiftly and professionally resolve complex customer inquiries via telephone, email, and live chat platforms.',
+                    'Maintain highly accurate customer interaction records, update internal databases, and document complex issues.',
+                    'Efficiently process incoming orders, facilitate returns, and manage financial refunds with a focus on accuracy.',
+                    'Expertly de-escalate stressful or confrontational situations by utilizing empathy and proven conflict resolution tactics.',
+                ],
+                'skills_required' => ['Empathy', 'Patience', 'Verbal Communication', 'Problem Solving'],
+                'certifications_required' => ['Certified Customer Service Professional (CCSP)', 'Call Center Fundamentals Certificate'],
+                'education_requirements' => 'High School Diploma, or Bachelor\'s Degree.',
+                'salary_range' => '₱250k - ₱450k / year',
+                'job_outlook' => 'Massive Demand (BPO)',
+                'related_careers' => ['Sales Representative', 'Administrative Officer'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Event Coordinator' => [
+                'title' => 'Event Coordinator',
+                'tagline' => 'Create memorable gatherings through meticulous planning.',
+                'description' => 'Event Coordinators organize and manage events, such as conferences, trade shows, weddings, parties, and corporate meetings.',
+                'short_description' => 'Meticulously plan and execute large-scale gatherings, managing vendors, budgets, and on-site logistics.',
+                'responsibilities' => [
+                    'Meticulously plan comprehensive event details, encompassing thematic design, guest lists, and precise timeline logistics.',
+                    'Liaise effectively with external vendors, caterers, and venues to negotiate contracts and ensure seamless delivery.',
+                    'Strictly manage overarching event budgets, track all expenses, and ensure maximum value without compromising quality.',
+                    'Oversee critical on-site event execution, swiftly resolving unexpected issues to guarantee a flawless attendee experience.',
+                ],
+                'skills_required' => ['Organization', 'Negotiation', 'Time Management', 'Crisis Management'],
+                'certifications_required' => ['Certified Special Events Professional (CSEP)', 'Certified Meeting Professional (CMP)'],
+                'education_requirements' => 'Bachelor\'s Degree in Hospitality Management, Public Relations, or Business.',
+                'salary_range' => '₱220k - ₱600k / year',
+                'job_outlook' => 'Strong Recovery',
+                'related_careers' => ['Marketing Coordinator', 'Public Relations Officer'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Tourism Management', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Hotel Front Desk Agent' => [
+                'title' => 'Hotel Front Desk Agent',
+                'tagline' => 'Be the welcoming face and first point of contact for guests.',
+                'description' => 'Hotel Front Desk Agents accommodate hotel patrons by registering and assigning rooms to guests, issuing room keys or cards, transmitting and receiving messages, and keeping records of occupied rooms and guests\' accounts.',
+                'responsibilities' => [
+                    'Warmly greet guests, orchestrate smooth check-in/check-out processes, and assign rooms according to preferences.',
+                    'Accurately process guest payments, manage financial folios, and ensure the integrity of cash drawer transactions.',
+                    'Promptly handle intricate guest requests, resolve complaints with grace, and provide insightful local recommendations.',
+                    'Maintain real-time records of room occupancy, communicate with housekeeping, and manage daily reservation platforms.',
+                ],
+                'skills_required' => ['Customer Service', 'Multitasking', 'Professionalism', 'Communication'],
+                'certifications_required' => ['Certified Front Desk Representative', 'Hospitality Management Diploma'],
+                'education_requirements' => 'High School Diploma or degree in Hospitality Management.',
+                'salary_range' => '₱180k - ₱350k / year',
+                'job_outlook' => 'Recovering/Growing',
+                'related_careers' => ['Customer Service Representative', 'Administrative Officer'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Tourism Management', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Hospitality Management', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Public Relations Officer' => [
+                'title' => 'Public Relations Officer',
+                'tagline' => 'Shape public perception and manage organizational reputation.',
+                'description' => 'Public Relations Officers create and maintain a favorable public image for the organization they represent. They design media releases to shape public perception.',
+                'short_description' => 'Shape a positive public image for organizations through strategic media releases and relationship management.',
+                'responsibilities' => [
+                    'Draft exceptional press releases, compelling media pitches, and dynamic public statements that capture attention.',
+                    'Cultivate and manage robust relationships with essential journalists, influential media outlets, and key stakeholders.',
+                    'Strategically develop and execute comprehensive PR campaigns designed to proactively shape a favorable public image.',
+                    'Assume a leadership role during crisis communication scenarios, rapidly mitigating reputational damage.',
+                ],
+                'skills_required' => ['Communication', 'Media Relations', 'Crisis Management', 'Writing'],
+                'certifications_required' => ['Accreditation in Public Relations (APR)', 'Crisis Communication Certificate'],
+                'education_requirements' => 'Bachelor\'s Degree in Public Relations, Communications, or Journalism.',
+                'salary_range' => '₱250k - ₱700k / year',
+                'job_outlook' => 'Stable Growth',
+                'related_careers' => ['Communications Specialist', 'Marketing Coordinator'],
+                'recommended_courses' => [['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Journalism', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Communications Specialist' => [
+                'title' => 'Communications Specialist',
+                'tagline' => 'Facilitate clear and effective internal and external messaging.',
+                'description' => 'Communications Specialists manage external and internal communications for an organization. They write news releases, prepare presentations, and craft newsletters.',
+                'short_description' => 'Develop clear, unified messaging for both internal staff communications and external public engagement.',
+                'responsibilities' => [
+                    'Strategically develop and refine both internal enterprise and external public-facing communication frameworks.',
+                    'Expertly write and curate engaging organizational newsletters, internal memos, and executive leadership announcements.',
+                    'Manage diverse multidimensional corporate communications channels, evaluating engagement and message penetration.',
+                    'Act as a diligent brand guardian, ensuring strict consistency in tone, messaging, and visual identity across all platforms.',
+                ],
+                'skills_required' => ['Writing/Editing', 'Presentation Skills', 'Strategic Planning', 'Interpersonal Skills'],
+                'certifications_required' => ['Accredited Business Communicator (ABC)', 'Digital Marketing Certificate'],
+                'education_requirements' => 'Bachelor\'s Degree in Communications, Journalism, or English.',
+                'salary_range' => '₱250k - ₱650k / year',
+                'job_outlook' => 'Steady Demand',
+                'related_careers' => ['Public Relations Officer', 'Content Writer'],
+                'recommended_courses' => [['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Journalism', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Market Research Analyst' => [
+                'title' => 'Market Research Analyst',
+                'tagline' => 'Analyze market conditions to pinpoint opportunities.',
+                'description' => 'Market Research Analysts study market conditions to examine potential sales of a product or service. They help companies understand what products people want, who will buy them, and at what price.',
+                'short_description' => 'Analyze shifting market trends and complex consumer data to guide strategic corporate decision-making.',
+                'responsibilities' => [
+                    'Scientifically design and conduct comprehensive surveys, insightful focus groups, and structured market questionnaires.',
+                    'Deeply analyze qualitative and quantitative data using advanced statistical software to uncover critical market insights.',
+                    'Accurately forecast emerging market trends, evaluate shifting consumer behaviors, and assess competitor strategies.',
+                    'Distill complex analytical findings into highly actionable, visually compelling reports for senior management.',
+                ],
+                'skills_required' => ['Data Analysis', 'Critical Thinking', 'Reporting', 'Statistical Software'],
+                'certifications_required' => ['Professional Researcher Certification (PRC)', 'Google Analytics Certification'],
+                'education_requirements' => 'Bachelor\'s in Market Research, Statistics, Math, or Computer Science.',
+                'salary_range' => '₱250k - ₱600k / year',
+                'job_outlook' => 'Growing',
+                'related_careers' => ['Data Analyst', 'Marketing Coordinator'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Statistics', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Curriculum Developer' => [
+                'title' => 'Curriculum Developer',
+                'tagline' => 'Design the blueprints for engaging educational programs.',
+                'description' => 'Curriculum Developers create instructional materials and develop teaching models for schools and educational organizations.',
+                'short_description' => 'Create structured, engaging educational materials and instructional models for diverse learning environments.',
+                'responsibilities' => [
+                    'Systematically design comprehensive syllabi, innovative lesson plans, and diverse evaluation metrics for students.',
+                    'Critically evaluate and continuously update educational materials to ensure they remain accurate and pedagogically sound.',
+                    'Conduct rigorous training seminars to instruct educators on implementing new curricula and best teaching practices.',
+                    'Pioneer the integration of emerging educational technologies and digital learning tools into standard classroom environments.',
+                ],
+                'skills_required' => ['Instructional Design', 'Research Skills', 'Communication', 'Attention to Detail'],
+                'certifications_required' => ['Licensure Examination for Teachers (LET)', 'Instructional Design Certificate'],
+                'education_requirements' => 'Master\'s Degree in Education or Curriculum and Instruction.',
+                'salary_range' => '₱250k - ₱600k / year',
+                'job_outlook' => 'Moderate',
+                'related_careers' => ['Educational Coordinator', 'Elementary School Teacher'],
+                'recommended_courses' => [['title' => 'Bachelor of Elementary Education', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Secondary Education', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Computer Engineer' => [
+                'title' => 'Computer Engineer',
+                'tagline' => 'Bridge the gap between hardware architecture and software design.',
+                'description' => 'Computer Engineers research, design, develop, and test computer systems and components such as processors, circuit boards, memory devices, and networks.',
+                'short_description' => 'Design, build, and rigorously test cutting-edge computer hardware, processors, and circuit boards.',
+                'responsibilities' => [
+                    'Meticulously design and architecture complex computer hardware components, microprocessors, and custom circuit boards.',
+                    'Rigorously test and analyze hardware performance under extreme conditions to identify and resolve critical bottlenecks.',
+                    'Spearhead the continuous improvement and technological update of existing enterprise-grade computer equipment.',
+                    'Write highly optimized low-level software, critical firmware, and driver interactions connecting software to physical systems.',
+                ],
+                'skills_required' => ['Electronics', 'C/C++', 'Hardware Design', 'Problem Solving'],
+                'certifications_required' => ['Licensure Exam for Electronics/Computer Engineers', 'Cisco Certified Network Professional (CCNP)'],
+                'education_requirements' => 'Bachelor\'s Degree in Computer Engineering or Electrical Engineering.',
+                'salary_range' => '₱300k - ₱850k / year',
+                'job_outlook' => 'Strong Growth',
+                'related_careers' => ['Software Developer', 'Electronics Engineer'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Computer Engineering', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Electronics Engineer' => [
+                'title' => 'Electronics Engineer',
+                'tagline' => 'Design the electronic components powering modern devices.',
+                'description' => 'Electronics Engineers design, develop, test, and supervise the manufacturing of electronic equipment such as broadcast and communications systems.',
+                'short_description' => 'Develop sophisticated electronic components and circuitry utilized in commercial and industrial devices.',
+                'responsibilities' => [
+                    'Pioneer the design of sophisticated electronic systems and micro-components tailored for specialized industrial applications.',
+                    'Rigorously evaluate proposed electronic designs for strict adherence to safety standards and maximum energy efficiency.',
+                    'Develop comprehensive, step-by-step maintenance procedures and operational protocols for complex electronic equipment.',
+                    'Diagnose and troubleshoot intricate systemic failures in broadcast, communication, and high-level electronic infrastructures.',
+                ],
+                'skills_required' => ['Circuit Design', 'AutoCAD/CAD Software', 'Analytical Skills', 'Math'],
+                'certifications_required' => ['Electronics Engineer Licensure Examination', 'Certified Electronics Technician (CET)'],
+                'education_requirements' => 'Bachelor\'s Degree in Electronics Engineering.',
+                'salary_range' => '₱250k - ₱750k / year',
+                'job_outlook' => 'Stable',
+                'related_careers' => ['Computer Engineer', 'Systems Administrator'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Electronics Engineering', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Electrical Engineering', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Physical Therapist' => [
+                'title' => 'Physical Therapist',
+                'tagline' => 'Help patients regain movement, manage pain, and improve their lives.',
+                'description' => 'Physical Therapists help injured or ill people improve their movement and manage their pain. They are an important part of the rehabilitation, treatment, and prevention of patients with chronic conditions.',
+                'short_description' => 'Help injured or ill people improve physical movement, manage pain, and recover through guided exercise.',
+                'responsibilities' => [
+                    'Expertly diagnose patients\' functional impairments, range of motion limitations, and underlying neurological mobility issues.',
+                    'Develop highly customized, measurable therapeutic care plans tailored exactly to the patient\'s specific injury or chronic condition.',
+                    'Actively teach and physically guide patients through specific rehabilitative exercises, strength training, and stretching routines.',
+                    'Regularly evaluate patient recovery progress, modify treatment strategies dynamically, and meticulously document clinical outcomes.',
+                ],
+                'skills_required' => ['Compassion', 'Physical Stamina', 'Anatomy/Physiology', 'Communication'],
+                'certifications_required' => ['Physical and Occupational Therapy Licensure Examination', 'Basic Life Support (BLS)'],
+                'education_requirements' => 'Doctor of Physical Therapy (DPT) degree and passing the licensure exam.',
+                'salary_range' => '₱250k - ₱600k / year',
+                'job_outlook' => 'High Demand',
+                'related_careers' => ['Occupational Therapist', 'Staff Nurse'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Physical Therapy', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Occupational Therapist' => [
+                'title' => 'Occupational Therapist',
+                'tagline' => 'Empower individuals to overcome physical and emotional barriers.',
+                'description' => 'Occupational Therapists treat injured, ill, or disabled patients through the therapeutic use of everyday activities. They help these patients develop, recover, improve, as well as maintain the skills needed for daily living and working.',
+                'short_description' => 'Help patients regain the crucial physical skills required for daily living and working independence.',
+                'responsibilities' => [
+                    'Holistically assess patients\' combined physical, mental, and cognitive conditions to determine their overall functional baseline.',
+                    'Develop innovative treatment plans focused entirely on restoring the patient\'s ability to perform vital daily living and work tasks.',
+                    'Carefully recommend and train patients in the use of specialized adaptive equipment and personalized ergonomic modifications.',
+                    'Extensively educate and train patients\' family members and caregivers to ensure safe and continuous support in the home environment.',
+                ],
+                'skills_required' => ['Patience', 'Empathy', 'Problem Solving', 'Adaptability'],
+                'certifications_required' => ['Physical and Occupational Therapy Licensure Examination', 'NBCOT Certification'],
+                'education_requirements' => 'Master\'s or Doctoral degree in Occupational Therapy and licensure.',
+                'salary_range' => '₱250k - ₱550k / year',
+                'job_outlook' => 'High Demand',
+                'related_careers' => ['Physical Therapist', 'Social Worker'],
+                'recommended_courses' => [['title' => 'Bachelor of Science in Occupational Therapy', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Psychology', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            'Elementary School Teacher' => [
+                'title' => 'Elementary School Teacher',
+                'tagline' => 'Shape the minds and futures of young learners.',
+                'description' => 'Elementary School Teachers instruct young students in basic subjects, such as math and reading, in order to prepare them for future schooling.',
+                'short_description' => 'Instruct young children in foundational subjects, fostering both their emotional and academic development.',
+                'responsibilities' => [
+                    'Creatively conceptualize and adhere to engaging daily lesson plans that solidly cover foundational subjects like math and reading.',
+                    'Continuously evaluate and document individual student academic progress, identifying areas requiring targeted intervention.',
+                    'Skillfully manage classroom behavior utilizing positive reinforcement frameworks to maintain a safe, highly productive learning environment.',
+                    'Communicate consistently and effectively with parents or guardians to align on student development, behavioral goals, and academic milestones.',
+                ],
+                'skills_required' => ['Patience', 'Communication', 'Creativity', 'Classroom Management'],
+                'certifications_required' => ['Licensure Examination for Teachers (LET)', 'TEFL/TESOL Certification'],
+                'education_requirements' => 'Bachelor\'s Degree in Elementary Education and teaching license.',
+                'salary_range' => '₱320k - ₱550k / year',
+                'job_outlook' => 'Consistent Demand',
+                'related_careers' => ['Educational Coordinator', 'Curriculum Developer'],
+                'recommended_courses' => [['title' => 'Bachelor of Elementary Education', 'platform' => 'Degree Program', 'url' => '#']]
+            ],
+            // Default fallback for other unlisted roles
+            'default' => [
+                'title' => $career,
+                'tagline' => 'Discover your path and excel in your career.',
+                'description' => "This is a detailed overview of the {$career} role. Professionals in this field use their expertise to solve problems, support their organizations, and drive growth.",
+                'responsibilities' => [
+                    'Perform core duties associated with the role.',
+                    'Collaborate with team members to achieve goals.',
+                    'Continuously update skills to stay current with industry trends.'
+                ],
+                'skills_required' => ['Communication', 'Critical Thinking', 'Adaptability', 'Teamwork'],
+                'education_requirements' => 'Varies by specific role (typically Bachelor\'s Degree or relevant certification).',
+                'salary_range' => 'Varies by experience',
+                'job_outlook' => 'Stable',
+                'related_careers' => ['Software Developer', 'Consultant', 'Project Specialist', 'Analyst'],
+                'recommended_courses' => [
+                    ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']
+                ]
+            ]
         ];
 
-        return view('pathfinder.career-details', compact('careerDetails'));
+        return $careers[$career] ?? $careers['default'];
+    }
+
+    /**
+     * Get real-world data for courses in the Philippines.
+     */
+    public static function getCourseData($course)
+    {
+        $defaultCourse = [
+            'title' => $course,
+            'tagline' => 'Unlock your potential in this specialized field.',
+            'description' => 'This program offers exploring specialized concepts and practices that prepare you for a professional career. You will gain industry-relevant skills and join a network of experts.',
+            'short_description' => 'A specialized program designed to build core competencies in your chosen field.',
+            'curriculum_highlights' => ['Core Principles', 'Industry Best Practices', 'Practical Applications', 'Capstone Research'],
+            'skills_gained' => ['Critical Thinking', 'Technical Proficiency', 'Communication', 'Collaborative Problem Solving'],
+            'career_opportunities' => ['Industry Specialist', 'Professional Consultant', 'Researcher', 'Technical Lead'],
+            'duration' => '4 Years',
+            'difficulty' => 'Moderate',
+            'tuition' => '₱40,000 - ₱100,000 / Sem',
+            'mbti_alignment' => ['INTJ', 'ENFJ', 'ISTJ', 'ENTP'],
+            'top_universities' => []
+        ];
+
+        // Map long-form degree names → short-name keys used in courses_data.json
+        $nameMap = [
+            'Bachelor of Science in Accountancy'                           => 'BS Accountancy',
+            'Bachelor of Science in Business Administration'               => 'BS Business Administration',
+            'Bachelor of Science in Marketing Management'                  => 'BS Marketing Management',
+            'Bachelor of Science in Financial Management'                  => 'BS Financial Management',
+            'Bachelor of Science in Entrepreneurship'                      => 'BS Entrepreneurship',
+            'Bachelor of Science in Human Resource Management'             => 'BS Human Resource Management',
+            'Bachelor of Science in Operations Management'                 => 'BS Operations Management',
+            'Bachelor of Science in Management Accounting'                 => 'BS Management Accounting',
+            'Bachelor of Science in International Relations'               => 'BS International Relations',
+            'Bachelor of Science in Civil Engineering'                     => 'BS Civil Engineering',
+            'Bachelor of Science in Electrical Engineering'                => 'BS Electrical Engineering',
+            'Bachelor of Science in Mechanical Engineering'                => 'BS Mechanical Engineering',
+            'Bachelor of Science in Chemical Engineering'                  => 'BS Chemical Engineering',
+            'Bachelor of Science in Industrial Engineering'                => 'BS Industrial Engineering',
+            'Bachelor of Science in Computer Engineering'                  => 'BS Computer Engineering',
+            'Bachelor of Science in Electronics Engineering'               => 'BS Electronics Engineering',
+            'Bachelor of Science in Geodetic Engineering'                  => 'BS Geodetic Engineering',
+            'Bachelor of Science in Computer Science'                      => 'BS Computer Science',
+            'Bachelor of Science in Information Technology'                => 'BS Information Technology',
+            'Bachelor of Science in Information Systems'                   => 'BS Information Systems',
+            'Bachelor of Science in Data Science'                          => 'BS Data Science',
+            'Bachelor of Science in Cybersecurity'                         => 'BS Cybersecurity',
+            'Bachelor of Science in Network Administration'                => 'BS Network Administration',
+            'Bachelor of Science in Entertainment and Multimedia Computing'=> 'BS Entertainment and Multimedia Computing',
+            'Bachelor of Science in Nursing'                               => 'BS Nursing',
+            'Bachelor of Science in Medical Technology'                    => 'BS Medical Technology',
+            'Bachelor of Science in Pharmacy'                              => 'BS Pharmacy',
+            'Bachelor of Science in Physical Therapy'                      => 'BS Physical Therapy',
+            'Bachelor of Science in Occupational Therapy'                  => 'BS Occupational Therapy',
+            'Bachelor of Science in Radiologic Technology'                 => 'BS Radiologic Technology',
+            'Bachelor of Science in Respiratory Therapy'                   => 'BS Respiratory Therapy',
+            'Bachelor of Science in Public Health'                         => 'BS Public Health',
+            'Bachelor of Science in Psychology'                            => 'BS Psychology',
+            'Bachelor of Science in Criminology'                           => 'BS Criminology',
+            'Bachelor of Science in Forensic Science'                      => 'BS Forensic Science',
+            'Bachelor of Science in Tourism Management'                    => 'BS Tourism Management',
+            'Bachelor of Science in Hotel and Restaurant Management'       => 'BS Hotel and Restaurant Management',
+            'Bachelor of Science in Hospitality Management'                => 'BS Hotel and Restaurant Management',
+            'Bachelor of Science in International Hospitality Management'  => 'BS International Hospitality Management',
+            'Bachelor of Science in Event Management'                      => 'BS Event Management',
+            'Bachelor of Science in Cruise Ship Management'                => 'BS Cruise Ship Management',
+            'Bachelor of Science in Travel Management'                     => 'BS Travel Management',
+            'Bachelor of Science in Food Service Management'               => 'BS Food Service Management',
+            'Bachelor of Science in Culinary Arts Management'              => 'BS Culinary Arts Management',
+            'Bachelor of Science in Customs Administration'                => 'BS Customs Administration',
+            'Bachelor of Arts in Communication'                            => 'BA Communication',
+            'Bachelor of Arts in Psychology'                               => 'BA Psychology',
+            'Bachelor of Arts in English'                                  => 'BA Communication',
+            'Bachelor of Arts in Political Science'                        => 'BA Political Science',
+            'Bachelor of Arts in History'                                  => 'BA History',
+            'Bachelor of Arts in Sociology'                                => 'BA Sociology',
+            'Bachelor of Arts in Public Administration'                    => 'BA Public Administration',
+            'Bachelor of Arts in Legal Management'                         => 'BA Legal Management',
+            'Bachelor of Arts in International Studies'                    => 'BA International Studies',
+            'Bachelor of Arts in Development Studies'                      => 'BA Development Studies',
+            'Bachelor of Elementary Education'                             => 'Bachelor of Elementary Education (BEEd)',
+            'Bachelor of Elementary Education (BEEd)'                     => 'Bachelor of Elementary Education (BEEd)',
+            'Bachelor of Early Childhood Education'                        => 'Bachelor of Early Childhood Education (BECEd)',
+            'Bachelor of Early Childhood Education (BECEd)'               => 'Bachelor of Early Childhood Education (BECEd)',
+            'Bachelor of Secondary Education'                              => 'Bachelor of Secondary Education (BSEd) major in English',
+            'Bachelor of Physical Education (BPEd)'                       => 'Bachelor of Physical Education (BPEd)',
+            'Bachelor of Technology and Livelihood Education (BTLEd)'     => 'Bachelor of Technology and Livelihood Education (BTLEd)',
+            'Bachelor of Laws (LLB)'                                       => 'BA Legal Management',
+        ];
+
+        // Resolve short key: use map or try exact key directly
+        $lookupKey = $nameMap[$course] ?? $course;
+
+        try {
+            if (\Illuminate\Support\Facades\Storage::disk('local')->exists('courses_data.json')) {
+                $json = \Illuminate\Support\Facades\Storage::disk('local')->get('courses_data.json');
+                $courses = json_decode($json, true);
+
+                if (json_last_error() === JSON_ERROR_NONE && is_array($courses)) {
+                    // Try short key first, then original name
+                    $data = $courses[$lookupKey] ?? $courses[$course] ?? null;
+                    if ($data) {
+                        // Always show the original full title in the UI
+                        $data['title'] = $course;
+                        return $data;
+                    }
+                    return $defaultCourse;
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to load courses data: ' . $e->getMessage());
+        }
+
+        return $defaultCourse;
+    }
+
+    private function getMbtiCareerCompatibility()
+    {
+        return [
+            'Software Developer' => [
+                'ISTJ' => 'ISTJs possess a strong Introverted Sensing (Si) function, which makes them exceptional at retaining complex technical information and adhering to established coding standards. In software development, their systematic and highly organized approach ensures code is meticulously structured, thoroughly tested, and highly reliable. They thrive in environments where they can apply logical, step-by-step methods (Te) to resolve intricate bugs and build secure, stable systems.',
+                'INFJ' => 'INFJs combine their dominant Introverted Intuition (Ni) with Extroverted Feeling (Fe) to build software that not only functions well but serves a meaningful human purpose. They excel at seeing the "big picture" architecture of a project while remaining deeply attuned to the end-user\'s experience. As developers, they are often the ones advocating for accessibility, intuitive design, and creating products that genuinely improve people\'s daily lives.',
+                'INTJ' => 'INTJs are visionaries driven by Introverted Intuition (Ni) and Extroverted Thinking (Te), making them natural-born software architects. They excel at holding massive, complex systems in their minds and designing elegant, highly efficient solutions to engineering challenges. Their independent and deeply analytical nature allows them to thrive when given the autonomy to rethink legacy systems and engineer highly scalable, future-proof platforms.',
+                'INTP' => 'INTPs are driven by Introverted Thinking (Ti), giving them an insatiable desire to understand exactly how underlying systems work. In software development, they are the ultimate problem-solvers, naturally deconstructing complex issues until they find edge cases others miss. Their Extroverted Intuition (Ne) allows them to brainstorm highly unconventional, elegant code solutions, making them invaluable when a team needs to invent a completely new technical approach.',
+                'ENTP' => 'ENTPs leverage their dominant Extroverted Intuition (Ne) to rapidly connect disparate technical concepts, making them highly innovative developers. They love the challenge of building something that hasn\'t been done before and are quick to prototype new, out-of-the-box solutions. Their logical framework (Ti) ensures their creative ideas remain technically sound, allowing them to thrive in fast-paced startup environments or R&D roles.',
+                'ENTJ' => 'ENTJs use their dominant Extroverted Thinking (Te) to drive efficiency, structure, and decisive action in the software development lifecycle. While they are highly capable coders, they often naturally gravitate toward technical leadership or systems architecture. They excel at mapping out the strategic direction of a codebase, organizing development workflows, and leading engineering teams to deliver high-quality products on aggressive timelines.'
+            ],
+            'Data Analyst' => [
+                'INFJ' => 'INFJs possess highly developed Introverted Intuition (Ni), giving them an uncanny ability to spot hidden trends and underlying narratives within massive datasets. Unlike purely logical types, their Extroverted Feeling (Fe) drives them to translate these data points into compelling, human-centric stories. They excel in this role because they don\'t just analyze numbers—they interpret what the data means for the people, customers, or patients behind it.',
+                'INTJ' => 'INTJs are master strategists (Ni) who utilize Extroverted Thinking (Te) to turn complex data into actionable business directives. They thrive in Data Analyst roles because they can effortlessly zoom out to see the overarching patterns in a dataset while designing highly efficient, automated models to track them. Their analysis is rarely just observational; it is always tied to optimizing systems and driving long-term organizational strategy.',
+                'INTP' => 'INTPs utilize Introverted Thinking (Ti) to rigorously tear apart datasets, ruthlessly seeking the precise truth hidden within the numbers. They are not satisfied with surface-level reports; they want to build complex queries and experimental models (Ne) to understand the fundamental logic driving the data. This deep, meticulous curiosity makes them exceptional at uncovering critical insights that more conventional analysts might overlook.'
+            ],
+            'Cybersecurity Analyst' => [
+                'ISTJ' => 'ISTJs are naturally vigilant and highly observant, relying on Introverted Sensing (Si) to meticulously track anomalies and deviations from normal system behavior. In cybersecurity, their deep respect for procedure and unmatched attention to detail makes them the ultimate defenders of digital infrastructure. They excel at writing robust security protocols, monitoring logs with unwavering consistency, and ensuring that compliance standards are flawlessly exacted.',
+                'INTJ' => 'INTJs apply their dominant Introverted Intuition (Ni) to anticipate security threats long before they materialize. They approach cybersecurity like a high-stakes game of chess, designing complex, multi-layered defensive architectures (Te) to outsmart sophisticated adversaries. Their ability to foresee potential attack vectors and systematically eliminate vulnerabilities makes them highly effective at proactive threat hunting and strategic risk management.',
+                'ISTP' => 'ISTPs possess dominant Introverted Thinking (Ti) paired with highly reactive Extroverted Sensing (Se), making them unmatched in crisis situations. When a system is actively under attack, they remain calm, immediately diagnosing the technical breach and taking decisive, hands-on action to neutralize the threat. They thrive in the high-adrenaline, problem-solving environment of incident response and penetration testing.'
+            ],
+            'Financial Analyst' => [
+                'ISTJ' => 'ISTJs rely on Introverted Sensing (Si) to maintain incredibly accurate, organized, and reliable financial records. They excel in financial analysis because they have the patience and discipline to pore over years of historical data, ensuring every budget is balanced and every forecast is rooted in hard reality. Their strong factual memory and methodical approach make them highly trusted custodians of an organization\'s financial health.',
+                'INTJ' => 'INTJs use their Introverted Intuition (Ni) to see the long-term economic trajectories that others miss. They excel as Financial Analysts because they view finance not just as accounting, but as a complex machine that can be optimized (Te) for maximum future yield. They are highly skilled at building sophisticated financial models that accurately forecast market shifts and guide high-level corporate investments.',
+                'ENTP' => 'ENTPs bring a highly dynamic, Extroverted Intuition (Ne) driven approach to finance, constantly identifying emerging market trends and unconventional investment opportunities. They love debating economic theory and utilizing logical frameworks (Ti) to assess risk versus reward in fluid markets. They thrive in fast-paced financial environments like trading, venture capital, or market strategy where agility and out-of-the-box thinking are highly rewarded.',
+                'ESTJ' => 'ESTJs use Extroverted Thinking (Te) to bring aggressive order, efficiency, and clear metrics to financial operations. They are highly effective Financial Analysts because they do not just report the numbers—they use them to enforce budgets, streamline spending, and drive tangible business growth. Their practical, decisive nature ensures that financial insights are translated immediately into measurable corporate action.',
+                'ENTJ' => 'ENTJs are natural financial strategists, utilizing Extroverted Thinking (Te) and Introverted Intuition (Ni) to orchestrate large-scale economic growth. They view financial analysis as the ultimate tool for corporate dominance and expansion. They excel at diagnosing financial inefficiencies, executing aggressive growth models, and confidently presenting complex financial directives to executive boards.'
+            ],
+            'Database Administrator' => [
+                'ISTJ' => 'ISTJs have a natural affinity for classifying information, driven by Introverted Sensing (Si). As Database Administrators, they take immense pride in ensuring that massive data stores are highly structured, perfectly backed up, and utterly secure. Their methodical persistence (Te) ensures that data integrity is maintained flawlessly, making them the most reliable safeguard an organization\'s critical information could have.',
+                'INTP' => 'INTPs are driven by Introverted Thinking (Ti) to build sophisticated, logically perfect frameworks. In database administration, this translates to designing elegant, highly normalized relational schemas that eliminate redundancy and process queries with maximum efficiency. They view the database as a massive logical puzzle that can always be optimized, making them exceptional at performance tuning and complex architecture design.'
+            ],
+            'Systems Administrator' => [
+                'INTJ' => 'INTJs utilize Introverted Intuition (Ni) to design highly resilient, future-proof IT infrastructures. They excel as Systems Administrators by anticipating capacity bottlenecks and hardware failures long before they occur, systematically automating operations (Te) to remove human error. They don\'t just maintain servers; they architect long-term, self-sustaining technological ecosystems.',
+                'ISTP' => 'ISTPs are hands-on troubleshooters who thrive when interacting directly with complex machinery and systems via their Extroverted Sensing (Se). When a critical server crashes, their Introverted Thinking (Ti) allows them to remain completely detached and analytical, rapidly identifying the root cause and deploying a practical fix. They excel in the unpredictable, dynamic reality of daily system operations and hardware maintenance.',
+                'ESTJ' => 'ESTJs bring rigorous, standard-operating-procedure discipline (Te) to IT environments. As Systems Administrators, they ensure that every server update, user permission, and network policy is executed perfectly to spec. They are highly reliable managers of technology who enforce security standards and guarantee maximum uptime through meticulous, routine maintenance (Si).',
+                'ENTJ' => 'ENTJs view enterprise IT systems as the central nervous system of a business that must operate with maximum, uncompromising efficiency (Te). They excel as Systems Administrators because they quickly identify operational bottlenecks and decisively implement sweeping technological upgrades. They are natural technical leaders who align a company\'s infrastructure directly with its aggressive growth objectives.'
+            ],
+            'Network Administrator' => [
+                'ISTP' => 'ISTPs possess a highly technical, hands-on learning style driven by Extroverted Sensing (Se) and Introverted Thinking (Ti). They don\'t just want to know that a network works; they want to physically understand how the packets are routed. This makes them exceptional Network Administrators who can mentally map out complex physical topologies, rapidly diagnose hardware failures, and execute practical, real-world solutions under intense pressure.',
+                'INTP' => 'INTPs are drawn to the pure underlying logic (Ti) of complex systems. As Network Administrators, they view network architecture as a massive puzzle of interconnecting protocols. Their Extroverted Intuition (Ne) allows them to foresee how a single routing change will impact the entire ecosystem, making them exceptional at designing highly efficient, elegant network topologies from the ground up.'
+            ],
+            'Web Developer' => [
+                'ISFP' => 'ISFPs possess a strong aesthetic awareness (Se) combined with deeply held personal values (Fi). They excel as Front-End Web Developers because they view coding not just as logic, but as a medium for artistic expression. They have a natural eye for user interface design and are driven to create beautiful, accessible web experiences that feel genuinely authentic and engaging to the end-user.',
+                'INTP' => 'INTPs use their Introverted Thinking (Ti) to endlessly experiment with new frameworks and back-end logic. They thrive as Web Developers because the internet is a constantly evolving sandbox for their Extroverted Intuition (Ne). They love to tear down existing codebases to understand how they work, ultimately rebuilding them into more elegant, modular, and highly efficient web applications.'
+            ],
+            'IT Support Specialist' => [
+                'ISFJ' => 'ISFJs are naturally empathetic and highly dependable, driven by Extroverted Feeling (Fe) and Introverted Sensing (Si). In IT Support, they excel not just at resolving the technical issue, but at making the frustrated user feel heard and cared for. They remember individual preferences, meticulously document recurring issues, and bring a much-needed sense of calm and order to chaotic technical environments.',
+                'ISFP' => 'ISFPs are highly observant (Se) and deeply empathetic (Fi). As IT Support Specialists, they are excellent at reading a user\'s stress level and responding with quiet, practical assistance. They do not over-complicate solutions with technical jargon; instead, they focus on hands-on, immediate fixes that get people back to work, always maintaining a gentle and accommodating demeanor.',
+                'ESTP' => 'ESTPs are energetic troubleshooters who thrive on immediate, tactical action (Se). In IT support, they are the ones who jump straight into a crisis, quickly physically diagnosing the hardware or software fault, and deploying a rapid fix. They enjoy the fast-paced, unpredictable nature of helpdesk environments where they can interact with different people and solve tangible problems every single day.'
+            ],
+            'Staff Nurse' => [
+                'ISFJ' => 'ISFJs are the quintessential caregivers, utilizing Introverted Sensing (Si) to meticulously track a patient\'s medical history, exact dosages, and daily routines. Their Extroverted Feeling (Fe) makes them deeply attuned to the emotional needs of both patients and their families. They excel as Staff Nurses because they provide an environment of absolute reliability, warmth, and unshakeable dedication to their patients\' daily comfort.',
+                'ISFP' => 'ISFPs bring a deeply compassionate, hands-on approach (Se) to patient care. They are acutely aware of their physical environment and use Introverted Feeling (Fi) to connect with patients on a profoundly personal level. As Staff Nurses, they are often the most gentle and attentive caregivers, quickly noticing subtle changes in a patient\'s physical comfort and responding with immediate, practical care.',
+                'ESFJ' => 'ESFJs are the ultimate coordinators of care, using Extroverted Feeling (Fe) to ensure everyone on the ward feels supported, informed, and valued. They excel as Staff Nurses because they seamlessly manage the complex social dynamics between doctors, patients, and families. Their strong organizational skills (Si) ensure that ward operations run smoothly and that no patient is ever overlooked.'
+            ],
+            'Human Resources Specialist' => [
+                'ISFJ' => 'ISFJs are the bedrock of any supportive organization. Utilizing Extroverted Feeling (Fe), they possess a natural instinct to mediate conflict and ensure that every employee feels valued and secure. In HR, their Introverted Sensing (Si) allows them to flawlessly manage complex payrolls, benefits structures, and compliance policies, ensuring the workplace is both legally sound and emotionally supportive.',
+                'INFJ' => 'INFJs use their Introverted Intuition (Ni) to foresee long-term organizational health and deeply understand the underlying cultural dynamics of a workplace. They excel in Human Resources as counselors and strategic planners, recognizing the untapped potential in employees and advocating for policies that promote genuine mental well-being, diversity, and long-term talent development.',
+                'ENFP' => 'ENFPs bring boundless energy and Extroverted Intuition (Ne) to Human Resources. They are the ultimate champions of company culture, constantly devising creative new ways to boost morale, foster team bonding, and recruit innovative talent. Their deep empathy (Fi) ensures that they view employees as unique individuals to be inspired, rather than just "human capital" to be managed.',
+                'ESFJ' => 'ESFJs are naturally community-minded organizers who thrive when creating harmony within a group (Fe). They are highly effective HR Specialists because they take immense pride in onboarding new hires, organizing company events, and clearly communicating expectations. They ensure that the workplace feels like a cohesive, welcoming community where established rules (Si) are followed for everyone\'s benefit.',
+                'ENFJ' => 'ENFJs are charismatic, visionary leaders of people (Fe/Ni). In Human Resources, they excel as transformational leaders who inspire entire organizations to align around a shared mission and set of values. They are exceptionally skilled at talent acquisition and leadership development, instinctively knowing how to place people in roles where they will achieve their absolute highest potential.'
+            ],
+            'Educational Coordinator' => [
+                'ISFJ' => 'ISFJs are meticulous organizers (Si) dedicated to serving their community (Fe). As Educational Coordinators, they excel at managing the complex, day-to-day scheduling required to keep a school or program running flawlessly. They ensure that teachers have the resources they need and that students are supported by a stable, predictable, and deeply caring educational environment.',
+                'INFJ' => 'INFJs view education as the ultimate tool for human transformation. Utilizing Introverted Intuition (Ni), they design long-term educational programs that don\'t just impart facts, but fundamentally shape a student\'s character and worldview. They excel as Coordinators because they advocate fiercely for holistic, inclusive curricula that addresses the emotional and intellectual needs of every learner.',
+                'INFP' => 'INFPs are deeply ideological (Fi) and believe that education should inspire an individual\'s unique authentic path. As Educational Coordinators, they excel at designing specialized, creative programs that cater to diverse learning styles rather than a "one-size-fits-all" approach. They advocate tirelessly for educational structures that protect student mental health and foster genuine creative expression.',
+                'ENFP' => 'ENFPs view the educational environment as a massive playground of ideas (Ne). They are highly effective Educational Coordinators because they bring infectious enthusiasm to curriculum design, constantly seeking out innovative, interactive, and unconventional teaching methods. They excel at rallying teachers around exciting new initiatives and creating an atmosphere where learning is genuinely fun.',
+                'ENFJ' => 'ENFJs are naturally charismatic mentors driven by Extroverted Feeling (Fe) and Introverted Intuition (Ni). As Educational Coordinators, they are unparalleled at inspiring faculty, leading teacher training programs, and uniting a school around a powerful educational vision. They instinctively understand how to motivate both educators and students to strive for academic and personal excellence.'
+            ],
+            'Content Writer' => [
+                'INFJ' => 'INFJs utilize Introverted Intuition (Ni) to grasp profound, universal human truths, and Extroverted Feeling (Fe) to express them with deep resonance. As Content Writers, they excel at crafting authentic, values-driven narratives that connect with readers on an emotional level. They are often the most persuasive writers because they genuinely believe in the stories they are telling.',
+                'INFP' => 'INFPs are deeply imaginative (Ne) and fiercely authentic (Fi). They excel as Content Writers because writing offers them a pure, unfiltered medium to express their complex internal worlds and ideological convictions. They are masters of tone and voice, uniquely capable of producing original, compelling prose that feels incredibly personal and intensely creative.',
+                'ENFP' => 'ENFPs possess endless curiosity and an explosive Extroverted Intuition (Ne) that allows them to find fascinating angles on almost any topic. As Content Writers, they thrive when given a wide variety of subjects to explore, constantly inventing new, engaging ways to hook an audience. Their natural enthusiasm (Fi) shines through their writing, making their content highly persuasive and highly readable.'
+            ],
+            'Social Worker' => [
+                'INFP' => 'INFPs are idealistic and deeply empathetic (Fi), driven by a powerful internal moral compass to protect the vulnerable. As Social Workers, they provide a profound level of emotional safety for their clients, listening without judgment and advocating fiercely for those who cannot advocate for themselves. They view social work not just as a job, but as a calling to heal a fractured world.',
+                'ENFJ' => 'ENFJs are natural advocates who utilize Extroverted Feeling (Fe) to mobilize communities and uplift individuals in crisis. They are highly effective Social Workers because they do not just offer sympathy; they proactively design interventions and build support networks (Ni) that drive tangible, positive change in people\'s lives. They are charismatic, endlessly supportive, and fiercely protective of their clients.'
+            ],
+            'Compliance Officer' => [
+                'ISTJ' => 'ISTJs rely on a dominant Introverted Sensing (Si) function, making them unmatched in their ability to retain, interpret, and strictly apply complex rules. In Compliance, they are the ultimate guardians of organizational integrity, ensuring that every legal statute and internal policy is followed to the letter. Their objective, logical nature (Te) ensures that rules are enforced fairly and without emotional bias.',
+                'ESTJ' => 'ESTJs are driven by Extroverted Thinking (Te) to bring absolute order and accountability to their environment. As Compliance Officers, they are highly proactive, explicitly defining standards, auditing organizational behavior, and swiftly correcting deviations from policy. They do not shy away from conflict, ensuring that a company remains secure, legally compliant, and systematically organized at all times.'
+            ],
+            'Administrative Officer' => [
+                'ISFJ' => 'ISFJs combine meticulous organization (Si) with a deep desire to support their community (Fe). As Administrative Officers, they are the invisible glue that holds an office together, quietly anticipating the needs of the team and ensuring that daily operations run without a single flaw. They take immense pride in creating a harmonious, perfectly functioning work environment for their colleagues.',
+                'ESTJ' => 'ESTJs are natural administrators who use Extroverted Thinking (Te) to turn chaotic offices into highly-tuned machines. They excel in this role by establishing clear operating procedures, driving out inefficiencies, and ensuring that every resource is utilized perfectly. They are highly dependable and take swift, decisive action to ensure organizational goals are met without delay.',
+                'ESFJ' => 'ESFJs are the ultimate coordinators, using Extroverted Feeling (Fe) to ensure an office remains both highly organized and emotionally supportive. As Administrative Officers, they excel at managing not just the paperwork, but the people—organizing events, resolving interpersonal friction, and ensuring everyone feels valued. Their strong attention to routine (Si) guarantees that operational details are never missed.'
+            ],
+            'Operations Manager' => [
+                'ESTP' => 'ESTPs are pragmatic action-takers who thrive in high-stakes, fast-moving environments (Se). As Operations Managers, they excel at crisis management, rapidly diagnosing logistical bottlenecks (Ti) and deploying immediate, on-the-ground solutions. They lead by example, maintaining total composure under pressure and mobilizing teams with their energetic, results-driven leadership style.',
+                'ENTP' => 'ENTPs view operations as a massive puzzle to be solved and optimized. Utilizing Extroverted Intuition (Ne) and Introverted Thinking (Ti), they are never satisfied with "the way things have always been done." They excel at identifying systemic inefficiencies and architecting brilliant, unconventional new workflows that drastically improve a company\'s operational throughput.',
+                'ESTJ' => 'ESTJs are the epitome of structured leadership (Te). As Operations Managers, they excel at designing rigid, highly efficient operating procedures and holding their teams strictly accountable to those standards. They possess a commanding presence and an incredible capacity to organize people and resources (Si) to achieve maximum operational efficiency.',
+                'ENTJ' => 'ENTJs are strategic visionaries (Ni) who execute their plans with ruthless efficiency (Te). In operations management, they are unparalleled at diagnosing large-scale organizational flaws and driving sweeping, systemic change to fix them. They do not just manage current operations; they aggressively scale them to support massive future corporate growth.'
+            ],
+            'Business Development Manager' => [
+                'ESTP' => 'ESTPs rely on Extroverted Sensing (Se) to read a room perfectly, adapting their pitch on the fly to close complex deals. Their fearless, action-oriented nature makes them exceptional at networking, cold-calling, and aggressively pursuing new market opportunities. They thrive on the thrill of the negotiation and the tangible reward of securing new business.',
+                'ENTP' => 'ENTPs use Extroverted Intuition (Ne) to spot lucrative market opportunities that competitors completely miss. As Business Development Managers, they are highly persuasive debaters (Ti), excellent at pitching innovative, unconventional partnerships to high-level stakeholders. They excel in the initial, creative phases of deal-making where vision and adaptability are paramount.',
+                'ENTJ' => 'ENTJs approach Business Development as a strategic campaign for corporate expansion. Using Extroverted Thinking (Te) and Introverted Intuition (Ni), they systematically analyze market trends, identify high-value acquisition targets, and execute complex, long-term partnership strategies. They are formidable negotiators who inspire confidence through their sheer competence and unshakeable ambition.'
+            ],
+            'Marketing Coordinator' => [
+                'ESTP' => 'ESTPs have their finger firmly on the pulse of current trends (Se) and know exactly what will grab the public\'s attention. As Marketing Coordinators, they operate with speed and tactical precision, quickly identifying viral opportunities and executing high-impact campaigns before the competition can react. Their practical logic (Ti) ensures that every marketing dollar spent translates to immediate, tangible results.',
+                'ESFP' => 'ESFPs are natural entertainers (Se) who understand the emotional triggers of an audience (Fi) better than almost anyone. They excel in marketing because they know how to make a brand feel genuinely exciting, authentic, and culturally relevant. They are highly creative, deeply attuned to aesthetics, and brilliant at crafting campaigns that generate massive organic engagement.',
+                'ENFP' => 'ENFPs possess an explosive imagination (Ne) that allows them to generate wildly creative, out-of-the-box marketing concepts. As Marketing Coordinators, they are unparalleled at crafting compelling brand narratives that inspire and captivate their target demographic. Their genuine enthusiasm (Fi) is infectious, allowing them to build marketing campaigns that feel more like energetic movements than traditional advertisements.'
+            ],
+            'Sales Representative' => [
+                'ESTP' => 'ESTPs are born negotiators driven by Extroverted Sensing (Se) and quick, tactical logic (Ti). They thrive in the high-stakes, competitive environment of sales because they can read a client\'s hesitation in real-time and effortlessly pivot their pitch to close the deal. They are thick-skinned, highly persuasive, and energized by the immediate thrill of winning a contract.',
+                'ESFP' => 'ESFPs utilize their immense charm (Se) and emotional intelligence (Fi) to build deep, authentic rapport with their clients. They excel in sales because they don\'t come across as aggressive or "salesy"; instead, they feel like a trusted friend recommending a genuinely good product. Their ability to make the purchasing experience genuinely enjoyable results in fierce, long-term client loyalty.'
+            ],
+            'Customer Service Representative' => [
+                'ESFP' => 'ESFPs possess boundless energy and a genuine love for interacting with people (Se/Fi). As Customer Service Representatives, they excel because they can diffuse high-stress situations with their natural warmth, humor, and empathy. They thrive in dynamic environments where they can turn a frustrated customer into a fiercely loyal brand advocate through sheer force of positive personality.',
+                'ESFJ' => 'ESFJs are deeply motivated by Extroverted Feeling (Fe) to help others and restore harmony. In Customer Service, they are highly attentive, infinitely patient, and dedicated to resolving every single issue completely so the customer leaves satisfied. Their strong organizational skills (Si) ensure they follow all company protocols while delivering exceptional, deeply caring service.'
+            ],
+            'Event Coordinator' => [
+                'ESFP' => 'ESFPs are the ultimate hosts, driven by Extroverted Sensing (Se) to create stunning, highly memorable physical experiences. As Event Coordinators, they excel at managing the fast-paced, chaotic reality of live events, improvising brilliant solutions on the fly when things invariably go wrong. Their natural charisma (Fi) ensures that vendors, staff, and guests all remain happy and energized throughout the entire production.'
+            ],
+            'Hotel Front Desk Agent' => [
+                'ESFP' => 'ESFPs define the concept of hospitality, using their Extroverted Sensing (Se) to remain highly attentive to their immediate environment and the needs of their guests. Their warm, spontaneous nature (Fi) allows them to provide uniquely personalized service, turning a standard hotel check-in into a genuinely welcoming and memorable first impression for weary travelers.'
+            ],
+            'Public Relations Officer' => [
+                'ENFP' => 'ENFPs are master communicators who utilize Extroverted Intuition (Ne) to shape incredibly compelling public narratives. As PR Officers, they excel at spinning complex situations into positive, forward-looking stories that captivate the media and the public. Their deep empathy (Fi) ensures that an organization\'s messaging remains authentic, human-centric, and intensely relatable.',
+                'ENFJ' => 'ENFJs are natural diplomats guided by Extroverted Feeling (Fe) and strategic foresight (Ni). In Public Relations, they are unparalleled at managing a brand\'s reputation, anticipating public reactions, and cultivating deep, trusting relationships with the press and the community. During a crisis, they step up as the calm, charismatic, and reassuring voice of the organization.'
+            ],
+            'Communications Specialist' => [
+                'INFP' => 'INFPs use Introverted Feeling (Fi) to deeply understand the emotional core of an audience, allowing them to craft highly resonant, empathetic messaging. As Communications Specialists, they excel at ensuring an organization\'s internal and external voice remains fiercely authentic and aligned with its core values. They possess an incredible talent for writing communications that feel genuinely heartfelt and inspiring.',
+                'ENFJ' => 'ENFJs are visionary communicators (Ni/Fe) who know exactly how to tailor a message to inspire action from diverse groups of people. As Communications Specialists, they excel at defining an organization\'s public voice and ensuring that every memo, speech, and press release resonates with deep emotional intelligence. They are the ultimate unifiers, using language to build consensus and drive organizational momentum.'
+            ],
+            'Market Research Analyst' => [
+                'ENTP' => 'ENTPs are driven by Extroverted Intuition (Ne) to constantly question the status quo and uncover hidden market dynamics. As Market Research Analysts, they excel because they utilize rigorous logic (Ti) to build unconventional models that accurately predict shifts in consumer behavior before they happen. They love the intellectual challenge of finding the "signal in the noise" and presenting game-changing strategic insights to leadership.'
+            ],
+            'Curriculum Developer' => [
+                'INFP' => 'INFPs view learning as an intensely personal, transformative journey (Fi). As Curriculum Developers, they excel at designing holistic, creative educational modules (Ne) that engage a student\'s imagination and moral compass, not just their rote memory. They design curricula that inspire genuine passion and cater beautifully to diverse learning styles.'
+            ],
+            'Computer Engineer' => [
+                'ISTP' => 'ISTPs are the ultimate mechanical and technical pragmatists, driven by a powerful combination of Introverted Thinking (Ti) and Extroverted Sensing (Se). As Computer Engineers, they excel because they possess an innate understanding of how hardware and software must physical integrate. They love the hands-on challenge of prototyping circuitry, diagnosing complex hardware faults, and building elegant, highly efficient physical systems.'
+            ],
+            'Electronics Engineer' => [
+                'ISTP' => 'ISTPs possess a natural, deeply intuitive understanding of physical mechanics and logical systems (Ti/Se). As Electronics Engineers, they are highly skilled at designing complex circuits, troubleshooting erratic electrical behavior, and physically prototyping new hardware. They remain incredibly calm and analytical when diagnosing complex physical faults, making them exceptional at hands-on engineering.'
+            ],
+            'Physical Therapist' => [
+                'ISFP' => 'ISFPs are intimately attuned to the physical world (Se) and possess a deep, quiet empathy for the suffering of others (Fi). As Physical Therapists, they excel at reading the subtle physical cues of a patient in pain, adjusting their hands-on treatments with incredible sensitivity. They provide a calm, highly supportive environment that encourages patients through the arduous process of physical rehabilitation.'
+            ],
+            'Occupational Therapist' => [
+                'ISFP' => 'ISFPs combine a deep desire to help individuals (Fi) with a practical, hands-on awareness of the physical environment (Se). In Occupational Therapy, they excel at designing highly creative, personalized interventions that help patients regain their independence in daily life tasks. They are immensely patient, celebrating small physical victories and fiercely advocating for their patients\' quality of life.'
+            ],
+            'Elementary School Teacher' => [
+                'ESFJ' => 'ESFJs are the quintessential, nurturing guardians of their community (Fe). As Elementary School Teachers, they excel at creating highly organized, predictable, and deeply loving classroom environments (Si) where young children feel incredibly safe to learn and grow. They are exceptionally attentive to the emotional and developmental needs of every single student, making them profoundly impactful early-childhood educators.'
+            ]
+        ];
     }
 
     /**
