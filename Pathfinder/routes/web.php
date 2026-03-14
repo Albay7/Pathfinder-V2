@@ -39,6 +39,8 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
     Route::get('/', [PathfinderController::class, 'index'])->name('home');
     Route::get('/career-guidance', [PathfinderController::class, 'careerGuidance'])->name('career-guidance');
     Route::get('/questionnaire/{type}', [PathfinderController::class, 'questionnaire'])->name('questionnaire');
+    Route::get('/questionnaire/{type}/results', [PathfinderController::class, 'showRecommendation'])->name('questionnaire.results');
+    Route::get('/questionnaire/{type}/retake', [PathfinderController::class, 'retakeQuestionnaire'])->name('questionnaire.retake');
     Route::get('/questionnaire-simple', function() {
         return view('pathfinder.questionnaire-simple');
     })->name('questionnaire-simple');
@@ -54,8 +56,10 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
     Route::get('/mbti-questionnaire', [MbtiController::class, 'showQuestionnaire'])->name('mbti-questionnaire');
     Route::post('/mbti-questionnaire/process', [MbtiController::class, 'processQuestionnaire'])->name('mbti-questionnaire.process');
     Route::get('/mbti-results', [MbtiController::class, 'showResults'])->name('mbti.results');
+    Route::get('/mbti-retake', [MbtiController::class, 'retakeAssessment'])->name('mbti.retake');
 
     Route::get('/career/details/{career}', [PathfinderController::class, 'careerDetails'])->name('career.details');
+    Route::get('/course/details/{course}', [PathfinderController::class, 'courseDetails'])->name('course.details');
     Route::get('/career', [PathfinderController::class, 'careerGuidance'])->name('career');
     Route::get('/courses', [PathfinderController::class, 'courses'])->name('courses');
     Route::get('/external-resources', [PathfinderController::class, 'externalResources'])->name('external-resources');

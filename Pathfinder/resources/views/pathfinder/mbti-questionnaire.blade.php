@@ -446,8 +446,8 @@
             questionDiv.innerHTML = `
                 <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">${questionText}</h2>
                 <div class="flex items-center justify-between mb-4">
-                    <span class="text-sm font-medium text-teal-600">Agree</span>
                     <span class="text-sm font-medium text-purple-600">Disagree</span>
+                    <span class="text-sm font-medium text-teal-600">Agree</span>
                 </div>
                 <div class="flex items-center justify-center gap-8 mb-6">
                     ${createRadioOptions(questionNum)}
@@ -459,7 +459,7 @@
 
         function createRadioOptions(questionNum) {
             let optionsHTML = '';
-            const values = [7, 6, 5, 4, 3, 2, 1];
+            const values = [1, 2, 3, 4, 5, 6, 7];
             const sizes = ['w-12 h-12', 'w-12 h-12', 'w-10 h-10', 'w-8 h-8', 'w-10 h-10', 'w-12 h-12', 'w-12 h-12'];
             const innerSizes = ['w-5 h-5', 'w-5 h-5', 'w-4 h-4', 'w-3 h-3', 'w-4 h-4', 'w-5 h-5', 'w-6 h-6'];
             const dotSizes = ['w-2 h-2', 'w-2 h-2', 'w-1.5 h-1.5', 'w-1 h-1', 'w-1.5 h-1.5', 'w-2 h-2', 'w-3 h-3'];

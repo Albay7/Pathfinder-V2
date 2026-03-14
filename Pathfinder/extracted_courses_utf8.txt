@@ -1,0 +1,54 @@
+﻿--- DEFINITIVE COURSES LIST ---
+BA Communication
+BA Development Studies
+BA History
+BA International Studies
+BA Legal Management
+BA Political Science
+BA Psychology
+BA Public Administration
+BA Sociology
+BS Accountancy
+BS Business Administration
+BS Chemical Engineering
+BS Civil Engineering
+BS Computer Engineering
+BS Computer Science
+BS Criminology
+BS Cruise Ship Management
+BS Culinary Arts Management
+BS Customs Administration
+BS Cybersecurity
+BS Data Science
+BS Electrical Engineering
+BS Electronics Engineering
+BS Entertainment and Multimedia Computing
+BS Entrepreneurship
+BS Event Management
+BS Financial Management
+BS Food Service Management
+BS Forensic Science
+BS Geodetic Engineering
+BS Hotel and Restaurant Management
+BS Human Resource Management
+BS Industrial Engineering
+BS Information Systems
+BS Information Technology
+BS International Hospitality Management
+BS International Relations
+BS Management Accounting
+BS Marketing Management
+BS Mechanical Engineering
+BS Medical Technology
+BS Network Administration
+BS Nursing
+BS Occupational Therapy
+BS Operations Management
+BS Pharmacy
+BS Physical Therapy
+BS Psychology
+BS Public Health
+BS Radiologic Technology
+BS Respiratory Therapy
+BS Tourism Management
+BS Travel Management

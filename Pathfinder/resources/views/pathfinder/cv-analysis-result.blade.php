@@ -51,9 +51,15 @@
                 <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide mb-4" style="background-color: #EFF6FF; color: #5AA7C6;">
                     {{ $topMatch['category'] }}
                 </span>
-                <p class="text-lg text-gray-600 mb-4">
+                <p class="text-lg text-gray-600 mb-6">
                     {{ $topMatch['description'] }}
                 </p>
+                <a href="{{ route('pathfinder.career.details', urlencode($topMatch['job_title'])) }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                    View Career Details
+                    <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
             </div>
         </div>
         @endif
@@ -126,7 +132,7 @@
             <h3 class="text-2xl font-bold text-gray-900 mb-6">Other Career Matches</h3>
             <div class="space-y-4">
                 @foreach(array_slice($allMatches, 1) as $match)
-                    <div class="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors duration-200" style="background-color: #FAFAFA;">
+                    <a href="{{ route('pathfinder.career.details', urlencode($match['job_title'])) }}" class="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-gray-300 transition-colors duration-200" style="background-color: #FAFAFA; text-decoration: none;">
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-1">
                                 <h4 class="font-semibold text-gray-900">{{ $match['job_title'] }}</h4>
@@ -134,13 +140,18 @@
                                     {{ $match['category'] }}
                                 </span>
                             </div>
-                            <p class="text-sm text-gray-600">{{ $match['description'] }}</p>
+                            <p class="text-sm text-gray-600 mb-0">{{ $match['description'] }}</p>
                         </div>
-                        <div class="flex-shrink-0 ml-4 text-right">
-                            <div class="text-xl font-bold" style="color: #13264D;">{{ $match['similarity_score'] }}%</div>
-                            <div class="text-xs text-gray-500">match</div>
+                        <div class="flex-shrink-0 ml-4 text-right flex items-center gap-4">
+                            <div>
+                                <div class="text-xl font-bold" style="color: #13264D;">{{ $match['similarity_score'] }}%</div>
+                                <div class="text-xs text-gray-500">match</div>
+                            </div>
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>

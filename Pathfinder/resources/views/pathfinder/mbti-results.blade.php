@@ -3,6 +3,15 @@
 @section('title', 'Your MBTI Results - Pathfinder')
 
 @section('content')
+@if(session('info'))
+<div class="bg-blue-50 border-l-4 border-blue-400 px-6 py-4 text-blue-800 text-sm font-medium flex items-center gap-3">
+    <svg class="h-5 w-5 flex-shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    {{ session('info') }}
+</div>
+@endif
+
 <!-- Header Section -->
 <div style="background: linear-gradient(to bottom right, #13264D, #5AA7C6);">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -14,14 +23,27 @@
                 <h2 class="text-2xl font-semibold mb-4" style="color: #EFF6FF; opacity: 0.9;">
                     {{ $personalityType->name }}
                 </h2>
-                <p class="text-xl max-w-3xl mx-auto" style="color: #EFF6FF; opacity: 0.9;">
+                <p class="text-xl max-w-3xl mx-auto mb-8" style="color: #EFF6FF; opacity: 0.9;">
                     {{ $personalityType->description }}
                 </p>
             @else
-                <p class="text-xl max-w-3xl mx-auto" style="color: #EFF6FF; opacity: 0.9;">
+                <p class="text-xl max-w-3xl mx-auto mb-8" style="color: #EFF6FF; opacity: 0.9;">
                     {{ $mbtiDescription }}
                 </p>
             @endif
+
+            {{-- Retake button --}}
+            <a href="{{ route('pathfinder.mbti.retake') }}"
+               class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-200 hover:scale-105"
+               style="background-color: rgba(255,255,255,0.15); color: #fff; border: 2px solid rgba(255,255,255,0.5);"
+               onmouseover="this.style.backgroundColor='rgba(255,255,255,0.25)'"
+               onmouseout="this.style.backgroundColor='rgba(255,255,255,0.15)'"
+               onclick="return confirm('Are you sure you want to retake the assessment? Your current result will be replaced.')">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                Retake Assessment
+            </a>
         </div>
     </div>
 </div>
@@ -158,57 +180,26 @@
             Based on your MBTI personality type ({{ $mbtiType }}), these career paths may be particularly well-suited to your natural strengths and preferences.
         </p>
 
-        <!-- Enhanced Career Overview -->
-        @if($personalityType && $personalityType->career_paths)
-        <div class="rounded-xl shadow-lg p-8 mb-8" style="background: linear-gradient(to bottom right, #EFF6FF, #DBEAFE); border: 1px solid #5AA7C6;">
-            <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <svg class="h-6 w-6 mr-2" style="color: #13264D;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                Career Insights for {{ $mbtiType }} Personalities
-            </h3>
-            <div class="prose prose-lg text-gray-700 leading-relaxed mb-6">
-                {{ $personalityType->career_paths }}
-            </div>
-        </div>
-        @endif
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($careerRecommendations as $index => $career)
+                @php $careerName = is_array($career) ? $career['name'] : $career; @endphp
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                     <div class="p-6">
                         <!-- Career Rank Badge -->
                         <div class="flex items-center justify-between mb-3">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: #EFF6FF; color: #13264D;">
-                                #{{ $index + 1 }} Match
+                                #{{ $index + 1 }} Recommended
                             </span>
-                            <div class="flex items-center">
-                                @php
-                                    $compatibilityScore = 85 + ($index * -5); // Decreasing compatibility for demo
-                                @endphp
-                                <span class="text-sm font-semibold text-green-600">{{ $compatibilityScore }}% Match</span>
-                            </div>
                         </div>
 
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">{{ $career }}</h3>
-
-                        <!-- Compatibility Bar -->
-                        <div class="mb-4">
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full" style="width: {{ $compatibilityScore }}%"></div>
-                            </div>
-                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">{{ $careerName }}</h3>
 
                         <p class="text-gray-600 mb-4 text-sm leading-relaxed">
-                            Highly compatible with {{ $mbtiType }} traits including
-                            @if($mbtiType[0] == 'E') leadership, @endif
-                            @if($mbtiType[1] == 'N') innovation, @endif
-                            @if($mbtiType[2] == 'T') analytical thinking, @else empathy, @endif
-                            @if($mbtiType[3] == 'J') organization. @else adaptability. @endif
+                            {{ is_array($career) ? $career['description'] : "This career aligns well with your {$mbtiType} personality strengths and natural work style." }}
                         </p>
 
                         <div class="flex items-center justify-between">
-                            <a href="{{ route('pathfinder.career.details', ['career' => urlencode($career)]) }}" class="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                            <a href="{{ route('pathfinder.career.details', ['career' => urlencode($careerName)]) }}" class="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
                                 Explore Career
                                 <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -221,6 +212,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Personalized Course Recommendations -->
 @if(Auth::check() && count($courseRecommendations) > 0)

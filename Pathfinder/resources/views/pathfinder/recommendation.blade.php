@@ -25,11 +25,15 @@
 <!-- Recommendation Section -->
 <div class="py-16 bg-gray-50">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        @php
+            $isCourseTitle = str_contains($recommendation, 'Bachelor') || str_starts_with($recommendation, 'BS ') || str_starts_with($recommendation, 'BA ') || str_starts_with($recommendation, 'Bachelor');
+            $displayType = ($type === 'course' || $isCourseTitle) ? 'Course' : 'Job';
+        @endphp
         <!-- Main Recommendation Card -->
         <div class="bg-white rounded-xl shadow-xl border border-gray-200 p-8 mb-8">
             <div class="text-center mb-8">
                 <div class="flex items-center justify-center w-16 h-16 rounded-full mx-auto mb-4" style="background-color: #EFF6FF;">
-                    @if($type === 'course')
+                    @if($type === 'course' || $isCourseTitle)
                         <svg class="h-8 w-8" style="color: #5AA7C6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
@@ -40,25 +44,51 @@
                     @endif
                 </div>
                 <h2 class="text-3xl font-bold mb-2" style="color: #13264D;">
-                    Your Recommended {{ $type === 'course' ? 'Course' : 'Job' }}
+                    Your Recommended {{ $displayType }}
                 </h2>
                 <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" style="background-color: #EFF6FF; color: #13264D;">
                     <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
-                    {{ rand(85, 98) }}% Match
+                    @php
+                        // Deterministically generate a high match percentage between 92 and 98 based on the recommendation string length so it doesn't change on reload
+                        $stableMatch = 92 + (strlen($recommendation) % 7);
+                    @endphp
+                    {{ $stableMatch }}% Match
                 </div>
             </div>
 
             <div class="text-center">
                 <h3 class="text-4xl font-bold text-gray-900 mb-4">{{ $recommendation }}</h3>
-                <p class="text-lg text-gray-600 mb-8">
-                    @if($type === 'course')
+                @if($type === 'course' || $isCourseTitle)
+                    <p class="text-lg text-gray-600 mb-8">
                         This course aligns perfectly with your learning style, interests, and career goals. It's designed to provide you with practical skills and knowledge that are highly valued in today's job market.
-                    @else
-                        This role matches your work preferences, motivations, and industry interests. It offers excellent growth potential and aligns with your career aspirations.
-                    @endif
-                </p>
+                    </p>
+                    <div class="mb-8">
+                        <a href="{{ route('pathfinder.course.details', ['course' => urlencode($recommendation)]) }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                            View Course Details
+                            <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                @else
+                    @php
+                        $careerData = \App\Http\Controllers\PathfinderController::getCareerData($recommendation);
+                        $shortDescription = $careerData['short_description'] ?? 'A dynamic role offering significant opportunities for professional growth and impact.';
+                    @endphp
+                    <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+                        {{ $shortDescription }}
+                    </p>
+                    <div class="mb-8">
+                        <a href="{{ route('pathfinder.career.details', urlencode($recommendation)) }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
+                            View Career Details
+                            <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -123,6 +153,13 @@
                         </div>
                     </div>
                 @else
+                    @php
+                        // Fetch the career data array from the PathfinderController
+                        $careerData = \App\Http\Controllers\PathfinderController::getCareerData($recommendation);
+                        $outlook = $careerData['job_outlook'] ?? 'Strong Growth';
+                        $salaryInfo = $careerData['salary_range'] ?? 'Competitive';
+                    @endphp
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
@@ -132,8 +169,8 @@
                             </div>
                         </div>
                         <div class="ml-3">
-                            <h4 class="text-lg font-semibold text-gray-900">Work Environment Match</h4>
-                            <p class="text-gray-600">Aligns with your preferred work setting and collaboration style.</p>
+                            <h4 class="text-lg font-semibold text-gray-900">Core Responsibilities</h4>
+                            <p class="text-gray-600">The day-to-day tasks align strongly with the interests and skills you emphasized in the assessment.</p>
                         </div>
                     </div>
 
@@ -147,7 +184,7 @@
                         </div>
                         <div class="ml-3">
                             <h4 class="text-lg font-semibold text-gray-900">Career Motivation</h4>
-                            <p class="text-gray-600">Satisfies your primary motivations and career aspirations.</p>
+                            <p class="text-gray-600">This role satisfies your primary motivations and overarching career aspirations perfectly.</p>
                         </div>
                     </div>
 
@@ -161,7 +198,7 @@
                         </div>
                         <div class="ml-3">
                             <h4 class="text-lg font-semibold text-gray-900">Industry Growth</h4>
-                            <p class="text-gray-600">Strong growth potential in your preferred industry sector.</p>
+                            <p class="text-gray-600">This field has a local Philippine job outlook of <strong>{{ $outlook }}</strong>, ensuring long-term stability.</p>
                         </div>
                     </div>
 
@@ -174,8 +211,8 @@
                             </div>
                         </div>
                         <div class="ml-3">
-                            <h4 class="text-lg font-semibold text-gray-900">Work-Life Balance</h4>
-                            <p class="text-gray-600">Offers the flexibility and balance you're looking for.</p>
+                            <h4 class="text-lg font-semibold text-gray-900">Financial Rewarding</h4>
+                            <p class="text-gray-600">Offers a highly competitive local salary range of <strong>{{ $salaryInfo }}</strong>.</p>
                         </div>
                     </div>
                 @endif
@@ -256,8 +293,8 @@
                             </div>
                         </div>
                         <div class="ml-4">
-                            <h4 class="font-semibold text-gray-900">Start Networking</h4>
-                            <p class="text-gray-600">Connect with professionals in this field and learn about opportunities.</p>
+                            <h4 class="font-semibold text-gray-900">Check your MBTI Compatibility</h4>
+                            <p class="text-gray-600">Take our personality assessment to see if this role is a natural fit for you.</p>
                         </div>
                     </div>
                 @endif
@@ -293,11 +330,11 @@
                     Plan Career Path
                 </a>
             @endif
-            <a href="{{ route('pathfinder.career-guidance') }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #BEC0BF;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#BEC0BF';">
+            <a href="{{ route('pathfinder.questionnaire.retake', ['type' => $type]) }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #BEC0BF;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#BEC0BF';">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                 </svg>
-                Take Another Assessment
+                Retake Assessment
             </a>
         </div>
     </div>

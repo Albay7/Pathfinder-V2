@@ -20,7 +20,41 @@ class MbtiController extends Controller
      */
     public function showIntro()
     {
+        // Redirect to results if user already has a result
+        if (Auth::check() && Auth::user()->mbti_type) {
+            return redirect()->route('pathfinder.mbti.results')
+                ->with('info', 'You have already completed the MBTI assessment. Your saved results are shown below.');
+        }
+
+        if (!Auth::check() && session('mbti_type')) {
+            return redirect()->route('pathfinder.mbti.results')
+                ->with('info', 'Your previous MBTI result is shown below.');
+        }
+
         return view('pathfinder.mbti-intro');
+    }
+
+    /**
+     * Clear the current MBTI result and redirect to the questionnaire for a retake
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function retakeAssessment()
+    {
+        if (Auth::check()) {
+            // Clear MBTI data from user profile so they can retake
+            Auth::user()->update([
+                'mbti_type'        => null,
+                'mbti_scores'      => null,
+                'mbti_description' => null,
+            ]);
+        }
+
+        // Always clear session data (for guests or any lingering session)
+        session()->forget(['mbti_type', 'mbti_scores', 'mbti_description', 'personality_type']);
+
+        return redirect()->route('pathfinder.mbti-questionnaire')
+            ->with('info', 'Starting a fresh MBTI assessment. Good luck!');
     }
 
     /**
@@ -910,126 +944,129 @@ class MbtiController extends Controller
      * Get career recommendations based on MBTI type
      *
      * @param string $mbtiType
-     * @return array
+     * @return array   Each element: ['name' => string, 'description' => string]
      */
     private function getMbtiCareerRecommendations($mbtiType)
     {
-        $recommendations = [
+        // Descriptions per role per MBTI type explaining WHY this role fits
+        $data = [
             'ISTJ' => [
-                'Software Engineer',
-                'Systems Analyst',
-                'Database Administrator',
-                'Project Manager',
-                'Quality Assurance Specialist'
+                ['name' => 'Software Developer',     'description' => 'ISTJs excel at systematic problem-solving and attention to detail — core skills for writing reliable, well-structured code in a structured development environment.'],
+                ['name' => 'Database Administrator', 'description' => 'ISTJs\' love for order and precision makes them natural DBAs, maintaining data integrity and enforcing consistent rules across complex systems.'],
+                ['name' => 'Cybersecurity Analyst',  'description' => 'The methodical mindset and strong sense of responsibility of ISTJs is ideal for monitoring threats and enforcing security protocols with consistency.'],
+                ['name' => 'Financial Analyst',      'description' => 'ISTJs are hardworking, dependable, and data-driven — qualities essential for accurate financial modeling and delivering reliable analysis.'],
+                ['name' => 'Compliance Officer',     'description' => 'ISTJs deeply respect rules and procedures, making them well-suited to ensure policies are followed and regulatory standards are met.'],
             ],
             'ISFJ' => [
-                'Technical Support Specialist',
-                'UX Researcher',
-                'IT Trainer',
-                'Web Content Manager',
-                'Database Administrator'
+                ['name' => 'IT Support Specialist',      'description' => 'ISFJs are patient, thorough, and genuinely care about helping others — perfect for resolving technical issues and providing user-centered IT support.'],
+                ['name' => 'Staff Nurse',                'description' => 'ISFJs\' warmth, attention to detail, and dedication to serving others make nursing a natural calling where they can make a meaningful daily difference.'],
+                ['name' => 'Educational Coordinator',    'description' => 'ISFJs are organized and supportive, allowing them to effectively coordinate programs that help students and staff thrive academically.'],
+                ['name' => 'Human Resources Specialist', 'description' => 'The empathetic and dependable nature of ISFJs enables them to support employees, manage sensitive concerns, and build a caring workplace culture.'],
+                ['name' => 'Administrative Officer',     'description' => 'ISFJs are reliable and task-oriented, making them excellent at maintaining smooth administrative operations and supporting teams behind the scenes.'],
             ],
             'INFJ' => [
-                'UX Designer',
-                'Technical Writer',
-                'AI Ethics Specialist',
-                'Digital Strategist',
-                'Information Architecture Specialist'
+                ['name' => 'Software Developer',         'description' => 'INFJs combine creativity and structured thinking to build software with a deeper purpose, especially in products that improve people\'s lives.'],
+                ['name' => 'Data Analyst',               'description' => 'INFJs\' intuition for finding meaningful patterns, combined with their drive to help others, allows them to turn raw data into actionable human insights.'],
+                ['name' => 'Content Writer',             'description' => 'INFJs are gifted communicators with a strong internal vision — traits that allow them to craft authentic, impactful written content that resonates deeply.'],
+                ['name' => 'Human Resources Specialist', 'description' => 'INFJs are empathetic and perceptive, giving them an innate ability to understand people\'s needs and foster a nurturing and fair workplace.'],
+                ['name' => 'Educational Coordinator',    'description' => 'INFJs are passionate about personal growth and meaningful learning experiences, making them effective at designing and coordinating programs that inspire students.'],
             ],
             'INTJ' => [
-                'Software Architect',
-                'Data Scientist',
-                'AI/ML Engineer',
-                'IT Strategist',
-                'Systems Architect'
+                ['name' => 'Software Developer',    'description' => 'INTJs are strategic, independent thinkers who excel at designing complex systems and solving architectural-level engineering challenges efficiently.'],
+                ['name' => 'Data Analyst',          'description' => 'INTJs thrive on identifying patterns in large datasets and translating those insights into long-term strategic recommendations.'],
+                ['name' => 'Cybersecurity Analyst', 'description' => 'INTJs\' ability to think several steps ahead and anticipate threats makes them highly effective at proactively defending systems against sophisticated attacks.'],
+                ['name' => 'Systems Administrator', 'description' => 'INTJs are disciplined and forward-thinking, ensuring system reliability and performance through careful planning and logical troubleshooting.'],
+                ['name' => 'Financial Analyst',     'description' => 'INTJs are analytically rigorous and goal-oriented, enabling them to build sophisticated financial models and drive data-backed strategic decisions.'],
             ],
             'ISTP' => [
-                'Cybersecurity Specialist',
-                'Network Engineer',
-                'DevOps Engineer',
-                'Systems Administrator',
-                'Mobile App Developer'
+                ['name' => 'Cybersecurity Analyst',  'description' => 'ISTPs are calm under pressure and enjoy diagnosing complex technical problems — ideal for identifying vulnerabilities and responding to security incidents.'],
+                ['name' => 'Network Administrator',  'description' => 'ISTPs love understanding how systems work at a granular level, making them excellent at configuring and troubleshooting network infrastructure.'],
+                ['name' => 'Systems Administrator',  'description' => 'ISTPs are hands-on and adaptable, allowing them to efficiently manage servers and quickly resolve operational issues as they arise.'],
+                ['name' => 'Computer Engineer',      'description' => 'ISTPs\' practical, logical mindset is perfectly suited to hardware-software integration challenges in computer engineering.'],
+                ['name' => 'Electronics Engineer',   'description' => 'ISTPs enjoy working with physical systems and have strong problem-solving ability — skills directly applied in circuit design and electronics troubleshooting.'],
             ],
             'ISFP' => [
-                'UI Designer',
-                'Digital Artist',
-                'Web Designer',
-                'Multimedia Specialist',
-                'Game Designer'
+                ['name' => 'Web Developer',           'description' => 'ISFPs blend aesthetic sensibility with technical skill, making them talented at creating visually appealing, user-friendly web experiences.'],
+                ['name' => 'IT Support Specialist',   'description' => 'ISFPs are kind and patient, and they enjoy helping people solve problems in a calm and empathetic way — a natural fit for hands-on user support.'],
+                ['name' => 'Staff Nurse',             'description' => 'ISFPs are compassionate and present-focused, giving them the empathy and attentiveness needed to provide personalized, caring patient care.'],
+                ['name' => 'Physical Therapist',      'description' => 'ISFPs are hands-on and motivated by helping others recover and improve — qualities that align well with the patient-centered work of physical therapy.'],
+                ['name' => 'Occupational Therapist',  'description' => 'ISFPs\' creativity and deep care for individuals allows them to design meaningful therapeutic activities that support clients\' daily living and wellbeing.'],
             ],
             'INFP' => [
-                'Content Strategist',
-                'User Experience Researcher',
-                'Game Writer/Narrative Designer',
-                'Digital Marketing Specialist',
-                'E-learning Developer'
+                ['name' => 'Content Writer',           'description' => 'INFPs are imaginative and value authentic self-expression — qualities that allow them to produce compelling, values-driven written content.'],
+                ['name' => 'Social Worker',            'description' => 'INFPs are idealistic and empathetic, driven by a deep desire to advocate for vulnerable people and create meaningful positive change.'],
+                ['name' => 'Educational Coordinator',  'description' => 'INFPs bring creativity and genuine care for students\' development, making them effective at shaping educational programs that are inspiring and inclusive.'],
+                ['name' => 'Curriculum Developer',     'description' => 'INFPs\' love of ideas and learning, combined with their creativity, enables them to design meaningful and engaging curriculum content.'],
+                ['name' => 'Communications Specialist','description' => 'INFPs use their expressive abilities and emotional intelligence to craft clear, empathetic communication strategies that connect with diverse audiences.'],
             ],
             'INTP' => [
-                'Data Scientist',
-                'Algorithm Developer',
-                'Research Scientist',
-                'Software Developer',
-                'Systems Analyst'
+                ['name' => 'Software Developer',     'description' => 'INTPs are natural problem-solvers who love exploring elegant solutions to complex challenges — at the core of what software development demands.'],
+                ['name' => 'Data Analyst',           'description' => 'INTPs are drawn to discovering underlying logic in data, and bring rigorous analytical thinking that transforms complex datasets into clear insights.'],
+                ['name' => 'Database Administrator', 'description' => 'INTPs\' affinity for structured, logical systems makes them well-suited to managing and optimizing relational database architectures.'],
+                ['name' => 'Web Developer',          'description' => 'INTPs enjoy building systems from scratch and experimenting with new approaches, making web development a satisfying area for their curiosity.'],
+                ['name' => 'Network Administrator',  'description' => 'INTPs\' desire to understand how systems communicate and interconnect drives them to master the intricacies of network design and administration.'],
             ],
             'ESTP' => [
-                'IT Sales Representative',
-                'Technical Project Manager',
-                'IT Consultant',
-                'Startup Founder',
-                'Digital Marketing Specialist'
+                ['name' => 'Sales Representative',         'description' => 'ESTPs are persuasive, energetic, and action-oriented — traits that help them excel at building client rapport and closing deals.'],
+                ['name' => 'IT Support Specialist',        'description' => 'ESTPs thrive in fast-paced, problem-solving environments where they can directly help users with hands-on technical fixes.'],
+                ['name' => 'Marketing Coordinator',        'description' => 'ESTPs are observant and opportunistic, identifying market trends quickly and executing campaigns with urgency and practical flair.'],
+                ['name' => 'Operations Manager',           'description' => 'ESTPs are decisive and results-focused, making them effective at managing day-to-day operations and mobilizing teams to hit targets.'],
+                ['name' => 'Business Development Manager', 'description' => 'ESTPs\' boldness and ability to read people gives them a natural edge in identifying new business opportunities and negotiating deals.'],
             ],
             'ESFP' => [
-                'Social Media Manager',
-                'Customer Success Manager',
-                'IT Trainer',
-                'Digital Media Producer',
-                'Technology Sales Representative'
+                ['name' => 'Customer Service Representative','description' => 'ESFPs are warm, energetic, and genuinely enjoy connecting with people — making them natural at delivering outstanding customer experiences.'],
+                ['name' => 'Sales Representative',          'description' => 'ESFPs are enthusiastic and people-focused, able to build genuine connections that turn conversations into lasting client relationships.'],
+                ['name' => 'Event Coordinator',             'description' => 'ESFPs love creating memorable experiences for others and excel at the coordination, creativity, and people management events require.'],
+                ['name' => 'Hotel Front Desk Agent',        'description' => 'ESFPs thrive in guest-facing roles where their friendliness and spontaneity create positive first impressions and memorable stays.'],
+                ['name' => 'Marketing Coordinator',         'description' => 'ESFPs are creative and socially savvy — qualities that allow them to connect brands to audiences through engaging, authentic marketing.'],
             ],
             'ENFP' => [
-                'Creative Director',
-                'User Experience Designer',
-                'Digital Marketing Manager',
-                'Innovation Consultant',
-                'Technology Evangelist'
+                ['name' => 'Marketing Coordinator',         'description' => 'ENFPs are creative, enthusiastic, and skilled at reading people — perfect for crafting campaigns that inspire and engage target audiences.'],
+                ['name' => 'Content Writer',                'description' => 'ENFPs\' natural curiosity and expressive communication style makes them compelling writers who can explore diverse topics with genuine enthusiasm.'],
+                ['name' => 'Human Resources Specialist',    'description' => 'ENFPs are people-oriented and empathetic, drawn to building positive workplace cultures and helping individuals grow within an organization.'],
+                ['name' => 'Public Relations Officer',      'description' => 'ENFPs are charismatic communicators who excel at building relationships and crafting narratives that shape positive public perception.'],
+                ['name' => 'Educational Coordinator',       'description' => 'ENFPs are energized by helping others discover their potential, making them highly effective at coordinating inspiring educational programs.'],
             ],
             'ENTP' => [
-                'Technology Entrepreneur',
-                'Product Manager',
-                'Business Analyst',
-                'Innovation Consultant',
-                'Solutions Architect'
+                ['name' => 'Software Developer',            'description' => 'ENTPs are inventive and love solving challenging problems — qualities at the heart of technical innovation in software development.'],
+                ['name' => 'Business Development Manager',  'description' => 'ENTPs are strategic and entrepreneurial, naturally identifying new business opportunities and convincing stakeholders to pursue them.'],
+                ['name' => 'Financial Analyst',             'description' => 'ENTPs analyze complex systems and love debating ideas — skills that translate directly into identifying investment opportunities and market trends.'],
+                ['name' => 'Operations Manager',            'description' => 'ENTPs challenge inefficiencies and enjoy redesigning processes, making them effective at driving measurable operational improvements.'],
+                ['name' => 'Market Research Analyst',       'description' => 'ENTPs are intellectually curious and love uncovering hidden patterns in data to challenge assumptions and inform strategic decisions.'],
             ],
             'ESTJ' => [
-                'IT Project Manager',
-                'Information Systems Manager',
-                'Chief Technology Officer',
-                'IT Director',
-                'Business Systems Analyst'
+                ['name' => 'Operations Manager',     'description' => 'ESTJs are natural leaders who thrive in structured environments, ensuring teams operate efficiently and consistently deliver results.'],
+                ['name' => 'Financial Analyst',      'description' => 'ESTJs are disciplined, logical, and goal-oriented — well-suited to financial modeling, budgeting, and communicating recommendations clearly.'],
+                ['name' => 'Administrative Officer', 'description' => 'ESTJs excel at maintaining order and following processes, making them effective at managing administrative workflows and organizational systems.'],
+                ['name' => 'Compliance Officer',     'description' => 'ESTJs\' strong respect for rules and organizational standards makes them ideal for enforcing regulatory policies and maintaining compliance.'],
+                ['name' => 'Systems Administrator',  'description' => 'ESTJs are systematic and responsible — critical traits for maintaining IT infrastructure reliability and managing system operations.'],
             ],
             'ESFJ' => [
-                'IT Account Manager',
-                'Technical Trainer',
-                'Customer Support Manager',
-                'IT Recruiter',
-                'Scrum Master'
+                ['name' => 'Human Resources Specialist',     'description' => 'ESFJs are warm and people-focused, making them natural at supporting employees, managing conflict, and building a positive workplace culture.'],
+                ['name' => 'Customer Service Representative','description' => 'ESFJs are caring and attentive, genuinely motivated to help others and ensure every customer interaction feels positive and meaningful.'],
+                ['name' => 'Elementary School Teacher',      'description' => 'ESFJs are nurturing and organized, creating safe and structured learning environments where young students feel supported and inspired.'],
+                ['name' => 'Staff Nurse',                    'description' => 'ESFJs combine conscientiousness with genuine compassion, making them dedicated caregivers who put patients\' wellbeing first.'],
+                ['name' => 'Administrative Officer',         'description' => 'ESFJs are dependable and cooperative, ensuring administrative tasks are handled smoothly and that everyone they support feels well taken care of.'],
             ],
             'ENFJ' => [
-                'Technology Team Leader',
-                'IT Training Manager',
-                'User Research Lead',
-                'Product Marketing Manager',
-                'Community Manager'
+                ['name' => 'Human Resources Specialist',  'description' => 'ENFJs are charismatic and deeply empathetic, inspiring trust and helping employees develop their full potential within the organization.'],
+                ['name' => 'Educational Coordinator',     'description' => 'ENFJs are natural mentors passionate about learning; they excel at coordinating programs that make a lasting impact on learners.'],
+                ['name' => 'Social Worker',               'description' => 'ENFJs are driven by a genuine desire to uplift others, making them effective advocates for individuals and communities facing hardship.'],
+                ['name' => 'Communications Specialist',   'description' => 'ENFJs are perceptive and articulate, expertly tailoring messages to move people to action and convey meaningful information.'],
+                ['name' => 'Public Relations Officer',    'description' => 'ENFJs are skilled at building authentic relationships and managing narratives, bringing emotional intelligence to every public-facing interaction.'],
             ],
             'ENTJ' => [
-                'Chief Information Officer',
-                'IT Director',
-                'Technology Consultant',
-                'Enterprise Architect',
-                'Technology Program Manager'
-            ]
+                ['name' => 'Business Development Manager', 'description' => 'ENTJs are visionary leaders who confidently identify and pursue new growth opportunities, leveraging strategic relationships and clear objectives.'],
+                ['name' => 'Operations Manager',           'description' => 'ENTJs bring commanding leadership and decisive action to operations, quickly diagnosing inefficiencies and driving teams toward measurable outcomes.'],
+                ['name' => 'Financial Analyst',            'description' => 'ENTJs thrive on using data to drive large-scale strategic decisions, combining analytical rigor with strong business acumen.'],
+                ['name' => 'Software Developer',           'description' => 'ENTJs approach software development with strategic foresight, designing scalable solutions and leading technical teams with clarity and purpose.'],
+                ['name' => 'Systems Administrator',        'description' => 'ENTJs are organized and results-driven, ensuring that IT systems operate at peak performance and that issues are resolved swiftly.'],
+            ],
         ];
 
-        return $recommendations[$mbtiType] ?? ['Career recommendations not available for this personality type.'];
+        return $data[$mbtiType] ?? [
+            ['name' => 'Software Developer', 'description' => 'This career aligns well with your personality strengths and natural work style.'],
+        ];
     }
 
     /**
