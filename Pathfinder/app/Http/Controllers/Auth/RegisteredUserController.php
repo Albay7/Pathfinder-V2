@@ -121,8 +121,8 @@ class RegisteredUserController extends Controller
         Cache::forget("pending_registration_{$token}");
         Cache::forget("pending_email_{$data['email']}");
 
-        // Signal to the polling endpoint that verification is complete
-        Cache::put("registration_verified_{$token}", true, now()->addMinutes(10));
+        // Signal to the polling endpoint that verification is complete and pass user ID
+        Cache::put("registration_verified_{$token}", $user->id, now()->addMinutes(10));
 
         // Fire the Registered event (email won't be sent again since already verified)
         event(new Registered($user));
@@ -146,8 +146,25 @@ class RegisteredUserController extends Controller
         }
 
         $verified = Cache::get("registration_verified_{$token}", false);
+        $isSuccess = false;
 
-        return response()->json(['verified' => $verified]);
+        if ($verified) {
+            // If $verified contains a user ID (from a different device)
+            if (is_numeric($verified)) {
+                $user = User::find($verified);
+                if ($user) {
+                    Auth::login($user);
+                    $isSuccess = true;
+                    // Clean up after successful "detect and login"
+                    Cache::forget("registration_verified_{$token}");
+                }
+            } else {
+                // If it was just 'true' (not expected anymore but for safety)
+                $isSuccess = true;
+            }
+        }
+
+        return response()->json(['verified' => $isSuccess]);
     }
 
     /**

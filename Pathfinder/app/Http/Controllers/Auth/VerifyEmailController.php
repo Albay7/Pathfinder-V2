@@ -32,6 +32,13 @@ class VerifyEmailController extends Controller
             if (! \Illuminate\Support\Facades\Auth::check()) {
                 \Illuminate\Support\Facades\Auth::login($user);
             }
+
+            // Signal to the registration polling endpoint (for cross-device login)
+            // if this verification happened via a standard link but a laptop is polling.
+            $token = \Illuminate\Support\Facades\Cache::get("pending_email_{$user->email}");
+            if ($token) {
+                \Illuminate\Support\Facades\Cache::put("registration_verified_{$token}", $user->id, now()->addMinutes(10));
+            }
         }
 
         return redirect()->intended(route('pathfinder.home', absolute: false).'?verified=1');
