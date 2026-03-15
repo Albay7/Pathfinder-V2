@@ -45,7 +45,7 @@ class CVAnalysisService
      */
     private function loadTfidfModel(): void
     {
-        $model = Cache::remember('tfidf_model_v2', 3600, function () {
+        $model = Cache::store('file')->remember('tfidf_model_v3', 3600, function () {
             $modelPath = storage_path('app/data/tfidf_model.json');
 
             if (!file_exists($modelPath)) {
@@ -458,13 +458,33 @@ class CVAnalysisService
     {
         $matches = [];
 
-        // Compare full 500-dim vector against each category centroid
+        // Prepare weights: technical skills count 3x more than generic words
+        $weights = [];
+        foreach ($this->skillFlags as $isSkill) {
+            $weights[] = $isSkill ? 3.0 : 1.0;
+        }
+
+        // Compare full vector against each category centroid using weighted similarity
         $categoryScores = [];
         foreach ($this->categoryCentroids as $category => $centroid) {
             $similarity = $this->calculateCosineSimilarityArrays(
                 $this->currentFullVector,
-                $centroid
+                $centroid,
+                $weights
             );
+
+            // Keyword Tie-breaker: Check if top keywords for this category are present in the CV
+            $keywordHitCount = 0;
+            $topKeywords = $this->categoryTopKeywords[$category] ?? [];
+            foreach ($topKeywords as $keyword) {
+                if (isset($skillsExtracted[$keyword])) {
+                    $keywordHitCount++;
+                }
+            }
+            
+            // Add a small boost for direct keyword hits (0.5% per hit)
+            $similarity += ($keywordHitCount * 0.005);
+
             if ($similarity > 0.05) {
                 $categoryScores[$category] = $similarity;
             }
@@ -596,17 +616,23 @@ class CVAnalysisService
     /**
      * Cosine similarity for two numeric arrays of the same length
      */
-    private function calculateCosineSimilarityArrays(array $a, array $b): float
+    private function calculateCosineSimilarityArrays(array $a, array $b, array $weights = []): float
     {
         $dot = 0;
         $magA = 0;
         $magB = 0;
         $len = min(count($a), count($b));
+        $hasWeights = !empty($weights);
 
         for ($i = 0; $i < $len; $i++) {
-            $dot += $a[$i] * $b[$i];
-            $magA += $a[$i] * $a[$i];
-            $magB += $b[$i] * $b[$i];
+            $w = $hasWeights ? ($weights[$i] ?? 1.0) : 1.0;
+            
+            $valA = $a[$i] * $w;
+            $valB = $b[$i] * $w;
+
+            $dot += $valA * $valB;
+            $magA += $valA * $valA;
+            $magB += $valB * $valB;
         }
 
         $magA = sqrt($magA);

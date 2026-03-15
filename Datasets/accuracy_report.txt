@@ -1,0 +1,78 @@
+Loading model...
+Loading dataset...
+Testing accuracy on 1000 samples...
+------------------------------------------------------------
+Actual Category           | Predicted Category        | Result
+------------------------------------------------------------
+TEACHER                   | TEACHER                   | ✓
+DIGITAL-MEDIA             | PUBLIC-RELATIONS          | ✗
+CONSTRUCTION              | CONSTRUCTION              | ✓
+CHEF                      | CHEF                      | ✓
+BANKING                   | ADVOCATE                  | ✗
+BUSINESS-DEVELOPMENT      | BUSINESS-DEVELOPMENT      | ✓
+DESIGNER                  | ENGINEERING               | ✗
+BUSINESS-DEVELOPMENT      | BUSINESS-DEVELOPMENT      | ✓
+TEACHER                   | AGRICULTURE               | ✗
+DESIGNER                  | ENGINEERING               | ✗
+HEALTHCARE                | ENGINEERING               | ✗
+HEALTHCARE                | TEACHER                   | ✗
+SALES                     | BANKING                   | ✗
+ARTS                      | INFORMATION-TECHNOLOGY    | ✗
+AUTOMOBILE                | AUTOMOBILE                | ✓
+SALES                     | HEALTHCARE                | ✗
+BANKING                   | AGRICULTURE               | ✗
+ADVOCATE                  | BANKING                   | ✗
+ARTS                      | BUSINESS-DEVELOPMENT      | ✗
+HR                        | AGRICULTURE               | ✗
+------------------------------------------------------------
+
+--- Classification Performance Report ---
+                        precision    recall  f1-score   support
+
+            ACCOUNTANT       0.64      0.64      0.64        45
+              ADVOCATE       0.21      0.06      0.09        53
+           AGRICULTURE       0.08      0.74      0.14        23
+               APPAREL       0.34      0.53      0.42        38
+                  ARTS       0.00      0.00      0.00        36
+            AUTOMOBILE       0.29      0.15      0.20        13
+              AVIATION       0.73      0.75      0.74        44
+               BANKING       0.53      0.69      0.60        48
+                   BPO       0.00      0.00      0.00         9
+  BUSINESS-DEVELOPMENT       0.17      0.75      0.27        48
+                  CHEF       0.87      0.64      0.74        53
+          CONSTRUCTION       0.77      0.48      0.59        56
+            CONSULTANT       0.00      0.00      0.00        44
+              DESIGNER       0.50      0.05      0.09        42
+         DIGITAL-MEDIA       0.40      0.14      0.21        43
+           ENGINEERING       0.37      0.39      0.38        38
+               FINANCE       0.29      0.04      0.08        45
+               FITNESS       0.95      0.40      0.56        45
+            HEALTHCARE       0.32      0.47      0.38        40
+                    HR       0.73      0.73      0.73        37
+INFORMATION-TECHNOLOGY       0.33      0.03      0.06        59
+      PUBLIC-RELATIONS       0.60      0.14      0.23        42
+                 SALES       0.00      0.00      0.00        51
+               TEACHER       0.57      0.77      0.65        48
+
+              accuracy                           0.37      1000
+             macro avg       0.40      0.36      0.33      1000
+          weighted avg       0.43      0.37      0.35      1000
+
+------------------------------------------------------------
+
+--- Skill Detection Quality Check ---
+
+CV 1 (TEACHER):
+Detected Skills: classroom, editing, english, french, layout, layouts, leadership, marketing, organizational, teaching
+
+CV 2 (DIGITAL-MEDIA):
+Detected Skills: advertising, association, digital, editing, journalism, leadership, marketing, organizational, social, spanish, special, specialized
+
+CV 3 (CONSTRUCTION):
+Detected Skills: accounting, budgeting, commercial, competencies, compliance, contract, contractor, contracts, incident, leadership, marketing, negotiations, procurement, programming, specialty
+
+CV 4 (CHEF):
+Detected Skills: catering, english, inventory, logistics, spanish, special
+
+CV 5 (BANKING):
+Detected Skills: commercial, compliance, contractual, database, enhancing, interpersonal, investments, organizational, photoshop, policies, portfolio, regulatory, science, servicing, spanish
