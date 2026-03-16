@@ -129,7 +129,7 @@
                 $useHistoryBack = false;
                 
                 if (str_contains($prevUrl, 'cv-analysis') || str_contains($prevUrl, 'cv-upload')) {
-                    $prevText = 'CV Match Results';
+                    $prevText = 'Resume Match Results';
                 } elseif (str_contains($prevUrl, 'questionnaire')) {
                     $prevText = 'Job Assessment Results';
                     $useHistoryBack = true; // Use JS history back for POST request pages

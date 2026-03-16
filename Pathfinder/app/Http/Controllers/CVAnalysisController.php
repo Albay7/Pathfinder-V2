@@ -73,7 +73,7 @@ class CVAnalysisController extends Controller
             ));
         } catch (\Exception $e) {
             return redirect()->route('pathfinder.cv-upload')
-                ->with('error', 'CV analysis failed: ' . $e->getMessage());
+                ->with('error', 'Resume analysis failed: ' . $e->getMessage());
         }
     }
 
@@ -105,7 +105,7 @@ class CVAnalysisController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'CV analyzed successfully',
+                'message' => 'Resume analyzed successfully',
                 'data' => $analysisResult
             ]);
 
@@ -118,7 +118,7 @@ class CVAnalysisController extends Controller
     }
 
     /**
-     * Get user's CV analysis history
+     * Get user's Resume analysis history
      */
     public function getAnalysisHistory(): JsonResponse
     {
@@ -226,7 +226,7 @@ class CVAnalysisController extends Controller
             if (!$latestAnalysis) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No CV analysis found. Please upload your CV first.'
+                    'message' => 'No Resume analysis found. Please upload your Resume first.'
                 ], 404);
             }
 
@@ -284,7 +284,7 @@ class CVAnalysisController extends Controller
             if (!$latestAnalysis) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No CV analysis found. Please upload your CV first.'
+                    'message' => 'No Resume analysis found. Please upload your Resume first.'
                 ], 404);
             }
 

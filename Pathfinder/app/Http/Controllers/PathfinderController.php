@@ -289,7 +289,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Programming', 'Problem Solving', 'Algorithm Design', 'Version Control', 'Agile Methodologies'],
                 'certifications_required' => ['AWS Certified Developer', 'Scrum Master (CSM)', 'Oracle Certified Professional'],
                 'education_requirements' => 'Bachelor\'s Degree in Computer Science, IT, or equivalent experience.',
-                'salary_range' => '₱300k - ₱900k / year',
+                'salary_range' => '₱400k - ₱1.2M Per year',
                 'job_outlook' => 'Very High Growth',
                 'related_careers' => ['Web Developer', 'Computer Engineer', 'Systems Administrator', 'Data Analyst'],
                 'recommended_courses' => [
@@ -312,7 +312,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['SQL', 'Python/R', 'Data Visualization', 'Statistics', 'Critical Thinking'],
                 'certifications_required' => ['Google Data Analytics Certificate', 'Microsoft Certified: Power BI Data Analyst', 'CAP'],
                 'education_requirements' => 'Bachelor\'s in Math, Statistics, Computer Science, or Economics.',
-                'salary_range' => '₱350k - ₱850k / year',
+                'salary_range' => '₱400k - ₱1.1M Per year',
                 'job_outlook' => 'High Demand',
                 'related_careers' => ['Data Scientist', 'Financial Analyst', 'Market Research Analyst'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Statistics', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Mathematics', 'platform' => 'Degree Program', 'url' => '#']]
@@ -330,7 +330,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Network Security', 'Threat Analysis', 'Linux', 'Ethical Hacking', 'Attention to Detail'],
                 'certifications_required' => ['CISSP', 'CompTIA Security+', 'Certified Ethical Hacker (CEH)'],
                 'education_requirements' => 'Bachelor\'s in Cybersecurity, IT, or related certifications (e.g., Security+, CISSP).',
-                'salary_range' => '₱400k - ₱1.2M / year',
+                'salary_range' => '₱450k - ₱1.4M Per year',
                 'job_outlook' => 'Very High Demand',
                 'related_careers' => ['Systems Administrator', 'Network Administrator'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#']]
@@ -349,7 +349,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Financial Modeling', 'Excel', 'Accounting', 'Analytical Skills', 'Data Analysis'],
                 'certifications_required' => ['Chartered Financial Analyst (CFA)', 'Certified Public Accountant (CPA)', 'Certified Financial Planner (CFP)'],
                 'education_requirements' => 'Bachelor\'s in Finance, Accounting, Economics, or Business.',
-                'salary_range' => '₱300k - ₱800k / year',
+                'salary_range' => '₱350k - ₱900k Per year',
                 'job_outlook' => 'Stable Growth',
                 'related_careers' => ['Data Analyst', 'Accountant', 'Investment Banker'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Accountancy', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
@@ -367,7 +367,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['SQL', 'Oracle/MySQL', 'Database Tuning', 'System Administration'],
                 'certifications_required' => ['Oracle Database Administrator Certified Professional', 'Microsoft Certified: Azure DB Administrator'],
                 'education_requirements' => 'Bachelor\'s in Computer Science or IT.',
-                'salary_range' => '₱350k - ₱900k / year',
+                'salary_range' => '₱400k - ₱1.0M Per year',
                 'job_outlook' => 'Steady Demand',
                 'related_careers' => ['Data Analyst', 'Systems Administrator', 'Software Developer'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#']]
@@ -386,7 +386,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Linux/Windows ServerOps', 'Scripting', 'Networking', 'Troubleshooting'],
                 'certifications_required' => ['CompTIA Server+', 'Red Hat Certified System Administrator (RHCSA)', 'CCNA'],
                 'education_requirements' => 'Bachelor\'s in IT, Computer Engineering, or related field.',
-                'salary_range' => '₱300k - ₱800k / year',
+                'salary_range' => '₱350k - ₱900k Per year',
                 'job_outlook' => 'Consistent Demand',
                 'related_careers' => ['Network Administrator', 'IT Support Specialist', 'Cybersecurity Analyst'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Engineering', 'platform' => 'Degree Program', 'url' => '#']]
@@ -404,7 +404,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Routing & Switching', 'Firewall Administration', 'Cisco/Juniper', 'Troubleshooting'],
                 'certifications_required' => ['Cisco Certified Network Associate (CCNA)', 'CompTIA Network+', 'JNCIA'],
                 'education_requirements' => 'Bachelor\'s in IT or related certifications (e.g., CCNA).',
-                'salary_range' => '₱280k - ₱850k / year',
+                'salary_range' => '₱320k - ₱950k Per year',
                 'job_outlook' => 'Strong Demand',
                 'related_careers' => ['Systems Administrator', 'Cybersecurity Analyst'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Engineering', 'platform' => 'Degree Program', 'url' => '#']]
@@ -422,7 +422,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['HTML/CSS', 'JavaScript', 'React/Vue', 'Responsive Design'],
                 'certifications_required' => ['AWS Certified Developer', 'Zend Certified PHP Engineer', 'Google Developers Certification'],
                 'education_requirements' => 'Bachelor\'s in Computer Science, or relevant coding bootcamp experience.',
-                'salary_range' => '₱250k - ₱750k / year',
+                'salary_range' => '₱300k - ₱850k Per year',
                 'job_outlook' => 'High Demand',
                 'related_careers' => ['Software Developer', 'UX/UI Designer'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#']]
@@ -441,7 +441,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Customer Service', 'Windows/macOS Support', 'Hardware Troubleshooting', 'Patience'],
                 'certifications_required' => ['CompTIA A+', 'Google IT Support Professional Certificate', 'Microsoft 365 Certified'],
                 'education_requirements' => 'Associate\'s or Bachelor\'s Degree in IT, or relevant certifications (e.g., CompTIA A+).',
-                'salary_range' => '₱200k - ₱450k / year',
+                'salary_range' => '₱250k - ₱500k Per year',
                 'job_outlook' => 'High Turnover / High Demand',
                 'related_careers' => ['Systems Administrator', 'Network Administrator'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Information Technology', 'platform' => 'Degree Program', 'url' => '#']]
@@ -460,7 +460,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Clinical Knowledge', 'Patient Care', 'Empathy', 'Communication', 'Attention to Detail'],
                 'certifications_required' => ['Philippine Nursing Licensure Examination (PNLE)', 'Basic Life Support (BLS)', 'Advance Cardiac Life Support (ACLS)'],
                 'education_requirements' => 'Bachelor of Science in Nursing (BSN) and passing the licensure exam.',
-                'salary_range' => '₱300k - ₱600k / year',
+                'salary_range' => '₱300k - ₱540k Per year',
                 'job_outlook' => 'Very High Demand (Local & Abroad)',
                 'related_careers' => ['Physical Therapist', 'Occupational Therapist'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Nursing', 'platform' => 'Degree Program', 'url' => '#']]
@@ -479,7 +479,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Interpersonal Skills', 'Conflict Resolution', 'Employment Law', 'Communication'],
                 'certifications_required' => ['Certified Human Resources Professional (CHRP)', 'SHRM Certified Professional'],
                 'education_requirements' => 'Bachelor\'s in Human Resources, Business, or Psychology.',
-                'salary_range' => '₱250k - ₱550k / year',
+                'salary_range' => '₱300k - ₱650k Per year',
                 'job_outlook' => 'Stable',
                 'related_careers' => ['Administrative Officer', 'Operations Manager'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Psychology', 'platform' => 'Degree Program', 'url' => '#']]
@@ -498,7 +498,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Curriculum Design', 'Leadership', 'Communication', 'Instructional Strategy'],
                 'certifications_required' => ['Licensure Examination for Teachers (LET)', 'Educational Leadership & Administration Certificate'],
                 'education_requirements' => 'Master\'s Degree in Education or Educational Leadership.',
-                'salary_range' => '₱250k - ₱550k / year',
+                'salary_range' => '₱300k - ₱650k Per year',
                 'job_outlook' => 'Moderate',
                 'related_careers' => ['Curriculum Developer', 'Elementary School Teacher'],
                 'recommended_courses' => [['title' => 'Bachelor of Elementary Education', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Secondary Education', 'platform' => 'Degree Program', 'url' => '#']]
@@ -517,7 +517,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Writing/Editing', 'SEO Basics', 'Creativity', 'Research Skills', 'Time Management'],
                 'certifications_required' => ['HubSpot Content Marketing Certification', 'Google Digital Garage Certificate', 'SEO Certification'],
                 'education_requirements' => 'Bachelor\'s in English, Journalism, Communications, or Marketing.',
-                'salary_range' => '₱240k - ₱600k / year',
+                'salary_range' => '₱280k - ₱700k Per year',
                 'job_outlook' => 'Fast Growing (Freelance/BPO)',
                 'related_careers' => ['Communications Specialist', 'Public Relations Officer'],
                 'recommended_courses' => [['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Journalism', 'platform' => 'Degree Program', 'url' => '#']]
@@ -536,7 +536,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Empathy', 'Active Listening', 'Crisis Intervention', 'Advocacy'],
                 'certifications_required' => ['Licensure Exam for Social Workers', 'Certified Clinical Social Worker'],
                 'education_requirements' => 'Bachelor\'s or Master\'s Degree in Social Work (BSW/MSW) and licensure.',
-                'salary_range' => '₱200k - ₱400k / year',
+                'salary_range' => '₱240k - ₱480k Per year',
                 'job_outlook' => 'Steady Demand',
                 'related_careers' => ['Occupational Therapist', 'Human Resources Specialist'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Social Work', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Psychology', 'platform' => 'Degree Program', 'url' => '#']]
@@ -555,7 +555,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Regulatory Knowledge', 'Attention to Detail', 'Analytical Thinking', 'Integrity'],
                 'certifications_required' => ['Certified Compliance & Ethics Professional (CCEP)', 'Certified Regulatory Compliance Manager (CRCM)'],
                 'education_requirements' => 'Bachelor\'s Degree in Business, Finance, or Law.',
-                'salary_range' => '₱350k - ₱900k / year',
+                'salary_range' => '₱400k - ₱1.0M Per year',
                 'job_outlook' => 'High Demand',
                 'related_careers' => ['Financial Analyst', 'Administrative Officer'],
                 'recommended_courses' => [['title' => 'Bachelor of Laws (LLB)', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
@@ -574,7 +574,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Organization', 'Communication', 'Office Software Proficiency', 'Time Management'],
                 'certifications_required' => ['Certified Administrative Professional (CAP)', 'Civil Service Eligibility (Professional)'],
                 'education_requirements' => 'Bachelor\'s Degree in Business Administration or related field.',
-                'salary_range' => '₱200k - ₱450k / year',
+                'salary_range' => '₱240k - ₱500k Per year',
                 'job_outlook' => 'Stable',
                 'related_careers' => ['Human Resources Specialist', 'Operations Manager'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
@@ -593,7 +593,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Leadership', 'Strategic Planning', 'Process Optimization', 'Financial Acumen'],
                 'certifications_required' => ['Project Management Professional (PMP)', 'Six Sigma Green Belt', 'Certified Supply Chain Professional'],
                 'education_requirements' => 'Bachelor\'s or Master\'s Degree in Business Administration or Operations Management.',
-                'salary_range' => '₱500k - ₱1.5M / year',
+                'salary_range' => '₱600k - ₱1.8M Per year',
                 'job_outlook' => 'Very Strong Demand',
                 'related_careers' => ['Business Development Manager', 'Administrative Officer'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
@@ -612,7 +612,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Negotiation', 'Sales Strategy', 'Networking', 'Communication', 'Market Research'],
                 'certifications_required' => ['Certified Business Development Professional', 'Salesforce Certified Administrator'],
                 'education_requirements' => 'Bachelor\'s Degree in Business Administration, Marketing, or Finance.',
-                'salary_range' => '₱450k - ₱1.2M / year',
+                'salary_range' => '₱500k - ₱1.5M Per year',
                 'job_outlook' => 'High Growth',
                 'related_careers' => ['Operations Manager', 'Sales Representative'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#']]
@@ -630,7 +630,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Digital Marketing', 'Copywriting', 'Analytics', 'Creativity'],
                 'certifications_required' => ['Google Analytics Individual Qualification', 'Facebook Blueprint Certification', 'HubSpot Certification'],
                 'education_requirements' => 'Bachelor\'s Degree in Marketing, Communications, or Business.',
-                'salary_range' => '₱250k - ₱650k / year',
+                'salary_range' => '₱300k - ₱750k Per year',
                 'job_outlook' => 'Rapidly Growing',
                 'related_careers' => ['Public Relations Officer', 'Market Research Analyst'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#']]
@@ -649,7 +649,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Persuasion', 'Active Listening', 'Resilience', 'Communication'],
                 'certifications_required' => ['Certified Sales Professional (CSP)', 'HubSpot Sales Software Certification'],
                 'education_requirements' => 'High School Diploma to Bachelor\'s Degree, depending on the industry.',
-                'salary_range' => '₱200k - ₱500k / year + commission',
+                'salary_range' => '₱240k - ₱600k Per year + commission',
                 'job_outlook' => 'High Demand',
                 'related_careers' => ['Customer Service Representative', 'Business Development Manager'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#']]
@@ -668,7 +668,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Empathy', 'Patience', 'Verbal Communication', 'Problem Solving'],
                 'certifications_required' => ['Certified Customer Service Professional (CCSP)', 'Call Center Fundamentals Certificate'],
                 'education_requirements' => 'High School Diploma, or Bachelor\'s Degree.',
-                'salary_range' => '₱250k - ₱450k / year',
+                'salary_range' => '₱280k - ₱500k Per year',
                 'job_outlook' => 'Massive Demand (BPO)',
                 'related_careers' => ['Sales Representative', 'Administrative Officer'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#']]
@@ -705,7 +705,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Customer Service', 'Multitasking', 'Professionalism', 'Communication'],
                 'certifications_required' => ['Certified Front Desk Representative', 'Hospitality Management Diploma'],
                 'education_requirements' => 'High School Diploma or degree in Hospitality Management.',
-                'salary_range' => '₱180k - ₱350k / year',
+                'salary_range' => '₱200k - ₱400k Per year',
                 'job_outlook' => 'Recovering/Growing',
                 'related_careers' => ['Customer Service Representative', 'Administrative Officer'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Tourism Management', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Hospitality Management', 'platform' => 'Degree Program', 'url' => '#']]
@@ -724,7 +724,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Communication', 'Media Relations', 'Crisis Management', 'Writing'],
                 'certifications_required' => ['Accreditation in Public Relations (APR)', 'Crisis Communication Certificate'],
                 'education_requirements' => 'Bachelor\'s Degree in Public Relations, Communications, or Journalism.',
-                'salary_range' => '₱250k - ₱700k / year',
+                'salary_range' => '₱300k - ₱800k Per year',
                 'job_outlook' => 'Stable Growth',
                 'related_careers' => ['Communications Specialist', 'Marketing Coordinator'],
                 'recommended_courses' => [['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Journalism', 'platform' => 'Degree Program', 'url' => '#']]
@@ -743,7 +743,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Writing/Editing', 'Presentation Skills', 'Strategic Planning', 'Interpersonal Skills'],
                 'certifications_required' => ['Accredited Business Communicator (ABC)', 'Digital Marketing Certificate'],
                 'education_requirements' => 'Bachelor\'s Degree in Communications, Journalism, or English.',
-                'salary_range' => '₱250k - ₱650k / year',
+                'salary_range' => '₱300k - ₱800k Per year',
                 'job_outlook' => 'Steady Demand',
                 'related_careers' => ['Public Relations Officer', 'Content Writer'],
                 'recommended_courses' => [['title' => 'Bachelor of Arts in Communication', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Arts in Journalism', 'platform' => 'Degree Program', 'url' => '#']]
@@ -762,7 +762,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Data Analysis', 'Critical Thinking', 'Reporting', 'Statistical Software'],
                 'certifications_required' => ['Professional Researcher Certification (PRC)', 'Google Analytics Certification'],
                 'education_requirements' => 'Bachelor\'s in Market Research, Statistics, Math, or Computer Science.',
-                'salary_range' => '₱250k - ₱600k / year',
+                'salary_range' => '₱300k - ₱700k Per year',
                 'job_outlook' => 'Growing',
                 'related_careers' => ['Data Analyst', 'Marketing Coordinator'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Statistics', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']]
@@ -781,7 +781,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Instructional Design', 'Research Skills', 'Communication', 'Attention to Detail'],
                 'certifications_required' => ['Licensure Examination for Teachers (LET)', 'Instructional Design Certificate'],
                 'education_requirements' => 'Master\'s Degree in Education or Curriculum and Instruction.',
-                'salary_range' => '₱250k - ₱600k / year',
+                'salary_range' => '₱300k - ₱700k Per year',
                 'job_outlook' => 'Moderate',
                 'related_careers' => ['Educational Coordinator', 'Elementary School Teacher'],
                 'recommended_courses' => [['title' => 'Bachelor of Elementary Education', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Secondary Education', 'platform' => 'Degree Program', 'url' => '#']]
@@ -800,7 +800,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Electronics', 'C/C++', 'Hardware Design', 'Problem Solving'],
                 'certifications_required' => ['Licensure Exam for Electronics/Computer Engineers', 'Cisco Certified Network Professional (CCNP)'],
                 'education_requirements' => 'Bachelor\'s Degree in Computer Engineering or Electrical Engineering.',
-                'salary_range' => '₱300k - ₱850k / year',
+                'salary_range' => '₱350k - ₱1.0M Per year',
                 'job_outlook' => 'Strong Growth',
                 'related_careers' => ['Software Developer', 'Electronics Engineer'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Computer Engineering', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Computer Science', 'platform' => 'Degree Program', 'url' => '#']]
@@ -819,7 +819,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Circuit Design', 'AutoCAD/CAD Software', 'Analytical Skills', 'Math'],
                 'certifications_required' => ['Electronics Engineer Licensure Examination', 'Certified Electronics Technician (CET)'],
                 'education_requirements' => 'Bachelor\'s Degree in Electronics Engineering.',
-                'salary_range' => '₱250k - ₱750k / year',
+                'salary_range' => '₱300k - ₱850k Per year',
                 'job_outlook' => 'Stable',
                 'related_careers' => ['Computer Engineer', 'Systems Administrator'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Electronics Engineering', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Electrical Engineering', 'platform' => 'Degree Program', 'url' => '#']]
@@ -838,7 +838,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Compassion', 'Physical Stamina', 'Anatomy/Physiology', 'Communication'],
                 'certifications_required' => ['Physical and Occupational Therapy Licensure Examination', 'Basic Life Support (BLS)'],
                 'education_requirements' => 'Doctor of Physical Therapy (DPT) degree and passing the licensure exam.',
-                'salary_range' => '₱250k - ₱600k / year',
+                'salary_range' => '₱300k - ₱700k Per year',
                 'job_outlook' => 'High Demand',
                 'related_careers' => ['Occupational Therapist', 'Staff Nurse'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Physical Therapy', 'platform' => 'Degree Program', 'url' => '#']]
@@ -857,7 +857,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Patience', 'Empathy', 'Problem Solving', 'Adaptability'],
                 'certifications_required' => ['Physical and Occupational Therapy Licensure Examination', 'NBCOT Certification'],
                 'education_requirements' => 'Master\'s or Doctoral degree in Occupational Therapy and licensure.',
-                'salary_range' => '₱250k - ₱550k / year',
+                'salary_range' => '₱300k - ₱700k Per year',
                 'job_outlook' => 'High Demand',
                 'related_careers' => ['Physical Therapist', 'Social Worker'],
                 'recommended_courses' => [['title' => 'Bachelor of Science in Occupational Therapy', 'platform' => 'Degree Program', 'url' => '#'], ['title' => 'Bachelor of Science in Psychology', 'platform' => 'Degree Program', 'url' => '#']]
@@ -876,7 +876,7 @@ class PathfinderController extends Controller
                 'skills_required' => ['Patience', 'Communication', 'Creativity', 'Classroom Management'],
                 'certifications_required' => ['Licensure Examination for Teachers (LET)', 'TEFL/TESOL Certification'],
                 'education_requirements' => 'Bachelor\'s Degree in Elementary Education and teaching license.',
-                'salary_range' => '₱320k - ₱550k / year',
+                'salary_range' => '₱360k - ₱600k Per year',
                 'job_outlook' => 'Consistent Demand',
                 'related_careers' => ['Educational Coordinator', 'Curriculum Developer'],
                 'recommended_courses' => [['title' => 'Bachelor of Elementary Education', 'platform' => 'Degree Program', 'url' => '#']]

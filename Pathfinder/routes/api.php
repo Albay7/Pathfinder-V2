@@ -20,9 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// CV Analysis API Routes
+// Resume Analysis API Routes
 Route::prefix('cv-analysis')->name('api.cv-analysis.')->group(function () {
-    // Upload and analyze CV
+    // Upload and analyze Resume
     Route::post('/upload', [CVAnalysisController::class, 'uploadAndAnalyze'])->name('upload');
     
     // Get analysis history for authenticated users

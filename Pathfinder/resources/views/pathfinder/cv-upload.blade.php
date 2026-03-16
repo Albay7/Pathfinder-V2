@@ -1,6 +1,6 @@
 @extends('pathfinder.layout')
 
-@section('title', 'CV Analysis - Upload Your Resume')
+@section('title', 'Resume Analysis - Upload Your Resume')
 
 @section('content')
 <!-- Header Section -->
@@ -8,10 +8,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                CV Analysis & Job Matching
+                Resume Analysis & Job Matching
             </h1>
             <p class="text-xl max-w-3xl mx-auto" style="color: #EFF6FF; opacity: 0.9;">
-                Upload your CV and discover the best job opportunities that match your skills using advanced TF-IDF analysis
+                Upload your Resume and discover the best job opportunities that match your skills using advanced TF-IDF analysis
             </p>
         </div>
     </div>
@@ -57,7 +57,7 @@
         <!-- Upload Section -->
         <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
             <div class="p-8">
-                <h2 class="text-2xl font-bold mb-6" style="color: #13264D;">Upload Your CV</h2>
+                <h2 class="text-2xl font-bold mb-6" style="color: #13264D;">Upload Your Resume</h2>
 
                 <form method="POST" action="{{ route('pathfinder.cv-upload.analyze') }}" enctype="multipart/form-data" id="cv-upload-form">
                     @csrf
@@ -69,7 +69,7 @@
                                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </div>
-                        <p class="text-lg text-gray-600 mb-2">Drop your CV here or click to browse</p>
+                        <p class="text-lg text-gray-600 mb-2">Drop your Resume here or click to browse</p>
                         <p class="text-sm text-gray-500 mb-4">Supports PDF, DOC, DOCX, TXT files (max 10MB)</p>
                         <input type="file" name="cv_file" id="cv-file-input" class="hidden" accept=".pdf,.doc,.docx,.txt">
                         <button type="button" id="browse-btn" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
@@ -106,7 +106,7 @@
                             <svg class="mr-2 h-5 w-5" id="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
-                            <span id="btn-text">Analyze CV</span>
+                            <span id="btn-text">Analyze Resume</span>
                         </button>
                     </div>
                 </form>
@@ -120,7 +120,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="text-center">
                         <div class="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-4 text-white font-bold" style="background-color: #5AA7C6;">1</div>
-                        <h3 class="font-semibold text-gray-900 mb-2">Upload Your CV</h3>
+                        <h3 class="font-semibold text-gray-900 mb-2">Upload Your Resume</h3>
                         <p class="text-sm text-gray-600">Upload your resume in PDF, DOC, DOCX, or TXT format.</p>
                     </div>
                     <div class="text-center">

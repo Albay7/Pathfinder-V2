@@ -64,7 +64,7 @@ Route::prefix('pathfinder')->name('pathfinder.')->group(function () {
     Route::get('/courses', [PathfinderController::class, 'courses'])->name('courses');
     Route::get('/external-resources', [PathfinderController::class, 'externalResources'])->name('external-resources');
 
-    // CV Analysis routes
+    // Resume Analysis routes
     Route::get('/cv-upload', [CVAnalysisController::class, 'showUploadForm'])->name('cv-upload');
     Route::post('/cv-upload/analyze', [CVAnalysisController::class, 'analyzeAndShowResult'])->name('cv-upload.analyze');
     Route::get('/cv-analysis/history', [CVAnalysisController::class, 'showAnalysisHistory'])->name('cv-analysis.history');

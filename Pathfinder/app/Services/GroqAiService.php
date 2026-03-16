@@ -34,7 +34,7 @@ class GroqAiService
             Return the response in JSON format (not markdown) with exactly these keys:
             1. 'description': A single, concise paragraph of exactly 5 sentences explaining the role, its impact, and core focus.
             2. 'responsibilities': An array of 5 specific, action-oriented key responsibilities.
-            3. 'salary_range': A realistic annual salary range (e.g., '$60,000 - $90,000').
+            3. 'salary_range': A realistic annual salary range in Philippine Peso localized for the Philippines (e.g., '₱400,000 - ₱700,000 Per year').
             4. 'education': The typical minimum degree or education required.
             5. 'certificates': An array of 3 professional certifications or licenses relevant to this role.
             6. 'recommended_degree': A specific academic degree relevant to this role (e.g., 'Bachelor of Science in Computer Science').

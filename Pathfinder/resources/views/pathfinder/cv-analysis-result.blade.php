@@ -1,6 +1,6 @@
 @extends('pathfinder.layout')
 
-@section('title', 'CV Analysis Results - Pathfinder')
+@section('title', 'Resume Analysis Results - Pathfinder')
 
 @section('content')
 <style>
@@ -115,12 +115,12 @@
         <nav class="cd-breadcrumb">
             <a href="{{ route('pathfinder.index') }}">Pathfinder</a>
             <span>›</span>
-            <a href="{{ route('pathfinder.cv-upload') }}">CV Upload</a>
+            <a href="{{ route('pathfinder.cv-upload') }}">Resume Upload</a>
             <span>›</span>
             Analysis Result
         </nav>
 
-        <h1>CV Analysis Complete!</h1>
+        <h1>Resume Analysis Complete!</h1>
         <p class="tagline">We've matched your skills against dozens of career profiles to find your perfect professional fit.</p>
 
         <div class="cd-stats">
@@ -139,7 +139,7 @@
                 </div>
                 <div>
                     <div class="cd-stat-label">Career Matches</div>
-                    <div class="cd-stat-val">{{ $analysisSummary['total_job_matches'] }}</div>
+                    <div class="cd-stat-val">{{ $analysisSummary['total_job_matches'] ?? 0 }}</div>
                 </div>
             </div>
             <div class="cd-stat">
@@ -148,7 +148,7 @@
                 </div>
                 <div>
                     <div class="cd-stat-label">Best Match Score</div>
-                    <div class="cd-stat-val">{{ $topMatch['similarity_score'] }}%</div>
+                    <div class="cd-stat-val">{{ $topMatch['similarity_score'] ?? 0 }}%</div>
                 </div>
             </div>
         </div>
@@ -169,15 +169,26 @@
                     <h2>Your Best Career Match</h2>
                 </div>
                 <div class="cd-card-body">
-                    <h3 style="font-size: 2.2rem; font-weight: 800; color: var(--pf-navy); margin: 0 0 0.5rem;">{{ $topMatch['job_title'] }}</h3>
+                    <h3 style="font-size: 2.2rem; font-weight: 800; color: var(--pf-navy); margin: 0 0 0.5rem;">{{ $topMatch['job_title'] ?? 'Generic Role' }}</h3>
                     <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem;">
-                        <span style="font-size: 0.75rem font-weight: 700; color: var(--pf-sky); text-transform: uppercase; letter-spacing: .05em;">{{ $topMatch['category'] }}</span>
-                        <div class="match-badge">{{ $topMatch['similarity_score'] }}% COMPATIBILITY</div>
+                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--pf-sky); text-transform: uppercase; letter-spacing: .05em;">{{ $topMatch['category'] ?? 'General' }}</span>
+                        <div class="match-badge">{{ $topMatch['similarity_score'] ?? 0 }}% COMPATIBILITY</div>
                     </div>
                     
-                    <p class="cd-desc" style="font-size: 1.1rem; italic; margin-bottom: 0;">"{{ $description }}"</p>
+                    <p class="cd-desc" style="font-size: 1.1rem; font-style: italic; margin-bottom: 0;">"{{ $description }}"</p>
                 </div>
             </div>
+            @else
+            {{-- Empty State --}}
+            <div class="cd-card" style="padding: 3rem; text-align: center;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: #f8fafc; display: grid; place-items: center; margin: 0 auto 1.5rem;">
+                    <svg style="width: 40px; height: 40px; color: #94a3b8;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--pf-navy); margin: 0 0 0.5rem;">No Direct Matches Found</h3>
+                <p style="color: #64748b; margin-bottom: 2rem;">We couldn't find a strong career match for your current Resume profile. Try highlighting more technical skills or adjusting your Resume format.</p>
+                <a href="{{ route('pathfinder.cv-upload') }}" class="cd-btn cd-btn-primary" style="max-width: 200px; margin: 0 auto;">Try Another Resume</a>
+            </div>
+            @endif
 
             {{-- Quick Insights Grid (Stats replacement) --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -235,7 +246,7 @@
             <div class="cd-card">
                 <div class="cd-card-head">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <h2>Skills Detected in Your CV</h2>
+                    <h2>Skills Detected in Your Resume</h2>
                 </div>
                 <div class="cd-card-body">
                     <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
@@ -273,7 +284,6 @@
                     </div>
                 </div>
             </div>
-            @endif
             @endif
         </div><!-- /left col -->
 
@@ -335,7 +345,7 @@
             <div style="margin-top: 1.5rem;">
                 <a href="{{ route('pathfinder.skill-gap') }}" class="cd-btn cd-btn-secondary">Analyze Skill Gap</a>
                 <a href="{{ route('pathfinder.career-path') }}" class="cd-btn cd-btn-secondary">Visualize Career Path</a>
-                <a href="{{ route('pathfinder.cv-upload') }}" class="cd-btn cd-btn-outline" style="background: white; border: 1px solid #cbd5e1; color: #64748b;">Upload Another CV</a>
+                <a href="{{ route('pathfinder.cv-upload') }}" class="cd-btn cd-btn-outline" style="background: white; border: 1px solid #cbd5e1; color: #64748b;">Upload Another Resume</a>
             </div>
 
         </div><!-- /right col -->
