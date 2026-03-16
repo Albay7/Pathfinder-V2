@@ -881,28 +881,55 @@ class PathfinderController extends Controller
                 'related_careers' => ['Educational Coordinator', 'Curriculum Developer'],
                 'recommended_courses' => [['title' => 'Bachelor of Elementary Education', 'platform' => 'Degree Program', 'url' => '#']]
             ],
-            // Default fallback for other unlisted roles
+            // Default fallback for other unlisted roles (Now used ONLY if AI fails)
             'default' => [
                 'title' => $career,
                 'tagline' => 'Discover your path and excel in your career.',
-                'description' => "This is a detailed overview of the {$career} role. Professionals in this field use their expertise to solve problems, support their organizations, and drive growth.",
+                'description' => "Detailed information for the {$career} role is currently unavailable. Please verify your AI integration or check back later.",
                 'responsibilities' => [
-                    'Perform core duties associated with the role.',
-                    'Collaborate with team members to achieve goals.',
-                    'Continuously update skills to stay current with industry trends.'
+                    'Contact support for detailed role responsibilities.',
+                    'Verify system configuration for dynamic content.',
                 ],
-                'skills_required' => ['Communication', 'Critical Thinking', 'Adaptability', 'Teamwork'],
-                'education_requirements' => 'Varies by specific role (typically Bachelor\'s Degree or relevant certification).',
-                'salary_range' => 'Varies by experience',
-                'job_outlook' => 'Stable',
-                'related_careers' => ['Software Developer', 'Consultant', 'Project Specialist', 'Analyst'],
-                'recommended_courses' => [
-                    ['title' => 'Bachelor of Science in Business Administration', 'platform' => 'Degree Program', 'url' => '#']
-                ]
+                'skills_required' => ['N/A'],
+                'education_requirements' => 'N/A',
+                'salary_range' => 'N/A',
+                'job_outlook' => 'N/A',
+                'related_careers' => [],
+                'recommended_courses' => []
             ]
         ];
 
-        return $careers[$career] ?? $careers['default'];
+        // Check if we have dynamic AI-generated data cached
+        $cacheKey = 'career_data_' . str_replace(' ', '_', strtolower($career));
+        
+        $cached = \Illuminate\Support\Facades\Cache::get($cacheKey);
+        if ($cached) {
+            return $cached;
+        }
+
+        // 1. Static Match
+        if (isset($careers[$career])) {
+            return $careers[$career];
+        }
+
+        // 2. AI Generation Fallback
+        $groqKey = config('services.groq.key');
+        \Log::debug('PathfinderController AI Check', [
+            'has_groq_key' => !empty($groqKey),
+            'career' => $career
+        ]);
+
+        $groqAiService = app(\App\Services\GroqAiService::class);
+        $dynamicData = $groqAiService->generateCareerData($career);
+
+        if ($dynamicData) {
+            // Only cache successful AI results
+            \Illuminate\Support\Facades\Cache::put($cacheKey, $dynamicData, now()->addDays(30));
+            return $dynamicData;
+        }
+
+        // 3. Final Default Fallback (Do NOT cache this)
+        return $careers['default'];
     }
 
     /**

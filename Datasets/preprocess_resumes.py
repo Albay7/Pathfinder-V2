@@ -68,8 +68,37 @@ RESUME_STOPWORDS = [
     # Filler
     'etc', 'per', 'via', 'within', 'across', 'throughout', 'along',
     'regarding', 'according', 'approximately', 'involved', 'required',
-    'necessary', 'needed', 'appropriate', 'available', 'able',
+    'necessary', 'needed', 'appropriate', 'available', 'able', 'highly',
+    'excellent', 'strong', 'good', 'including', 'varied', 'various',
+    'multiple', 'different', 'wide', 'variety', 'outstanding', 'proven',
+    'track', 'record', 'hand', 'on', 'focused', 'dynamic', 'motivated',
+    'proactive', 'detail', 'oriented', 'skills', 'experience', 'background',
+    'level', 'basis', 'large', 'small', 'many', 'work', 'career',
 ]
+
+# ============================================================
+# 0b. Skill Denylist (Words that should NEVER be tagged as skills)
+# ============================================================
+
+SKILL_DENYLIST = {
+    'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec',
+    'january', 'february', 'march', 'april', 'june', 'july', 'august', 'september',
+    'october', 'november', 'december', 'city', 'state', 'usa', 'united', 'states',
+    'american', 'national', 'local', 'regional', 'global', 'international',
+    'area', 'basis', 'level', 'role', 'position', 'jan', 'month', 'months', 'year', 'years',
+    'number', 'member', 'groups', 'item', 'items', 'individual', 'personal',
+    'basic', 'advanced', 'senior', 'junior', 'entry', 'major', 'minor',
+    'degree', 'university', 'college', 'school', 'studies', 'student', 'students',
+    'skill', 'skills', 'work', 'working', 'job', 'position', 'experience',
+    'knowledge', 'ability', 'capability', 'history', 'summary', 'highlights',
+    'accomplishments', 'responsibilities', 'duties', 'tasks', 'activities',
+    'information', 'details', 'detailed', 'brief', 'background', 'involved',
+    'academic', 'agencies', 'associate', 'associates', 'associated', 'capital', 'decision',
+    'efficiency', 'efficient', 'efficiently', 'facilitate', 'proficiency',
+    'society', 'pricing', 'specifications', 'special events', 'society',
+    'specialist', 'coordinator', 'manager', 'director', 'executive',
+    'organizations', 'participation', 'recipient', 'producing', 'involved',
+}
 
 ALL_STOPWORDS = list(ENGLISH_STOP_WORDS) + RESUME_STOPWORDS
 
@@ -77,16 +106,113 @@ ALL_STOPWORDS = list(ENGLISH_STOP_WORDS) + RESUME_STOPWORDS
 # 1. Load and clean dataset
 # ============================================================
 
-BASE_DIR = os.path.dirname(__file__)
-DATASET_PATH = os.path.join(BASE_DIR, 'Cloude-Resume', 'Kaggle-Resume', 'Resume.csv')
-SKILLS_TXT_PATH = os.path.join(BASE_DIR, 'Cloude-Resume', 'Kaggle-Resume', 'Skills.txt')
-SKILLS_OCC_PATH = os.path.join(BASE_DIR, 'Cloude-Resume', 'Kaggle-Resume', 'Skills-occupation.xlsx')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, 'Cloude-Resume', 'Kaggle-Resume')
+
+# Dataset Paths
+RESUME_PATH = os.path.join(DATA_DIR, 'Resume.csv')
+UPDATED_RESUME_PATH = os.path.join(DATA_DIR, 'UpdatedResumeDataSet.csv')
+TRAIN_PATH = os.path.join(DATA_DIR, 'train.csv')
+
+# ESCO Taxonomy Paths
+ESCO_SKILLS_PATH = os.path.join(DATA_DIR, 'skills_en.csv')
+ESCO_OCC_PATH = os.path.join(DATA_DIR, 'occupations_en.csv')
+ESCO_REL_PATH = os.path.join(DATA_DIR, 'occupationSkillRelations_en.csv')
+
 OUTPUT_DIR = os.path.join(BASE_DIR, '..', 'Pathfinder', 'storage', 'app', 'data')
 OUTPUT_PATH = os.path.join(OUTPUT_DIR, 'tfidf_model.json')
 
-print(f"Loading dataset from: {DATASET_PATH}")
-df = pd.read_csv(DATASET_PATH)
-print(f"Loaded {len(df)} resumes across {df['Category'].nunique()} categories")
+def load_merged_datasets():
+    """Load and merge Resume.csv, UpdatedResumeDataSet.csv, and train.csv."""
+    print("Merging datasets...")
+    
+    # 1. Base Resume Dataset
+    df1 = pd.read_csv(RESUME_PATH)
+    merged = pd.DataFrame({
+        'text': df1['Resume_str'],
+        'category': df1['Category'].str.upper()
+    })
+    
+    # 2. Updated Resume Dataset (mapping categories)
+    try:
+        df2 = pd.read_csv(UPDATED_RESUME_PATH)
+        # Standardize naming to match our 24 roles where possible
+        cat_map = {
+            'Java Developer': 'INFORMATION-TECHNOLOGY',
+            'Python Developer': 'INFORMATION-TECHNOLOGY',
+            'Web Designing': 'DESIGNER',
+            'Business Analyst': 'CONSULTANT',
+            'Mechanical Engineer': 'ENGINEERING',
+            'Health and fitness': 'FITNESS',
+            'Civil Engineer': 'CONSTRUCTION',
+            'Data Science': 'INFORMATION-TECHNOLOGY',
+            'Electrical Engineering': 'ENGINEERING',
+            'Operations Manager': 'MANAGEMENT', # New category if needed
+            'DevOps Engineer': 'INFORMATION-TECHNOLOGY',
+            'Network Security Engineer': 'INFORMATION-TECHNOLOGY',
+            'PMO': 'MANAGEMENT',
+            'Database': 'INFORMATION-TECHNOLOGY',
+            'Hadoop': 'INFORMATION-TECHNOLOGY',
+            'ETL Developer': 'INFORMATION-TECHNOLOGY',
+            'DotNet Developer': 'INFORMATION-TECHNOLOGY',
+            'Blockchain': 'INFORMATION-TECHNOLOGY',
+            'Testing': 'INFORMATION-TECHNOLOGY',
+            'Automation Testing': 'INFORMATION-TECHNOLOGY',
+        }
+        df2['category'] = df2['Category'].apply(lambda x: cat_map.get(x, x).upper())
+        merged = pd.concat([merged, pd.DataFrame({
+            'text': df2['Resume'],
+            'category': df2['category']
+        })])
+        
+        # 2.5 Add SAP DEVELOPER and other common tech categories to IT if thin
+        merged['category'] = merged['category'].replace({
+            'SAP DEVELOPER': 'INFORMATION-TECHNOLOGY',
+            'DEVELOPER': 'INFORMATION-TECHNOLOGY',
+            'MANAGEMENT': 'CONSULTANT' # Merge thin Management into Consultant or vice versa
+        })
+    except Exception as e:
+        print(f"Warning: Failed to load UpdatedResumeDataSet.csv: {e}")
+
+    # 3. train.csv (Extracting high-quality Job Descriptions as "Ideal Targets")
+    try:
+        # Load only "Good Fit" labels for job descriptions to define "Ideal centroids"
+        df3 = pd.read_csv(TRAIN_PATH)
+        # Note: train.csv doesn't have explicit category labels in the 'label' col (it's binary fit)
+        # but we can use it to augment overall training text if we had category info.
+        # Since it lacks category mapping, we'll use it for vocabulary building only.
+        pass
+    except Exception as e:
+        print(f"Warning: Failed to load train.csv: {e}")
+
+    return merged
+
+df_merged = load_merged_datasets()
+print(f"Merged total: {len(df_merged)} samples")
+
+def load_esco_taxonomy():
+    """Ingest ESCO professional taxonomy for skills and occupations."""
+    print("Ingesting ESCO Taxonomy...")
+    esco_skills = set()
+    esco_occupations = set()
+    
+    try:
+        s_df = pd.read_csv(ESCO_SKILLS_PATH)
+        esco_skills = set(s_df['preferredLabel'].str.lower().dropna().unique())
+        print(f"  Loaded {len(esco_skills)} ESCO professional skills.")
+    except Exception as e:
+        print(f"Warning: Failed to load ESCO skills: {e}")
+
+    try:
+        o_df = pd.read_csv(ESCO_OCC_PATH)
+        esco_occupations = set(o_df['preferredLabel'].str.lower().dropna().unique())
+        print(f"  Loaded {len(esco_occupations)} ESCO occupation titles.")
+    except Exception as e:
+        print(f"Warning: Failed to load ESCO occupations: {e}")
+        
+    return esco_skills, esco_occupations
+
+ESCO_SKILLS, ESCO_OCCUPATIONS = load_esco_taxonomy()
 
 
 def clean_text(text):
@@ -100,26 +226,36 @@ def clean_text(text):
     return text.strip()
 
 
-df['clean_text'] = df['Resume_str'].apply(clean_text)
+df_merged['clean_text'] = df_merged['text'].apply(clean_text)
 
-# Drop any rows with empty text
-df = df[df['clean_text'].str.len() > 50].reset_index(drop=True)
-print(f"After cleaning: {len(df)} resumes")
+# Drop any rows with empty text or too short
+df = df_merged[df_merged['clean_text'].str.len() > 50].reset_index(drop=True)
+print(f"After cleaning: {len(df)} resumes/documents total.")
+
+# ============================================================
+# 1.5. Build Professional Vocabulary from ESCO
+# ============================================================
+# We use ESCO skills and occupations to seed our vocabulary 
+# ensuring the TF-IDF model focuses on real-world professional terms.
+print("Integrating ESCO terms into vocabulary seeds...")
+ESCO_TERMS = list(ESCO_SKILLS) + list(ESCO_OCCUPATIONS)
+ESCO_CLEAN = [clean_text(t) for t in ESCO_TERMS if len(str(t)) > 2]
+print(f"  Added {len(ESCO_CLEAN)} professional seeds.")
 
 # ============================================================
 # 2. Fit TF-IDF vectorizer
 # ============================================================
 
-print("Fitting TF-IDF vectorizer (max_features=500, bigrams enabled)...")
+print("Fitting TF-IDF vectorizer (max_features=1500, bigrams enabled)...")
 
 vectorizer = TfidfVectorizer(
-    max_features=500,
+    max_features=3000,   # Increased further to separate similar roles
     stop_words=ALL_STOPWORDS,
-    min_df=5,            # term must appear in at least 5 resumes
-    max_df=0.8,          # ignore terms in >80% of resumes (too common)
-    sublinear_tf=True,   # use 1 + log(tf) instead of raw tf
-    ngram_range=(1, 2),  # unigrams and bigrams
-    token_pattern=r'(?u)\b[a-z][a-z\+\#\.]{1,25}\b'  # 2+ char tokens
+    min_df=3,            
+    max_df=0.4,          # Even stricter: discard very common professional terms
+    sublinear_tf=True,   
+    ngram_range=(1, 2),  
+    token_pattern=r'(?u)\b[a-z][a-z\+\#\.]{2,25}\b'
 )
 
 tfidf_matrix = vectorizer.fit_transform(df['clean_text'])
@@ -133,16 +269,59 @@ print(f"TF-IDF matrix shape: {tfidf_matrix.shape}")
 # 3. Compute category centroids
 # ============================================================
 
-print("Computing category centroids...")
+print("Computing professional anchored centroids...")
 
-categories = sorted(df['Category'].unique().tolist())
+categories = sorted(df['category'].unique().tolist())
 category_centroids = {}
 
+# Dictionary to anchor our 24 categories with ESCO professional terminology
+CATEGORY_ANCHORS = {
+    "INFORMATION-TECHNOLOGY": ["software", "developer", "web", "database", "it", "security", "cloud", "devops", "coding"],
+    "FINANCE": ["financial", "investment", "banking", "risk", "equity", "finance", "capital", "underwriting"],
+    "ENGINEERING": ["mechanical", "electrical", "civil", "structural", "engineering", "manufacturing", "cad"],
+    "ACCOUNTANT": ["accounting", "auditing", "taxation", "bookkeeping", "cpa", "audit"],
+    "HEALTHCARE": ["nursing", "clinical", "patient", "medical", "hospital", "diagnosis", "nurse", "physician"],
+    "SALES": ["sales", "representative", "account manager", "merchandising", "retail", "selling"],
+    "CONSULTANT": ["consulting", "strategy", "management", "business analyst", "advisor"],
+    "DESIGNER": ["graphic", "ux", "ui", "designer", "creative", "illustration", "branding"],
+    "TEACHER": ["teaching", "educator", "classroom", "pedagogy", "curriculum", "professor", "instruction"],
+    "ADVOCATE": ["legal", "attorney", "lawyer", "paralegal", "compliance", "regulatory", "litigation"],
+    "CHEF": ["culinary", "chef", "cooking", "restaurant", "kitchen", "hospitality", "bakery"],
+    "AVIATION": ["pilot", "flight", "aviation", "aircraft", "airline", "navigation"],
+    "FITNESS": ["fitness", "trainer", "gym", "wellness", "sports", "coaching", "athlete"],
+    "APPAREL": ["fashion", "textile", "clothing", "apparel", "garment", "merchandising"],
+    "CONSTRUCTION": ["construction", "site", "building", "structural", "contractor", "infrastructure"],
+    "PUBLIC-RELATIONS": ["public relations", "media", "journalism", "communications", "press"],
+    "HR": ["human resources", "recruiting", "hiring", "compensation", "personnel"],
+    "DIGITAL-MEDIA": ["social media", "content", "digital marketing", "advertising", "seo"],
+    "AGRICULTURE": ["farming", "agricultural", "crop", "livestock", "agronomy", "irrigation"],
+    "AUTOMOBILE": ["automotive", "vehicle", "car", "mechanic", "transportation"],
+    "BPO": ["business process", "outsourcing", "customer service", "call center", "support"],
+    "ARTS": ["art", "fine arts", "gallery", "curator", "creative", "visual"],
+}
+
 for cat in categories:
-    mask = df['Category'] == cat
-    cat_matrix = tfidf_matrix[mask.values]
-    centroid = cat_matrix.mean(axis=0).A1  # sparse to dense array
-    category_centroids[cat] = centroid.tolist()
+    # 1. Get raw centroid from resumes
+    mask = df['category'] == cat
+    if mask.any():
+        cat_matrix = tfidf_matrix[mask.values]
+        raw_centroid = cat_matrix.mean(axis=0).A1
+    else:
+        raw_centroid = np.zeros(len(vocabulary))
+
+    # 2. Add "Anchor Weight" from ESCO terms and keywords
+    anchors = CATEGORY_ANCHORS.get(cat, [])
+    # Add category name itself as anchor
+    anchors.append(cat.lower().replace('-', ' '))
+    
+    anchor_vector = np.zeros(len(vocabulary))
+    for i, term in enumerate(vocabulary):
+        if any(anchor in term for anchor in anchors):
+            anchor_vector[i] = 1.0
+            
+    # Combine (Weighted: 30% anchor, 70% reality)
+    combined_centroid = (0.7 * raw_centroid) + (0.3 * anchor_vector)
+    category_centroids[cat] = combined_centroid.tolist()
 
 print(f"Computed centroids for {len(category_centroids)} categories")
 
@@ -359,65 +538,17 @@ category_roles = {
 }
 
 # ============================================================
-# 8. Load O*NET skills and build skill whitelist (Layer 2)
+# 8. Taxonomy-Driven Skill Detection (ESCO)
 # ============================================================
 
-print("Loading O*NET skill taxonomy...")
+print("Building professional skill dictionary from ESCO...")
 
-# 8a: Load 36 O*NET skill names from Skills.txt (TSV)
-skill_whitelist = set()
-try:
-    skills_df = pd.read_csv(SKILLS_TXT_PATH, sep='\t')
-    onet_skills = set(skills_df['Element Name'].str.lower().str.strip().unique())
-    skill_whitelist |= onet_skills
-    print(f"  Loaded {len(onet_skills)} O*NET skill categories from Skills.txt")
-except Exception as e:
-    print(f"  Warning: Could not load Skills.txt: {e}")
-    onet_skills = set()
+# Combined professional dictionary
+skill_whitelist = ESCO_SKILLS.copy()
+occupation_words = ESCO_OCCUPATIONS.copy()
 
-# 8b: Load occupation words from Skills-occupation.xlsx
-try:
-    occ_df = pd.read_excel(SKILLS_OCC_PATH, header=3)
-    occupation_words = set()
-    for title in occ_df.iloc[:, 1].dropna():  # Column B = occupation title
-        words = re.findall(r'[a-z]+', str(title).lower())
-        for w in words:
-            if len(w) > 3:
-                occupation_words.add(w)
-                # Also add singular forms (strip common plural suffixes)
-                if w.endswith('ists'):
-                    occupation_words.add(w[:-1])   # therapists -> therapist
-                elif w.endswith('ors'):
-                    occupation_words.add(w[:-1])   # directors -> director
-                elif w.endswith('ers'):
-                    occupation_words.add(w[:-1])   # engineers -> engineer
-                elif w.endswith('ants'):
-                    occupation_words.add(w[:-1])   # accountants -> accountant
-                elif w.endswith('ents'):
-                    occupation_words.add(w[:-1])   # agents -> agent
-                elif w.endswith('sts'):
-                    occupation_words.add(w[:-1])   # analysts -> analyst
-                elif w.endswith('ies'):
-                    occupation_words.add(w[:-3] + 'y')  # therapies -> therapy
-                elif w.endswith('es') and len(w) > 5:
-                    occupation_words.add(w[:-2])   # nurses -> nurs (ok, still helps)
-                    occupation_words.add(w[:-1])   # nurses -> nurse
-                elif w.endswith('s') and not w.endswith('ss'):
-                    occupation_words.add(w[:-1])   # pilots -> pilot
-    # Also add full multi-word occupation terms (lowercased)
-    for title in occ_df.iloc[:, 1].dropna():
-        clean_title = re.sub(r'[^a-z\s]', '', str(title).lower()).strip()
-        if clean_title:
-            skill_whitelist.add(clean_title)
-    skill_whitelist |= occupation_words
-    print(f"  Loaded {len(occupation_words)} occupation words from Skills-occupation.xlsx")
-except Exception as e:
-    print(f"  Warning: Could not load Skills-occupation.xlsx: {e}")
-    onet_skills = onet_skills if 'onet_skills' in dir() else set()
-
-# 8c: Add common technical/domain skill terms to whitelist
+# Add legacy manual boosts for common technical terms
 EXTRA_SKILL_TERMS = {
-    # Technical
     'programming', 'coding', 'software', 'hardware', 'database', 'networking',
     'security', 'cloud', 'devops', 'frontend', 'backend', 'fullstack',
     'javascript', 'python', 'java', 'html', 'css', 'sql', 'react', 'angular',
@@ -479,23 +610,24 @@ for term in vocabulary:
     term_lower = term.lower()
     term_words = set(term_lower.split())
 
-    # Direct match: term is in whitelist
-    if term_lower in skill_whitelist:
+    # Skip if in denylist
+    # Logic: If term matches ESCO skill directly, it's a skill.
+    # We prioritize exact matches with ESCO to avoid generic term detection.
+    
+    if term_lower in SKILL_DENYLIST:
+        is_skill = False
+    elif term_lower in occupation_words:
+        is_skill = False
+    elif term_lower in ESCO_SKILLS: # Exact ESCO match is gold
         is_skill = True
-    # Partial match: any word in term matches whitelist
-    elif term_words & skill_whitelist:
+    elif term_lower in EXTRA_SKILL_TERMS:
         is_skill = True
-    else:
-        # Check if term is a substring of an O*NET skill name or vice versa
-        for onet_skill in onet_skills:
-            if onet_skill in term_lower or term_lower in onet_skill:
-                is_skill = True
-                break
-
+    elif any(s in term_lower for s in EXTRA_SKILL_TERMS): # Substring match for technical keywords
+        is_skill = True
+        
     skill_flags.append(is_skill)
 
-skill_count = sum(skill_flags)
-print(f"  Tagged {skill_count}/{len(vocabulary)} vocabulary terms as skills")
+print(f"  Tagged {sum(skill_flags)}/{len(vocabulary)} terms as professional skills.")
 
 # ============================================================
 # 9. Build and write JSON artifact

@@ -1,0 +1,155 @@
+git : POST 
+git-receive-pack (chunked)
+At line:1 char:1
++ git push origin 
+main:clean-deployment-v3 
+--force --verbose 2>&1 | 
+Out ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (POS  
+  T git-receive-pack (ch   
+ unked):String) [], Rem    
+oteException
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+remote: warning: See 
+https://gh.io/lfs for more 
+information.        
+remote: warning: File Datas
+ets/Cloude-Resume/Kaggle-Re
+sume/data job posts.csv is 
+91.52 MB; this is larger 
+than GitHub's recommended 
+maximum file size of 50.00 
+MB        
+remote: warning: File Datas
+ets/Cloude-Resume/Kaggle-Re
+sume/train.csv is 50.96 
+MB; this is larger than 
+GitHub's recommended 
+maximum file size of 50.00 
+MB        
+remote: warning: GH001: 
+Large files detected. You 
+may want to try Git Large 
+File Storage - https://git-
+lfs.github.com.        
+remote: error: GH013: 
+Repository rule violations 
+found for refs/heads/clean-
+deployment-v3.        
+remote: 
+remote: - GITHUB PUSH 
+PROTECTION        
+remote:   GÇöGÇöGÇöGÇöGÇöGÇ
+öGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇ
+öGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇ
+öGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇ
+öGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇö  
+      
+remote:     Resolve the 
+following violations 
+before pushing again       
+ 
+remote: 
+remote:     - Push cannot 
+contain secrets        
+remote: 
+remote:             
+remote:      (?) Learn how 
+to resolve a blocked push  
+      
+remote:      https://docs.g
+ithub.com/code-security/sec
+ret-scanning/working-with-s
+ecret-scanning-and-push-pro
+tection/working-with-push-p
+rotection-from-the-command-
+line#resolving-a-blocked-pu
+sh        
+remote:             
+remote:      (?) This 
+repository does not have 
+Secret Scanning enabled, 
+but is eligible. Enable 
+Secret Scanning to view 
+and manage detected 
+secrets.        
+remote:      Visit the 
+repository settings page, h
+ttps://github.com/Albay7/Pa
+thfinder-V2/settings/securi
+ty_analysis        
+remote:             
+remote:             
+remote:       GÇöGÇö Groq 
+API Key GÇöGÇöGÇöGÇöGÇöGÇöG
+ÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöG
+ÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöG
+ÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöG
+ÇöGÇöGÇöGÇöGÇö        
+remote:        locations:  
+      
+remote:          - commit: 
+258e9e58005dcd9c30ec3f8a06d
+9daedb3acd27d        
+remote:            path: 
+Pathfinder/test-groq.php:2 
+       
+remote:             
+remote:        (?) To 
+push, remove secret from 
+commit(s) or follow this 
+URL to allow the secret.   
+     
+remote:        https://gith
+ub.com/Albay7/Pathfinder-V2
+/security/secret-scanning/u
+nblock-secret/3AzVRtw6svY4c
+Kgw7jsijEvvQTz        
+remote:             
+remote:             
+remote:       GÇöGÇö 
+OpenAI API Key GÇöGÇöGÇöGÇö
+GÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇö
+GÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇö
+GÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇöGÇö
+GÇöGÇöGÇöGÇöGÇö        
+remote:        locations:  
+      
+remote:          - commit: 
+258e9e58005dcd9c30ec3f8a06d
+9daedb3acd27d        
+remote:            path: Pa
+thfinder/test-openai.php:2 
+       
+remote:             
+remote:        (?) To 
+push, remove secret from 
+commit(s) or follow this 
+URL to allow the secret.   
+     
+remote:        https://gith
+ub.com/Albay7/Pathfinder-V2
+/security/secret-scanning/u
+nblock-secret/3AzVRvkdxQDgM
+iuxoRHoRfaCWd6        
+remote:             
+remote: 
+remote: 
+Pushing to https://github.c
+om/Albay7/Pathfinder-V2.git
+To https://github.com/Albay
+7/Pathfinder-V2.git
+ ! [remote rejected] main 
+-> clean-deployment-v3 
+(push declined due to 
+repository rule violations)
+error: failed to push some 
+refs to 'https://github.com
+/Albay7/Pathfinder-V2.git'
+
