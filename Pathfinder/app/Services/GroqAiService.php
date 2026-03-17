@@ -32,15 +32,15 @@ class GroqAiService
         try {
             $prompt = "Provide a professional career profile for the role: '{$careerTitle}'. 
             Return the response in JSON format (not markdown) with exactly these keys:
-            1. 'description': A comprehensive paragraph of 5-8 sentences explaining the role, its impact, and core focus.
-            2. 'short_description': A very concise 2-3 sentence summary for a quick result page.
+            1. 'description': A high-impact professional overview of EXACTLY 5 sentences. No more, no less. Each sentence must be substantial and professional.
+            2. 'short_description': A very concise 2-sentence summary for a quick result page.
             3. 'responsibilities': An array of 5 specific, action-oriented key responsibilities.
             4. 'salary_range': A realistic annual salary range in Philippine Peso localized for the Philippines (e.g., '₱400,000 - ₱700,000 Per year').
             5. 'education': The typical minimum degree or education required.
             6. 'certificates': An array of 3 professional certifications or licenses relevant to this role.
             7. 'recommended_degree': A specific academic degree relevant to this role (e.g., 'Bachelor of Science in Computer Science').
             
-            Ensure the tone is professional. The 'description' should be 5-8 sentences, and the 'short_description' exactly 2-3 sentences.";
+            CRITICAL REQUIREMENT: The 'description' MUST be EXACTLY 5 sentences long. Avoid very short sentences; they should be high-impact.";
 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
@@ -115,15 +115,15 @@ class GroqAiService
             
             Based on these facts, provide a professional career profile.
             Return the response in JSON format (not markdown) with exactly these keys:
-            1. 'description': A comprehensive paragraph of 5-8 sentences explaining the role, its impact, and core focus.
-            2. 'short_description': A very concise 2-3 sentence summary for a quick result page.
+            1. 'description': A high-impact professional overview of EXACTLY 5 sentences. No more, no less. Each sentence must be substantial and professional.
+            2. 'short_description': A very concise 2-sentence summary for a quick result page.
             3. 'responsibilities': An array of 5 specific, action-oriented key responsibilities.
             4. 'salary_range': A realistic annual salary range in Philippine Peso localized for the Philippines (e.g., '₱400,000 - ₱700,000 Per year').
             5. 'education': The typical minimum degree or education required.
             6. 'certificates': An array of 3 professional certifications or licenses relevant to this role.
             7. 'recommended_degree': A specific academic degree relevant to this role.
             
-            Ensure the tone is professional. The 'description' should be 5-8 sentences, and the 'short_description' exactly 2-3 sentences.";
+            CRITICAL REQUIREMENT: The 'description' MUST be EXACTLY 5 sentences long. Avoid very short sentences; they should be high-impact.";
 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,

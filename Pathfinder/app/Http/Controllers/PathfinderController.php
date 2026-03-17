@@ -902,43 +902,73 @@ class PathfinderController extends Controller
         ];
 
         // Check if we have dynamic AI-generated data cached
-        $cacheKey = 'career_data_' . str_replace(' ', '_', strtolower($career));
+        $slug = str_replace(' ', '_', strtolower($career));
+        $cacheKey = 'career_data_' . $slug;
         
+        // 1. Check Cache
         $cached = \Illuminate\Support\Facades\Cache::get($cacheKey);
         if ($cached) {
             return $cached;
         }
 
-        // 1. Static Match
-        if (isset($careers[$career])) {
-            return $careers[$career];
-        }
-
-        // 2. Hybrid O*NET + Groq Enrichment
-        $onetService = app(\App\Services\OnetService::class);
-        $groqAiService = app(\App\Services\GroqAiService::class);
-
-        $onetData = $onetService->getOccupationData($career);
-        if ($onetData) {
-            $enrichedData = $groqAiService->enrichOnetData($career, $onetData);
-            if ($enrichedData) {
-                \Illuminate\Support\Facades\Cache::put($cacheKey, $enrichedData, now()->addDays(30));
-                return $enrichedData;
+        // 2. Check Persistent Storage (storage/app/careers/*.json)
+        if (\Illuminate\Support\Facades\Storage::disk('local')->exists("careers/{$slug}.json")) {
+            $persistentData = json_decode(\Illuminate\Support\Facades\Storage::disk('local')->get("careers/{$slug}.json"), true);
+            if ($persistentData) {
+                \Illuminate\Support\Facades\Cache::put($cacheKey, $persistentData, now()->addDays(30));
+                return $persistentData;
             }
         }
 
-        // 3. Fallback AI Generation (Pure Groq)
+        // 3. Check if Static data exists AND if it's "Thin" (needs enrichment)
+        $staticData = $careers[$career] ?? null;
+        $needsEnrichment = false;
+
+        if ($staticData) {
+            // Increased threshold: if description is under 600 chars, we trigger enrichment
+            if (strlen($staticData['description'] ?? '') < 600) {
+                $needsEnrichment = true;
+            } else {
+                return $staticData;
+            }
+        }
+
+        // 4. Hybrid Enrichment (Groq)
+        $groqAiService = app(\App\Services\GroqAiService::class);
         $groqKey = config('services.groq.key');
+
         if (!empty($groqKey)) {
-            $dynamicData = $groqAiService->generateCareerData($career);
+            // Optional: Try O*NET first if we have it
+            $onetService = app(\App\Services\OnetService::class);
+            $onetData = $onetService->getOccupationData($career);
+            
+            if ($onetData) {
+                $dynamicData = $groqAiService->enrichOnetData($career, $onetData);
+            } else {
+                $dynamicData = $groqAiService->generateCareerData($career);
+            }
+
             if ($dynamicData) {
+                // MERGE: Keep hardcoded courses if they exist (localized data is better)
+                if ($staticData && !empty($staticData['recommended_courses'])) {
+                    $dynamicData['recommended_courses'] = $staticData['recommended_courses'];
+                }
+                
+                // SAVE: To both Cache and Persistent Storage
                 \Illuminate\Support\Facades\Cache::put($cacheKey, $dynamicData, now()->addDays(30));
+                
+                $storage = \Illuminate\Support\Facades\Storage::disk('local');
+                if (!$storage->exists('careers')) {
+                    $storage->makeDirectory('careers');
+                }
+                $storage->put("careers/{$slug}.json", json_encode($dynamicData, JSON_PRETTY_PRINT));
+                
                 return $dynamicData;
             }
         }
 
-        // 4. Final Default Fallback
-        return $careers['default'];
+        // 5. Final Fallback (either original static if it existed, or 'default')
+        return $staticData ?? $careers['default'];
     }
 
     /**
