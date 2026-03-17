@@ -75,14 +75,19 @@
                 @else
                     @php
                         $careerData = \App\Http\Controllers\PathfinderController::getCareerData($recommendation);
-                        $detailedDescription = $careerData['description'] ?? $careerData['short_description'] ?? 'A dynamic role offering significant opportunities for professional growth and impact.';
-                        if (isset($careerData['responsibilities']) && is_array($careerData['responsibilities'])) {
-                            $detailedDescription .= ' In this role, you will be responsible for ' . strtolower(implode(', ', $careerData['responsibilities'])) . '.';
-                        }
+                        $displayDescription = $careerData['short_description'] ?? $careerData['description'] ?? 'A dynamic role offering significant opportunities for professional growth and impact.';
                     @endphp
                     <p class="text-lg text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed text-left">
-                        {{ $detailedDescription }}
+                        {{ $displayDescription }}
                     </p>
+                    <div class="mb-4">
+                        <a href="{{ route('pathfinder.career.details', ['career' => urlencode($recommendation)]) }}" class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #13264D;" onmouseover="this.style.backgroundColor='#5AA7C6';" onmouseout="this.style.backgroundColor='#13264D';">
+                            View Career Details
+                            <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+                    </div>
                 @endif
             </div>
         </div>

@@ -320,7 +320,8 @@ class PathfinderController extends Controller
             'Cybersecurity Analyst' => [
                 'title' => 'Cybersecurity Analyst',
                 'tagline' => 'Defend digital boundaries against modern threats.',
-                'description' => 'Cybersecurity Analysts protect an organization\'s computer networks and systems. They monitor for security breaches and investigate violations when they occur.',
+                'description' => 'Cybersecurity Analysts protect an organization\'s computer networks and systems by monitoring for security breaches and investigating violations when they occur. They design and implement robust security protocols, conduct vulnerability assessments, and stay ahead of emerging cyber threats to ensure data integrity. These professionals are the first line of defense in protecting sensitive company information from increasingly sophisticated external attacks.',
+                'short_description' => 'Protect organization networks and systems from cyber threats by monitoring breaches and implementing robust security protocols.',
                 'responsibilities' => [
                     'Continuously monitor network traffic and system logs to detect anomalies and potential security incidents.',
                     'Conduct thorough investigations into security breaches and implement rapid incident response protocols.',
@@ -357,7 +358,8 @@ class PathfinderController extends Controller
             'Database Administrator' => [
                 'title' => 'Database Administrator',
                 'tagline' => 'Organize, secure, and manage the world\'s data.',
-                'description' => 'Database Administrators (DBAs) use specialized software to store and organize data. They ensure that data is available to users and secure from unauthorized access.',
+                'description' => 'Database Administrators (DBAs) use specialized software to store and organize data. They ensure that data is available to users and secure from unauthorized access. They are responsible for performance tuning, capacity planning, and ensuring that databases run efficiently around the clock. DBAs also play a critical role in data recovery and disaster planning to prevent data loss in emergencies.',
+                'short_description' => 'Store and organize data using specialized software while ensuring system security, availability, and optimal performance.',
                 'responsibilities' => [
                     'Design, build, and optimize complex database architectures to ensure fast, reliable data retrieval.',
                     'Implement rigorous data security protocols and manage automated backup systems to guarantee data integrity.',
@@ -544,8 +546,8 @@ class PathfinderController extends Controller
             'Compliance Officer' => [
                 'title' => 'Compliance Officer',
                 'tagline' => 'Ensure ethical practices and adherence to regulations.',
-                'description' => 'Compliance Officers examine, evaluate, and investigate eligibility for or conformity with laws and regulations governing contract compliance of licenses.',
-                'short_description' => 'Audit internal operations to ensure strict company adherence to complex legal and regulatory standards.',
+                'description' => 'Compliance Officers examine, evaluate, and investigate eligibility for or conformity with laws and regulations governing contract compliance of licenses. They ensure that an organization functions in a legal and ethical manner while meeting its business goals. By conducting regular audits and risk assessments, they identify potential areas of vulnerability and develop corrective plans. These professionals also keep up to date with changing regulations to ensure company policies remain current and effective.',
+                'short_description' => 'Audit internal operations to ensure strict company adherence to complex legal, ethical, and regulatory standards.',
                 'responsibilities' => [
                     'Meticulously review corporate operations to ensure they meet all legal standards and industry regulations.',
                     'Plan and execute regular compliance audits, risk assessments, and internal investigations across all departments.',
@@ -912,23 +914,30 @@ class PathfinderController extends Controller
             return $careers[$career];
         }
 
-        // 2. AI Generation Fallback
-        $groqKey = config('services.groq.key');
-        \Log::debug('PathfinderController AI Check', [
-            'has_groq_key' => !empty($groqKey),
-            'career' => $career
-        ]);
-
+        // 2. Hybrid O*NET + Groq Enrichment
+        $onetService = app(\App\Services\OnetService::class);
         $groqAiService = app(\App\Services\GroqAiService::class);
-        $dynamicData = $groqAiService->generateCareerData($career);
 
-        if ($dynamicData) {
-            // Only cache successful AI results
-            \Illuminate\Support\Facades\Cache::put($cacheKey, $dynamicData, now()->addDays(30));
-            return $dynamicData;
+        $onetData = $onetService->getOccupationData($career);
+        if ($onetData) {
+            $enrichedData = $groqAiService->enrichOnetData($career, $onetData);
+            if ($enrichedData) {
+                \Illuminate\Support\Facades\Cache::put($cacheKey, $enrichedData, now()->addDays(30));
+                return $enrichedData;
+            }
         }
 
-        // 3. Final Default Fallback (Do NOT cache this)
+        // 3. Fallback AI Generation (Pure Groq)
+        $groqKey = config('services.groq.key');
+        if (!empty($groqKey)) {
+            $dynamicData = $groqAiService->generateCareerData($career);
+            if ($dynamicData) {
+                \Illuminate\Support\Facades\Cache::put($cacheKey, $dynamicData, now()->addDays(30));
+                return $dynamicData;
+            }
+        }
+
+        // 4. Final Default Fallback
         return $careers['default'];
     }
 
