@@ -140,6 +140,18 @@
                 .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
                 .md\:text-5xl { font-size: 3rem; }
             }
+
+            /* Footer Styles */
+            .footer { background-color: #1F2937; color: white; padding: 4rem 0; }
+            .footer-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+            @media (min-width: 768px) { .footer-grid { grid-template-columns: repeat(2, 1fr); } }
+            @media (min-width: 1024px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }
+            .footer-title { font-size: 1.125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; border-bottom: 1px solid #374151; padding-bottom: 0.5rem; display: inline-block; }
+            .footer-link { color: #9CA3AF; text-decoration: none; transition: color 0.2s; display: flex; align-items: center; margin-bottom: 1rem; }
+            .footer-link:hover { color: #60A5FA; }
+            .footer-contact-name { color: #60A5FA; font-weight: 600; margin-bottom: 0.25rem; }
+            .footer-contact-info { font-size: 0.875rem; color: #9CA3AF; display: flex; flex-direction: column; gap: 0.25rem; }
+            .footer-bottom { margin-top: 3rem; pt: 2rem; border-top: 1px solid #374151; text-align: center; color: #6B7280; font-size: 0.875rem; }
         </style>
 
 
@@ -261,7 +273,7 @@
             <div class="max-w-4xl mx-auto px-4 text-center">
                 <h2 class="text-3xl font-bold text-white mb-4">Ready to Start Your Journey?</h2>
                 <p class="text-xl text-white mb-8">
-                    Join thousands of professionals who have discovered their perfect career path with Pathfinder.
+                    Join thousands of professionals who have developed their career path with Pathfinder.
                 </p>
                 @if (Route::has('login') && Auth::check())
                     <a href="{{ route('pathfinder.career-guidance') }}" class="btn-primary">
@@ -274,6 +286,88 @@
                 @endif
             </div>
         </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="footer-grid">
+                    <!-- About Us -->
+                    <div>
+                        <div class="flex items-center mb-6">
+                            <div class="w-8 h-8 bg-fountain-blue rounded flex items-center justify-center mr-2">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <h2 class="text-2xl font-bold text-white">Pathfinder</h2>
+                        </div>
+                        <p style="color: #9CA3AF; line-height: 1.6;">
+                            Pathfinder is a comprehensive career guidance platform dedicated to helping students and professionals navigate their professional journeys.
+                        </p>
+                    </div>
+
+                    <!-- Features -->
+                    <div>
+                        <h3 class="footer-title">Features</h3>
+                        <div style="display: flex; flex-direction: column;">
+                            <a href="{{ route('pathfinder.career-guidance') }}" class="footer-link">
+                                <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                Career Guidance
+                            </a>
+                            <a href="{{ route('pathfinder.career-path') }}" class="footer-link">
+                                <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                Path Visualization
+                            </a>
+                            <a href="{{ route('pathfinder.skill-gap') }}" class="footer-link">
+                                <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                Skill Gap Analysis
+                            </a>
+                            <a href="{{ route('pathfinder.mbti-intro') }}" class="footer-link">
+                                <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                MBTI Assessment
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Contact Us 1 -->
+                    <div>
+                        <h3 class="footer-title">Contact Us</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <div>
+                                <p class="footer-contact-name">Hendrix B. Albay</p>
+                                <div class="footer-contact-info">
+                                    <span>09550089737</span>
+                                    <span>ahb0562@dlusd.edu.ph</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="footer-contact-name">Jessica Ferreira</p>
+                                <div class="footer-contact-info">
+                                    <span>09998079251</span>
+                                    <span>djx2462@dlsud.edu.ph</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Us 2 -->
+                    <div class="md:pt-14">
+                        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <div>
+                                <p class="footer-contact-name">John Lirams P. Trampe</p>
+                                <div class="footer-contact-info">
+                                    <span>09761610413</span>
+                                    <span>tjp0611@dlsud.edu.ph</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom" style="padding-top: 2rem;">
+                    <p>&copy; {{ date('Y') }} Pathfinder - Your Career Guidance Platform. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>
                         <path d="M17.2036 -3H0V102.197H49.5189V86.7187H17.2036V-3Z" fill="currentColor" />

@@ -13,6 +13,8 @@ class MbtiPersonalityType extends Model
         'description',
         'strengths',
         'weaknesses',
+        'workplace_habits',
+        'growth_advice',
         'career_paths',
         'temperament',
         'role'

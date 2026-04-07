@@ -458,42 +458,87 @@
     <!-- Footer -->
     <footer class="bg-gray-800 text-white">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <div class="flex items-center">
-                        <svg class="h-8 w-8" style="color: #5AA7C6;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <!-- About Us -->
+                <div class="md:col-span-2 lg:col-span-1">
+                    <div class="flex items-center mb-6">
+                        <svg class="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                         </svg>
-                        <span class="ml-2 text-xl font-bold">Pathfinder</span>
+                        <span class="ml-2 text-2xl font-bold tracking-tight">Pathfinder</span>
                     </div>
-                    <p class="mt-4 text-gray-300">
-                        Your ultimate career guidance platform. Discover your path, visualize your journey, and bridge your skill gaps.
+                    <p class="text-gray-400 leading-relaxed">
+                        Pathfinder is a comprehensive career guidance platform dedicated to helping students and professionals navigate their professional journeys.
                     </p>
                 </div>
+
+                <!-- Features -->
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Features</h3>
-                    <ul class="space-y-2 text-gray-300">
-                        <li>Career Guidance</li>
-                        <li>Path Visualization</li>
-                        <li>Skill Gap Analysis</li>
-                        <li>Personalized Recommendations</li>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-6 border-b border-gray-700 pb-2 inline-block">Features</h3>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="{{ route('pathfinder.career-guidance') }}" class="text-gray-400 hover:text-blue-400 transition-colors duration-200 flex items-center text-sm">
+                                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                                Career Guidance
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('pathfinder.career-path') }}" class="text-gray-400 hover:text-blue-400 transition-colors duration-200 flex items-center text-sm">
+                                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                                Path Visualization
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('pathfinder.skill-gap') }}" class="text-gray-400 hover:text-blue-400 transition-colors duration-200 flex items-center text-sm">
+                                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                                Skill Gap Analysis
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('pathfinder.mbti-intro') }}" class="text-gray-400 hover:text-blue-400 transition-colors duration-200 flex items-center text-sm">
+                                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                                MBTI Assessment
+                            </a>
+                        </li>
                     </ul>
                 </div>
+
+                <!-- Contact Us Column 1 -->
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Get Started</h3>
-                    <p class="text-gray-300 mb-4">
-                        Ready to find your perfect career path? Start with our career guidance tool.
-                    </p>
-                    <a href="{{ route('pathfinder.career-guidance') }}" class="inline-flex items-center px-4 py-2 text-white font-medium rounded-lg transition-colors duration-200" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
-                        Get Started
-                        <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </a>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-6 border-b border-gray-700 pb-2 inline-block">Contact Us</h3>
+                    <div class="space-y-5">
+                        <div class="group">
+                            <p class="text-blue-400 font-semibold mb-1 text-sm">Hendrix B. Albay</p>
+                            <div class="flex flex-col text-xs text-gray-400 space-y-1">
+                                <span class="flex items-center"><svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>09550089737</span>
+                                <span class="flex items-center"><svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>ahb0562@dlusd.edu.ph</span>
+                            </div>
+                        </div>
+                        <div class="group">
+                            <p class="text-blue-400 font-semibold mb-1 text-sm">Jessica Ferreira</p>
+                            <div class="flex flex-col text-xs text-gray-400 space-y-1">
+                                <span class="flex items-center"><svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>09998079251</span>
+                                <span class="flex items-center"><svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>djx2462@dlsud.edu.ph</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Us Column 2 -->
+                <div class="lg:pt-14">
+                    <div class="space-y-5">
+                        <div class="group">
+                            <p class="text-blue-400 font-semibold mb-1 text-sm">John Lirams P. Trampe</p>
+                            <div class="flex flex-col text-xs text-gray-400 space-y-1">
+                                <span class="flex items-center"><svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>09761610413</span>
+                                <span class="flex items-center"><svg class="h-3 w-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>tjp0611@dlsud.edu.ph</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} Pathfinder. All rights reserved.</p>
+            <div class="mt-12 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
+                <p>&copy; {{ date('Y') }} Pathfinder - Your Career Guidance Platform. All rights reserved.</p>
             </div>
         </div>
     </footer>
