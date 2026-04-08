@@ -66,6 +66,12 @@ if [ ! -f /etc/apache2/mods-enabled/mpm_prefork.load ]; then
     ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load
 fi
 
+# Start FastAPI Microservice in the background
+echo "Starting ML API Microservice..."
+cd /var/www/html/ml_api
+python3 -m uvicorn main:app --host 127.0.0.1 --port 8000 &
+cd /var/www/html
+
 # Start Apache
 echo "Starting Apache in foreground on port $PORT..."
 apache2-foreground

@@ -7,6 +7,8 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     git \
     curl \
+    python3 \
+    python3-pip \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
@@ -33,6 +35,9 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Install Node.js dependencies and build assets
 RUN npm install && npm run prod
+
+# Install Python ML Microservice dependencies
+RUN pip3 install --no-cache-dir -r ml_api/requirements.txt --break-system-packages
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
