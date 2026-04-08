@@ -64,6 +64,7 @@ class CVAnalysisService
             $topCategory = $mlData['top_category'] ?? 'OTHER';
             $extractedSkills = $mlData['skills'] ?? [];
             $skillVector = $mlData['skill_vector'] ?? [];
+            $suggestedRoles = $mlData['suggested_roles'] ?? [];
             
             // Format extracted skills structure for legacy views
             $formattedSkills = [];
@@ -76,7 +77,7 @@ class CVAnalysisService
             }
 
             // Perform Hybrid Matching against actual JobProfiles database
-            $jobMatches = $this->findMatchingJobsProfile($topCategory, $skillVector, $extractedSkills);
+            $jobMatches = $this->findMatchingJobsProfile($topCategory, $skillVector, $extractedSkills, $suggestedRoles);
             $analysisSummary = $this->createAnalysisSummary($formattedSkills, $jobMatches, $topCategory);
 
             $processingTime = microtime(true) - $startTime;
@@ -120,6 +121,7 @@ class CVAnalysisService
         $topCategory = $mlData['top_category'] ?? 'OTHER';
         $extractedSkills = $mlData['skills'] ?? [];
         $skillVector = $mlData['skill_vector'] ?? [];
+        $suggestedRoles = $mlData['suggested_roles'] ?? [];
         
         // Format extracted skills structure
         $formattedSkills = [];
@@ -131,7 +133,7 @@ class CVAnalysisService
             ];
         }
 
-        $jobMatches = $this->findMatchingJobsProfile($topCategory, $skillVector, $extractedSkills);
+        $jobMatches = $this->findMatchingJobsProfile($topCategory, $skillVector, $extractedSkills, $suggestedRoles);
         $analysisSummary = $this->createAnalysisSummary($formattedSkills, $jobMatches, $topCategory);
 
         return [
@@ -147,11 +149,11 @@ class CVAnalysisService
      * Hybrid Matching Approach with JobProfile DB.
      * Uses ML Category grouping if possible, then calculates local cosine similarity.
      */
-    private function findMatchingJobsProfile(string $topCategory, array $skillVector, array $extractedSkills): array
+    private function findMatchingJobsProfile(string $topCategory, array $skillVector, array $extractedSkills, array $suggestedRoles = []): array
     {
         $jobProfiles = JobProfile::active()->get();
         if ($jobProfiles->isEmpty()) {
-            return []; // No jobs in DB
+            return $this->generateFallbackMatches($topCategory, $suggestedRoles, $extractedSkills);
         }
         
         $matches = [];
@@ -219,8 +221,30 @@ class CVAnalysisService
             }
         }
         
+        if (empty($matches)) {
+            return $this->generateFallbackMatches($topCategory, $suggestedRoles, $extractedSkills);
+        }
+        
         usort($matches, fn($a, $b) => $b['similarity_score'] <=> $a['similarity_score']);
         return array_slice($matches, 0, 10);
+    }
+    
+    private function generateFallbackMatches(string $topCategory, array $suggestedRoles, array $extractedSkills): array 
+    {
+        $matches = [];
+        foreach ($suggestedRoles as $role) {
+            $matches[] = [
+                'job_id' => 0,
+                'job_title' => $role['title'] ?? 'Unknown Role',
+                'category' => $this->formatCategoryName($topCategory),
+                'company' => 'Recommended Industry',
+                'description' => $role['description'] ?? 'A career utilizing your detected skills.',
+                'similarity_score' => 95.0,
+                'matching_dimensions' => [],
+                'required_skills' => array_slice($extractedSkills, 0, 8)
+            ];
+        }
+        return $matches;
     }
     
     private function createAnalysisSummary(array $skillsExtracted, array $jobMatches, string $topCategory): array

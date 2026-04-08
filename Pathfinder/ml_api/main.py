@@ -16,13 +16,14 @@ vocab_index = {}
 idf_values = []
 centroids = {}
 skill_flags = []
+category_roles = {}
 svc_coef = []
 svc_intercept = []
 svc_classes = []
 has_svc = False
 
 def load_model():
-    global model_data, vocab_index, idf_values, centroids, skill_flags, svc_coef, svc_intercept, svc_classes, has_svc
+    global model_data, vocab_index, idf_values, centroids, skill_flags, category_roles, svc_coef, svc_intercept, svc_classes, has_svc
     if not os.path.exists(MODEL_PATH):
         print(f"Error: Model not found at {MODEL_PATH}")
         return False
@@ -36,6 +37,7 @@ def load_model():
         idf_values = model_data.get('idf_values', [])
         centroids = model_data.get('category_centroids', {})
         skill_flags = model_data.get('skill_flags', [])
+        category_roles = model_data.get('category_roles', {})
         
         svc_coef = model_data.get('svc_coef', [])
         svc_intercept = model_data.get('svc_intercept', [])
@@ -65,6 +67,7 @@ class MLResponse(BaseModel):
     categories: Dict[str, float]
     skills: List[str]
     skill_vector: Dict[str, float]
+    suggested_roles: List[Dict[str, str]]
 
 def get_tfidf_vector(text: str) -> list:
     words = clean_text(text).split()
@@ -178,6 +181,11 @@ def analyze_resume(req: ResumeRequest):
     
     cat_dict = {cat: score for cat, score in sorted_cats[:5]}
     
+    # Get suggested roles from the ML model directly
+    roles = category_roles.get(top_cat, [])
+    if not roles and top_cat != "OTHER":
+         roles = [{'title': top_cat.title().replace('-', ' '), 'description': f'A career in {top_cat.title().replace("-", " ")}'}]
+         
     # 3. Detect Skills
     words = set(clean_text(text).split())
     # Identify skills present in document mapped by original vocabulary
@@ -206,5 +214,7 @@ def analyze_resume(req: ResumeRequest):
         top_category=top_cat,
         categories=cat_dict,
         skills=detected_skills,
-        skill_vector=skill_vector
+        skill_vector=skill_vector,
+        suggested_roles=roles
     )
+
