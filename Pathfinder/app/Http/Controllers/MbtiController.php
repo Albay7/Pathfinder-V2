@@ -613,18 +613,19 @@ class MbtiController extends Controller
      */
     public function processQuestionnaire(Request $request)
     {
-        // Validate the request - expecting JSON responses
+        // Validate the request
         $request->validate([
-            'responses' => 'required|string',
+            'responses' => 'required',
             'current_page' => 'required|integer|min:1|max:10'
         ]);
 
-        // Decode the JSON responses
-        $responses = json_decode($request->input('responses'), true);
+        // Decode the JSON responses robustly
+        $responsesInput = $request->input('responses');
+        $responses = is_string($responsesInput) ? json_decode($responsesInput, true) : $responsesInput;
 
         // Validate that we have all 60 questions with valid values
-        if (!$responses || count($responses) !== 60) {
-            return back()->withErrors(['error' => 'Please complete all questions before submitting.']);
+        if (!is_array($responses) || count($responses) !== 60) {
+            return back()->withInput()->withErrors(['error' => 'Please complete all questions before submitting.']);
         }
 
         // Convert responses to the expected format and validate values
@@ -633,7 +634,7 @@ class MbtiController extends Controller
             $questionKey = "q{$i}";
             if (!isset($responses[$questionKey]) || !is_numeric($responses[$questionKey]) ||
                 $responses[$questionKey] < 1 || $responses[$questionKey] > 7) {
-                return back()->withErrors(['error' => "Invalid response for question {$i}."]);
+                return back()->withInput()->withErrors(['error' => "Invalid response for question {$i}."]);
             }
             $answers[$questionKey] = (int) $responses[$questionKey];
         }
@@ -740,7 +741,7 @@ class MbtiController extends Controller
         $personalityType = MbtiPersonalityType::where('type_code', $mbtiType)->first();
 
         if (!$personalityType) {
-            return redirect()->back()->with('error', 'Unable to determine personality type. Please try again.');
+            \Illuminate\Support\Facades\Log::warning('MBTI Personality Type missing from DB for type: ' . $mbtiType);
         }
 
         // Calculate percentages for display
@@ -776,7 +777,7 @@ class MbtiController extends Controller
             'j_score' => $jScore,
             'p_score' => $pScore,
             'result_type' => $mbtiType,
-            'personality_type_id' => $personalityType->id,
+            'personality_type_id' => $personalityType ? $personalityType->id : null,
             'completed' => true,
             'completed_at' => now()
         ]);
@@ -787,17 +788,23 @@ class MbtiController extends Controller
             $user->update([
                 'mbti_type' => $mbtiType,
                 'mbti_scores' => $mbtiScores,
-                'mbti_description' => $personalityType->description
+                'mbti_description' => $personalityType ? $personalityType->description : $this->getMbtiDescription($mbtiType)
             ]);
 
             // Store career recommendations in user_progress
-            $this->storeCareerRecommendations($user->id, $mbtiType, $personalityType);
+            if ($personalityType) {
+                $this->storeCareerRecommendations($user->id, $mbtiType, $personalityType);
+            } else {
+                // Mock personality type constraint gracefully if DB is missing
+                $dummyType = new MbtiPersonalityType(['type_code' => $mbtiType, 'description' => $this->getMbtiDescription($mbtiType)]);
+                $this->storeCareerRecommendations($user->id, $mbtiType, $dummyType);
+            }
         } else {
             // Store in session for guest users
             session([
                 'mbti_type' => $mbtiType,
                 'mbti_scores' => $mbtiScores,
-                'mbti_description' => $personalityType->description,
+                'mbti_description' => $personalityType ? $personalityType->description : $this->getMbtiDescription($mbtiType),
                 'personality_type' => $personalityType
             ]);
         }

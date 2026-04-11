@@ -202,12 +202,22 @@
 @endpush
 
 @push('scripts')
+@if(old('responses'))
+<script>
+    @php
+        $oldResponses = old('responses');
+        $oldResponsesJson = is_string($oldResponses) ? $oldResponses : json_encode($oldResponses ?: new \stdClass());
+    @endphp
+    window.oldResponses = {!! $oldResponsesJson !!};
+    window.oldCurrentPage = {{ old('current_page', 1) }};
+</script>
+@endif
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        let currentPage = 1;
+        let currentPage = window.oldCurrentPage || 1;
         const totalPages = 10;
         const questionsPerPage = 6;
-        const responses = {};
+        const responses = window.oldResponses || {};
 
         // MBTI Questions Database (60 questions total)
         const questions = {
@@ -281,7 +291,14 @@
         };
 
         // Initialize first page
-        showPage(1);
+        if (Object.keys(responses).length > 0) {
+            // Restore previously answered pages
+            const maxAnsweredPage = Math.ceil(Object.keys(responses).length / questionsPerPage);
+            for (let i = 1; i <= Math.max(currentPage, maxAnsweredPage); i++) {
+                showPage(i);
+            }
+        }
+        showPage(currentPage);
         updateProgress();
         updateNavigationButtons();
 
@@ -472,12 +489,14 @@
                                    value === 4 ? `style="background: linear-gradient(to bottom right, #f9fafb, #f3f4f6); border-color: #9ca3af;"` :
                                    `style="background: linear-gradient(to bottom right, #f0fdfa, #ccfdf7); border-color: #14b8a6;"`;
 
+                const isChecked = responses[`q${questionNum}`] === value ? 'checked' : '';
+
                 optionsHTML += `
-                    <label for=\"q${questionNum}_${value}\" class=\"cursor-pointer block mx-2\">
-                        <input type=\"radio\" id=\"q${questionNum}_${value}\" name=\"q${questionNum}\" value=\"${value}\" class=\"sr-only\" required>
-                        <div class=\"modern-radio-option ${sizes[index]} rounded-xl border-2 ${shadowClass} transform hover:scale-105 transition-all duration-300 flex items-center justify-center group\" data-value=\"${value}\" ${customStyle}>
-                            <div class=\"${innerSizes[index]} rounded-full opacity-0 group-hover:opacity-30 transition-all duration-300 flex items-center justify-center\" style=\"background: ${value <= 3 ? '#5AA7C6' : value === 4 ? '#9ca3af' : '#14b8a6'};\">
-                                <div class=\"${dotSizes[index]} rounded-full bg-white opacity-0 transition-opacity duration-300\"></div>
+                    <label for="q${questionNum}_${value}" class="cursor-pointer block mx-2">
+                        <input type="radio" id="q${questionNum}_${value}" name="q${questionNum}" value="${value}" class="sr-only" ${isChecked} required>
+                        <div class="modern-radio-option ${sizes[index]} rounded-xl border-2 ${shadowClass} transform hover:scale-105 transition-all duration-300 flex items-center justify-center group" data-value="${value}" ${customStyle}>
+                            <div class="${innerSizes[index]} rounded-full opacity-0 group-hover:opacity-30 transition-all duration-300 flex items-center justify-center" style="background: ${value <= 3 ? '#5AA7C6' : value === 4 ? '#9ca3af' : '#14b8a6'};">
+                                <div class="${dotSizes[index]} rounded-full bg-white opacity-0 transition-opacity duration-300"></div>
                             </div>
                         </div>
                     </label>
