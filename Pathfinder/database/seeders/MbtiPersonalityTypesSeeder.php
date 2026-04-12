@@ -28,7 +28,7 @@ class MbtiPersonalityTypesSeeder extends Seeder
             ],
             [
                 'type_code' => 'INTP',
-                'name' => 'The Thinker',
+                'name' => 'The Logician',
                 'description' => 'INTPs are innovative inventors who thrive on abstract problem-solving and the intellectual freedom to explore uncharted territories of thought. They possess a unique ability to dissect complex ideas and identify logical inconsistencies, often arriving at original solutions that others might overlook. While they may appear detached or absent-minded, their internal world is a vibrant laboratory of experimentation and theoretical modeling. In the workplace, they value intellectual challenge and dislike the constraints of routine or rigid micro-management. For an INTP, the ultimate objective is not just to know the truth, but to understand the fundamental laws that define the universe.',
                 'strengths' => 'Great analysts and abstract thinkers, Imaginative and original, Open-minded, Enthusiastic, Objective',
                 'weaknesses' => 'Very private and withdrawn, Insensitive, Absent-minded, Condescending, Loathe rules',
@@ -124,7 +124,7 @@ class MbtiPersonalityTypesSeeder extends Seeder
             ],
             [
                 'type_code' => 'ISFJ',
-                'name' => 'The Protector',
+                'name' => 'The Defender',
                 'description' => 'ISFJs are dedicated and warm protectors who find deep satisfaction in supporting others and ensuring that their practical needs are met with care and attention. They possess a remarkable memory for detail and a quiet strength that allows them to handle complex responsibilities without seeking recognition. While they are incredibly humble, their commitment to the well-being of their loved ones and colleagues is absolute and unwavering. In the workplace, they excel in roles that allow them to provide service and foster a sense of security and belonging. Ultimately, the ISFJ\'s goal is to create a harmonious and supportive environment where everyone can thrive.',
                 'strengths' => 'Supportive, Reliable and patient, Observant, Enthusiastic, Loyal',
                 'weaknesses' => 'Humble and shy, Take things too personally, Overload themselves, Reluctant to change',
