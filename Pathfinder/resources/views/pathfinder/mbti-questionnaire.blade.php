@@ -219,75 +219,79 @@
         const questionsPerPage = 6;
         const responses = window.oldResponses || {};
 
-        // MBTI Questions Database (60 questions total)
+        // MBTI Questions Database (60 questions — psychometrician-reviewed)
         const questions = {
-            // Extraversion vs Introversion (E/I) - Questions 1-15
-            1: "You regularly make new friends.",
-            2: "You prefer to work in a team rather than alone.",
-            3: "You enjoy being the center of attention.",
-            4: "You feel comfortable in large social gatherings.",
-            5: "You often initiate conversations with strangers.",
-            6: "You feel energized after spending time with people.",
-            7: "You prefer talking to thinking.",
-            8: "You find it easy to introduce yourself to new people.",
-            9: "You enjoy parties and social events.",
-            10: "You feel comfortable being the leader in group activities.",
-            11: "You prefer to express your thoughts out loud rather than in writing.",
-            12: "You feel drained after spending too much time alone.",
-            13: "You enjoy meeting new people at social events.",
-            14: "You prefer group activities over solitary ones.",
-            15: "You feel more comfortable speaking than listening.",
+            // Extraversion (E) vs. Introversion (I) — Questions 1–15
+            // Source of energy: Social/External (E) vs. Solitary/Internal (I)
+            1:  "You regularly make new friends.",                                          // E – valid (Q1)
+            2:  "You prefer to work alone rather than in a team.",                          // I – valid (Q2)
+            3:  "You enjoy being the center of attention.",                                  // E – valid (Q3)
+            4:  "You prefer quiet environments to recharge after a busy day.",               // I – revised (Q4, was: stay relaxed)
+            5:  "You often initiate conversations with strangers.",                         // E – valid (Q5)
+            6:  "You tend to keep in the background during group activities.",              // I – valid (Q6)
+            7:  "You are the first to start conversations in social settings.",             // E – valid (Q7)
+            8:  "You prefer to think things through before you speak.",                     // I – revised (Q8, was: have little to say)
+            9:  "You gain energy from being around other people.",                          // E – revised (Q9, was: feel comfortable)
+            10: "You prefer to avoid large crowds or busy social gatherings.",              // I – valid (Q10)
+            11: "You find it easy to meet and talk to new people.",                         // E – valid (Q11)
+            12: "You find prolonged social interaction draining.",                          // I – revised (Q12, was: difficult to approach)
+            13: "You prefer talking with others to sharing ideas in writing.",              // E – revised (Q13, was: skilled in handling)
+            14: "You prefer one-on-one conversations over large group discussions.",        // I – revised (Q14, was: describe experiences as dull)
+            15: "You take charge in conversations and group settings.",                     // E – valid (Q15)
 
-            // Sensing vs Intuition (S/N) - Questions 16-30
-            16: "You prefer to focus on details rather than the big picture.",
-            17: "You trust facts more than theories.",
-            18: "You prefer practical solutions over innovative ideas.",
-            19: "You focus on what is rather than what could be.",
-            20: "You prefer step-by-step instructions.",
-            21: "You trust your experience more than your intuition.",
-            22: "You prefer concrete information over abstract concepts.",
-            23: "You focus on present realities rather than future possibilities.",
-            24: "You prefer proven methods over experimental approaches.",
-            25: "You trust your five senses more than your hunches.",
-            26: "You prefer specific examples over general principles.",
-            27: "You focus on facts rather than meanings.",
-            28: "You prefer routine over variety.",
-            29: "You trust what you can see and touch.",
-            30: "You prefer traditional approaches over innovative ones.",
+            // Sensing (S) vs. Intuition (N) — Questions 16–30
+            // Data processing: Concrete/Current (S) vs. Abstract/Future (N)
+            16: "You prefer to focus on details rather than the big picture.",              // S – valid (Q16)
+            17: "You tend to see the big picture rather than the specific details.",        // N – valid (Q17)
+            18: "You prefer practical, hands-on solutions over theoretical ones.",         // S – valid (Q18)
+            19: "You have a vivid imagination and enjoy exploring ideas.",                  // N – valid (Q19)
+            20: "You prefer sticking to familiar, proven methods.",                         // S – valid (Q20)
+            21: "You enjoy solving complex, abstract problems.",                            // N – valid (Q21)
+            22: "You follow directions and established procedures carefully.",              // S – valid (Q22)
+            23: "You are drawn to creating bold, original ideas.",                          // N – valid (Q23)
+            24: "You prefer conventional, tried-and-tested approaches.",                    // S – valid (Q24)
+            25: "You enjoy thinking deeply about ideas and concepts.",                      // N – valid (Q25)
+            26: "You rarely look for hidden or deeper meanings behind things.",             // S – valid (Q26)
+            27: "You prefer to focus on patterns and meanings behind facts.",               // N – revised (Q27, was: process large amounts of info)
+            28: "You prefer to focus on one task at a time rather than multitasking.",     // S – valid (Q28)
+            29: "You enjoy generating new ideas and brainstorming possibilities.",          // N – valid (Q29)
+            30: "You prefer clear, concrete facts over abstract theories.",                 // S – revised (Q30, was: not interested in art — REJECTED)
 
-            // Thinking vs Feeling (T/F) - Questions 31-45
-            31: "You make decisions based on logic rather than emotions.",
-            32: "You value truth more than harmony.",
-            33: "You prefer to be objective rather than personal.",
-            34: "You focus on tasks more than people.",
-            35: "You believe being right is more important than being liked.",
-            36: "You prefer criticism over praise.",
-            37: "You make decisions with your head rather than your heart.",
-            38: "You value competence more than compassion.",
-            39: "You prefer to analyze rather than sympathize.",
-            40: "You focus on principles rather than people.",
-            41: "You believe justice is more important than mercy.",
-            42: "You prefer logical arguments over emotional appeals.",
-            43: "You value efficiency more than harmony.",
-            44: "You prefer to be firm rather than gentle.",
-            45: "You focus on what makes sense rather than what feels right.",
+            // Thinking (T) vs. Feeling (F) — Questions 31–45
+            // Decision-making: Logic/Objective (T) vs. Values/Subjective (F)
+            31: "You make decisions based on facts and logic rather than emotion.",         // T – valid (Q31)
+            32: "You make a point to consider how others will feel about your decisions.", // F – valid (Q32)
+            33: "You find it easier to make decisions based on logic than personal values.",// T – revised (Q33, was: political opinion — REJECTED)
+            34: "You believe that laws and rules should be flexible based on circumstances.",// F – valid (Q34)
+            35: "You prioritize logic over harmony when resolving a disagreement.",        // T – revised (Q35, was: optimism — REJECTED)
+            36: "You are sensitive to the emotional needs of the people around you.",      // F – revised (Q36, was: I tend to worry — REJECTED)
+            37: "You rely on logical reasoning when making important decisions.",           // T – valid (Q37)
+            38: "You easily empathize with others and understand their feelings.",         // F – valid (Q38)
+            39: "You remain objective and analytical even during personal conflicts.",      // T – revised (Q39, was: stay calm under pressure)
+            40: "You often consider how a decision will emotionally affect those involved.",// F – revised (Q40, was: I get stressed easily — REJECTED)
+            41: "You analyze the pros and cons carefully before committing to a decision.", // T – revised (Q41, was: rarely feel irritated — REJECTED)
+            42: "You value kindness and compassion more than being technically correct.",   // F – revised (Q42, was: get upset easily — REJECTED)
+            43: "You try to keep your personal feelings out of professional decisions.",   // T – revised (Q43, was: control emotions — ability framing)
+            44: "You believe that a fair outcome matters more than how people feel about it.", // T – revised (Q44, was: mood swings — REJECTED)
+            45: "You focus on the truth, even if it is uncomfortable for others to hear.", // T – revised (Q45, was: not easily bothered)
 
-            // Judging vs Perceiving (J/P) - Questions 46-60
-            46: "You prefer to have things settled rather than open-ended.",
-            47: "You like to plan ahead rather than be spontaneous.",
-            48: "You prefer structure over flexibility.",
-            49: "You like to finish projects before starting new ones.",
-            50: "You prefer deadlines to open timelines.",
-            51: "You like to have a schedule rather than go with the flow.",
-            52: "You prefer closure over keeping options open.",
-            53: "You like to make decisions quickly.",
-            54: "You prefer organized environments over messy ones.",
-            55: "You like to have things planned out in advance.",
-            56: "You prefer predictability over surprises.",
-            57: "You like to stick to your plans rather than change them.",
-            58: "You prefer to work steadily rather than in bursts.",
-            59: "You like to have clear goals and objectives.",
-            60: "You prefer to complete tasks rather than start new ones."
+            // Judging (J) vs. Perceiving (P) — Questions 46–60
+            // Work style: Planned/Structured (J) vs. Spontaneous/Flexible (P)
+            46: "You prefer to have things settled and decided rather than left open.",    // J – valid (Q46)
+            47: "You prefer to keep your options open rather than committing to a plan.",  // P – valid (Q47)
+            48: "You like to stick to your plans once you have made them.",                // J – valid (Q48)
+            49: "You are comfortable changing plans at the last minute.",                   // P – valid (Q49)
+            50: "You enjoy organizing events and activities for others.",                   // J – valid (Q50)
+            51: "You prefer spontaneity and flexibility over rigid schedules.",            // P – valid (Q51)
+            52: "You prefer to finish tasks well ahead of the deadline.",                  // J – revised (Q52, was: complete tasks effectively)
+            53: "You tend to forget to return things or put them back in their place.",    // P – valid (Q53)
+            54: "You like to keep your workspace and belongings tidy and organized.",      // J – valid (Q54)
+            55: "You tend to leave things scattered rather than organized.",               // P – valid (Q55)
+            56: "You prefer following a schedule rather than making decisions on the fly.",// J – valid (Q56)
+            57: "You are comfortable making decisions even when the situation is uncertain.", // P – revised (Q57, was: act without thinking — impulsivity)
+            58: "You like to wrap up projects and tasks as soon as possible.",             // J – valid (Q58)
+            59: "You prefer to delay decisions to keep all your options available.",       // P – valid (Q59)
+            60: "You dislike leaving tasks unfinished or open-ended."                      // J – revised (Q60, was: I work hard — REJECTED)
         };
 
         // Initialize first page

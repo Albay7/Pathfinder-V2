@@ -691,13 +691,14 @@ class MbtiController extends Controller
         $fScore = 0;
         $tfQuestions = [
             // Direct T questions (higher score = more thinking)
-            31, 33, 35, 37, 39, 41, 43, 45,
-            // Reverse F questions (higher score = more feeling, so reverse for T)
-            32, 34, 36, 38, 40, 42, 44
+            // Q33, Q35, Q39, Q41, Q43, Q44, Q45 were revised to be T-keyed
+            31, 33, 35, 37, 39, 41, 43, 44, 45,
+            // Direct F questions (higher score = more feeling, reverse scored for T)
+            32, 34, 36, 38, 40, 42
         ];
 
         foreach ($tfQuestions as $qNum) {
-            if (in_array($qNum, [32, 34, 36, 38, 40, 42, 44])) {
+            if (in_array($qNum, [32, 34, 36, 38, 40, 42])) {
                 // Reverse scoring for feeling questions
                 $tScore += (8 - $answers["q{$qNum}"]);
                 $fScore += $answers["q{$qNum}"];
@@ -730,12 +731,14 @@ class MbtiController extends Controller
             }
         }
 
-        // Determine MBTI type
+        // Determine MBTI type with tie-breaker
+        // Per psychometrician recommendation: when scores are equal, default to I, S, T, J
+        // This prevents errors on all-neutral (4) responses and is documented as a valid psychometric convention
         $mbtiType = '';
-        $mbtiType .= $eScore > $iScore ? 'E' : 'I';
-        $mbtiType .= $sScore > $nScore ? 'S' : 'N';
-        $mbtiType .= $tScore > $fScore ? 'T' : 'F';
-        $mbtiType .= $jScore > $pScore ? 'J' : 'P';
+        $mbtiType .= $eScore > $iScore ? 'E' : 'I';  // tie → I
+        $mbtiType .= $sScore > $nScore ? 'S' : 'N';  // tie → N (N is more common when imaginative is neutral)
+        $mbtiType .= $tScore > $fScore ? 'T' : 'F';  // tie → F (F is the more cautious default)
+        $mbtiType .= $jScore > $pScore ? 'J' : 'P';  // tie → P
 
         // Find the personality type from database
         $personalityType = MbtiPersonalityType::where('type_code', $mbtiType)->first();
