@@ -1,0 +1,24 @@
+﻿
+--- Testing: Software Developer ---
+Title: Software Developer
+Source: Static Match / Pure AI
+Description: Software Developers design, code, and test software applications. They apply engineering principles to software creation, solving complex problems and...
+Salary Ph: Γé▒400k - Γé▒1.2M Per year
+Responsibilities (count): 4
+Skills: Programming, Problem Solving, Algorithm Design...
+
+--- Testing: Data Analyst ---
+Title: Data Analyst
+Source: Static Match / Pure AI
+Description: Data Analysts gather, clean, and analyze datasets to help organizations make better business decisions. They use statistical tools to interpret data a...
+Salary Ph: Γé▒400k - Γé▒1.1M Per year
+Responsibilities (count): 4
+Skills: SQL, Python/R, Data Visualization...
+
+--- Testing: Chef ---
+Title: Chef
+Source: Static Match / Pure AI
+Description: The role of a Chef is crucial in the hospitality industry, as it directly impacts the satisfaction and experience of customers. A Chef is responsible ...
+Salary Ph: Γé▒400,000 - Γé▒700,000 Per year
+Responsibilities (count): 5
+Skills: Analytical Thinking, Problem Solving, Communication...

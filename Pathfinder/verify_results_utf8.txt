@@ -1,0 +1,40 @@
+﻿
+--- Testing: Software Developer ---
+Title: Software Developer
+Source: Static Match / Pure AI
+Description: Software Developers design, code, and test software applications. They apply engineering principles to software creation, solving complex problems and...
+Salary Ph: Γé▒400k - Γé▒1.2M Per year
+Responsibilities (count): 4
+Skills: Programming, Problem Solving, Algorithm Design...
+
+--- Testing: Data Analyst ---
+Title: Data Analyst
+Source: Static Match / Pure AI
+Description: Data Analysts gather, clean, and analyze datasets to help organizations make better business decisions. They use statistical tools to interpret data a...
+Salary Ph: Γé▒400k - Γé▒1.1M Per year
+Responsibilities (count): 4
+Skills: SQL, Python/R, Data Visualization...
+
+--- Testing: Chef ---
+
+   TypeError 
+
+  Cannot assign null to property App\Services\OnetService::$apiKey of type string
+
+  at app\Services\OnetService.php:16
+     12Γûò     protected string $baseUrl;
+     13Γûò 
+     14Γûò     public function __construct()
+     15Γûò     {
+  Γ₧£  16Γûò         $this->apiKey = config('services.onet.key', '');
+     17Γûò         $this->baseUrl = rtrim(config('services.onet.base_url', 'https://services.onetcenter.org/webservices/rest'), '/');
+     18Γûò     }
+     19Γûò 
+     20Γûò     /**
+
+  1   [internal]:0
+      App\Services\OnetService::__construct()
+
+  2   vendor\laravel\framework\src\Illuminate\Container\Container.php:1205
+      ReflectionClass::newInstanceArgs([])
+
