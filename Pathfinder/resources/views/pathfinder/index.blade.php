@@ -194,7 +194,7 @@
             </p>
         </div>
 
-        <div class="flex flex-row items-start justify-between gap-4" style="display: flex !important; flex-direction: row !important; align-items: flex-start !important; justify-content: space-between !important;">
+        <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 md:gap-4">
             <div class="text-center">
                 <div class="flex items-center justify-center w-16 h-16 text-white rounded-full mx-auto mb-4 text-xl font-bold" style="background-color: #13264D;">
                     1
