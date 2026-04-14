@@ -1,78 +1,82 @@
+======================================================================
+PATHFINDER MODEL ANALYSIS REPORT (V4.1)
+======================================================================
+
 Loading model...
-Loading dataset...
-Testing accuracy on 1000 samples...
-------------------------------------------------------------
-Actual Category           | Predicted Category        | Result
-------------------------------------------------------------
-TEACHER                   | TEACHER                   | ✓
-DIGITAL-MEDIA             | PUBLIC-RELATIONS          | ✗
-CONSTRUCTION              | CONSTRUCTION              | ✓
-CHEF                      | CHEF                      | ✓
-BANKING                   | ADVOCATE                  | ✗
-BUSINESS-DEVELOPMENT      | BUSINESS-DEVELOPMENT      | ✓
-DESIGNER                  | ENGINEERING               | ✗
-BUSINESS-DEVELOPMENT      | BUSINESS-DEVELOPMENT      | ✓
-TEACHER                   | AGRICULTURE               | ✗
-DESIGNER                  | ENGINEERING               | ✗
-HEALTHCARE                | ENGINEERING               | ✗
-HEALTHCARE                | TEACHER                   | ✗
-SALES                     | BANKING                   | ✗
-ARTS                      | INFORMATION-TECHNOLOGY    | ✗
-AUTOMOBILE                | AUTOMOBILE                | ✓
-SALES                     | HEALTHCARE                | ✗
-BANKING                   | AGRICULTURE               | ✗
-ADVOCATE                  | BANKING                   | ✗
-ARTS                      | BUSINESS-DEVELOPMENT      | ✗
-HR                        | AGRICULTURE               | ✗
-------------------------------------------------------------
+  Model Type : Hybrid LinearSVC + Cosine
+  Vocabulary : 10000 terms
+  Categories : 24
 
---- Classification Performance Report ---
-                        precision    recall  f1-score   support
+Loading test dataset...
+  Testing on 1500 samples from Resume.csv
 
-            ACCOUNTANT       0.64      0.64      0.64        45
-              ADVOCATE       0.21      0.06      0.09        53
-           AGRICULTURE       0.08      0.74      0.14        23
-               APPAREL       0.34      0.53      0.42        38
-                  ARTS       0.00      0.00      0.00        36
-            AUTOMOBILE       0.29      0.15      0.20        13
-              AVIATION       0.73      0.75      0.74        44
-               BANKING       0.53      0.69      0.60        48
-                   BPO       0.00      0.00      0.00         9
-  BUSINESS-DEVELOPMENT       0.17      0.75      0.27        48
-                  CHEF       0.87      0.64      0.74        53
-          CONSTRUCTION       0.77      0.48      0.59        56
-            CONSULTANT       0.00      0.00      0.00        44
-              DESIGNER       0.50      0.05      0.09        42
-         DIGITAL-MEDIA       0.40      0.14      0.21        43
-           ENGINEERING       0.37      0.39      0.38        38
-               FINANCE       0.29      0.04      0.08        45
-               FITNESS       0.95      0.40      0.56        45
-            HEALTHCARE       0.32      0.47      0.38        40
-                    HR       0.73      0.73      0.73        37
-INFORMATION-TECHNOLOGY       0.33      0.03      0.06        59
-      PUBLIC-RELATIONS       0.60      0.14      0.23        42
-                 SALES       0.00      0.00      0.00        51
-               TEACHER       0.57      0.77      0.65        48
+Evaluating predictions...
 
-              accuracy                           0.37      1000
-             macro avg       0.40      0.36      0.33      1000
-          weighted avg       0.43      0.37      0.35      1000
+======================================================================
+CATEGORY                   PRECISION     RECALL   F1-SCORE    SAMPLES
+----------------------------------------------------------------------
+✓ ACCOUNTANT                    1.00       1.00       1.00         69
+✓ ADVOCATE                      1.00       0.97       0.99         71
+✓ AGRICULTURE                   0.98       1.00       0.99         40
+✓ APPAREL                       0.98       1.00       0.99         63
+✓ ARTS                          1.00       0.98       0.99         63
+✓ AUTOMOBILE                    1.00       1.00       1.00         19
+✓ AVIATION                      0.98       1.00       0.99         64
+✓ BANKING                       0.99       1.00       0.99         73
+✓ BPO                           1.00       1.00       1.00         14
+✓ BUSINESS-DEVELOPMENT          1.00       0.90       0.95         69
+✓ CHEF                          1.00       1.00       1.00         76
+✓ CONSTRUCTION                  0.99       1.00       0.99         81
+✓ CONSULTANT                    0.98       0.98       0.98         65
+✓ DESIGNER                      1.00       1.00       1.00         64
+✓ DIGITAL-MEDIA                 0.97       1.00       0.98         64
+✓ ENGINEERING                   0.98       1.00       0.99         65
+✓ FINANCE                       0.99       1.00       0.99         71
+✓ FITNESS                       1.00       1.00       1.00         65
+✓ HEALTHCARE                    0.94       1.00       0.97         67
+✓ HR                            0.92       1.00       0.96         58
+✓ INFORMATION-TECHNOLOGY        1.00       0.94       0.97         82
+✓ PUBLIC-RELATIONS              0.98       1.00       0.99         58
+✓ SALES                         1.00       0.94       0.97         72
+✓ TEACHER                       1.00       1.00       1.00         67
+----------------------------------------------------------------------
+TOP-1 EXACT MATCH ACCURACY  : 98.67% (1480/1500)
+TOP-3 RECOMMENDATION ACCURACY: 99.80% (1497/1500) *** PRIMARY APP METRIC ***
+MACRO AVG F1 (Top-1)        :  0.99
+======================================================================
 
-------------------------------------------------------------
+======================================================================
+THEMATIC PERFORMANCE (Grouping categories into fields)
+----------------------------------------------------------------------
+Technical Skills                 0.99  █████████████████████████████
+Creative & Design                0.99  █████████████████████████████
+Healthcare & Sciences            0.99  █████████████████████████████
+Business & Management            0.98  █████████████████████████████
+Communication & Interpersonal    0.98  █████████████████████████████
+Legal & Compliance               0.99  █████████████████████████████
+Education & Training             1.00  ██████████████████████████████
+Trades & Applied                 0.99  █████████████████████████████
+----------------------------------------------------------------------
 
---- Skill Detection Quality Check ---
+======================================================================
+TOP 5 MISCLASSIFICATIONS (Who gets mixed up?)
+----------------------------------------------------------------------
+Actual: BUSINESS-DEVELOPMENT mispredicted as HEALTHCARE           (4 times)
+Actual: ADVOCATE             mispredicted as FINANCE              (1 times)
+Actual: ADVOCATE             mispredicted as HR                   (1 times)
+Actual: ARTS                 mispredicted as HR                   (1 times)
+Actual: BUSINESS-DEVELOPMENT mispredicted as BANKING              (1 times)
+Actual: BUSINESS-DEVELOPMENT mispredicted as DIGITAL-MEDIA        (1 times)
+Actual: BUSINESS-DEVELOPMENT mispredicted as HR                   (1 times)
+Actual: CONSULTANT           mispredicted as HR                   (1 times)
+----------------------------------------------------------------------
 
-CV 1 (TEACHER):
-Detected Skills: classroom, editing, english, french, layout, layouts, leadership, marketing, organizational, teaching
+======================================================================
+Skill Detection Health Sample
+----------------------------------------------------------------------
+CV: TEACHER              | Found: classroom, editing, english, french, layout, layouts, leadership, marketing, teaching
+CV: DIGITAL-MEDIA        | Found: advertising, digital, editing, entrepreneurship, journalism, latin, leadership, marketing, spanish
+CV: CONSTRUCTION         | Found: accounting, budgeting, capitalize, compliance, contract, contractor, contracts, leadership, marketing, negotiations, procurement, programming
+======================================================================
 
-CV 2 (DIGITAL-MEDIA):
-Detected Skills: advertising, association, digital, editing, journalism, leadership, marketing, organizational, social, spanish, special, specialized
-
-CV 3 (CONSTRUCTION):
-Detected Skills: accounting, budgeting, commercial, competencies, compliance, contract, contractor, contracts, incident, leadership, marketing, negotiations, procurement, programming, specialty
-
-CV 4 (CHEF):
-Detected Skills: catering, english, inventory, logistics, spanish, special
-
-CV 5 (BANKING):
-Detected Skills: commercial, compliance, contractual, database, enhancing, interpersonal, investments, organizational, photoshop, policies, portfolio, regulatory, science, servicing, spanish
+Detailed Report saved to: Datasets/accuracy_report.txt

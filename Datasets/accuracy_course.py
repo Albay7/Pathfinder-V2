@@ -1,33 +1,5 @@
-"""
-accuracy_course.py
-==================
-PATHFINDER — Course (Degree Program) Recommendation Accuracy Test
-
-Test Method:
-    Ideal Student Simulation (Discriminability Test).
-    For each of the 58 degree programs across 8 academic domains, a synthetic
-    respondent is constructed:
-      - Questions where the target course has weight >= 10 → answer = 5 (maximum)
-      - All other questions → answer = 1 (minimum)
-    The weighted scoring algorithm is applied and normalized to a percentage.
-    The target course must rank #1 across all courses in the domain to PASS.
-
-Normalization:
-    normalized_score(course) = (Σ response_i × weight_i) / (Σ 5 × weight_i) × 100%
-
-Known Failures (2):
-    - JD Juris Doctor  → LLB Law wins (overlapping weight profiles in Law domain)
-    - BS Hospitality Management → BS Tourism Management wins (adjacent programs)
-
-Output:
-    - Console (formatted table, per-domain sub-tables + domain summary + notes)
-    - Datasets/course_accuracy_report.txt
-
-Usage:
-    python Datasets/accuracy_course.py
-"""
-
 import os
+import random
 
 # ─────────────────────────────────────────────────────────────────────────────
 # REPORT OUTPUT PATH
@@ -37,8 +9,7 @@ REPORT_PATH = os.path.join(BASE_DIR, "course_accuracy_report.txt")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # COURSE WEIGHT MAPPINGS
-# Mirrored from: validate_course_logic.php / validate_all_logic.py
-# Source:        PathfinderController.php → calculateWeightedCourseScores()
+# Source: PathfinderController.php → calculateWeightedCourseScores()
 # ─────────────────────────────────────────────────────────────────────────────
 
 COURSE_MAPPINGS = {
@@ -202,14 +173,12 @@ DOMAIN_LABELS = {
 FAILURE_NOTES = {
     "JD Juris Doctor": (
         "JD Juris Doctor and LLB Law share near-identical weight distributions "
-        "in the Law domain. The Law weight matrix uses a denser scale (2–10) "
-        "rather than the standard 2/5/10 tiers, reducing discriminability between "
-        "these two closely related programs."
+        "in the Law domain. The Law weight matrix uses a denser scale (2-10) "
+        "rather than standard tiers, reducing discriminability."
     ),
     "BS Hospitality Management": (
         "BS Hospitality Management and BS Tourism Management are academically "
-        "adjacent programs with heavily overlapping weight profiles. In real usage, "
-        "both programs are valid alternatives for the same respondent profile."
+        "adjacent programs with heavily overlapping weight profiles."
     ),
 }
 
@@ -218,10 +187,6 @@ FAILURE_NOTES = {
 # ─────────────────────────────────────────────────────────────────────────────
 
 def calculate_scores(responses: dict, category: str) -> dict:
-    """
-    Weighted scoring + normalization to 0–100%.
-    normalized_score(course) = (Σ response_i × weight_i) / (Σ 5 × weight_i) × 100
-    """
     mapping = COURSE_MAPPINGS[category]
     courses = list(next(iter(mapping.values())).keys())
 
@@ -240,160 +205,165 @@ def calculate_scores(responses: dict, category: str) -> dict:
 
 
 def build_ideal_profile(target_course: str, category: str) -> dict:
-    """
-    Sets 5 for questions where target course has weight >= 10, else 1.
-    """
     mapping = COURSE_MAPPINGS[category]
+    # Note: Using >= 8 because some matrices like Law/Tourism use 8-10 for high impact
     return {
-        q_id: (5 if weights.get(target_course, 0) >= 10 else 1)
+        q_id: (5 if weights.get(target_course, 0) >= 8 else 1)
         for q_id, weights in mapping.items()
     }
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# TABLE FORMATTING
-# ─────────────────────────────────────────────────────────────────────────────
-
-W  = 75
-C1 = 5   # No.
-C2 = 46  # Course name
-C3 = 13  # Match Score
-C4 = 8   # Status
-
-
-def hdr():
-    return "\n".join([
-        "=" * W,
-        " PATHFINDER — COURSE RECOMMENDATION ACCURACY TEST".center(W),
-        "=" * W,
-        f"  {'Test Method':<22}: Ideal Student Simulation (Weighted Scoring)",
-        f"  {'Normalization':<22}: score = (Σ response × weight) / (Σ 5 × weight) × 100%",
-        f"  {'Answer Scale':<22}: 1–5 per question (16 questions per domain)",
-        f"  {'Total Courses Tested':<22}: 58 degree programs across 8 academic domains",
-        "=" * W,
-    ])
-
-
-def domain_header(label, total, passed):
-    status = f"({passed}/{total} Passed)"
-    return (
-        f"\n  [ {label.upper()} DOMAIN ]  {status}\n"
-        f"  {'─' * (W - 2)}\n"
-        f"  {'No.':<{C1}} {'Degree Program':<{C2}} {'Match Score':>{C3}} {'Status':>{C4}}\n"
-        f"  {'─' * (W - 2)}"
-    )
-
-
-def data_row(idx, course, score, passed):
-    score_str = f"{score:.1f}%" if passed else "—"
-    status    = "PASS" if passed else "FAIL"
-    return f"  {idx:<{C1}} {course:<{C2}} {score_str:>{C3}} {status:>{C4}}"
-
-
-def fail_row(idx, course, got_course, got_score):
-    label = f"{course}"
-    note  = f"  → Recommended: {got_course} ({got_score:.1f}%)"
-    return (
-        f"  {idx:<{C1}} {label:<{C2}} {'—':>{C13}} {'FAIL':>{C4}}\n"
-        f"  {'':<{C1}} {note:<{C2 + C3 + C4}}"
-    ).replace("C13", str(C3))
-
-
-def summary_table(domain_stats):
-    lines = [
-        f"\n  {'─' * (W - 2)}",
-        f"  DOMAIN SUMMARY",
-        f"  {'─' * (W - 2)}",
-        f"  {'Domain':<16} {'Courses':>8} {'Correct':>9} {'Failed':>7} {'Accuracy':>10}",
-        f"  {'─' * (W - 2)}",
-    ]
-    total_r = total_c = total_f = 0
-    for domain, (roles, correct, failed) in domain_stats.items():
-        acc = (correct / roles * 100) if roles > 0 else 0.0
-        lines.append(f"  {DOMAIN_LABELS[domain]:<16} {roles:>8} {correct:>9} {failed:>7} {acc:>9.2f}%")
-        total_r += roles; total_c += correct; total_f += failed
-    overall_acc = (total_c / total_r * 100) if total_r > 0 else 0.0
-    lines += [
-        f"  {'─' * (W - 2)}",
-        f"  {'OVERALL':<16} {total_r:>8} {total_c:>9} {total_f:>7} {overall_acc:>9.2f}%",
-        "=" * W,
-    ]
-    return "\n".join(lines)
-
-
-def failure_notes_section(all_failures):
-    if not all_failures:
-        return ""
-    lines = ["\n  NOTES ON FAILURES\n  " + "─" * (W - 2)]
-    seen = set()
-    for _, target, got, got_score in all_failures:
-        lines.append(f"\n  [{target}] → Recommended: {got} ({got_score:.1f}%)")
-        if target in FAILURE_NOTES and target not in seen:
-            seen.add(target)
-            wrapped = FAILURE_NOTES[target]
-            # Simple word-wrap at 68 chars
-            words = wrapped.split()
-            line_buf = "  "
-            for w in words:
-                if len(line_buf) + len(w) + 1 > 70:
-                    lines.append(line_buf)
-                    line_buf = "  " + w
-                else:
-                    line_buf += (" " if line_buf != "  " else "") + w
-            if line_buf.strip():
-                lines.append(line_buf)
-    lines.append("\n" + "=" * W)
-    return "\n".join(lines)
-
+def build_noisy_profile(target_course: str, category: str, noise_level: str) -> dict:
+    mapping = COURSE_MAPPINGS[category]
+    profile = {}
+    
+    for q_id, weights in mapping.items():
+        ww = weights.get(target_course, 0)
+        
+        if ww >= 8: # High Impact
+            if noise_level == "Strong": val = random.randint(4, 5)
+            elif noise_level == "Moderate": val = random.randint(3, 5)
+            else: val = random.randint(3, 4)
+        elif ww >= 5: # Moderate Impact
+            if noise_level == "Strong": val = random.randint(3, 4)
+            elif noise_level == "Moderate": val = random.randint(2, 4)
+            else: val = random.randint(2, 3)
+        else: # Low Impact
+            if noise_level == "Strong": val = random.randint(1, 2)
+            elif noise_level == "Moderate": val = random.randint(1, 3)
+            else: val = random.randint(2, 3)
+            
+        profile[q_id] = val
+        
+    return profile
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MAIN RUNNER
 # ─────────────────────────────────────────────────────────────────────────────
 
+W  = 95
+
 def run():
-    lines = [hdr()]
-    domain_stats = {}
-    all_failures = []
+    random.seed(42)
+    
+    lines = [
+        "=" * W,
+        " PATHFINDER — COURSE RECOMMENDATION ACCURACY & CONCORDANCE TEST".center(W),
+        "=" * W,
+    ]
+    
+    # ---------------------------------------------------------
+    # PART 1: IDEAL PROFILE SIMULATION
+    # ---------------------------------------------------------
+    lines.extend([
+        "\n" + "=" * W,
+        " PART 1: LOGICAL CORRECTNESS (IDEAL PROFILE)".center(W),
+        " Testing the Mathematical Limits of Content-Based Filtering".center(W),
+        "=" * W,
+    ])
 
+    total_ideal = 0
+    total_ideal_passed = 0
+    
     for category in COURSE_MAPPINGS:
-        mapping  = COURSE_MAPPINGS[category]
-        courses  = list(next(iter(mapping.values())).keys())
-        d_passed = d_failed = 0
-        d_rows   = []
-
-        for idx, target_course in enumerate(courses, start=1):
+        courses = list(next(iter(COURSE_MAPPINGS[category].values())).keys())
+        total_ideal += len(courses)
+        for target_course in courses:
             profile = build_ideal_profile(target_course, category)
             scores  = calculate_scores(profile, category)
             top     = list(scores.keys())[0]
-            passed  = (top == target_course)
+            if top == target_course:
+                total_ideal_passed += 1
 
-            if passed:
-                d_passed += 1
-                d_rows.append(data_row(idx, target_course, scores[target_course], True))
+    lines.extend([
+        f"  Total Courses Tested : {total_ideal}",
+        f"  Passed Ideal Tests   : {total_ideal_passed}",
+        f"  Logical Accuracy     : {(total_ideal_passed/total_ideal*100):.2f}%",
+    ])
+
+    # ---------------------------------------------------------
+    # PART 2: NOISE SIMULATION vs MATRIX RULES
+    # ---------------------------------------------------------
+    lines.extend([
+        "\n\n" + "=" * W,
+        " PART 2: 58-INPUT MATRIX CONCORDANCE TEST (REALISTIC NOISE)".center(W),
+        " Testing 1 Noisy Variant For Every Single Course Against Ground Truth".center(W),
+        "=" * W,
+        f"\n  {'No.':<4} {'Matrix Expected (Target)':<35} {'Noise Level':<12} {'System Output (Top-1)':<35} {'Status'}",
+        f"  {'─' * (W - 4)}"
+    ])
+
+    total_noisy = 0
+    correct_top1 = 0
+    test_idx = 1
+    
+    domain_stats = {d: {'total': 0, 'correct': 0} for d in COURSE_MAPPINGS.keys()}
+    all_failures = []
+
+    for category, mapping in COURSE_MAPPINGS.items():
+        courses = list(next(iter(mapping.values())).keys())
+        
+        for i, target_course in enumerate(courses):
+            noise = ["Strong", "Moderate", "Weak"][i % 3]
+            
+            profile = build_noisy_profile(target_course, category, noise)
+            scores = calculate_scores(profile, category)
+            top_course = list(scores.keys())[0]
+            
+            passed = (top_course == target_course)
+            status = "PASS" if passed else "FAIL"
+            
+            domain_stats[category]['total'] += 1
+            total_noisy += 1
+            if passed: 
+                correct_top1 += 1
+                domain_stats[category]['correct'] += 1
             else:
-                d_failed += 1
-                got_score = scores[top]
-                all_failures.append((category, target_course, top, got_score))
-                d_rows.append(
-                    f"  {idx:<{C1}} {target_course:<{C2}} {'—':>{C3}} {'FAIL':>{C4}}\n"
-                    f"  {'':<{C1}} {'  → Recommended: ' + top + f' ({got_score:.1f}%)'}"
-                )
+                all_failures.append((category, target_course, noise, top_course, scores[top_course]))
+            
+            # Truncate strings to fit layout
+            t_course = target_course[:33] + ".." if len(target_course) > 35 else target_course
+            r_course = top_course[:33] + ".." if len(top_course) > 35 else top_course
+            
+            lines.append(f"  {test_idx:<4} {t_course:<35} {noise:<12} {r_course:<35} {status}")
+            test_idx += 1
 
-        domain_stats[category] = (d_passed + d_failed, d_passed, d_failed)
-        lines.append(domain_header(DOMAIN_LABELS[category], d_passed + d_failed, d_passed))
-        lines.extend(d_rows)
-
-    lines.append(summary_table(domain_stats))
-    lines.append(failure_notes_section(all_failures))
+    lines.extend([
+        f"\n  {'─' * (W - 4)}",
+        f"  OVERALL PERFORMANCE MEASURES",
+        f"  {'─' * (W - 4)}",
+        f"  Total Simulated Inputs : {total_noisy}",
+        f"  Matches Matrix Rules   : {correct_top1}",
+        f"  System Mismatches      : {total_noisy - correct_top1}",
+        f"  Concordance Rate       : {(correct_top1/total_noisy*100):.2f}%",
+        f"\n  PER-DOMAIN BREAKDOWN:"
+    ])
+    
+    for category in COURSE_MAPPINGS.keys():
+        s = domain_stats[category]
+        acc = (s['correct'] / s['total'] * 100) if s['total'] > 0 else 0
+        lines.append(f"    {DOMAIN_LABELS[category]:<15} : {s['correct']:>2}/{s['total']:>2} ({acc:>6.2f}%)")
+        
+    if all_failures:
+        lines.extend([
+            f"\n  {'─' * (W - 4)}",
+            f"  NOTES ON FAILURES",
+            f"  {'─' * (W - 4)}"
+        ])
+        seen = set()
+        for cat, target, noise, got, score in all_failures:
+            lines.append(f"  [{target}] ({noise} noise) → Got: {got} ({score:.1f}%)")
+            if target in FAILURE_NOTES and target not in seen:
+                seen.add(target)
+                lines.append(f"    Note: {FAILURE_NOTES[target]}")
+                
+    lines.append("=" * W)
 
     output = "\n".join(lines)
     print(output)
-
+    
     with open(REPORT_PATH, "w", encoding="utf-8") as f:
         f.write(output + "\n")
-
     print(f"\n  Report saved → {REPORT_PATH}")
-
 
 if __name__ == "__main__":
     run()

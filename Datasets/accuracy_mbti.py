@@ -1,25 +1,5 @@
-"""
-accuracy_mbti.py
-================
-PATHFINDER — MBTI Personality Assessment Accuracy Test
-
-Test Method:
-    Pure-Type Ideal Profile Simulation.
-    For each of the 16 MBTI personalities, a synthetic respondent is constructed:
-      - Trait-aligned questions (direct scoring) → answer = 7 (maximum)
-      - Opposing-trait questions (reverse scoring) → answer = 1 (minimum)
-    The 4-axis differential scoring algorithm is then applied.
-    The resulting type must exactly match the target type to PASS.
-
-Output:
-    - Console (formatted table)
-    - Datasets/mbti_accuracy_report.txt
-
-Usage:
-    python Datasets/accuracy_mbti.py
-"""
-
 import os
+import random
 
 # ─────────────────────────────────────────────────────────────────────────────
 # REPORT OUTPUT PATH
@@ -81,10 +61,6 @@ ALL_TYPES = [
 
 
 def calculate_mbti_type(answers: dict) -> tuple[str, dict]:
-    """
-    Applies the 4-axis differential scoring algorithm.
-    Returns (mbti_type_string, per_dimension_results).
-    """
     result_letters = []
     dim_results = {}
 
@@ -110,31 +86,54 @@ def calculate_mbti_type(answers: dict) -> tuple[str, dict]:
 
 
 def build_pure_profile(target_type: str) -> dict:
-    """
-    Constructs a synthetic respondent who answers maximally
-    in the direction of every trait in target_type.
-    """
     answers = {}
     flags = {
-        "E": "E" in target_type,
-        "S": "S" in target_type,
-        "T": "T" in target_type,
-        "J": "J" in target_type,
+        "E": "E" in target_type, "S": "S" in target_type,
+        "T": "T" in target_type, "J": "J" in target_type,
     }
 
-    dim_flags = {
-        "EI": flags["E"],
-        "SN": flags["S"],
-        "TF": flags["T"],
-        "JP": flags["J"],
-    }
+    dim_flags = {"EI": flags["E"], "SN": flags["S"], "TF": flags["T"], "JP": flags["J"]}
 
     for dim_key, dim in DIMENSIONS.items():
         want_positive = dim_flags[dim_key]
+        for q in dim["direct"]: answers[f"q{q}"] = 7 if want_positive else 1
+        for q in dim["reverse"]: answers[f"q{q}"] = 1 if want_positive else 7
+
+    return answers
+
+
+def build_noisy_profile(target_type: str, noise_level: str) -> dict:
+    answers = {}
+    flags = {
+        "E": "E" in target_type, "S": "S" in target_type,
+        "T": "T" in target_type, "J": "J" in target_type,
+    }
+    dim_flags = {"EI": flags["E"], "SN": flags["S"], "TF": flags["T"], "JP": flags["J"]}
+    
+    for dim_key, dim in DIMENSIONS.items():
+        want_positive = dim_flags[dim_key]
+        
         for q in dim["direct"]:
-            answers[f"q{q}"] = 7 if want_positive else 1
+            if want_positive:
+                if noise_level == "Strong": val = random.randint(5, 7)
+                elif noise_level == "Moderate": val = random.randint(4, 6)
+                else: val = random.randint(4, 5) # Weak
+            else:
+                if noise_level == "Strong": val = random.randint(1, 3)
+                elif noise_level == "Moderate": val = random.randint(2, 4)
+                else: val = random.randint(3, 4) # Weak
+            answers[f"q{q}"] = val
+            
         for q in dim["reverse"]:
-            answers[f"q{q}"] = 1 if want_positive else 7
+            if want_positive:
+                if noise_level == "Strong": val = random.randint(1, 3)
+                elif noise_level == "Moderate": val = random.randint(2, 4)
+                else: val = random.randint(3, 4) # Weak
+            else:
+                if noise_level == "Strong": val = random.randint(5, 7)
+                elif noise_level == "Moderate": val = random.randint(4, 6)
+                else: val = random.randint(4, 5) # Weak
+            answers[f"q{q}"] = val
 
     return answers
 
@@ -143,103 +142,121 @@ def build_pure_profile(target_type: str) -> dict:
 # TABLE FORMATTING HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
 
-W = 70  # table width
-
+W = 85
 
 def sep(char="─", width=W):
     return char * width
 
-
-def header():
-    lines = [
-        "=" * W,
-        " PATHFINDER — MBTI PERSONALITY ASSESSMENT ACCURACY TEST".center(W),
-        "=" * W,
-        f"  {'Test Method':<20}: Pure-Type Ideal Profile Simulation",
-        f"  {'Questionnaire':<20}: 60 items across 4 bipolar dimensions (15 items each)",
-        f"  {'Answer Scale':<20}: 1–7 Likert scale per item",
-        f"  {'Total Types Tested':<20}: 16 MBTI personality types",
-        "=" * W,
-    ]
-    return "\n".join(lines)
-
-
-def col_header():
-    return (
-        f"\n  {'No.':<5} {'Target Type':<13} {'Temperament':<13}"
-        f" {'E/I':<5} {'S/N':<5} {'T/F':<5} {'J/P':<5}"
-        f" {'Result':<8} {'Status'}"
-        f"\n  {sep('─', 68)}"
-    )
-
-
-def row(idx, target, temperament, dims, result, passed):
-    status = "PASS" if passed else "FAIL"
-    return (
-        f"  {idx:<5} {target:<13} {temperament:<13}"
-        f" {dims['EI']:<5} {dims['SN']:<5} {dims['TF']:<5} {dims['JP']:<5}"
-        f" {result:<8} {status}"
-    )
-
-
-def summary(total, correct):
-    failed = total - correct
-    accuracy = (correct / total * 100) if total > 0 else 0.0
-    lines = [
-        f"\n  {sep()}",
-        f"  {'Total Simulations':<25}: {total}",
-        f"  {'Correct Predictions':<25}: {correct}",
-        f"  {'Failed Predictions':<25}: {failed}",
-        f"  {'Logical Accuracy':<25}: {accuracy:.2f}%",
-        "=" * W,
-    ]
-    return "\n".join(lines)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# MAIN RUNNER
-# ─────────────────────────────────────────────────────────────────────────────
-
 def run():
-    lines = [header(), col_header()]
+    random.seed(42) # Reproducibility
+    
+    lines = [
+        "=" * W,
+        " PATHFINDER — MBTI PERSONALITY ASSESSMENT ACCURACY & PERFORMANCE TEST".center(W),
+        "=" * W,
+    ]
+    
+    # ---------------------------------------------------------
+    # PART 1: LOGICAL CORRECTNESS (PURE IDEAL)
+    # ---------------------------------------------------------
+    lines.extend([
+        "\n" + "=" * W,
+        " PART 1: LOGICAL CORRECTNESS (PURE-TYPE IDEAL SIMULATION)".center(W),
+        " Testing the Mathematical Limits of the Recommendation Engine".center(W),
+        "=" * W,
+        f"\n  {'No.':<4} {'Target Type':<11} {'Temperament':<10}"
+        f" {'E/I':<4} {'S/N':<4} {'T/F':<4} {'J/P':<4}"
+        f" {'Result':<8} {'Status'}",
+        f"  {sep('─', W-4)}"
+    ])
 
-    total   = 0
-    correct = 0
-    failures = []
+    total_pure = 0
+    correct_pure = 0
+    failures_pure = []
 
     for idx, target_type in enumerate(ALL_TYPES, start=1):
-        total += 1
-        answers        = build_pure_profile(target_type)
-        result, dims   = calculate_mbti_type(answers)
-        passed         = (result == target_type)
-        temperament    = TEMPERAMENT[target_type]
+        total_pure += 1
+        answers = build_pure_profile(target_type)
+        result, dims = calculate_mbti_type(answers)
+        passed = (result == target_type)
+        temperament = TEMPERAMENT[target_type]
 
-        if passed:
-            correct += 1
-        else:
-            failures.append((target_type, result))
+        if passed: correct_pure += 1
+        else: failures_pure.append((target_type, result))
 
-        lines.append(row(idx, target_type, temperament, dims, result, passed))
+        status = "PASS" if passed else "FAIL"
+        lines.append(
+            f"  {idx:<4} {target_type:<11} {temperament:<10}"
+            f" {dims['EI']:<4} {dims['SN']:<4} {dims['TF']:<4} {dims['JP']:<4}"
+            f" {result:<8} {status}"
+        )
+        
+    lines.extend([
+        f"\n  {sep('─', W-4)}",
+        f"  {'Total Pure Simulations':<25}: {total_pure}",
+        f"  {'Logical Accuracy':<25}: {(correct_pure/total_pure*100):.2f}%",
+        f"  {sep('─', W-4)}"
+    ])
 
-    lines.append(summary(total, correct))
+    # ---------------------------------------------------------
+    # PART 2: CONCORDANCE TEST (VARIED NOISE SIMULATION)
+    # ---------------------------------------------------------
+    lines.extend([
+        "\n\n" + "=" * W,
+        " PART 2: 48-INPUT MATRIX CONCORDANCE TEST (REALISTIC NOISE)".center(W),
+        " Testing Recommendation Robustness vs. the Ground Truth Matrix".center(W),
+        "=" * W,
+        f"\n  {'No.':<4} {'Matrix Expected':<16} {'Noise Level':<12}"
+        f" {'E/I':<4} {'S/N':<4} {'T/F':<4} {'J/P':<4}"
+        f" {'System Output':<15} {'Status'}",
+        f"  {sep('─', W-4)}"
+    ])
 
-    if failures:
-        lines.append("\n  FAILURE DETAILS:")
-        for target, got in failures:
-            lines.append(f"    Target: {target}  →  Got: {got}")
-        lines.append("=" * W)
+    total_noisy = 0
+    correct_noisy = 0
+    per_type_metrics = {t: {'total': 0, 'correct': 0} for t in ALL_TYPES}
+
+    test_idx = 1
+    for target_type in ALL_TYPES:
+        for noise in ["Strong", "Moderate", "Weak"]:
+            total_noisy += 1
+            answers = build_noisy_profile(target_type, noise)
+            result, dims = calculate_mbti_type(answers)
+            passed = (result == target_type)
+            
+            per_type_metrics[target_type]['total'] += 1
+            if passed: 
+                correct_noisy += 1
+                per_type_metrics[target_type]['correct'] += 1
+
+            status = "PASS" if passed else "FAIL"
+            lines.append(
+                f"  {test_idx:<4} {target_type:<16} {noise:<12}"
+                f" {dims['EI']:<4} {dims['SN']:<4} {dims['TF']:<4} {dims['JP']:<4}"
+                f" {result:<15} {status}"
+            )
+            test_idx += 1
+
+    lines.extend([
+        f"\n  {sep('─', W-4)}",
+        f"  {'Total Noisy Simulations':<25}: {total_noisy}",
+        f"  {'Concordance Rate':<25}: {(correct_noisy/total_noisy*100):.2f}%",
+        f"  {sep('─', W-4)}",
+        "\n  PER-TYPE BREAKDOWN:",
+    ])
+    
+    for t in ALL_TYPES:
+        m = per_type_metrics[t]
+        acc = (m['correct'] / m['total'] * 100) if m['total'] > 0 else 0
+        lines.append(f"  {t:<6} : {m['correct']}/{m['total']} ({acc:>6.2f}%)")
+
+    lines.append("=" * W)
 
     output = "\n".join(lines)
-
-    # ── Console ──
     print(output)
-
-    # ── File ──
     with open(REPORT_PATH, "w", encoding="utf-8") as f:
         f.write(output + "\n")
-
     print(f"\n  Report saved → {REPORT_PATH}")
-
 
 if __name__ == "__main__":
     run()

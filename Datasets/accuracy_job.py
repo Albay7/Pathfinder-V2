@@ -1,29 +1,5 @@
-"""
-accuracy_job.py
-===============
-PATHFINDER — Job Role Recommendation Accuracy Test
-
-Test Method:
-    Ideal Profile Simulation (Discriminability Test).
-    For each of the 64 job roles across 8 career domains, a synthetic
-    respondent is constructed:
-      - Questions where the target job has weight = 10 → answer = 5 (maximum)
-      - All other questions → answer = 1 (minimum)
-    The weighted scoring algorithm is applied and normalized to a percentage.
-    The target job must rank #1 across all roles in the domain to PASS.
-
-Normalization:
-    normalized_score(job) = (Σ response_i × weight_i) / (Σ 5 × weight_i) × 100%
-
-Output:
-    - Console (formatted table, per-domain sub-tables + domain summary)
-    - Datasets/job_accuracy_report.txt
-
-Usage:
-    python Datasets/accuracy_job.py
-"""
-
 import os
+import random
 
 # ─────────────────────────────────────────────────────────────────────────────
 # REPORT OUTPUT PATH
@@ -34,12 +10,6 @@ REPORT_PATH = os.path.join(BASE_DIR, "job_accuracy_report.txt")
 # ─────────────────────────────────────────────────────────────────────────────
 # JOB ROLES & WEIGHT MAPPINGS
 # Mirrored from: validate_all_logic.py (JOB_ROLES / JOB_MAPPINGS)
-# Source:        PathfinderController.php → calculateWeightedJobScores()
-#
-# Weight scale:
-#   10 = strong signal for this job role
-#    5 = moderate signal
-#    2 = weak/background signal
 # ─────────────────────────────────────────────────────────────────────────────
 
 JOB_ROLES = {
@@ -227,10 +197,6 @@ DOMAIN_LABELS = {
 # ─────────────────────────────────────────────────────────────────────────────
 
 def calculate_scores(responses: dict, category: str) -> dict:
-    """
-    Applies weighted scoring and normalizes to 0–100%.
-    normalized_score(job) = (Σ response_i × weight_i) / (Σ 5 × weight_i) × 100
-    """
     mapping = JOB_MAPPINGS[category]
     roles   = JOB_ROLES[category]
 
@@ -247,137 +213,143 @@ def calculate_scores(responses: dict, category: str) -> dict:
 
     return dict(sorted(normalized.items(), key=lambda x: x[1], reverse=True))
 
-
 def build_ideal_profile(target_job: str, category: str) -> dict:
-    """
-    Constructs a synthetic respondent who answers 5 for target-job's
-    weight-10 questions and 1 for all others.
-    """
     mapping = JOB_MAPPINGS[category]
     return {
         q_id: (5 if weights.get(target_job, 0) == 10 else 1)
         for q_id, weights in mapping.items()
     }
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# TABLE FORMATTING
-# ─────────────────────────────────────────────────────────────────────────────
-
-W  = 72
-C1 = 5   # No.
-C2 = 36  # Job Role
-C3 = 13  # Match Score
-C4 = 8   # Status
-
-
-def hdr():
-    return "\n".join([
-        "=" * W,
-        " PATHFINDER — JOB RECOMMENDATION ACCURACY TEST".center(W),
-        "=" * W,
-        f"  {'Test Method':<22}: Ideal Profile Simulation (Weighted Scoring)",
-        f"  {'Normalization':<22}: score = (Σ response × weight) / (Σ 5 × weight) × 100%",
-        f"  {'Answer Scale':<22}: 1–5 per question (16 questions per domain)",
-        f"  {'Total Roles Tested':<22}: 64 job roles across 8 career domains",
-        "=" * W,
-    ])
-
-
-def domain_header(label, total, passed):
-    status = f"({passed}/{total} Passed)"
-    line = f"  [ {label.upper()} DOMAIN ]  {status}"
-    return f"\n{line}\n  {'─' * (W - 2)}\n" \
-           f"  {'No.':<{C1}} {'Job Role':<{C2}} {'Match Score':>{C3}} {'Status':>{C4}}\n" \
-           f"  {'─' * (W - 2)}"
-
-
-def data_row(idx, job, score, passed):
-    score_str = f"{score:.1f}%" if passed else "—"
-    status    = "PASS" if passed else "FAIL"
-    return f"  {idx:<{C1}} {job:<{C2}} {score_str:>{C3}} {status:>{C4}}"
-
-
-def fail_row(idx, job, got_job, got_score):
-    return (
-        f"  {idx:<{C1}} {job:<{C2}} {'—':>{C3}} {'FAIL':>{C4}}\n"
-        f"  {'':<{C1}} {'  → Recommended: ' + got_job + f' ({got_score:.1f}%)':<{C2 + C3 + C4}}"
-    )
-
-
-def summary_table(domain_stats):
-    lines = [
-        f"\n  {'─' * (W - 2)}",
-        f"  DOMAIN SUMMARY",
-        f"  {'─' * (W - 2)}",
-        f"  {'Domain':<16} {'Roles':>7} {'Correct':>9} {'Failed':>7} {'Accuracy':>10}",
-        f"  {'─' * (W - 2)}",
-    ]
-    total_r = total_c = total_f = 0
-    for domain, (roles, correct, failed) in domain_stats.items():
-        acc = (correct / roles * 100) if roles > 0 else 0.0
-        lines.append(f"  {DOMAIN_LABELS[domain]:<16} {roles:>7} {correct:>9} {failed:>7} {acc:>9.2f}%")
-        total_r += roles
-        total_c += correct
-        total_f += failed
-    overall_acc = (total_c / total_r * 100) if total_r > 0 else 0.0
-    lines += [
-        f"  {'─' * (W - 2)}",
-        f"  {'OVERALL':<16} {total_r:>7} {total_c:>9} {total_f:>7} {overall_acc:>9.2f}%",
-        "=" * W,
-    ]
-    return "\n".join(lines)
-
+def build_noisy_profile(target_job: str, category: str, noise_level: str) -> dict:
+    mapping = JOB_MAPPINGS[category]
+    profile = {}
+    
+    for q_id, weights in mapping.items():
+        ww = weights.get(target_job, 0)
+        
+        if ww == 10:
+            if noise_level == "Strong": val = random.randint(4, 5)
+            elif noise_level == "Moderate": val = random.randint(3, 5)
+            else: val = random.randint(3, 4)
+        elif ww == 5:
+            if noise_level == "Strong": val = random.randint(3, 4)
+            elif noise_level == "Moderate": val = random.randint(2, 4)
+            else: val = random.randint(2, 3)
+        else:
+            if noise_level == "Strong": val = random.randint(1, 2)
+            elif noise_level == "Moderate": val = random.randint(1, 3)
+            else: val = random.randint(2, 3)
+            
+        profile[q_id] = val
+        
+    return profile
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MAIN RUNNER
 # ─────────────────────────────────────────────────────────────────────────────
 
+W  = 95
+
 def run():
-    lines = [hdr()]
-    domain_stats = {}
-    all_failures = []
+    random.seed(42)
+    
+    lines = [
+        "=" * W,
+        " PATHFINDER — JOB RECOMMENDATION ACCURACY & CONCORDANCE TEST".center(W),
+        "=" * W,
+    ]
+    
+    # ---------------------------------------------------------
+    # PART 1: IDEAL PROFILE SIMULATION
+    # ---------------------------------------------------------
+    lines.extend([
+        "\n" + "=" * W,
+        " PART 1: LOGICAL CORRECTNESS (IDEAL PROFILE)".center(W),
+        " Testing the Mathematical Limits of Content-Based Filtering".center(W),
+        "=" * W,
+    ])
 
+    total_ideal_passed = 0
+    total_ideal = sum(len(roles) for roles in JOB_ROLES.values())
+    
     for category, roles in JOB_ROLES.items():
-        domain_passed  = 0
-        domain_failed  = 0
-        domain_rows    = []
-
-        for idx, target_job in enumerate(roles, start=1):
+        for target_job in roles:
             profile = build_ideal_profile(target_job, category)
             scores  = calculate_scores(profile, category)
             top_job = list(scores.keys())[0]
-            passed  = (top_job == target_job)
+            if top_job == target_job:
+                total_ideal_passed += 1
 
-            if passed:
-                domain_passed += 1
-                domain_rows.append(data_row(idx, target_job, scores[target_job], True))
-            else:
-                domain_failed += 1
-                all_failures.append((category, target_job, top_job, scores[top_job]))
-                domain_rows.append(fail_row(idx, target_job, top_job, scores[top_job]))
+    lines.extend([
+        f"  Total Roles Tested  : {total_ideal}",
+        f"  Passed Ideal Tests  : {total_ideal_passed}",
+        f"  Logical Accuracy    : {(total_ideal_passed/total_ideal*100):.2f}%",
+    ])
 
-        domain_total = domain_passed + domain_failed
-        domain_stats[category] = (domain_total, domain_passed, domain_failed)
-        lines.append(domain_header(DOMAIN_LABELS[category], domain_total, domain_passed))
-        lines.extend(domain_rows)
+    # ---------------------------------------------------------
+    # PART 2: NOISE SIMULATION vs MATRIX RULES
+    # ---------------------------------------------------------
+    lines.extend([
+        "\n\n" + "=" * W,
+        " PART 2: MATRIX CONCORDANCE TEST (REALISTIC NOISE)".center(W),
+        " Testing System Recommendations vs. Matrix Ground Truth".center(W),
+        "=" * W,
+        f"\n  {'No.':<4} {'Matrix Expected (Target Role)':<30} {'Noise Level':<12} {'System Output (Top-1)':<30} {'Status'}",
+        f"  {'─' * (W - 4)}"
+    ])
 
-    lines.append(summary_table(domain_stats))
+    total_noisy = 0
+    correct_top1 = 0
+    test_idx = 1
+    
+    domain_stats = {d: {'total': 0, 'correct': 0} for d in JOB_ROLES.keys()}
 
-    if all_failures:
-        lines.append("\n  FAILURE DETAILS:")
-        for cat, target, got, score in all_failures:
-            lines.append(f"    [{cat.upper()}] '{target}' → got '{got}' ({score:.1f}%)")
-        lines.append("=" * W)
+    for category, roles in JOB_ROLES.items():
+        # Generate 6 noisy tests per domain (to hit 48 total tests like MBTI)
+        test_roles = roles[:6]
+        
+        for i, target_job in enumerate(test_roles):
+            noise = ["Strong", "Moderate", "Weak"][i % 3]
+            
+            profile = build_noisy_profile(target_job, category, noise)
+            scores = calculate_scores(profile, category)
+            top_job = list(scores.keys())[0]
+            
+            passed = (top_job == target_job)
+            status = "PASS" if passed else "FAIL"
+            
+            domain_stats[category]['total'] += 1
+            total_noisy += 1
+            if passed: 
+                correct_top1 += 1
+                domain_stats[category]['correct'] += 1
+            
+            lines.append(f"  {test_idx:<4} {target_job:<30} {noise:<12} {top_job:<30} {status}")
+            test_idx += 1
+
+    lines.extend([
+        f"\n  {'─' * (W - 4)}",
+        f"  OVERALL PERFORMANCE MEASURES",
+        f"  {'─' * (W - 4)}",
+        f"  Total Simulated Inputs : {total_noisy}",
+        f"  Matches Matrix Rules   : {correct_top1}",
+        f"  System Mismatches      : {total_noisy - correct_top1}",
+        f"  Concordance Rate       : {(correct_top1/total_noisy*100):.2f}%",
+        f"\n  PER-DOMAIN BREAKDOWN:"
+    ])
+    
+    for category in JOB_ROLES.keys():
+        s = domain_stats[category]
+        acc = (s['correct'] / s['total'] * 100) if s['total'] > 0 else 0
+        lines.append(f"    {DOMAIN_LABELS[category]:<15} : {s['correct']}/{s['total']} ({acc:.2f}%)")
+        
+    lines.append("=" * W)
 
     output = "\n".join(lines)
     print(output)
-
     with open(REPORT_PATH, "w", encoding="utf-8") as f:
         f.write(output + "\n")
-
     print(f"\n  Report saved → {REPORT_PATH}")
-
 
 if __name__ == "__main__":
     run()
