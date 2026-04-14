@@ -20,7 +20,7 @@
                     @media (min-width: 640px) { .hero-subtitle { font-size: 1.125rem !important; } }
                     @media (min-width: 768px) { .hero-subtitle { font-size: 1.25rem !important; } }
                     </style>
-                    Discover your strengths, explore career opportunities, and create a personalized roadmap to your professional success with our comprehensive career guidance platform.
+                    Discover your strengths, personality, explore career opportunities, and create a personalized roadmap to your professional success with our comprehensive career guidance platform.
                 </p>
                         <div class="hero-buttons" style="display: flex; flex-direction: column; gap: 0.75rem; justify-content: center; padding: 0 1rem;">
                 <style>
@@ -53,7 +53,7 @@
                 Powerful Tools for Your Career Journey
             </h2>
             <p class="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-2">
-                Our comprehensive platform provides everything you need to make informed career decisions and achieve your professional goals.
+                Our comprehensive platform provides everything you need to make informed career decisions, personality compatability and achieve your professional goals.
             </p>
         </div>
 
@@ -71,7 +71,7 @@
                 </div>
                 <h3 class="font-bold text-gray-900 mb-3" style="font-size: 1.25rem; line-height: 1.4;">Career Guidance</h3>
                 <p class="text-gray-600 mb-6">
-                    Take our comprehensive questionnaire to discover courses and jobs that match your interests, skills, and career aspirations.
+                    Take our comprehensive questionnaire to discover courses, jobs and personality that are suited for you.
                 </p>
                 <ul class="text-sm text-gray-500 mb-6 space-y-2">
                     <li class="flex items-center">
@@ -84,13 +84,13 @@
                         <svg class="h-4 w-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        Course and job matching
+                        Course, Job and MBTI matching
                     </li>
                     <li class="flex items-center">
                         <svg class="h-4 w-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        Interest-based assessment
+                        Interest, Skill, Knowledge and Personality Assessment
                     </li>
                 </ul>
                 <a href="{{ route('pathfinder.career-guidance') }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200 min-h-[48px]" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
@@ -129,7 +129,7 @@
                         <svg class="h-4 w-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        Progress tracking
+                        Role Tracking
                     </li>
                 </ul>
                 <a href="{{ route('pathfinder.career-path') }}" class="inline-flex items-center w-full justify-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200 min-h-[48px]" style="background-color: #5AA7C6;" onmouseover="this.style.backgroundColor='#13264D';" onmouseout="this.style.backgroundColor='#5AA7C6';">
@@ -194,7 +194,7 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="flex flex-row items-start justify-between gap-4" style="display: flex !important; flex-direction: row !important; align-items: flex-start !important; justify-content: space-between !important;">
             <div class="text-center">
                 <div class="flex items-center justify-center w-16 h-16 text-white rounded-full mx-auto mb-4 text-xl font-bold" style="background-color: #13264D;">
                     1
@@ -215,38 +215,27 @@
                 <div class="flex items-center justify-center w-16 h-16 text-white rounded-full mx-auto mb-4 text-xl font-bold" style="background-color: #13264D;">
                     3
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Plan Your Path</h3>
-                <p class="text-gray-600">Visualize your career journey and identify skill gaps to bridge.</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Personality Assessment</h3>
+                <p class="text-gray-600">Check your compatibility for your target job or role based on your personality type.</p>
             </div>
 
             <div class="text-center">
                 <div class="flex items-center justify-center w-16 h-16 text-white rounded-full mx-auto mb-4 text-xl font-bold" style="background-color: #5AA7C6;">
                     4
                 </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Plan Your Path</h3>
+                <p class="text-gray-600">Visualize your career journey and identify skill gaps to bridge.</p>
+            </div>
+
+            <div class="text-center">
+                <div class="flex items-center justify-center w-16 h-16 text-white rounded-full mx-auto mb-4 text-xl font-bold" style="background-color: #13264D;">
+                    5
+                </div>
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Achieve Goals</h3>
-                <p class="text-gray-600">Follow your personalized roadmap to reach your career objectives.</p>
+                <p class="text-gray-600">Follow your personalized path to reach your career objectives.</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- CTA Section -->
-<div style="background: linear-gradient(to right, #13264D, #5AA7C6);">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                Ready to Start Your Journey?
-            </h2>
-            <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: #EFF6FF; opacity: 0.9;">
-                Join thousands of professionals who have found their perfect career path with Pathfinder.
-            </p>
-            <a href="{{ route('pathfinder.career-guidance') }}" class="inline-flex items-center px-8 py-4 bg-white font-semibold rounded-lg transition-colors duration-200 shadow-lg" style="color: #13264D;" onmouseover="this.style.backgroundColor='#EFF6FF';" onmouseout="this.style.backgroundColor='white';">
-                Get Started Now
-                <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
-        </div>
-    </div>
-</div>
 @endsection
