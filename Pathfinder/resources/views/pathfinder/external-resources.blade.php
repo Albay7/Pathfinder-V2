@@ -315,8 +315,8 @@
         @else
         {{-- Empty state --}}
         <div class="rounded-2xl py-14 px-8 text-center" style="border: 2px dashed #e5e7eb;">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: #ccfbf1;">
-                <svg class="h-7 w-7" style="color: #0d9488;" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: #ccfbf1; width: 56px; height: 56px;">
+                <svg class="h-7 w-7" style="color: #0d9488; width: 28px; height: 28px;" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">No playlists yet</h3>
             <p class="text-sm text-gray-500 mb-6 max-w-sm mx-auto">Run a skill gap analysis so we can generate personalized YouTube playlists matched to your missing skills.</p>
@@ -408,8 +408,8 @@
         @else
         {{-- Empty state --}}
         <div class="rounded-2xl py-14 px-8 text-center" style="border: 2px dashed #e5e7eb;">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: var(--sea-100);">
-                <svg class="h-7 w-7" style="color: var(--sea-500);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: var(--sea-100); width: 56px; height: 56px;">
+                <svg class="h-7 w-7" style="color: var(--sea-500); width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
             </div>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">No articles available</h3>
             <p class="text-sm text-gray-500 mb-6 max-w-sm mx-auto">Run a skill gap analysis to see articles tailored to your target role, or check back later.</p>
@@ -533,8 +533,8 @@
 @if(empty($missingSkills))
 <div class="py-12" style="background: linear-gradient(135deg, #fef9e7 0%, #fef3c7 100%); border-top: 1px solid #fde68a;">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5" style="background-color: #f7e1a1;">
-            <svg class="h-7 w-7" style="color: #b45309;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5" style="background-color: #f7e1a1; width: 56px; height: 56px;">
+            <svg class="h-7 w-7" style="color: #b45309; width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
         <h2 class="text-xl font-semibold text-gray-900 mb-3">Unlock Your Personalized Content</h2>
         <p class="text-sm text-gray-600 mb-7 max-w-lg mx-auto">Run a skill gap analysis to get matched YouTube playlists, curated articles, and job search results tailored specifically to your target role.</p>

@@ -49,6 +49,10 @@ return [
         'model' => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
     ],
 
+    'gemini' => [
+        'key' => env('GEMINI_API_KEY'),
+    ],
+
     'onet' => [
         'key' => env('ONET_API_KEY'),
         'base_url' => 'https://services.onetcenter.org/webservices/rest',

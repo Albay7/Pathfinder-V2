@@ -338,11 +338,8 @@
                             <a href="{{ route('pathfinder.career-path') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                                 Career Path
                             </a>
-                            <a href="{{ route('pathfinder.skill-gap') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            <a href="{{ route('pathfinder.skill-gap') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 last:rounded-b-md transition-colors">
                                 Skill Gap
-                            </a>
-                            <a href="{{ route('pathfinder.mbti-intro') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 last:rounded-b-md transition-colors">
-                                MBTI Assessment
                             </a>
                         </div>
                     </div>
@@ -411,9 +408,7 @@
                         <a href="{{ route('pathfinder.skill-gap') }}" class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                             Skill Gap
                         </a>
-                        <a href="{{ route('pathfinder.mbti-intro') }}" class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                            MBTI Assessment
-                        </a>
+
                     </div>
                 </div>
 
@@ -494,12 +489,7 @@
                                 Skill Gap Analysis
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ route('pathfinder.mbti-intro') }}" class="text-gray-400 hover:text-blue-400 transition-colors duration-200 flex items-center text-sm">
-                                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-                                MBTI Assessment
-                            </a>
-                        </li>
+
                     </ul>
                 </div>
 

@@ -1837,7 +1837,31 @@ class PathfinderController extends Controller
 
     private function generateCareerPath($currentRole, $targetRole)
     {
-        // Generate career ladder based on target role
+        // Use Gemini API to generate dynamic career paths tailored to the local market
+        $cacheKey = 'career_roadmap_' . md5($currentRole . '_' . $targetRole);
+        
+        // 1. Check Cache first
+        $cachedRoadmap = \Illuminate\Support\Facades\Cache::get($cacheKey);
+        if ($cachedRoadmap) {
+            return $cachedRoadmap;
+        }
+
+        // 2. Call Groq AI Service
+        try {
+            $groqAiService = app(\App\Services\GroqAiService::class);
+            $roadmap = $groqAiService->generateCareerRoadmap($currentRole, $targetRole);
+
+            if ($roadmap && is_array($roadmap) && count($roadmap) > 0) {
+                // Determine if we should also cache exactly mapping current->target for file system
+                $slugTarget = str_replace(' ', '_', strtolower($targetRole));
+                \Illuminate\Support\Facades\Cache::put($cacheKey, $roadmap, now()->addDays(30));
+                return $roadmap;
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('PathfinderController Error calling Groq for roadmap: ' . $e->getMessage());
+        }
+
+        // 3. Fallback to hardcoded career ladder based on target role
         $careerLadder = $this->generateCareerLadder($targetRole);
 
         return $careerLadder;
@@ -1956,16 +1980,16 @@ class PathfinderController extends Controller
             ];
         }
 
-        // Customize based on target role and reverse order for proper ascending display
+        // Assign step numbers from 1 (Entry) to max (Leadership) in natural order
         $totalLevels = count($careerLevels);
         foreach ($careerLevels as $index => $level) {
             $careerLevels[$index]['title'] = $this->getCustomizedTitle($targetRole, $level['level']);
-            // Make step numbering ascend from 1 (bottom) to max (top)
-            $careerLevels[$index]['step'] = $totalLevels - $index;
+            // Step 1 = Entry-Level, Step N = highest level
+            $careerLevels[$index]['step'] = $index + 1;
         }
 
-        // Reverse the array so highest step number (leadership) appears first in layout
-        return array_reverse($careerLevels);
+        // Return in natural chronological order (Entry first, Leadership last)
+        return $careerLevels;
     }
 
     /**

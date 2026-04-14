@@ -49,10 +49,6 @@
                         <option value="Recent Graduate">Recent Graduate</option>
                         <option value="Entry Level Professional">Entry Level Professional</option>
                         <option value="Junior Apprentice (2 years of experience)">Junior Apprentice (2 years of experience)</option>
-                        <option value="Mid Level">Mid Level</option>
-                        <option value="Senior Level">Senior Level</option>
-                        <option value="Change Career">Change Career</option>
-                        <option value="Currently Unemployed">Currently Unemployed</option>
                     </select>
                 </div>
 
@@ -109,7 +105,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h2m0 0h2a2 2 0 002-2V7a2 2 0 00-2-2H9m0 0V5a2 2 0 012-2h2a2 2 0 012 2v2M7 7h10"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Step-by-Step Roadmap</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">More details</h3>
                 <p class="text-gray-600">Clear, actionable steps from your current position to your dream job, with detailed descriptions for each milestone.</p>
             </div>
 
@@ -136,64 +132,5 @@
     </div>
 </div>
 
-<!-- Success Stories Section -->
-<div class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                Success Stories
-            </h2>
-            <p class="text-lg text-gray-600">
-                See how others have used our career path visualizer to achieve their goals
-            </p>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                        S
-                    </div>
-                    <div class="ml-3">
-                        <h4 class="font-semibold text-gray-900">Sarah M.</h4>
-                        <p class="text-sm text-gray-600">Student → UX Designer</p>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm">
-                    "The career path helped me transition from a psychology student to a UX designer in just 18 months. The step-by-step approach made it feel achievable!"
-                </p>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                        M
-                    </div>
-                    <div class="ml-3">
-                        <h4 class="font-semibold text-gray-900">Mike R.</h4>
-                        <p class="text-sm text-gray-600">Sales Rep → Product Manager</p>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm">
-                    "I followed the roadmap exactly and landed my dream product manager role. The timeline estimates were spot on!"
-                </p>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                        A
-                    </div>
-                    <div class="ml-3">
-                        <h4 class="font-semibold text-gray-900">Anna L.</h4>
-                        <p class="text-sm text-gray-600">Career Changer → Data Scientist</p>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm">
-                    "At 35, I thought it was too late to change careers. The visualizer showed me it was possible and gave me confidence to make the switch."
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection

@@ -200,7 +200,7 @@
                             <div class="career-action">
                                 <a href="{{ route('pathfinder.career.details', ['career' => urlencode($careerName)]) }}" 
                                    class="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs font-bold border border-white/10 transition-all">
-                                    Roadmap
+                                    More details
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                 </a>
                             </div>

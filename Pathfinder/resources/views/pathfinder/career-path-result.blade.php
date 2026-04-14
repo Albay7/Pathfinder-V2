@@ -27,8 +27,8 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- New Vertical Journey Timeline -->
         @php
-            /* Reorder so earliest (junior) level appears first (top). */
-            $journeySteps = array_values(array_reverse($pathSteps));
+            /* Journey steps are provided from earliest to latest */
+            $journeySteps = array_values($pathSteps);
             $total = count($journeySteps);
         @endphp
         <div class="max-w-5xl mx-auto mt-14" id="journey-root">
