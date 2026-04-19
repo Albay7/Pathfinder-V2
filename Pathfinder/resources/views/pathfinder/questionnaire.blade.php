@@ -201,210 +201,210 @@
         const questionDatabase = {
             business: {
                 section1: [
-                    { id: 1, text: "How comfortable are you with mathematical calculations and numerical analysis?", type: "rating", category: "Skill", focus: "Mathematical/Analytical Skills" },
-                    { id: 2, text: "How interested are you in analyzing financial statements and business performance metrics?", type: "rating", category: "Interest", focus: "Financial Analysis" },
-                    { id: 3, text: "How well can you communicate complex ideas clearly to different audiences?", type: "rating", category: "Skill", focus: "Communication Skills" },
-                    { id: 4, text: "How interested are you in leading teams and managing people?", type: "rating", category: "Interest", focus: "Leadership/Management" }
+                    { id: 1, text: "I am comfortable with mathematical calculations and numerical analysis.", type: "rating", category: "Skill", focus: "Mathematical/Analytical Skills" },
+                    { id: 2, text: "I am interested in analyzing financial statements and business performance metrics.", type: "rating", category: "Interest", focus: "Financial Analysis" },
+                    { id: 3, text: "I can communicate complex ideas clearly to different audiences.", type: "rating", category: "Skill", focus: "Communication Skills" },
+                    { id: 4, text: "I am interested in leading teams and managing people.", type: "rating", category: "Interest", focus: "Leadership/Management" }
                 ],
                 section2: [
-                    { id: 5, text: "How comfortable are you with using technology and business software applications?", type: "rating", category: "Skill", focus: "Technology Skills" },
-                    { id: 6, text: "How interested are you in creating and developing new business ideas or products?", type: "rating", category: "Interest", focus: "Innovation/Entrepreneurship" },
-                    { id: 7, text: "How well do you understand basic accounting principles and bookkeeping?", type: "rating", category: "Knowledge", focus: "Accounting Knowledge" },
-                    { id: 8, text: "How interested are you in understanding consumer behavior and market trends?", type: "rating", category: "Interest", focus: "Marketing/Consumer Behavior" }
+                    { id: 5, text: "I am comfortable with using technology and business software applications.", type: "rating", category: "Skill", focus: "Technology Skills" },
+                    { id: 6, text: "I am interested in creating and developing new business ideas or products.", type: "rating", category: "Interest", focus: "Innovation/Entrepreneurship" },
+                    { id: 7, text: "I understand basic accounting principles and bookkeeping.", type: "rating", category: "Knowledge", focus: "Accounting Knowledge" },
+                    { id: 8, text: "I am interested in understanding consumer behavior and market trends.", type: "rating", category: "Interest", focus: "Marketing/Consumer Behavior" }
                 ],
                 section3: [
-                    { id: 9, text: "How comfortable are you with making decisions under pressure and uncertainty?", type: "rating", category: "Skill", focus: "Decision Making" },
-                    { id: 10, text: "How well do you understand economic principles and their business applications?", type: "rating", category: "Knowledge", focus: "Economics/Business Environment" },
-                    { id: 11, text: "How interested are you in managing budgets and financial planning?", type: "rating", category: "Interest", focus: "Financial Planning" },
-                    { id: 12, text: "How well can you organize and manage multiple tasks simultaneously?", type: "rating", category: "Skill", focus: "Organization/Time Management" }
+                    { id: 9, text: "I am comfortable with making decisions under pressure and uncertainty.", type: "rating", category: "Skill", focus: "Decision Making" },
+                    { id: 10, text: "I understand economic principles and their business applications.", type: "rating", category: "Knowledge", focus: "Economics/Business Environment" },
+                    { id: 11, text: "I am interested in managing budgets and financial planning.", type: "rating", category: "Interest", focus: "Financial Planning" },
+                    { id: 12, text: "I can organize and manage multiple tasks simultaneously.", type: "rating", category: "Skill", focus: "Organization/Time Management" }
                 ],
                 section4: [
-                    { id: 13, text: "How interested are you in understanding workplace policies and employee relations?", type: "rating", category: "Interest", focus: "Human Resources" },
-                    { id: 14, text: "How comfortable are you with analyzing data and identifying business patterns?", type: "rating", category: "Skill", focus: "Data Analysis" },
-                    { id: 15, text: "How well do you understand legal and regulatory aspects of business operations?", type: "rating", category: "Knowledge", focus: "Business Law/Compliance" },
-                    { id: 16, text: "How interested are you in optimizing business processes and operational efficiency?", type: "rating", category: "Interest", focus: "Operations Management" }
+                    { id: 13, text: "I am interested in understanding workplace policies and employee relations.", type: "rating", category: "Interest", focus: "Human Resources" },
+                    { id: 14, text: "I am comfortable with analyzing data and identifying business patterns.", type: "rating", category: "Skill", focus: "Data Analysis" },
+                    { id: 15, text: "I understand legal and regulatory aspects of business operations.", type: "rating", category: "Knowledge", focus: "Business Law/Compliance" },
+                    { id: 16, text: "I am interested in optimizing business processes and operational efficiency.", type: "rating", category: "Interest", focus: "Operations Management" }
                 ]
             },
             technology: {
                 section1: [
-                    { id: 101, text: "How comfortable are you with programming fundamentals (e.g., Python/Java) and problem solving?", type: "rating", category: "Skill", focus: "Programming Fundamentals" },
-                    { id: 102, text: "How strong is your understanding of algorithms, data structures, and computational thinking?", type: "rating", category: "Skill", focus: "Algorithms & Data Structures" },
-                    { id: 103, text: "How comfortable are you with discrete math, logic, linear algebra, and probability?", type: "rating", category: "Skill", focus: "Mathematics for Computing" },
-                    { id: 104, text: "How comfortable are you with databases, SQL, and data modeling/normalization?", type: "rating", category: "Skill", focus: "Databases & SQL" }
+                    { id: 101, text: "I am comfortable with programming fundamentals (e.g., Python/Java) and problem solving.", type: "rating", category: "Skill", focus: "Programming Fundamentals" },
+                    { id: 102, text: "I have a strong understanding of algorithms, data structures, and computational thinking.", type: "rating", category: "Skill", focus: "Algorithms & Data Structures" },
+                    { id: 103, text: "I am comfortable with discrete math, logic, linear algebra, and probability.", type: "rating", category: "Skill", focus: "Mathematics for Computing" },
+                    { id: 104, text: "I am comfortable with databases, SQL, and data modeling/normalization.", type: "rating", category: "Skill", focus: "Databases & SQL" }
                 ],
                 section2: [
-                    { id: 105, text: "How interested are you in web and mobile development (front-end/back-end, APIs, apps)?", type: "rating", category: "Interest", focus: "Web & Mobile Development" },
-                    { id: 106, text: "How familiar are you with software engineering lifecycle, Git, testing, and CI/CD?", type: "rating", category: "Skill", focus: "Software Engineering" },
-                    { id: 107, text: "How comfortable are you with operating systems, shell, virtualization, and sysadmin tasks?", type: "rating", category: "Skill", focus: "Operating Systems & SysAdmin" },
-                    { id: 108, text: "How comfortable are you with computer networks, routing/switching, and protocols?", type: "rating", category: "Skill", focus: "Computer Networks" }
+                    { id: 105, text: "I am interested in web and mobile development (front-end/back-end, APIs, apps).", type: "rating", category: "Interest", focus: "Web & Mobile Development" },
+                    { id: 106, text: "I am familiar with software engineering lifecycle, Git, testing, and CI/CD.", type: "rating", category: "Skill", focus: "Software Engineering" },
+                    { id: 107, text: "I am comfortable with operating systems, shell, virtualization, and sysadmin tasks.", type: "rating", category: "Skill", focus: "Operating Systems & SysAdmin" },
+                    { id: 108, text: "I am comfortable with computer networks, routing/switching, and protocols.", type: "rating", category: "Skill", focus: "Computer Networks" }
                 ],
                 section3: [
-                    { id: 109, text: "How experienced are you with cloud platforms (AWS/Azure/GCP), scripting, and DevOps?", type: "rating", category: "Skill", focus: "Cloud & DevOps" },
-                    { id: 110, text: "How interested are you in cybersecurity (threats, defense, forensics, and policy)?", type: "rating", category: "Interest", focus: "Cybersecurity" },
-                    { id: 111, text: "How comfortable are you with statistics, data wrangling, visualization, and analytics?", type: "rating", category: "Skill", focus: "Data Analysis & Stats" },
-                    { id: 112, text: "How interested are you in machine learning and AI (models, training, evaluation)?", type: "rating", category: "Interest", focus: "Machine Learning & AI" }
+                    { id: 109, text: "I am experienced with cloud platforms (AWS/Azure/GCP), scripting, and DevOps.", type: "rating", category: "Skill", focus: "Cloud & DevOps" },
+                    { id: 110, text: "I am interested in cybersecurity (threats, defense, forensics, and policy).", type: "rating", category: "Interest", focus: "Cybersecurity" },
+                    { id: 111, text: "I am comfortable with statistics, data wrangling, visualization, and analytics.", type: "rating", category: "Skill", focus: "Data Analysis & Stats" },
+                    { id: 112, text: "I am interested in machine learning and AI (models, training, evaluation).", type: "rating", category: "Interest", focus: "Machine Learning & AI" }
                 ],
                 section4: [
-                    { id: 113, text: "How comfortable are you with hardware, digital logic, microcontrollers, and embedded systems?", type: "rating", category: "Skill", focus: "Hardware & Embedded" },
-                    { id: 114, text: "How interested are you in graphics, multimedia production, and game engines?", type: "rating", category: "Interest", focus: "Graphics, Multimedia & Games" },
-                    { id: 115, text: "How strong is your interest in UX/HCI, requirements analysis, and business process modeling?", type: "rating", category: "Interest", focus: "UX/HCI & Business Analysis" },
-                    { id: 116, text: "How comfortable are you with teamwork, communication, and managing projects (Agile/Scrum)?", type: "rating", category: "Skill", focus: "Teamwork & Project Management" }
+                    { id: 113, text: "I am comfortable with hardware, digital logic, microcontrollers, and embedded systems.", type: "rating", category: "Skill", focus: "Hardware & Embedded" },
+                    { id: 114, text: "I am interested in graphics, multimedia production, and game engines.", type: "rating", category: "Interest", focus: "Graphics, Multimedia & Games" },
+                    { id: 115, text: "I have a strong interest in UX/HCI, requirements analysis, and business process modeling.", type: "rating", category: "Interest", focus: "UX/HCI & Business Analysis" },
+                    { id: 116, text: "I am comfortable with teamwork, communication, and managing projects (Agile/Scrum).", type: "rating", category: "Skill", focus: "Teamwork & Project Management" }
                 ]
             },
             healthcare: {
                 section1: [
-                    { id: 201, text: "How comfortable are you with direct patient care, bedside procedures, and vital signs monitoring?", type: "rating", category: "Skill", focus: "Patient Care & Bedside Skills" },
-                    { id: 202, text: "How strong is your interest in laboratory diagnostics, specimen handling, and clinical analysis?", type: "rating", category: "Interest", focus: "Laboratory Diagnostics" },
-                    { id: 203, text: "How interested are you in pharmacology, medications, dosing, and medication safety?", type: "rating", category: "Interest", focus: "Pharmacology & Medication Management" },
-                    { id: 204, text: "How comfortable are you with anatomy, kinesiology, and rehabilitation exercise planning?", type: "rating", category: "Skill", focus: "Anatomy & Rehabilitation" }
+                    { id: 201, text: "I am comfortable with direct patient care, bedside procedures, and vital signs monitoring.", type: "rating", category: "Skill", focus: "Patient Care & Bedside Skills" },
+                    { id: 202, text: "I have a strong interest in laboratory diagnostics, specimen handling, and clinical analysis.", type: "rating", category: "Interest", focus: "Laboratory Diagnostics" },
+                    { id: 203, text: "I am interested in pharmacology, medications, dosing, and medication safety.", type: "rating", category: "Interest", focus: "Pharmacology & Medication Management" },
+                    { id: 204, text: "I am comfortable with anatomy, kinesiology, and rehabilitation exercise planning.", type: "rating", category: "Skill", focus: "Anatomy & Rehabilitation" }
                 ],
                 section2: [
-                    { id: 205, text: "How interested are you in medical imaging, radiation physics, and imaging procedures?", type: "rating", category: "Interest", focus: "Imaging & Radiologic Science" },
-                    { id: 206, text: "How comfortable are you with respiratory assessment, oxygen therapy, and ventilator management?", type: "rating", category: "Skill", focus: "Respiratory Care" },
-                    { id: 207, text: "How strong is your interest in epidemiology, community programs, and population health?", type: "rating", category: "Interest", focus: "Public Health & Epidemiology" },
-                    { id: 208, text: "How comfortable are you with chemistry/biochemistry, compounding, and laboratory calculations?", type: "rating", category: "Skill", focus: "Chemistry & Compounding" }
+                    { id: 205, text: "I am interested in medical imaging, radiation physics, and imaging procedures.", type: "rating", category: "Interest", focus: "Imaging & Radiologic Science" },
+                    { id: 206, text: "I am comfortable with respiratory assessment, oxygen therapy, and ventilator management.", type: "rating", category: "Skill", focus: "Respiratory Care" },
+                    { id: 207, text: "I have a strong interest in epidemiology, community programs, and population health.", type: "rating", category: "Interest", focus: "Public Health & Epidemiology" },
+                    { id: 208, text: "I am comfortable with chemistry/biochemistry, compounding, and laboratory calculations.", type: "rating", category: "Skill", focus: "Chemistry & Compounding" }
                 ],
                 section3: [
-                    { id: 209, text: "How comfortable are you with infection control, biosafety, and quality assurance procedures?", type: "rating", category: "Skill", focus: "Infection Control & QA" },
-                    { id: 210, text: "How interested are you in therapeutic exercise, manual therapy, and rehabilitation goals?", type: "rating", category: "Interest", focus: "Therapeutic Exercise" },
-                    { id: 211, text: "How comfortable are you with assistive technology, ADL retraining, and psychosocial support?", type: "rating", category: "Skill", focus: "Occupational Therapy & ADLs" },
-                    { id: 212, text: "How comfortable are you with emergency response, triage, and critical care protocols (BLS/ACLS)?", type: "rating", category: "Skill", focus: "Emergency & Critical Care" }
+                    { id: 209, text: "I am comfortable with infection control, biosafety, and quality assurance procedures.", type: "rating", category: "Skill", focus: "Infection Control & QA" },
+                    { id: 210, text: "I am interested in therapeutic exercise, manual therapy, and rehabilitation goals.", type: "rating", category: "Interest", focus: "Therapeutic Exercise" },
+                    { id: 211, text: "I am comfortable with assistive technology, ADL retraining, and psychosocial support.", type: "rating", category: "Skill", focus: "Occupational Therapy & ADLs" },
+                    { id: 212, text: "I am comfortable with emergency response, triage, and critical care protocols (BLS/ACLS).", type: "rating", category: "Skill", focus: "Emergency & Critical Care" }
                 ],
                 section4: [
-                    { id: 213, text: "How strong is your communication, empathy, and patient education across diverse populations?", type: "rating", category: "Skill", focus: "Communication & Patient Education" },
-                    { id: 214, text: "How comfortable are you with health informatics, electronic records, and clinical documentation?", type: "rating", category: "Skill", focus: "Health Informatics & Documentation" },
-                    { id: 215, text: "How comfortable are you with statistics, research methods, and evidence-based practice?", type: "rating", category: "Skill", focus: "Research & Evidence-Based Practice" },
-                    { id: 216, text: "How strong is your understanding of ethics, regulations, and safety protocols in clinical settings?", type: "rating", category: "Knowledge", focus: "Ethics, Regulation & Safety" }
+                    { id: 213, text: "I have a strong communication, empathy, and patient education across diverse populations.", type: "rating", category: "Skill", focus: "Communication & Patient Education" },
+                    { id: 214, text: "I am comfortable with health informatics, electronic records, and clinical documentation.", type: "rating", category: "Skill", focus: "Health Informatics & Documentation" },
+                    { id: 215, text: "I am comfortable with statistics, research methods, and evidence-based practice.", type: "rating", category: "Skill", focus: "Research & Evidence-Based Practice" },
+                    { id: 216, text: "I have a strong understanding of ethics, regulations, and safety protocols in clinical settings.", type: "rating", category: "Knowledge", focus: "Ethics, Regulation & Safety" }
                 ]
             },
             creative: {
                 section1: [
-                    { id: 301, text: "How interested are you in analyzing and interpreting literary works, poetry, and written texts?", type: "rating", category: "Interest", focus: "Literary Analysis" },
-                    { id: 302, text: "How much do you enjoy studying historical events, cultures, and their impact on society?", type: "rating", category: "Interest", focus: "Historical Research" },
-                    { id: 303, text: "How interested are you in understanding human behavior, social dynamics, and psychological processes?", type: "rating", category: "Interest", focus: "Social Sciences" },
-                    { id: 304, text: "How much do you enjoy philosophical discussions, ethical debates, and exploring abstract concepts?", type: "rating", category: "Interest", focus: "Philosophy & Ethics" }
+                    { id: 301, text: "I am interested in analyzing and interpreting literary works, poetry, and written texts.", type: "rating", category: "Interest", focus: "Literary Analysis" },
+                    { id: 302, text: "I enjoy studying historical events, cultures, and their impact on society.", type: "rating", category: "Interest", focus: "Historical Research" },
+                    { id: 303, text: "I am interested in understanding human behavior, social dynamics, and psychological processes.", type: "rating", category: "Interest", focus: "Social Sciences" },
+                    { id: 304, text: "I enjoy philosophical discussions, ethical debates, and exploring abstract concepts.", type: "rating", category: "Interest", focus: "Philosophy & Ethics" }
                 ],
                 section2: [
-                    { id: 305, text: "How confident are you in your writing skills for academic papers, essays, and research?", type: "rating", category: "Skill", focus: "Academic Writing" },
-                    { id: 306, text: "How strong are your critical thinking and analytical reasoning abilities?", type: "rating", category: "Skill", focus: "Critical Analysis" },
-                    { id: 307, text: "How comfortable are you with conducting research using various sources and methodologies?", type: "rating", category: "Skill", focus: "Research Methods" },
-                    { id: 308, text: "How effective are you at oral communication, presentations, and public speaking?", type: "rating", category: "Skill", focus: "Communication" }
+                    { id: 305, text: "I am confident in my writing skills for academic papers, essays, and research.", type: "rating", category: "Skill", focus: "Academic Writing" },
+                    { id: 306, text: "I have strong critical thinking and analytical reasoning abilities.", type: "rating", category: "Skill", focus: "Critical Analysis" },
+                    { id: 307, text: "I am comfortable with conducting research using various sources and methodologies.", type: "rating", category: "Skill", focus: "Research Methods" },
+                    { id: 308, text: "I am effective at oral communication, presentations, and public speaking.", type: "rating", category: "Skill", focus: "Communication" }
                 ],
                 section3: [
-                    { id: 309, text: "How interested are you in studying different cultures, languages, and global perspectives?", type: "rating", category: "Interest", focus: "Cultural Studies" },
-                    { id: 310, text: "How much do you enjoy creative writing, storytelling, and artistic expression?", type: "rating", category: "Interest", focus: "Creative Expression" },
-                    { id: 311, text: "How interested are you in political systems, governance, and public policy analysis?", type: "rating", category: "Interest", focus: "Political Science" },
-                    { id: 312, text: "How much do you enjoy studying economics, market behavior, and financial systems?", type: "rating", category: "Interest", focus: "Economics" }
+                    { id: 309, text: "I am interested in studying different cultures, languages, and global perspectives.", type: "rating", category: "Interest", focus: "Cultural Studies" },
+                    { id: 310, text: "I enjoy creative writing, storytelling, and artistic expression.", type: "rating", category: "Interest", focus: "Creative Expression" },
+                    { id: 311, text: "I am interested in political systems, governance, and public policy analysis.", type: "rating", category: "Interest", focus: "Political Science" },
+                    { id: 312, text: "I enjoy studying economics, market behavior, and financial systems.", type: "rating", category: "Interest", focus: "Economics" }
                 ],
                 section4: [
-                    { id: 313, text: "How interested are you in media studies, journalism, and mass communication?", type: "rating", category: "Interest", focus: "Media & Communication" },
-                    { id: 314, text: "How much do you enjoy studying art history, visual culture, and aesthetic theory?", type: "rating", category: "Interest", focus: "Art & Aesthetics" },
-                    { id: 315, text: "How interested are you in environmental studies and sustainability issues?", type: "rating", category: "Interest", focus: "Environmental Studies" },
-                    { id: 316, text: "How much do you enjoy interdisciplinary studies that combine multiple fields of knowledge?", type: "rating", category: "Interest", focus: "Interdisciplinary Studies" }
+                    { id: 313, text: "I am interested in media studies, journalism, and mass communication.", type: "rating", category: "Interest", focus: "Media & Communication" },
+                    { id: 314, text: "I enjoy studying art history, visual culture, and aesthetic theory.", type: "rating", category: "Interest", focus: "Art & Aesthetics" },
+                    { id: 315, text: "I am interested in environmental studies and sustainability issues.", type: "rating", category: "Interest", focus: "Environmental Studies" },
+                    { id: 316, text: "I enjoy interdisciplinary studies that combine multiple fields of knowledge.", type: "rating", category: "Interest", focus: "Interdisciplinary Studies" }
                 ]
             },
             education: {
                 section1: [
-                    { id: 401, text: "How confident are you in teaching language, reading comprehension, and writing to learners?", type: "rating", category: "Skill", focus: "Language/Communication Pedagogy" },
-                    { id: 402, text: "How strong is your interest and skill in mathematics problem-solving and explaining math concepts?", type: "rating", category: "Skill", focus: "Mathematics Pedagogy" },
-                    { id: 403, text: "How interested are you in scientific inquiry, experiments, and explaining natural phenomena?", type: "rating", category: "Interest", focus: "Science Pedagogy" },
-                    { id: 404, text: "How interested are you in civics, history, culture, and facilitating discussions on society?", type: "rating", category: "Interest", focus: "Social Studies Pedagogy" }
+                    { id: 401, text: "I am confident in teaching language, reading comprehension, and writing to learners.", type: "rating", category: "Skill", focus: "Language/Communication Pedagogy" },
+                    { id: 402, text: "I have a strong interest and skill in mathematics problem-solving and explaining math concepts.", type: "rating", category: "Skill", focus: "Mathematics Pedagogy" },
+                    { id: 403, text: "I am interested in scientific inquiry, experiments, and explaining natural phenomena.", type: "rating", category: "Interest", focus: "Science Pedagogy" },
+                    { id: 404, text: "I am interested in civics, history, culture, and facilitating discussions on society.", type: "rating", category: "Interest", focus: "Social Studies Pedagogy" }
                 ],
                 section2: [
-                    { id: 405, text: "How patient and passionate are you about nurturing children ages 3–8 through play-based learning?", type: "rating", category: "Interest", focus: "Early Childhood Orientation" },
-                    { id: 406, text: "How confident are you in lesson planning, classroom management, and assessment strategies?", type: "rating", category: "Skill", focus: "General Pedagogy & Assessment" },
-                    { id: 407, text: "How comfortable are you with facilitating physical activities, sports coaching, and fitness instruction?", type: "rating", category: "Skill", focus: "Physical Education & Coaching" },
-                    { id: 408, text: "How skilled are you in practical, hands-on, and vocational skills (e.g., ICT, HELE/TLE, carpentry, cookery)?", type: "rating", category: "Skill", focus: "TLE/Vocational Orientation" }
+                    { id: 405, text: "I am patient and passionate about nurturing children ages 3–8 through play-based learning.", type: "rating", category: "Interest", focus: "Early Childhood Orientation" },
+                    { id: 406, text: "I am confident in lesson planning, classroom management, and assessment strategies.", type: "rating", category: "Skill", focus: "General Pedagogy & Assessment" },
+                    { id: 407, text: "I am comfortable with facilitating physical activities, sports coaching, and fitness instruction.", type: "rating", category: "Skill", focus: "Physical Education & Coaching" },
+                    { id: 408, text: "I am skilled in practical, hands-on, and vocational skills (e.g., ICT, HELE/TLE, carpentry, cookery).", type: "rating", category: "Skill", focus: "TLE/Vocational Orientation" }
                 ],
                 section3: [
-                    { id: 409, text: "How comfortable are you speaking in front of groups, facilitating discussions, and leading classes?", type: "rating", category: "Skill", focus: "Public Speaking & Facilitation" },
-                    { id: 410, text: "How strong is your interest in educational technology (LMS, multimedia lessons, basic coding/ICT)?", type: "rating", category: "Interest", focus: "EdTech Integration" },
-                    { id: 411, text: "How interested are you in child/adolescent psychology, differentiation, and inclusive practices?", type: "rating", category: "Knowledge", focus: "Learner Diversity & Inclusion" },
-                    { id: 412, text: "How comfortable are you with designing performance tasks, rubrics, and interpreting test results?", type: "rating", category: "Skill", focus: "Assessment Literacy" }
+                    { id: 409, text: "I am comfortable speaking in front of groups, facilitating discussions, and leading classes.", type: "rating", category: "Skill", focus: "Public Speaking & Facilitation" },
+                    { id: 410, text: "I have a strong interest in educational technology (LMS, multimedia lessons, basic coding/ICT).", type: "rating", category: "Interest", focus: "EdTech Integration" },
+                    { id: 411, text: "I am interested in child/adolescent psychology, differentiation, and inclusive practices.", type: "rating", category: "Knowledge", focus: "Learner Diversity & Inclusion" },
+                    { id: 412, text: "I am comfortable with designing performance tasks, rubrics, and interpreting test results.", type: "rating", category: "Skill", focus: "Assessment Literacy" }
                 ],
                 section4: [
-                    { id: 413, text: "How much do you enjoy designing creative instructional materials (worksheets, visuals, manipulatives)?", type: "rating", category: "Interest", focus: "Instructional Design & Creativity" },
-                    { id: 414, text: "How interested are you in school-community engagement, service learning, and extracurricular advising?", type: "rating", category: "Interest", focus: "Advising & Community Engagement" },
-                    { id: 415, text: "How comfortable are you in basic classroom research (action research, data collection, reflection)?", type: "rating", category: "Knowledge", focus: "Action Research Orientation" },
-                    { id: 416, text: "How strong is your interest in mentorship, patience, and building positive classroom climate?", type: "rating", category: "Interest", focus: "Pastoral Care & Mentorship" }
+                    { id: 413, text: "I enjoy designing creative instructional materials (worksheets, visuals, manipulatives).", type: "rating", category: "Interest", focus: "Instructional Design & Creativity" },
+                    { id: 414, text: "I am interested in school-community engagement, service learning, and extracurricular advising.", type: "rating", category: "Interest", focus: "Advising & Community Engagement" },
+                    { id: 415, text: "I am comfortable in basic classroom research (action research, data collection, reflection).", type: "rating", category: "Knowledge", focus: "Action Research Orientation" },
+                    { id: 416, text: "I have a strong interest in mentorship, patience, and building positive classroom climate.", type: "rating", category: "Interest", focus: "Pastoral Care & Mentorship" }
                 ]
             },
             engineering: {
                 section1: [
-                    { id: 501, text: "How comfortable are you with mathematical modeling, calculus, and solving complex equations?", type: "rating", category: "Skill", focus: "Mathematical Foundations" },
-                    { id: 502, text: "How interested are you in designing and analyzing structures like buildings, bridges, and infrastructure?", type: "rating", category: "Interest", focus: "Structural Design" },
-                    { id: 503, text: "How skilled are you in programming, software development, and computer systems?", type: "rating", category: "Skill", focus: "Programming & Software" },
-                    { id: 504, text: "How interested are you in electrical circuits, power systems, and electronic devices?", type: "rating", category: "Interest", focus: "Electrical Systems" }
+                    { id: 501, text: "I am comfortable with mathematical modeling, calculus, and solving complex equations.", type: "rating", category: "Skill", focus: "Mathematical Foundations" },
+                    { id: 502, text: "I am interested in designing and analyzing structures like buildings, bridges, and infrastructure.", type: "rating", category: "Interest", focus: "Structural Design" },
+                    { id: 503, text: "I am skilled in programming, software development, and computer systems.", type: "rating", category: "Skill", focus: "Programming & Software" },
+                    { id: 504, text: "I am interested in electrical circuits, power systems, and electronic devices.", type: "rating", category: "Interest", focus: "Electrical Systems" }
                 ],
                 section2: [
-                    { id: 505, text: "How comfortable are you with mechanical systems, thermodynamics, and machine design?", type: "rating", category: "Skill", focus: "Mechanical Systems" },
-                    { id: 506, text: "How interested are you in chemical processes, materials science, and industrial production?", type: "rating", category: "Interest", focus: "Chemical Processes" },
-                    { id: 507, text: "How skilled are you in using CAD software, 3D modeling, and technical drawing?", type: "rating", category: "Skill", focus: "Design & Modeling" },
-                    { id: 508, text: "How interested are you in environmental sustainability, renewable energy, and green technology?", type: "rating", category: "Interest", focus: "Environmental Engineering" }
+                    { id: 505, text: "I am comfortable with mechanical systems, thermodynamics, and machine design.", type: "rating", category: "Skill", focus: "Mechanical Systems" },
+                    { id: 506, text: "I am interested in chemical processes, materials science, and industrial production.", type: "rating", category: "Interest", focus: "Chemical Processes" },
+                    { id: 507, text: "I am skilled in using CAD software, 3D modeling, and technical drawing.", type: "rating", category: "Skill", focus: "Design & Modeling" },
+                    { id: 508, text: "I am interested in environmental sustainability, renewable energy, and green technology.", type: "rating", category: "Interest", focus: "Environmental Engineering" }
                 ],
                 section3: [
-                    { id: 509, text: "How comfortable are you with project management, teamwork, and leading technical projects?", type: "rating", category: "Skill", focus: "Project Management" },
-                    { id: 510, text: "How interested are you in research, innovation, and developing new technologies?", type: "rating", category: "Interest", focus: "Research & Innovation" },
-                    { id: 511, text: "How knowledgeable are you about safety protocols, quality control, and regulatory compliance?", type: "rating", category: "Knowledge", focus: "Safety & Compliance" },
-                    { id: 512, text: "How skilled are you in data analysis, statistics, and interpreting technical results?", type: "rating", category: "Skill", focus: "Data Analysis" }
+                    { id: 509, text: "I am comfortable with project management, teamwork, and leading technical projects.", type: "rating", category: "Skill", focus: "Project Management" },
+                    { id: 510, text: "I am interested in research, innovation, and developing new technologies.", type: "rating", category: "Interest", focus: "Research & Innovation" },
+                    { id: 511, text: "I am knowledgeable about safety protocols, quality control, and regulatory compliance.", type: "rating", category: "Knowledge", focus: "Safety & Compliance" },
+                    { id: 512, text: "I am skilled in data analysis, statistics, and interpreting technical results.", type: "rating", category: "Skill", focus: "Data Analysis" }
                 ],
                 section4: [
-                    { id: 513, text: "How interested are you in automation, robotics, and artificial intelligence applications?", type: "rating", category: "Interest", focus: "Automation & AI" },
-                    { id: 514, text: "How comfortable are you with troubleshooting, problem-solving, and system optimization?", type: "rating", category: "Skill", focus: "Problem Solving" },
-                    { id: 515, text: "How knowledgeable are you about materials properties, testing, and selection for engineering applications?", type: "rating", category: "Knowledge", focus: "Materials Science" },
-                    { id: 516, text: "How interested are you in interdisciplinary collaboration and communicating technical concepts to non-engineers?", type: "rating", category: "Interest", focus: "Communication & Collaboration" }
+                    { id: 513, text: "I am interested in automation, robotics, and artificial intelligence applications.", type: "rating", category: "Interest", focus: "Automation & AI" },
+                    { id: 514, text: "I am comfortable with troubleshooting, problem-solving, and system optimization.", type: "rating", category: "Skill", focus: "Problem Solving" },
+                    { id: 515, text: "I am knowledgeable about materials properties, testing, and selection for engineering applications.", type: "rating", category: "Knowledge", focus: "Materials Science" },
+                    { id: 516, text: "I am interested in interdisciplinary collaboration and communicating technical concepts to non-engineers.", type: "rating", category: "Interest", focus: "Communication & Collaboration" }
                 ]
             },
             law: {
                 section1: [
-                    { id: 601, text: "How interested are you in legal research, case analysis, and statutory interpretation?", type: "rating", category: "Interest", focus: "Legal Research" },
-                    { id: 602, text: "How comfortable are you with constitutional law, civil rights, and government structure?", type: "rating", category: "Knowledge", focus: "Constitutional Law" },
-                    { id: 603, text: "How interested are you in criminal justice, law enforcement, and crime prevention?", type: "rating", category: "Interest", focus: "Criminal Justice" },
-                    { id: 604, text: "How skilled are you in public speaking, debate, and oral argumentation?", type: "rating", category: "Skill", focus: "Advocacy & Oral Skills" }
+                    { id: 601, text: "I am interested in legal research, case analysis, and statutory interpretation.", type: "rating", category: "Interest", focus: "Legal Research" },
+                    { id: 602, text: "I am comfortable with constitutional law, civil rights, and government structure.", type: "rating", category: "Knowledge", focus: "Constitutional Law" },
+                    { id: 603, text: "I am interested in criminal justice, law enforcement, and crime prevention.", type: "rating", category: "Interest", focus: "Criminal Justice" },
+                    { id: 604, text: "I am skilled in public speaking, debate, and oral argumentation.", type: "rating", category: "Skill", focus: "Advocacy & Oral Skills" }
                 ],
                 section2: [
-                    { id: 605, text: "How interested are you in contract law, business transactions, and commercial disputes?", type: "rating", category: "Interest", focus: "Contract & Commercial Law" },
-                    { id: 606, text: "How comfortable are you with legal writing, brief preparation, and document drafting?", type: "rating", category: "Skill", focus: "Legal Writing" },
-                    { id: 607, text: "How interested are you in public administration, policy development, and government operations?", type: "rating", category: "Interest", focus: "Public Administration" },
-                    { id: 608, text: "How knowledgeable are you about ethics, professional responsibility, and legal standards?", type: "rating", category: "Knowledge", focus: "Legal Ethics" }
+                    { id: 605, text: "I am interested in contract law, business transactions, and commercial disputes.", type: "rating", category: "Interest", focus: "Contract & Commercial Law" },
+                    { id: 606, text: "I am comfortable with legal writing, brief preparation, and document drafting.", type: "rating", category: "Skill", focus: "Legal Writing" },
+                    { id: 607, text: "I am interested in public administration, policy development, and government operations.", type: "rating", category: "Interest", focus: "Public Administration" },
+                    { id: 608, text: "I am knowledgeable about ethics, professional responsibility, and legal standards.", type: "rating", category: "Knowledge", focus: "Legal Ethics" }
                 ],
                 section3: [
-                    { id: 609, text: "How interested are you in forensic science, evidence analysis, and crime scene investigation?", type: "rating", category: "Interest", focus: "Forensic Science" },
-                    { id: 610, text: "How comfortable are you with negotiation, mediation, and conflict resolution?", type: "rating", category: "Skill", focus: "Alternative Dispute Resolution" },
-                    { id: 611, text: "How interested are you in international law, human rights, and global governance?", type: "rating", category: "Interest", focus: "International Law" },
-                    { id: 612, text: "How skilled are you in critical thinking, logical reasoning, and analytical problem-solving?", type: "rating", category: "Skill", focus: "Critical Analysis" }
+                    { id: 609, text: "I am interested in forensic science, evidence analysis, and crime scene investigation.", type: "rating", category: "Interest", focus: "Forensic Science" },
+                    { id: 610, text: "I am comfortable with negotiation, mediation, and conflict resolution.", type: "rating", category: "Skill", focus: "Alternative Dispute Resolution" },
+                    { id: 611, text: "I am interested in international law, human rights, and global governance.", type: "rating", category: "Interest", focus: "International Law" },
+                    { id: 612, text: "I am skilled in critical thinking, logical reasoning, and analytical problem-solving.", type: "rating", category: "Skill", focus: "Critical Analysis" }
                 ],
                 section4: [
-                    { id: 613, text: "How interested are you in family law, personal injury, and individual client representation?", type: "rating", category: "Interest", focus: "Personal Legal Services" },
-                    { id: 614, text: "How comfortable are you with legal technology, case management systems, and digital research tools?", type: "rating", category: "Skill", focus: "Legal Technology" },
-                    { id: 615, text: "How interested are you in regulatory compliance, administrative law, and government relations?", type: "rating", category: "Interest", focus: "Regulatory Affairs" },
-                    { id: 616, text: "How strong is your interest in justice, fairness, and protecting individual rights?", type: "rating", category: "Interest", focus: "Social Justice" }
+                    { id: 613, text: "I am interested in family law, personal injury, and individual client representation.", type: "rating", category: "Interest", focus: "Personal Legal Services" },
+                    { id: 614, text: "I am comfortable with legal technology, case management systems, and digital research tools.", type: "rating", category: "Skill", focus: "Legal Technology" },
+                    { id: 615, text: "I am interested in regulatory compliance, administrative law, and government relations.", type: "rating", category: "Interest", focus: "Regulatory Affairs" },
+                    { id: 616, text: "I have a strong interest in justice, fairness, and protecting individual rights.", type: "rating", category: "Interest", focus: "Social Justice" }
                 ]
             },
             tourism: {
                 section1: [
-                    { id: 701, text: "How interested are you in travel planning, itinerary development, and destination management?", type: "rating", category: "Interest", focus: "Travel Operations" },
-                    { id: 702, text: "How comfortable are you with food and beverage service, restaurant operations, and hospitality?", type: "rating", category: "Skill", focus: "F&B Service" },
-                    { id: 703, text: "How interested are you in culinary arts, food preparation, and kitchen management?", type: "rating", category: "Interest", focus: "Culinary Arts" },
-                    { id: 704, text: "How skilled are you in housekeeping operations, facility maintenance, and guest services?", type: "rating", category: "Skill", focus: "Housekeeping & Facilities" }
+                    { id: 701, text: "I am interested in travel planning, itinerary development, and destination management.", type: "rating", category: "Interest", focus: "Travel Operations" },
+                    { id: 702, text: "I am comfortable with food and beverage service, restaurant operations, and hospitality.", type: "rating", category: "Skill", focus: "F&B Service" },
+                    { id: 703, text: "I am interested in culinary arts, food preparation, and kitchen management.", type: "rating", category: "Interest", focus: "Culinary Arts" },
+                    { id: 704, text: "I am skilled in housekeeping operations, facility maintenance, and guest services.", type: "rating", category: "Skill", focus: "Housekeeping & Facilities" }
                 ],
                 section2: [
-                    { id: 705, text: "How interested are you in event planning, coordination, and special occasion management?", type: "rating", category: "Interest", focus: "Event Management" },
-                    { id: 706, text: "How comfortable are you with cruise operations, maritime hospitality, and shipboard services?", type: "rating", category: "Skill", focus: "Cruise Operations" },
-                    { id: 707, text: "How interested are you in hospitality marketing, customer relations, and brand promotion?", type: "rating", category: "Interest", focus: "Hospitality Marketing" },
-                    { id: 708, text: "How skilled are you in customer service, guest relations, and problem resolution?", type: "rating", category: "Skill", focus: "Guest Relations" }
+                    { id: 705, text: "I am interested in event planning, coordination, and special occasion management.", type: "rating", category: "Interest", focus: "Event Management" },
+                    { id: 706, text: "I am comfortable with cruise operations, maritime hospitality, and shipboard services.", type: "rating", category: "Skill", focus: "Cruise Operations" },
+                    { id: 707, text: "I am interested in hospitality marketing, customer relations, and brand promotion.", type: "rating", category: "Interest", focus: "Hospitality Marketing" },
+                    { id: 708, text: "I am skilled in customer service, guest relations, and problem resolution.", type: "rating", category: "Skill", focus: "Guest Relations" }
                 ],
                 section3: [
-                    { id: 709, text: "How interested are you in cultural tourism, heritage preservation, and local community engagement?", type: "rating", category: "Interest", focus: "Cultural Tourism" },
-                    { id: 710, text: "How comfortable are you with hotel operations, front desk management, and reservation systems?", type: "rating", category: "Skill", focus: "Hotel Operations" },
-                    { id: 711, text: "How interested are you in sustainable tourism, eco-friendly practices, and environmental conservation?", type: "rating", category: "Interest", focus: "Sustainable Tourism" },
-                    { id: 712, text: "How skilled are you in multilingual communication and cross-cultural interaction?", type: "rating", category: "Skill", focus: "Cross-Cultural Communication" }
+                    { id: 709, text: "I am interested in cultural tourism, heritage preservation, and local community engagement.", type: "rating", category: "Interest", focus: "Cultural Tourism" },
+                    { id: 710, text: "I am comfortable with hotel operations, front desk management, and reservation systems.", type: "rating", category: "Skill", focus: "Hotel Operations" },
+                    { id: 711, text: "I am interested in sustainable tourism, eco-friendly practices, and environmental conservation.", type: "rating", category: "Interest", focus: "Sustainable Tourism" },
+                    { id: 712, text: "I am skilled in multilingual communication and cross-cultural interaction.", type: "rating", category: "Skill", focus: "Cross-Cultural Communication" }
                 ],
                 section4: [
-                    { id: 713, text: "How interested are you in tourism research, market analysis, and industry trends?", type: "rating", category: "Interest", focus: "Tourism Research" },
-                    { id: 714, text: "How comfortable are you with financial management, budgeting, and revenue optimization in hospitality?", type: "rating", category: "Skill", focus: "Financial Management" },
-                    { id: 715, text: "How interested are you in adventure tourism, outdoor recreation, and activity coordination?", type: "rating", category: "Interest", focus: "Adventure Tourism" },
-                    { id: 716, text: "How skilled are you in leadership, team management, and staff development in service industries?", type: "rating", category: "Skill", focus: "Service Leadership" }
+                    { id: 713, text: "I am interested in tourism research, market analysis, and industry trends.", type: "rating", category: "Interest", focus: "Tourism Research" },
+                    { id: 714, text: "I am comfortable with financial management, budgeting, and revenue optimization in hospitality.", type: "rating", category: "Skill", focus: "Financial Management" },
+                    { id: 715, text: "I am interested in adventure tourism, outdoor recreation, and activity coordination.", type: "rating", category: "Interest", focus: "Adventure Tourism" },
+                    { id: 716, text: "I am skilled in leadership, team management, and staff development in service industries.", type: "rating", category: "Skill", focus: "Service Leadership" }
                 ]
             }
         };
@@ -489,210 +489,210 @@
         const jobQuestionDatabase = {
             business: {
                 section1: [
-                    { id: 1, text: "How interested are you in developing and implementing business strategies?", type: "rating" },
-                    { id: 2, text: "How comfortable are you with analyzing financial data and creating reports?", type: "rating" },
-                    { id: 3, text: "How much do you enjoy leading teams and managing people?", type: "rating" },
-                    { id: 4, text: "How interested are you in identifying market opportunities and trends?", type: "rating" }
+                    { id: 1, text: "I am interested in developing and implementing business strategies.", type: "rating" },
+                    { id: 2, text: "I am comfortable with analyzing financial data and creating reports.", type: "rating" },
+                    { id: 3, text: "I enjoy leading teams and managing people.", type: "rating" },
+                    { id: 4, text: "I am interested in identifying market opportunities and trends.", type: "rating" }
                 ],
                 section2: [
-                    { id: 5, text: "How comfortable are you with making high-stakes business decisions?", type: "rating" },
-                    { id: 6, text: "How much do you enjoy networking and building business relationships?", type: "rating" },
-                    { id: 7, text: "How interested are you in creating and launching new products or services?", type: "rating" },
-                    { id: 8, text: "How comfortable are you with managing budgets and financial planning?", type: "rating" }
+                    { id: 5, text: "I am comfortable with making high-stakes business decisions.", type: "rating" },
+                    { id: 6, text: "I enjoy networking and building business relationships.", type: "rating" },
+                    { id: 7, text: "I am interested in creating and launching new products or services.", type: "rating" },
+                    { id: 8, text: "I am comfortable with managing budgets and financial planning.", type: "rating" }
                 ],
                 section3: [
-                    { id: 9, text: "How much do you enjoy analyzing customer behavior and preferences?", type: "rating" },
-                    { id: 10, text: "How interested are you in optimizing business operations and processes?", type: "rating" },
-                    { id: 11, text: "How comfortable are you with public speaking and presentations?", type: "rating" },
-                    { id: 12, text: "How much do you enjoy working with data and analytics?", type: "rating" }
+                    { id: 9, text: "I enjoy analyzing customer behavior and preferences.", type: "rating" },
+                    { id: 10, text: "I am interested in optimizing business operations and processes.", type: "rating" },
+                    { id: 11, text: "I am comfortable with public speaking and presentations.", type: "rating" },
+                    { id: 12, text: "I enjoy working with data and analytics.", type: "rating" }
                 ],
                 section4: [
-                    { id: 13, text: "How interested are you in developing organizational policies and procedures?", type: "rating" },
-                    { id: 14, text: "How comfortable are you with negotiating contracts and deals?", type: "rating" },
-                    { id: 15, text: "How much do you enjoy mentoring and developing other professionals?", type: "rating" },
-                    { id: 16, text: "How interested are you in staying updated with industry regulations and compliance?", type: "rating" }
+                    { id: 13, text: "I am interested in developing organizational policies and procedures.", type: "rating" },
+                    { id: 14, text: "I am comfortable with negotiating contracts and deals.", type: "rating" },
+                    { id: 15, text: "I enjoy mentoring and developing other professionals.", type: "rating" },
+                    { id: 16, text: "I am interested in staying updated with industry regulations and compliance.", type: "rating" }
                 ]
             },
             healthcare: {
                 section1: [
-                    { id: 1, text: "How comfortable are you with providing direct patient care and support?", type: "rating" },
-                    { id: 2, text: "How interested are you in conducting medical tests and laboratory analysis?", type: "rating" },
-                    { id: 3, text: "How much do you enjoy educating patients about health and wellness?", type: "rating" },
-                    { id: 4, text: "How comfortable are you with working in high-stress emergency situations?", type: "rating" }
+                    { id: 1, text: "I am comfortable with providing direct patient care and support.", type: "rating" },
+                    { id: 2, text: "I am interested in conducting medical tests and laboratory analysis.", type: "rating" },
+                    { id: 3, text: "I enjoy educating patients about health and wellness.", type: "rating" },
+                    { id: 4, text: "I am comfortable with working in high-stress emergency situations.", type: "rating" }
                 ],
                 section2: [
-                    { id: 5, text: "How interested are you in developing treatment plans and rehabilitation programs?", type: "rating" },
-                    { id: 6, text: "How much do you enjoy working with medical technology and equipment?", type: "rating" },
-                    { id: 7, text: "How comfortable are you with maintaining detailed medical records and documentation?", type: "rating" },
-                    { id: 8, text: "How interested are you in conducting medical research and clinical studies?", type: "rating" }
+                    { id: 5, text: "I am interested in developing treatment plans and rehabilitation programs.", type: "rating" },
+                    { id: 6, text: "I enjoy working with medical technology and equipment.", type: "rating" },
+                    { id: 7, text: "I am comfortable with maintaining detailed medical records and documentation.", type: "rating" },
+                    { id: 8, text: "I am interested in conducting medical research and clinical studies.", type: "rating" }
                 ],
                 section3: [
-                    { id: 9, text: "How much do you enjoy collaborating with healthcare teams and professionals?", type: "rating" },
-                    { id: 10, text: "How comfortable are you with administering medications and monitoring patient responses?", type: "rating" },
-                    { id: 11, text: "How interested are you in promoting community health and disease prevention?", type: "rating" },
-                    { id: 12, text: "How much do you enjoy working with diverse patient populations?", type: "rating" }
+                    { id: 9, text: "I enjoy collaborating with healthcare teams and professionals.", type: "rating" },
+                    { id: 10, text: "I am comfortable with administering medications and monitoring patient responses.", type: "rating" },
+                    { id: 11, text: "I am interested in promoting community health and disease prevention.", type: "rating" },
+                    { id: 12, text: "I enjoy working with diverse patient populations.", type: "rating" }
                 ],
                 section4: [
-                    { id: 13, text: "How comfortable are you with following strict medical protocols and procedures?", type: "rating" },
-                    { id: 14, text: "How interested are you in specializing in a specific area of healthcare?", type: "rating" },
-                    { id: 15, text: "How much do you enjoy continuous learning about medical advances?", type: "rating" },
-                    { id: 16, text: "How comfortable are you with making critical decisions about patient care?", type: "rating" }
+                    { id: 13, text: "I am comfortable with following strict medical protocols and procedures.", type: "rating" },
+                    { id: 14, text: "I am interested in specializing in a specific area of healthcare.", type: "rating" },
+                    { id: 15, text: "I enjoy continuous learning about medical advances.", type: "rating" },
+                    { id: 16, text: "I am comfortable with making critical decisions about patient care.", type: "rating" }
                 ]
             },
             technology: {
                 section1: [
-                    { id: 1, text: "How interested are you in designing and developing software applications?", type: "rating" },
-                    { id: 2, text: "How comfortable are you with analyzing complex data and creating insights?", type: "rating" },
-                    { id: 3, text: "How much do you enjoy solving technical problems and debugging code?", type: "rating" },
-                    { id: 4, text: "How interested are you in protecting systems from cyber threats and attacks?", type: "rating" }
+                    { id: 1, text: "I am interested in designing and developing software applications.", type: "rating" },
+                    { id: 2, text: "I am comfortable with analyzing complex data and creating insights.", type: "rating" },
+                    { id: 3, text: "I enjoy solving technical problems and debugging code.", type: "rating" },
+                    { id: 4, text: "I am interested in protecting systems from cyber threats and attacks.", type: "rating" }
                 ],
                 section2: [
-                    { id: 5, text: "How comfortable are you with managing computer networks and infrastructure?", type: "rating" },
-                    { id: 6, text: "How much do you enjoy creating user-friendly interfaces and experiences?", type: "rating" },
-                    { id: 7, text: "How interested are you in working with artificial intelligence and machine learning?", type: "rating" },
-                    { id: 8, text: "How comfortable are you with managing databases and information systems?", type: "rating" }
+                    { id: 5, text: "I am comfortable with managing computer networks and infrastructure.", type: "rating" },
+                    { id: 6, text: "I enjoy creating user-friendly interfaces and experiences.", type: "rating" },
+                    { id: 7, text: "I am interested in working with artificial intelligence and machine learning.", type: "rating" },
+                    { id: 8, text: "I am comfortable with managing databases and information systems.", type: "rating" }
                 ],
                 section3: [
-                    { id: 9, text: "How much do you enjoy testing software and ensuring quality assurance?", type: "rating" },
-                    { id: 10, text: "How interested are you in leading technical projects and teams?", type: "rating" },
-                    { id: 11, text: "How comfortable are you with staying updated on emerging technologies?", type: "rating" },
-                    { id: 12, text: "How much do you enjoy automating processes and improving efficiency?", type: "rating" }
+                    { id: 9, text: "I enjoy testing software and ensuring quality assurance.", type: "rating" },
+                    { id: 10, text: "I am interested in leading technical projects and teams.", type: "rating" },
+                    { id: 11, text: "I am comfortable with staying updated on emerging technologies.", type: "rating" },
+                    { id: 12, text: "I enjoy automating processes and improving efficiency.", type: "rating" }
                 ],
                 section4: [
-                    { id: 13, text: "How interested are you in providing technical support and training?", type: "rating" },
-                    { id: 14, text: "How comfortable are you with working in agile development environments?", type: "rating" },
-                    { id: 15, text: "How much do you enjoy collaborating with cross-functional teams?", type: "rating" },
-                    { id: 16, text: "How interested are you in researching and implementing new technologies?", type: "rating" }
+                    { id: 13, text: "I am interested in providing technical support and training.", type: "rating" },
+                    { id: 14, text: "I am comfortable with working in agile development environments.", type: "rating" },
+                    { id: 15, text: "I enjoy collaborating with cross-functional teams.", type: "rating" },
+                    { id: 16, text: "I am interested in researching and implementing new technologies.", type: "rating" }
                 ]
             },
             creative: {
                 section1: [
-                    { id: 1, text: "How interested are you in creating visual designs and artistic content?", type: "rating" },
-                    { id: 2, text: "How comfortable are you with writing creative content and storytelling?", type: "rating" },
-                    { id: 3, text: "How much do you enjoy working with multimedia and digital media?", type: "rating" },
-                    { id: 4, text: "How interested are you in developing marketing campaigns and brand strategies?", type: "rating" }
+                    { id: 1, text: "I am interested in creating visual designs and artistic content.", type: "rating" },
+                    { id: 2, text: "I am comfortable with writing creative content and storytelling.", type: "rating" },
+                    { id: 3, text: "I enjoy working with multimedia and digital media.", type: "rating" },
+                    { id: 4, text: "I am interested in developing marketing campaigns and brand strategies.", type: "rating" }
                 ],
                 section2: [
-                    { id: 5, text: "How comfortable are you with using design software and creative tools?", type: "rating" },
-                    { id: 6, text: "How much do you enjoy collaborating with clients on creative projects?", type: "rating" },
-                    { id: 7, text: "How interested are you in photography and visual documentation?", type: "rating" },
-                    { id: 8, text: "How comfortable are you with presenting creative ideas to stakeholders?", type: "rating" }
+                    { id: 5, text: "I am comfortable with using design software and creative tools.", type: "rating" },
+                    { id: 6, text: "I enjoy collaborating with clients on creative projects.", type: "rating" },
+                    { id: 7, text: "I am interested in photography and visual documentation.", type: "rating" },
+                    { id: 8, text: "I am comfortable with presenting creative ideas to stakeholders.", type: "rating" }
                 ],
                 section3: [
-                    { id: 9, text: "How much do you enjoy working on multiple creative projects simultaneously?", type: "rating" },
-                    { id: 10, text: "How interested are you in staying current with design trends and techniques?", type: "rating" },
-                    { id: 11, text: "How comfortable are you with receiving and incorporating creative feedback?", type: "rating" },
-                    { id: 12, text: "How much do you enjoy problem-solving through creative solutions?", type: "rating" }
+                    { id: 9, text: "I enjoy working on multiple creative projects simultaneously.", type: "rating" },
+                    { id: 10, text: "I am interested in staying current with design trends and techniques.", type: "rating" },
+                    { id: 11, text: "I am comfortable with receiving and incorporating creative feedback.", type: "rating" },
+                    { id: 12, text: "I enjoy problem-solving through creative solutions.", type: "rating" }
                 ],
                 section4: [
-                    { id: 13, text: "How interested are you in teaching or mentoring other creative professionals?", type: "rating" },
-                    { id: 14, text: "How comfortable are you with working under tight deadlines?", type: "rating" },
-                    { id: 15, text: "How much do you enjoy experimenting with new creative mediums?", type: "rating" },
-                    { id: 16, text: "How interested are you in building a personal creative portfolio?", type: "rating" }
+                    { id: 13, text: "I am interested in teaching or mentoring other creative professionals.", type: "rating" },
+                    { id: 14, text: "I am comfortable with working under tight deadlines.", type: "rating" },
+                    { id: 15, text: "I enjoy experimenting with new creative mediums.", type: "rating" },
+                    { id: 16, text: "I am interested in building a personal creative portfolio.", type: "rating" }
                 ]
             },
             education: {
                 section1: [
-                    { id: 1, text: "How interested are you in developing curriculum and educational materials?", type: "rating" },
-                    { id: 2, text: "How comfortable are you with managing classroom behavior and student engagement?", type: "rating" },
-                    { id: 3, text: "How much do you enjoy working with students of different ages and backgrounds?", type: "rating" },
-                    { id: 4, text: "How interested are you in assessing student progress and providing feedback?", type: "rating" }
+                    { id: 1, text: "I am interested in developing curriculum and educational materials.", type: "rating" },
+                    { id: 2, text: "I am comfortable with managing classroom behavior and student engagement.", type: "rating" },
+                    { id: 3, text: "I enjoy working with students of different ages and backgrounds.", type: "rating" },
+                    { id: 4, text: "I am interested in assessing student progress and providing feedback.", type: "rating" }
                 ],
                 section2: [
-                    { id: 5, text: "How comfortable are you with using educational technology and digital tools?", type: "rating" },
-                    { id: 6, text: "How much do you enjoy collaborating with parents and families?", type: "rating" },
-                    { id: 7, text: "How interested are you in supporting students with special needs or challenges?", type: "rating" },
-                    { id: 8, text: "How comfortable are you with public speaking and presenting to groups?", type: "rating" }
+                    { id: 5, text: "I am comfortable with using educational technology and digital tools.", type: "rating" },
+                    { id: 6, text: "I enjoy collaborating with parents and families.", type: "rating" },
+                    { id: 7, text: "I am interested in supporting students with special needs or challenges.", type: "rating" },
+                    { id: 8, text: "I am comfortable with public speaking and presenting to groups.", type: "rating" }
                 ],
                 section3: [
-                    { id: 9, text: "How much do you enjoy continuous professional development and learning?", type: "rating" },
-                    { id: 10, text: "How interested are you in educational research and best practices?", type: "rating" },
-                    { id: 11, text: "How comfortable are you with adapting teaching methods to different learning styles?", type: "rating" },
-                    { id: 12, text: "How much do you enjoy mentoring and guiding student development?", type: "rating" }
+                    { id: 9, text: "I enjoy continuous professional development and learning.", type: "rating" },
+                    { id: 10, text: "I am interested in educational research and best practices.", type: "rating" },
+                    { id: 11, text: "I am comfortable with adapting teaching methods to different learning styles.", type: "rating" },
+                    { id: 12, text: "I enjoy mentoring and guiding student development.", type: "rating" }
                 ],
                 section4: [
-                    { id: 13, text: "How interested are you in educational leadership and administration?", type: "rating" },
-                    { id: 14, text: "How comfortable are you with handling challenging or difficult situations?", type: "rating" },
-                    { id: 15, text: "How much do you enjoy creating inclusive and supportive learning environments?", type: "rating" },
-                    { id: 16, text: "How interested are you in making a positive impact on student lives?", type: "rating" }
+                    { id: 13, text: "I am interested in educational leadership and administration.", type: "rating" },
+                    { id: 14, text: "I am comfortable with handling challenging or difficult situations.", type: "rating" },
+                    { id: 15, text: "I enjoy creating inclusive and supportive learning environments.", type: "rating" },
+                    { id: 16, text: "I am interested in making a positive impact on student lives.", type: "rating" }
                 ]
             },
             engineering: {
                 section1: [
-                    { id: 1, text: "How interested are you in designing and developing technical systems?", type: "rating" },
-                    { id: 2, text: "How comfortable are you with complex mathematical calculations and analysis?", type: "rating" },
-                    { id: 3, text: "How much do you enjoy solving engineering problems and challenges?", type: "rating" },
-                    { id: 4, text: "How interested are you in working with advanced technology and equipment?", type: "rating" }
+                    { id: 1, text: "I am interested in designing and developing technical systems.", type: "rating" },
+                    { id: 2, text: "I am comfortable with complex mathematical calculations and analysis.", type: "rating" },
+                    { id: 3, text: "I enjoy solving engineering problems and challenges.", type: "rating" },
+                    { id: 4, text: "I am interested in working with advanced technology and equipment.", type: "rating" }
                 ],
                 section2: [
-                    { id: 5, text: "How comfortable are you with creating technical drawings and specifications?", type: "rating" },
-                    { id: 6, text: "How much do you enjoy testing and validating engineering solutions?", type: "rating" },
-                    { id: 7, text: "How interested are you in managing engineering projects and timelines?", type: "rating" },
-                    { id: 8, text: "How comfortable are you with ensuring safety and compliance standards?", type: "rating" }
+                    { id: 5, text: "I am comfortable with creating technical drawings and specifications.", type: "rating" },
+                    { id: 6, text: "I enjoy testing and validating engineering solutions.", type: "rating" },
+                    { id: 7, text: "I am interested in managing engineering projects and timelines.", type: "rating" },
+                    { id: 8, text: "I am comfortable with ensuring safety and compliance standards.", type: "rating" }
                 ],
                 section3: [
-                    { id: 9, text: "How much do you enjoy collaborating with multidisciplinary teams?", type: "rating" },
-                    { id: 10, text: "How interested are you in researching and implementing new technologies?", type: "rating" },
-                    { id: 11, text: "How comfortable are you with analyzing data and making technical decisions?", type: "rating" },
-                    { id: 12, text: "How much do you enjoy optimizing processes and improving efficiency?", type: "rating" }
+                    { id: 9, text: "I enjoy collaborating with multidisciplinary teams.", type: "rating" },
+                    { id: 10, text: "I am interested in researching and implementing new technologies.", type: "rating" },
+                    { id: 11, text: "I am comfortable with analyzing data and making technical decisions.", type: "rating" },
+                    { id: 12, text: "I enjoy optimizing processes and improving efficiency.", type: "rating" }
                 ],
                 section4: [
-                    { id: 13, text: "How interested are you in environmental sustainability and green engineering?", type: "rating" },
-                    { id: 14, text: "How comfortable are you with presenting technical information to stakeholders?", type: "rating" },
-                    { id: 15, text: "How much do you enjoy continuous learning about engineering advances?", type: "rating" },
-                    { id: 16, text: "How interested are you in mentoring junior engineers and technical staff?", type: "rating" }
+                    { id: 13, text: "I am interested in environmental sustainability and green engineering.", type: "rating" },
+                    { id: 14, text: "I am comfortable with presenting technical information to stakeholders.", type: "rating" },
+                    { id: 15, text: "I enjoy continuous learning about engineering advances.", type: "rating" },
+                    { id: 16, text: "I am interested in mentoring junior engineers and technical staff.", type: "rating" }
                 ]
             },
             law: {
                 section1: [
-                    { id: 1, text: "How interested are you in researching and analyzing legal cases and precedents?", type: "rating" },
-                    { id: 2, text: "How comfortable are you with writing legal documents and briefs?", type: "rating" },
-                    { id: 3, text: "How much do you enjoy advocating for clients and representing their interests?", type: "rating" },
-                    { id: 4, text: "How interested are you in developing public policies and regulations?", type: "rating" }
+                    { id: 1, text: "I am interested in researching and analyzing legal cases and precedents.", type: "rating" },
+                    { id: 2, text: "I am comfortable with writing legal documents and briefs.", type: "rating" },
+                    { id: 3, text: "I enjoy advocating for clients and representing their interests.", type: "rating" },
+                    { id: 4, text: "I am interested in developing public policies and regulations.", type: "rating" }
                 ],
                 section2: [
-                    { id: 5, text: "How comfortable are you with public speaking and courtroom presentations?", type: "rating" },
-                    { id: 6, text: "How much do you enjoy negotiating settlements and agreements?", type: "rating" },
-                    { id: 7, text: "How interested are you in ensuring compliance with laws and regulations?", type: "rating" },
-                    { id: 8, text: "How comfortable are you with managing complex legal cases and documentation?", type: "rating" }
+                    { id: 5, text: "I am comfortable with public speaking and courtroom presentations.", type: "rating" },
+                    { id: 6, text: "I enjoy negotiating settlements and agreements.", type: "rating" },
+                    { id: 7, text: "I am interested in ensuring compliance with laws and regulations.", type: "rating" },
+                    { id: 8, text: "I am comfortable with managing complex legal cases and documentation.", type: "rating" }
                 ],
                 section3: [
-                    { id: 9, text: "How much do you enjoy working with diverse clients and communities?", type: "rating" },
-                    { id: 10, text: "How interested are you in criminal justice and law enforcement?", type: "rating" },
-                    { id: 11, text: "How comfortable are you with analyzing contracts and legal agreements?", type: "rating" },
-                    { id: 12, text: "How much do you enjoy staying updated on legal developments and changes?", type: "rating" }
+                    { id: 9, text: "I enjoy working with diverse clients and communities.", type: "rating" },
+                    { id: 10, text: "I am interested in criminal justice and law enforcement.", type: "rating" },
+                    { id: 11, text: "I am comfortable with analyzing contracts and legal agreements.", type: "rating" },
+                    { id: 12, text: "I enjoy staying updated on legal developments and changes.", type: "rating" }
                 ],
                 section4: [
-                    { id: 13, text: "How interested are you in providing legal education and training?", type: "rating" },
-                    { id: 14, text: "How comfortable are you with working under pressure and tight deadlines?", type: "rating" },
-                    { id: 15, text: "How much do you enjoy collaborating with legal teams and professionals?", type: "rating" },
-                    { id: 16, text: "How interested are you in making a positive impact on society through law?", type: "rating" }
+                    { id: 13, text: "I am interested in providing legal education and training.", type: "rating" },
+                    { id: 14, text: "I am comfortable with working under pressure and tight deadlines.", type: "rating" },
+                    { id: 15, text: "I enjoy collaborating with legal teams and professionals.", type: "rating" },
+                    { id: 16, text: "I am interested in making a positive impact on society through law.", type: "rating" }
                 ]
             },
             tourism: {
                 section1: [
-                    { id: 1, text: "How interested are you in planning and organizing travel experiences?", type: "rating" },
-                    { id: 2, text: "How comfortable are you with providing excellent customer service?", type: "rating" },
-                    { id: 3, text: "How much do you enjoy working with people from different cultures?", type: "rating" },
-                    { id: 4, text: "How interested are you in managing hospitality operations and services?", type: "rating" }
+                    { id: 1, text: "I am interested in planning and organizing travel experiences.", type: "rating" },
+                    { id: 2, text: "I am comfortable with providing excellent customer service.", type: "rating" },
+                    { id: 3, text: "I enjoy working with people from different cultures.", type: "rating" },
+                    { id: 4, text: "I am interested in managing hospitality operations and services.", type: "rating" }
                 ],
                 section2: [
-                    { id: 5, text: "How comfortable are you with handling multiple tasks and priorities?", type: "rating" },
-                    { id: 6, text: "How much do you enjoy creating memorable experiences for guests?", type: "rating" },
-                    { id: 7, text: "How interested are you in marketing tourism destinations and services?", type: "rating" },
-                    { id: 8, text: "How comfortable are you with working flexible hours and schedules?", type: "rating" }
+                    { id: 5, text: "I am comfortable with handling multiple tasks and priorities.", type: "rating" },
+                    { id: 6, text: "I enjoy creating memorable experiences for guests.", type: "rating" },
+                    { id: 7, text: "I am interested in marketing tourism destinations and services.", type: "rating" },
+                    { id: 8, text: "I am comfortable with working flexible hours and schedules.", type: "rating" }
                 ],
                 section3: [
-                    { id: 9, text: "How much do you enjoy problem-solving and handling customer concerns?", type: "rating" },
-                    { id: 10, text: "How interested are you in learning about different destinations and attractions?", type: "rating" },
-                    { id: 11, text: "How comfortable are you with using booking systems and travel technology?", type: "rating" },
-                    { id: 12, text: "How much do you enjoy working in fast-paced, dynamic environments?", type: "rating" }
+                    { id: 9, text: "I enjoy problem-solving and handling customer concerns.", type: "rating" },
+                    { id: 10, text: "I am interested in learning about different destinations and attractions.", type: "rating" },
+                    { id: 11, text: "I am comfortable with using booking systems and travel technology.", type: "rating" },
+                    { id: 12, text: "I enjoy working in fast-paced, dynamic environments.", type: "rating" }
                 ],
                 section4: [
-                    { id: 13, text: "How interested are you in sustainable tourism and environmental responsibility?", type: "rating" },
-                    { id: 14, text: "How comfortable are you with managing budgets and financial planning?", type: "rating" },
-                    { id: 15, text: "How much do you enjoy building relationships with suppliers and partners?", type: "rating" },
-                    { id: 16, text: "How interested are you in leadership roles in the tourism industry?", type: "rating" }
+                    { id: 13, text: "I am interested in sustainable tourism and environmental responsibility.", type: "rating" },
+                    { id: 14, text: "I am comfortable with managing budgets and financial planning.", type: "rating" },
+                    { id: 15, text: "I enjoy building relationships with suppliers and partners.", type: "rating" },
+                    { id: 16, text: "I am interested in leadership roles in the tourism industry.", type: "rating" }
                 ]
             }
         };
